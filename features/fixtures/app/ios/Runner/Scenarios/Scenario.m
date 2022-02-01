@@ -5,20 +5,13 @@
 @implementation Scenario
 
 + (Scenario *)createScenarioNamed:(NSString *)className {
-    Class clz = NSClassFromString(className);
+    Class class = NSClassFromString(className);
 
-    NSAssert(clz != nil, @"Failed to find class named '%@'", className);
+    if (!class) {
+        [NSException raise:NSInvalidArgumentException format:@"Failed to find scenario class named %@", className];
+    }
 
-    BOOL implementsRun = method_getImplementation(class_getInstanceMethod([Scenario class], @selector(runWithExtraConfig))) !=
-    method_getImplementation(class_getInstanceMethod(clz, @selector(runWithExtraConfig)));
-
-    NSAssert(implementsRun, @"Class '%@' does not implement the run method", className);
-
-    id obj = [clz alloc];
-
-    NSAssert([obj isKindOfClass:[Scenario class]], @"Class '%@' is not a subclass of Scenario", className);
-
-    return [(Scenario *)obj init];
+    return (Scenario *)[class new];
 }
 
 - (instancetype)init {
@@ -26,6 +19,7 @@
 }
 
 - (void)runWithExtraConfig:(NSString *)extraConfig {
+    [self doesNotRecognizeSelector:_cmd];
 }
 
 @end

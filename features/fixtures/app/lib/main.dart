@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:MazeRunner/channels.dart';
 import 'package:flutter/material.dart';
 
@@ -43,10 +45,16 @@ class _HomePageState extends State<MazeRunnerHomePage> {
     _scenarioNameController = TextEditingController();
     _extraConfigController = TextEditingController();
     _notifyEndpointController = TextEditingController(
-      text: 'http://bs-local.com:9339/notify',
+      text: const String.fromEnvironment(
+        'bsg.endpoint.notify',
+        defaultValue: 'http://bs-local.com:9339/notify',
+      ),
     );
     _sessionEndpointController = TextEditingController(
-      text: 'http://bs-local.com:9339/session',
+      text: const String.fromEnvironment(
+        'bsg.endpoint.session',
+        defaultValue: 'http://bs-local.com:9339/session',
+      ),
     );
   }
 
@@ -60,19 +68,32 @@ class _HomePageState extends State<MazeRunnerHomePage> {
     super.dispose();
   }
 
-  void _onStartBugsnag(BuildContext context) async {
-    await MazeRunnerChannels.startBugsnag();
+  Future<void> _onStartBugsnag() async {
+    final notifyEndpoint = _notifyEndpointController.value.text;
+    final sessionEndpoint = _sessionEndpointController.value.text;
+
+    await MazeRunnerChannels.startBugsnag(
+      notifyEndpoint: notifyEndpoint,
+      sessionEndpoint: sessionEndpoint,
+    );
   }
 
   void _onStartScenario(BuildContext context) async {
-    await _initScenario(context)?.run();
+    final scenario = _initScenario(context);
+    if (scenario == null) {
+      return;
+    }
+
+    final extraConfig = _extraConfigController.value.text;
+    scenario.extraConfig = extraConfig;
+    scenario.startBugsnag = _onStartBugsnag;
+    await scenario.run();
   }
 
   Scenario? _initScenario(BuildContext context) {
     final name = _scenarioNameController.value.text;
-    final extraConfig = _extraConfigController.value.text;
     final scenarioIndex =
-    scenarios.indexWhere((element) => element.name == name);
+        scenarios.indexWhere((element) => element.name == name);
 
     if (scenarioIndex == -1) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -85,7 +106,7 @@ class _HomePageState extends State<MazeRunnerHomePage> {
       return null;
     }
 
-    return scenarios[scenarioIndex].init(extraConfig);
+    return scenarios[scenarioIndex].init();
   }
 
   @override
@@ -134,7 +155,7 @@ class _HomePageState extends State<MazeRunnerHomePage> {
             ),
             TextButton(
               child: const Text("Start Bugsnag"),
-              onPressed: () => _onStartBugsnag(context),
+              onPressed: _onStartBugsnag,
               key: const Key("startBugsnag"),
             ),
           ],
