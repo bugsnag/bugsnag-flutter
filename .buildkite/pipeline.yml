@@ -1,0 +1,28 @@
+agents:
+  queue: ms-arm-12-4
+
+steps:
+
+  - label: Hello Buildkite
+    timeout_in_minutes: 2
+    agents:
+      queue: opensource
+    commands:
+      - echo "Hello, Buidlkite"
+
+  - label: Hello Flutter
+    timeout_in_minutes: 2
+    commands:
+      - flutter doctor
+
+  - label: Build iOS Test Fixture
+    timeout_in_minutes: 20
+    commands:
+      - cd features/fixtures/app
+      - flutter build ipa --export-options-plist=ios/exportOptions.plist
+
+  - label: Build Android Test Fixture
+    timeout_in_minutes: 20
+    commands:
+      - cd features/fixtures/app
+      - flutter build apk
