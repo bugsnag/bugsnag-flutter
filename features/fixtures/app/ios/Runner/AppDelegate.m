@@ -27,7 +27,7 @@
                :(FlutterResult) result {
     
     if([@"runScenario" isEqualToString:call.method]) {
-        NSString *scenarioName = call.arguments[@"scenario"];
+        NSString *scenarioName = call.arguments[@"scenarioName"];
         NSString *extraConfig = call.arguments[@"extraConfig"];
         Scenario *targetScenario = [Scenario createScenarioNamed:scenarioName];
         
@@ -36,11 +36,14 @@
                                        message:scenarioName
                                        details:nil]);
         } else {
-            [targetScenario runWithExtraConfig:extraConfig];
-            result(nil);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [targetScenario runWithExtraConfig:extraConfig];
+                result(nil);
+            });
         }
     } else if([@"startBugsnag" isEqualToString:call.method]) {
         [Bugsnag start];
+        result(nil);
     }
 }
 
