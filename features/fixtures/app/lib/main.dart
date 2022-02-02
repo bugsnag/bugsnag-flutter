@@ -1,115 +1,166 @@
+import 'dart:async';
+
+import 'package:MazeRunner/channels.dart';
 import 'package:flutter/material.dart';
 
+import 'scenarios/scenario.dart';
+import 'scenarios/scenarios.dart';
+
 void main() {
-  runApp(const MyApp());
+  runApp(const MazeRunnerFlutterApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class MazeRunnerFlutterApp extends StatelessWidget {
+  const MazeRunnerFlutterApp({Key? key}) : super(key: key);
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Bugsnag Test',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
+        primaryColor: const Color.fromARGB(255, 73, 73, 227),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MazeRunnerHomePage(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+class MazeRunnerHomePage extends StatefulWidget {
+  const MazeRunnerHomePage({Key? key}) : super(key: key);
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<MazeRunnerHomePage> createState() => _HomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _HomePageState extends State<MazeRunnerHomePage> {
+  late TextEditingController _scenarioNameController;
+  late TextEditingController _extraConfigController;
+  late TextEditingController _notifyEndpointController;
+  late TextEditingController _sessionEndpointController;
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+  @override
+  void initState() {
+    super.initState();
+    _scenarioNameController = TextEditingController();
+    _extraConfigController = TextEditingController();
+    _notifyEndpointController = TextEditingController(
+      text: const String.fromEnvironment(
+        'bsg.endpoint.notify',
+        defaultValue: 'http://bs-local.com:9339/notify',
+      ),
+    );
+    _sessionEndpointController = TextEditingController(
+      text: const String.fromEnvironment(
+        'bsg.endpoint.session',
+        defaultValue: 'http://bs-local.com:9339/session',
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _scenarioNameController.dispose();
+    _extraConfigController.dispose();
+    _notifyEndpointController.dispose();
+    _sessionEndpointController.dispose();
+
+    super.dispose();
+  }
+
+  Future<void> _onStartBugsnag() async {
+    final notifyEndpoint = _notifyEndpointController.value.text;
+    final sessionEndpoint = _sessionEndpointController.value.text;
+
+    await MazeRunnerChannels.startBugsnag(
+      notifyEndpoint: notifyEndpoint,
+      sessionEndpoint: sessionEndpoint,
+    );
+  }
+
+  void _onStartScenario(BuildContext context) async {
+    final scenario = _initScenario(context);
+    if (scenario == null) {
+      return;
+    }
+
+    final extraConfig = _extraConfigController.value.text;
+    scenario.extraConfig = extraConfig;
+    scenario.startBugsnag = _onStartBugsnag;
+    await scenario.run();
+  }
+
+  Scenario? _initScenario(BuildContext context) {
+    final name = _scenarioNameController.value.text;
+    final scenarioIndex =
+        scenarios.indexWhere((element) => element.name == name);
+
+    if (scenarioIndex == -1) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Cannot find Scenario $name. "
+              "Has is been added to scenario.dart?"),
+        ),
+      );
+
+      return null;
+    }
+
+    return scenarios[scenarioIndex].init();
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: const Text('Bugsnag Test Fixture'),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+            TextField(
+              controller: _scenarioNameController,
+              key: const Key("scenarioName"),
+              decoration: const InputDecoration(
+                label: Text("Scenario Name"),
+              ),
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+            TextField(
+              controller: _extraConfigController,
+              key: const Key("extraConfig"),
+              decoration: const InputDecoration(
+                label: Text("Extra Config"),
+              ),
+            ),
+            TextField(
+              controller: _notifyEndpointController,
+              key: const Key("notifyEndpoint"),
+              decoration: const InputDecoration(
+                label: Text("Notify Endpoint"),
+              ),
+            ),
+            TextField(
+              controller: _sessionEndpointController,
+              key: const Key("sessionEndpoint"),
+              decoration: const InputDecoration(
+                label: Text("Session Endpoint"),
+              ),
+            ),
+            TextButton(
+              child: const Text("Start Scenario"),
+              onPressed: () => _onStartScenario(context),
+              key: const Key("startScenario"),
+            ),
+            TextButton(
+              child: const Text("Start Bugsnag"),
+              onPressed: _onStartBugsnag,
+              key: const Key("startBugsnag"),
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }

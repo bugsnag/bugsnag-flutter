@@ -3,4 +3,7 @@
 
 @interface AppDelegate : FlutterAppDelegate
 
+-(void)onMethod:(FlutterMethodCall*) call
+               :(FlutterResult) result;
+
 @end

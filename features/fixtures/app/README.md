@@ -1,16 +1,21 @@
 # app
 
-A very crashy Flutter app
+A very crashy Flutter app used for testing.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+### Build options
+ - for Android: `flutter build apk`
+ - for iOS: `flutter build ios`
 
-A few resources to get you started if this is your first Flutter project:
+## Dart Defines
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+The following options can be appended to the `build` commands to customise the application
+as `--dart-define`s. For example, to build an Android APK with a customised `notify` endpoint:
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```shell
+flutter build apk --dart-define=bsg.endpoint.notify=http://10.0.2.2:9876/notify
+```
+
+ - `bsg.endpoint.notify=http://bs-local.com:9339/notify`
+ - `bsg.endpoint.session=http://bs-local.com:9339/session`

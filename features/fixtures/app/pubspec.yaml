@@ -1,4 +1,4 @@
-name: app
+name: MazeRunner
 description: A very crashy Flutter app
 
 # The following line prevents the package from being accidentally published to
