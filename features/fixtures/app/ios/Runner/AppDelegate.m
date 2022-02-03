@@ -8,6 +8,7 @@
 
 - (BOOL)application:(UIApplication *)application
     didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    
     [GeneratedPluginRegistrant registerWithRegistry:self];
 
     FlutterViewController* controller = (FlutterViewController*)self.window.rootViewController;
