@@ -6,9 +6,9 @@ A very crashy Flutter app used for testing.
 
 ### Build options
  - for Android: `flutter build apk`
- - for iOS: `flutter build ios`
+ - for iOS: `flutter build ipa`
 
-## Dart Defines
+### Dart Defines
 
 The following options can be appended to the `build` commands to customise the application
 as `--dart-define`s. For example, to build an Android APK with a customised `notify` endpoint:
