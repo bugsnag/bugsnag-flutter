@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:MazeRunner/channels.dart';
 import 'package:flutter/material.dart';
 
+import 'packages.dart';
 import 'scenarios/scenario.dart';
 import 'scenarios/scenarios.dart';
 
@@ -39,6 +40,8 @@ class _HomePageState extends State<MazeRunnerHomePage> {
   late TextEditingController _notifyEndpointController;
   late TextEditingController _sessionEndpointController;
 
+  List<String> _packages = const [];
+
   @override
   void initState() {
     super.initState();
@@ -56,6 +59,12 @@ class _HomePageState extends State<MazeRunnerHomePage> {
         defaultValue: 'http://bs-local.com:9339/session',
       ),
     );
+
+    listPackages().then((value) {
+      setState(() {
+        _packages = value;
+      });
+    });
   }
 
   @override
@@ -157,6 +166,9 @@ class _HomePageState extends State<MazeRunnerHomePage> {
               child: const Text("Start Bugsnag"),
               onPressed: _onStartBugsnag,
               key: const Key("startBugsnag"),
+            ),
+            ListView(
+              children: _packages.map((e) => Text("package: $e")).toList(),
             ),
           ],
         ),
