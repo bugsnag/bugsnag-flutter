@@ -18,7 +18,7 @@ packages:
   bugsnag_flutter:
     dependency: "direct main"
     description:
-      path: "../../../bugsnag_flutter"
+      path: "../bugsnag_flutter"
       relative: true
     source: path
     version: "0.0.1"
