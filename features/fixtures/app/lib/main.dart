@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:MazeRunner/channels.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 import 'packages.dart';
 import 'scenarios/scenario.dart';
@@ -9,6 +11,26 @@ import 'scenarios/scenarios.dart';
 
 void main() {
   runApp(const MazeRunnerFlutterApp());
+}
+
+class Command {
+  final String action;
+  final String scenarioName;
+  final String scenarioMode;
+
+  const Command({
+    required this.action,
+    required this.scenarioName,
+    required this.scenarioMode,
+  });
+
+  factory Command.fromJson(Map<String, dynamic> json) {
+    return Command(
+      action: json['action'],
+      scenarioName: json['scenario_name'],
+      scenarioMode: json['scenario_mode'],
+    );
+  }
 }
 
 class MazeRunnerFlutterApp extends StatelessWidget {
@@ -78,11 +100,15 @@ class _HomePageState extends State<MazeRunnerHomePage> {
   }
 
   void _onRunCommand(BuildContext context) async {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text("Run it!")
-      ),
-    );
+    final response = await http.get(Uri.parse('http://bs-local.com:9339/command'));
+    if (response.statusCode == 200) {
+      final command = Command.fromJson(jsonDecode(response.body));
+      _scenarioNameController.text = command.scenarioName;
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Failed to load command"))
+      );
+    }
   }
 
   Future<void> _onStartBugsnag() async {
