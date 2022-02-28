@@ -77,6 +77,14 @@ class _HomePageState extends State<MazeRunnerHomePage> {
     super.dispose();
   }
 
+  void _onRunCommand(BuildContext context) async {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text("Run it!")
+      ),
+    );
+  }
+
   Future<void> _onStartBugsnag() async {
     final notifyEndpoint = _notifyEndpointController.value.text;
     final sessionEndpoint = _sessionEndpointController.value.text;
@@ -121,14 +129,20 @@ class _HomePageState extends State<MazeRunnerHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Bugsnag Test Fixture'),
-      ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
+            Container(
+              height: 500.0,
+              width: double.infinity,
+              child: TextButton(
+                child: const Text("Run Command"),
+                onPressed: () => _onRunCommand(context),
+                key: const Key("runCommand"),
+              )
+            ),
             TextField(
               controller: _scenarioNameController,
               key: const Key("scenarioName"),
