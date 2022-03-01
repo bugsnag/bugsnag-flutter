@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
-import 'package:MazeRunner/channels.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:MazeRunner/channels.dart';
 
 import 'packages.dart';
 import 'scenarios/scenario.dart';
@@ -62,6 +64,8 @@ class _HomePageState extends State<MazeRunnerHomePage> {
   late TextEditingController _notifyEndpointController;
   late TextEditingController _sessionEndpointController;
 
+  static const platform = MethodChannel('com.bugsnag.mazeRunner/platform');
+
   List<String> _packages = const [];
 
   @override
@@ -100,15 +104,8 @@ class _HomePageState extends State<MazeRunnerHomePage> {
   }
 
   void _onRunCommand(BuildContext context) async {
-    final response = await http.get(Uri.parse('http://bs-local.com:9339/command'));
-    if (response.statusCode == 200) {
-      final command = Command.fromJson(jsonDecode(response.body));
-      _scenarioNameController.text = command.scenarioName;
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Failed to load command"))
-      );
-    }
+    print('SKW Make the request');
+    print(await MazeRunnerChannels.getCommand());
   }
 
   Future<void> _onStartBugsnag() async {
@@ -161,7 +158,7 @@ class _HomePageState extends State<MazeRunnerHomePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             Container(
-              height: 500.0,
+              height: 400.0,
               width: double.infinity,
               child: TextButton(
                 child: const Text("Run Command"),

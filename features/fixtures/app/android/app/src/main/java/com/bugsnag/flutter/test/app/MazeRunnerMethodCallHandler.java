@@ -27,7 +27,9 @@ public class MazeRunnerMethodCallHandler implements MethodChannel.MethodCallHand
 
     @Override
     public void onMethodCall(@NonNull MethodCall call, @NonNull MethodChannel.Result result) {
-        if (call.method.equals("runScenario")) {
+        if (call.method.equals("getCommand")) {
+            getCommand(call, result);
+        } else if (call.method.equals("runScenario")) {
             runScenario(call, result);
         } else if (call.method.equals("startBugsnag")) {
             Configuration config = Configuration.load(context);
@@ -43,6 +45,12 @@ public class MazeRunnerMethodCallHandler implements MethodChannel.MethodCallHand
         } else {
             result.notImplemented();
         }
+    }
+
+    private void getCommand(@NonNull MethodCall call, @NonNull MethodChannel.Result result) {
+
+        // TODO Make the HTTP GET request, handling errors
+        result.success("This is the command");
     }
 
     private void runScenario(@NonNull MethodCall call, @NonNull MethodChannel.Result result) {
