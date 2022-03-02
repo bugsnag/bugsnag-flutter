@@ -33,3 +33,33 @@ class User {
         name: json['name'] as String?,
       );
 }
+
+class FeatureFlag {
+  final String name;
+  final String? variant;
+
+  const FeatureFlag(this.name, [this.variant]);
+
+  dynamic toJson() => {
+        'featureFlag': name,
+        if (variant != null) 'variant': variant,
+      };
+
+  @override
+  String toString() => "FeatureFlag{name: $name, variant: $variant}";
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is FeatureFlag &&
+          runtimeType == other.runtimeType &&
+          name == other.name &&
+          variant == other.variant;
+
+  @override
+  int get hashCode => name.hashCode ^ variant.hashCode;
+}
+
+class Session {}
+
+class Breadcrumb {}

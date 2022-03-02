@@ -28,6 +28,7 @@ public class BugsnagFlutterPlugin implements FlutterPlugin, MethodCallHandler {
         functions.put("getUser", bugsnag::getUser);
         functions.put("setContext", bugsnag::setContext);
         functions.put("getContext", bugsnag::getContext);
+        functions.put("addFeatureFlags", bugsnag::addFeatureFlags);
         functions.put("attach", bugsnag::attach);
     }
 

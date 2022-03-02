@@ -1,6 +1,6 @@
 #import "BugsnagFlutterPlugin.h"
 
-#import <Bugsnag/Bugsnag.h>
+#import <Bugsnag/Bugsnag+Private.h>
 #import <objc/runtime.h>
 
 static NSString *NSStringOrNil(id value) {
@@ -8,8 +8,6 @@ static NSString *NSStringOrNil(id value) {
 }
 
 @implementation BugsnagFlutterPlugin
-
-// MARK: - @protocol FlutterPlugin
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
   FlutterMethodChannel *channel = [FlutterMethodChannel
@@ -23,13 +21,13 @@ static NSString *NSStringOrNil(id value) {
 
 - (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)result {
     SEL selector = NSSelectorFromString([call.method stringByAppendingString:@":"]);
-    
+
     // Defend against executing arbitrary methods
     if (!protocol_getMethodDescription(@protocol(BugsnagFlutterProtocol), selector, YES, YES).name) {
         result(FlutterMethodNotImplemented);
         return;
     }
-    
+
     if ([self respondsToSelector:selector]) {
         @try {
             // "For methods that return anything other than an object, use NSInvocation."
@@ -102,7 +100,11 @@ static NSString *NSStringOrNil(id value) {
     }
 }
 
-- (void)attach:(NSDictionary *)json {
+- (NSNumber *)attach:(NSDictionary *)json {
+    if (Bugsnag.client == nil) {
+        return @NO;
+    }
+
     if ([json[@"user"] isKindOfClass:[NSDictionary class]]) {
         [self setUser:json[@"user"]];
     }
@@ -114,6 +116,8 @@ static NSString *NSStringOrNil(id value) {
     if ([json[@"featureFlags"] isKindOfClass:[NSDictionary class]]) {
         [self addFeatureFlags:json];
     }
+
+    return @YES;
 }
 
 @end
