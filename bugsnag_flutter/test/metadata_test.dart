@@ -42,7 +42,9 @@ void main() {
           'car': 'Ferrari',
           'color': const Color(0xffff0000)
         },
-        'dodgy': Dodgy()
+        'dodgy': Dodgy(),
+        'empty_array': [],
+        'empty_object': {}
       }), {
         'array': [1, 2, 3, 4, 'foo'],
         'set': [],
@@ -57,7 +59,9 @@ void main() {
           'car': 'Ferrari',
           'color': 'Color(0xffff0000)'
         },
-        'dodgy': '[exception]: DodgyException'
+        'dodgy': '[exception]: DodgyException',
+        'empty_array': [],
+        'empty_object': {}
       });
     });
   });

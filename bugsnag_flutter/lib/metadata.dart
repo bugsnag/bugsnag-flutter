@@ -3,31 +3,28 @@ typedef MetadataMap = Map<String, MetadataSection>;
 
 class Metadata {
   
-  MetadataMap map = {};
+  final MetadataMap _map;
 
-  Metadata([MetadataMap map = const {}]) {
-    this.map = map.map((key, val) => MapEntry(key, sanitizedMap(val)));
-  }
+  Metadata([MetadataMap map = const {}]):
+    _map = map.map((key, val) => MapEntry(key, sanitizedMap(val)));
 
   void addMetadata(String section, MetadataSection metadata) {
-    map.putIfAbsent(section, () => {}).addAll(sanitizedMap(metadata));
+    _map.putIfAbsent(section, () => {}).addAll(sanitizedMap(metadata));
   }
 
   void clearMetadata(String section, [String? key]) {
     if (key == null) {
-      map.remove(section);
+      _map.remove(section);
     } else {
-      map[section]?.remove(key);
+      _map[section]?.remove(key);
     }
   }
 
-  MetadataSection? getMetadata(String section) {
-    return map[section];
-  }
+  MetadataSection? getMetadata(String section) => _map[section];
 
-  MetadataMap toMap() {
-    return map;
-  }
+  MetadataMap toMap() => _map;
+
+  dynamic toJson() => _map;
 
   static MetadataSection sanitizedMap(Map<String, Object> map) {
     return map.map((key, val) => MapEntry(key, sanitizedObject(val)));
@@ -36,11 +33,13 @@ class Metadata {
   static Object sanitizedObject(Object object) {
     if (object is String || object is num) return object;
     if (object is Map<String, Object>) return sanitizedMap(object);
+    // Special case because empty Maps wil not be caught on previous line
+    if (object is Map && object.isEmpty) return object;
     if (object is Iterable) return object.map((e) => sanitizedObject(e));
     try {
-      return "$object";
+      return '$object';
     } catch (e) {
-      return "[exception]: $e";
+      return '[exception]: $e';
     }
   }
 }
