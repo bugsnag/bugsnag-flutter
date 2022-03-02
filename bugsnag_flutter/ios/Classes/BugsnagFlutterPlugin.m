@@ -7,6 +7,21 @@ static NSString *NSStringOrNil(id value) {
 
 @implementation BugsnagFlutterPlugin
 
+- (instancetype)init {
+    if ((self = [super init])) {
+        _availableFunctions = [NSSet setWithObjects:
+                               @"setUser",
+                               @"getUser",
+                               @"setContext",
+                               @"getContext",
+                               @"attach",
+                               nil
+        ];
+    }
+    
+    return self;
+}
+
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
   FlutterMethodChannel *channel = [FlutterMethodChannel
       methodChannelWithName:@"com.bugsnag/client"
@@ -18,6 +33,11 @@ static NSString *NSStringOrNil(id value) {
 }
 
 - (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)result {
+    if (![_availableFunctions containsObject:call.method]) {
+        result(FlutterMethodNotImplemented);
+        return;
+    }
+    
     SEL selector = NSSelectorFromString([call.method stringByAppendingString:@":"]);
     if ([self respondsToSelector:selector]) {
         @try {
@@ -51,8 +71,32 @@ static NSString *NSStringOrNil(id value) {
     return Bugsnag.context;
 }
 
+- (void)addFeatureFlags:(NSDictionary *)json {
+    if ([json[@"featureFlags"] isKindOfClass:[NSArray class]]) {
+        NSArray *jsonFeatureFlags = json[@"featureFlags"];
+        NSMutableArray *featureFlags = [NSMutableArray arrayWithCapacity:[jsonFeatureFlags count]];
+        
+        for (NSDictionary *flag in jsonFeatureFlags) {
+            [featureFlags addObject:[BugsnagFeatureFlag flagWithName:flag[@"featureFlag"]
+                                                             variant:NSStringOrNil(flag[@"variant"])]];
+        }
+        
+        [Bugsnag addFeatureFlags:featureFlags];
+    }
+}
+
 - (void)attach:(NSDictionary *)json {
-    [Bugsnag start];
+    if ([json[@"user"] isKindOfClass:[NSDictionary class]]) {
+        [self setUser:json[@"user"]];
+    }
+    
+    if ([json[@"context"] isKindOfClass:[NSString class]]) {
+        [self setContext:json];
+    }
+    
+    if ([json[@"featureFlags"] isKindOfClass:[NSDictionary class]]) {
+        [self addFeatureFlags:json];
+    }
 }
 
 @end
