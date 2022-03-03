@@ -14,4 +14,6 @@
 
 @interface BugsnagFlutterPlugin : NSObject<FlutterPlugin, BugsnagFlutterProtocol>
 
+@property (nonatomic, getter=isAttached) BOOL attached;
+
 @end

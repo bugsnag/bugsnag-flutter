@@ -9,6 +9,8 @@ static NSString *NSStringOrNil(id value) {
 
 @implementation BugsnagFlutterPlugin
 
+// MARK: - @protocol FlutterPlugin
+
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
   FlutterMethodChannel *channel = [FlutterMethodChannel
       methodChannelWithName:@"com.bugsnag/client"
@@ -104,6 +106,10 @@ static NSString *NSStringOrNil(id value) {
     if (Bugsnag.client == nil) {
         return @NO;
     }
+    
+    if (self.isAttached) {
+        @throw [NSException exceptionWithName:@"CannotAttach" reason:@"bugsnag.attach may not be called more than once" userInfo:nil];
+    }
 
     if ([json[@"user"] isKindOfClass:[NSDictionary class]]) {
         [self setUser:json[@"user"]];
@@ -116,7 +122,8 @@ static NSString *NSStringOrNil(id value) {
     if ([json[@"featureFlags"] isKindOfClass:[NSDictionary class]]) {
         [self addFeatureFlags:json];
     }
-
+    
+    self.attached = YES;
     return @YES;
 }
 

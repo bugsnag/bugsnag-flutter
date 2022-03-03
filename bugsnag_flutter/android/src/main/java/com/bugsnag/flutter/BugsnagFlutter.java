@@ -59,6 +59,7 @@ class BugsnagFlutter {
             }
         }
 
+        isAttached = true;
         return true;
     }
 
