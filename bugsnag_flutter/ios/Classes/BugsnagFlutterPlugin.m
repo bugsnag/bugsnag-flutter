@@ -1,5 +1,7 @@
 #import "BugsnagFlutterPlugin.h"
-#import "Bugsnag/Bugsnag.h"
+
+#import <Bugsnag/Bugsnag.h>
+#import <objc/runtime.h>
 
 static NSString *NSStringOrNil(id value) {
     return [value isKindOfClass:[NSString class]] ? value : nil;
@@ -7,20 +9,7 @@ static NSString *NSStringOrNil(id value) {
 
 @implementation BugsnagFlutterPlugin
 
-- (instancetype)init {
-    if ((self = [super init])) {
-        _availableFunctions = [NSSet setWithObjects:
-                               @"setUser",
-                               @"getUser",
-                               @"setContext",
-                               @"getContext",
-                               @"attach",
-                               nil
-        ];
-    }
-    
-    return self;
-}
+// MARK: - @protocol FlutterPlugin
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
   FlutterMethodChannel *channel = [FlutterMethodChannel
@@ -33,15 +22,35 @@ static NSString *NSStringOrNil(id value) {
 }
 
 - (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)result {
-    if (![_availableFunctions containsObject:call.method]) {
+    SEL selector = NSSelectorFromString([call.method stringByAppendingString:@":"]);
+    
+    // Defend against executing arbitrary methods
+    if (!protocol_getMethodDescription(@protocol(BugsnagFlutterProtocol), selector, YES, YES).name) {
         result(FlutterMethodNotImplemented);
         return;
     }
     
-    SEL selector = NSSelectorFromString([call.method stringByAppendingString:@":"]);
     if ([self respondsToSelector:selector]) {
         @try {
-            result([self performSelector:selector withObject:call.arguments]);
+            // "For methods that return anything other than an object, use NSInvocation."
+            id arguments = call.arguments;
+            NSMethodSignature *methodSignature = [self methodSignatureForSelector:selector];
+            NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:methodSignature];
+            [invocation setTarget:self];
+            [invocation setSelector:selector];
+            [invocation setArgument:&arguments atIndex:2];
+            [invocation invoke];
+            id returnValue = nil;
+            const char *returnType = [methodSignature methodReturnType];
+            if (strcmp(methodSignature.methodReturnType, @encode(id)) == 0) {
+                [invocation getReturnValue:&returnValue];
+            } else if (strcmp(returnType, @encode(void)) != 0) {
+                result([FlutterError errorWithCode:@"Invalid return type" message:
+                        [NSString stringWithFormat:@"%@ does not return id or void",
+                         NSStringFromSelector(selector)] details:nil]);
+                return;
+            }
+            result(returnValue);
         } @catch (NSException *exception) {
             result([FlutterError errorWithCode:exception.name message:exception.reason details:nil]);
         }
@@ -49,6 +58,8 @@ static NSString *NSStringOrNil(id value) {
         result(FlutterMethodNotImplemented);
     }
 }
+
+// MARK: -
 
 - (void)setUser:(NSDictionary *)json {
     [Bugsnag setUser:NSStringOrNil(json[@"id"]) withEmail:NSStringOrNil(json[@"email"]) andName:NSStringOrNil(json[@"name"])];
