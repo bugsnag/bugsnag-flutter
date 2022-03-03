@@ -1,7 +1,12 @@
 agents:
-  queue: ms-arm-12-4
+  queue: opensource-arm-mac-cocoa-12
 
 steps:
+
+  - label: ":test_tube:"
+    timeout_in_minutes: 10
+    commands:
+      - make test
 
   - label: Build iOS Test Fixture
     timeout_in_minutes: 20

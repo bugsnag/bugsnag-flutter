@@ -15,7 +15,7 @@ example:
 	cd example && flutter build apk --suppress-analytics && flutter build ios --no-codesign --suppress-analytics
 
 test:
-	cd bugsnag_flutter && flutter test --suppress-analytics
+	cd bugsnag_flutter && flutter test -r expanded --suppress-analytics
 
 lint: aar
 	cd bugsnag_flutter && flutter analyze --suppress-analytics
