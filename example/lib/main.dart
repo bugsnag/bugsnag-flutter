@@ -30,10 +30,7 @@ class MyApp extends StatelessWidget {
             children: [
               Text(
                 'Unhandled Errors',
-                style: Theme
-                    .of(context)
-                    .textTheme
-                    .headline6,
+                style: Theme.of(context).textTheme.headline6,
               ),
               ElevatedButton(
                 onPressed: _unhandledFlutterError,
