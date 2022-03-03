@@ -35,6 +35,12 @@ static NSString *NSStringOrNil(id value) {
             // "For methods that return anything other than an object, use NSInvocation."
             id arguments = call.arguments;
             NSMethodSignature *methodSignature = [self methodSignatureForSelector:selector];
+            if ([methodSignature numberOfArguments] != 3) {
+                result([FlutterError errorWithCode:@"Invalid number of arguments" message:
+                        [NSString stringWithFormat:@"'%@' does not take a single argument",
+                         NSStringFromSelector(selector)] details:nil]);
+                return;
+            }
             NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:methodSignature];
             [invocation setTarget:self];
             [invocation setSelector:selector];
@@ -46,7 +52,7 @@ static NSString *NSStringOrNil(id value) {
                 [invocation getReturnValue:&returnValue];
             } else if (strcmp(returnType, @encode(void)) != 0) {
                 result([FlutterError errorWithCode:@"Invalid return type" message:
-                        [NSString stringWithFormat:@"%@ does not return id or void",
+                        [NSString stringWithFormat:@"'%@' does not return id or void",
                          NSStringFromSelector(selector)] details:nil]);
                 return;
             }
