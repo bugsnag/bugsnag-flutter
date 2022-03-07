@@ -105,7 +105,7 @@ class _HomePageState extends State<MazeRunnerHomePage> {
 
   void _onRunCommand(BuildContext context) async {
     print('SKW Make the request');
-    print(await MazeRunnerChannels.getCommand());
+    print('The command is: ${await MazeRunnerChannels.getCommand()}');
   }
 
   Future<void> _onStartBugsnag() async {
