@@ -11,16 +11,16 @@ When('I configure Bugsnag for {string}') do |scenario_name|
   execute_command :start_bugsnag, scenario_name
 end
 
-
 def execute_command(action, scenario_name)
-  command = { action: action, scenario_name: scenario_name, scenario_mode: $scenario_mode }
+  extra_config = $extra_config || ''
+  command = { action: action, scenario_name: scenario_name, extra_config: extra_config }
   Maze::Server.commands.add command
 
   touch_action = Appium::TouchAction.new
   touch_action.tap({:x => 100, :y => 100})
   touch_action.perform
 
-  $scenario_mode = nil
+  $extra_config = ''
   # Ensure fixture has read the command
   count = 100
   sleep 0.1 until Maze::Server.commands.remaining.empty? || (count -= 1) < 1
