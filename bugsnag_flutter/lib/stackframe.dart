@@ -14,6 +14,13 @@ class Stackframe {
           'method': frame.method
         };
 
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) || other is Stackframe && other._json == _json;
+
+  @override
+  int get hashCode => _json.hashCode;
+
   dynamic toJson() => _json;
 
   String? get type => _json['type'] as String?;
@@ -67,7 +74,7 @@ class Stackframe {
   // Required on platforms (e.g. Android) which include numeric rather than the
   // expected string values for memory addresses.
   String? _getAddress(String key) {
-    dynamic value = _json[key];
+    final value = _json[key];
     if (value is String) return value;
     if (value is int) return '0x' + value.toRadixString(16);
     return null;
