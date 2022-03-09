@@ -69,7 +69,6 @@ class _HomePageState extends State<MazeRunnerHomePage> {
   late TextEditingController _extraConfigController;
   late TextEditingController _notifyEndpointController;
   late TextEditingController _sessionEndpointController;
-  late BuildContext _context;
 
   static const platform = MethodChannel('com.bugsnag.mazeRunner/platform');
 
@@ -127,7 +126,7 @@ class _HomePageState extends State<MazeRunnerHomePage> {
       break;
 
       case 'run_scenario': {
-        _onRunScenario();
+        _onRunScenario(context);
       }
       break;
     }
@@ -146,8 +145,8 @@ class _HomePageState extends State<MazeRunnerHomePage> {
   }
 
   /// Runs a scenario, starting bugsnag first
-  void _onRunScenario() async {
-    final scenario = _initScenario();
+  void _onRunScenario(BuildContext context) async {
+    final scenario = _initScenario(context);
     if (scenario == null) {
       return;
     }
@@ -160,14 +159,14 @@ class _HomePageState extends State<MazeRunnerHomePage> {
   }
 
   /// Initializes a scenario
-  Scenario? _initScenario() {
+  Scenario? _initScenario(BuildContext context) {
     final name = _scenarioNameController.value.text;
     log('Initializing scenario: $name');
     final scenarioIndex =
         scenarios.indexWhere((element) => element.name == name);
 
     if (scenarioIndex == -1) {
-      ScaffoldMessenger.of(_context).showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text("Cannot find Scenario $name. "
               "Has it been added to scenario.dart?"),
@@ -182,8 +181,6 @@ class _HomePageState extends State<MazeRunnerHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    _context = context;
-
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -234,7 +231,7 @@ class _HomePageState extends State<MazeRunnerHomePage> {
             ),
             TextButton(
               child: const Text("Run Scenario"),
-              onPressed: () => _onRunScenario(),
+              onPressed: () => _onRunScenario(context),
               key: const Key("startScenario"),
             ),
             ListView(
