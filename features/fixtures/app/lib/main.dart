@@ -33,10 +33,13 @@ class Command {
 
   factory Command.fromJsonString(String jsonString) {
     final map = json.decode(jsonString) as Map<String, String>;
+    if (map['action'] == null) {
+      throw new Exception('MazeRunner commands must have an action');
+    }
     return Command(
-      action: map['action'],
-      scenarioName: map['scenario_name'],
-      extraConfig: map['extra_config'],
+      action: map['action']!,
+      scenarioName: map['scenario_name'] ?? '',
+      extraConfig: map['extra_config'] ?? ''
     );
   }
 }
