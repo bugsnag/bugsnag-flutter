@@ -16,7 +16,8 @@ class Stackframe {
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) || other is Stackframe && other._json == _json;
+      identical(this, other) ||
+      other is Stackframe && mapEquals(other._json, _json);
 
   @override
   int get hashCode => _json.hashCode;
