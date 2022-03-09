@@ -32,7 +32,7 @@ class Command {
   });
 
   factory Command.fromJsonString(String jsonString) {
-    final map = json.decode(jsonString);
+    final map = json.decode(jsonString) as Map<String, String>;
     return Command(
       action: map['action'],
       scenarioName: map['scenario_name'],
