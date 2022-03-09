@@ -8,7 +8,11 @@ steps:
     commands:
       - make test
 
+  #
+  # iOS
+  #
   - label: Build iOS Test Fixture
+    key: ios-fixture
     timeout_in_minutes: 20
     commands:
       - cd features/fixtures/app
@@ -17,7 +21,32 @@ steps:
       artifacts#v1.5.0:
         upload: "features/fixtures/app/build/ios/ipa/app.ipa"
 
+  - label: 'iOS 14 end-to-end tests'
+    depends_on: "ios-fixture"
+    timeout_in_minutes: 10
+    agents:
+      queue: opensource
+    plugins:
+      artifacts#v1.5.0:
+        download: "features/fixtures/app/build/ios/ipa/app.ipa"
+        upload: "maze_output/failed/**/*"
+      docker-compose#v3.7.0:
+        pull: maze-runner
+        run: maze-runner
+        command:
+          - "--app=/app/features/fixtures/app/build/ios/ipa/app.ipa"
+          - "--farm=bs"
+          - "--device=IOS_14"
+          - "--fail-fast"
+    concurrency: 9
+    concurrency_group: 'browserstack-app'
+    concurrency_method: eager
+
+  #
+  # Android
+  #
   - label: Build Android Test Fixture
+    key: android-fixture
     timeout_in_minutes: 20
     commands:
       - cd features/fixtures/app
@@ -25,3 +54,24 @@ steps:
     plugins:
       artifacts#v1.5.0:
         upload: "features/fixtures/app/build/app/outputs/flutter-apk/app-release.apk"
+
+  - label: 'Android 11 end-to-end tests'
+    depends_on: "android-fixture"
+    timeout_in_minutes: 10
+    agents:
+      queue: opensource
+    plugins:
+      artifacts#v1.5.0:
+        download: "features/fixtures/app/build/app/outputs/flutter-apk/app-release.apk"
+        upload: "maze_output/failed/**/*"
+      docker-compose#v3.7.0:
+        pull: maze-runner
+        run: maze-runner
+        command:
+          - "--app=/app/features/fixtures/app/build/app/outputs/flutter-apk/app-release.apk"
+          - "--farm=bs"
+          - "--device=ANDROID_11_0"
+          - "--fail-fast"
+    concurrency: 9
+    concurrency_group: 'browserstack-app'
+    concurrency_method: eager

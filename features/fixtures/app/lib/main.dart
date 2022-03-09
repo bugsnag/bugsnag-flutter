@@ -1,14 +1,47 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 
-import 'package:MazeRunner/channels.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
+import 'package:MazeRunner/channels.dart';
 
 import 'packages.dart';
 import 'scenarios/scenario.dart';
 import 'scenarios/scenarios.dart';
 
+void log(String message) {
+  print('[MazeRunner] $message');
+}
+
 void main() {
   runApp(const MazeRunnerFlutterApp());
+}
+
+/// Represents a MazeRunner command
+class Command {
+  final String action;
+  final String scenarioName;
+  final String extraConfig;
+
+  const Command({
+    required this.action,
+    required this.scenarioName,
+    required this.extraConfig,
+  });
+
+  factory Command.fromJsonString(String jsonString) {
+    final map = json.decode(jsonString) as Map<String, String>;
+    if (map['action'] == null) {
+      throw new Exception('MazeRunner commands must have an action');
+    }
+    return Command(
+      action: map['action']!,
+      scenarioName: map['scenario_name'] ?? '',
+      extraConfig: map['extra_config'] ?? ''
+    );
+  }
 }
 
 class MazeRunnerFlutterApp extends StatelessWidget {
@@ -39,6 +72,8 @@ class _HomePageState extends State<MazeRunnerHomePage> {
   late TextEditingController _extraConfigController;
   late TextEditingController _notifyEndpointController;
   late TextEditingController _sessionEndpointController;
+
+  static const platform = MethodChannel('com.bugsnag.mazeRunner/platform');
 
   List<String> _packages = const [];
 
@@ -77,7 +112,32 @@ class _HomePageState extends State<MazeRunnerHomePage> {
     super.dispose();
   }
 
+  /// Fetches the next command
+  void _onRunCommand(BuildContext context) async {
+    log('Fetching the next command');
+    final commandStr = await MazeRunnerChannels.getCommand();
+    log('The command is: ${commandStr}');
+
+    final command = Command.fromJsonString(commandStr);
+    _scenarioNameController.text = command.scenarioName;
+    _extraConfigController.text = command.extraConfig;
+
+    switch(command.action) {
+      case 'start_bugsnag': {
+        _onStartBugsnag();
+      }
+      break;
+
+      case 'run_scenario': {
+        _onRunScenario(context);
+      }
+      break;
+    }
+  }
+
+  /// Starts Bugsnag
   Future<void> _onStartBugsnag() async {
+    log('Starting Bugsnag');
     final notifyEndpoint = _notifyEndpointController.value.text;
     final sessionEndpoint = _sessionEndpointController.value.text;
 
@@ -87,7 +147,8 @@ class _HomePageState extends State<MazeRunnerHomePage> {
     );
   }
 
-  void _onStartScenario(BuildContext context) async {
+  /// Runs a scenario, starting bugsnag first
+  void _onRunScenario(BuildContext context) async {
     final scenario = _initScenario(context);
     if (scenario == null) {
       return;
@@ -96,11 +157,14 @@ class _HomePageState extends State<MazeRunnerHomePage> {
     final extraConfig = _extraConfigController.value.text;
     scenario.extraConfig = extraConfig;
     scenario.startBugsnag = _onStartBugsnag;
+    log('Running scenario');
     await scenario.run();
   }
 
+  /// Initializes a scenario
   Scenario? _initScenario(BuildContext context) {
     final name = _scenarioNameController.value.text;
+    log('Initializing scenario: $name');
     final scenarioIndex =
         scenarios.indexWhere((element) => element.name == name);
 
@@ -108,7 +172,7 @@ class _HomePageState extends State<MazeRunnerHomePage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text("Cannot find Scenario $name. "
-              "Has is been added to scenario.dart?"),
+              "Has it been added to scenario.dart?"),
         ),
       );
 
@@ -121,14 +185,20 @@ class _HomePageState extends State<MazeRunnerHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Bugsnag Test Fixture'),
-      ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
+            Container(
+              height: 400.0,
+              width: double.infinity,
+              child: TextButton(
+                child: const Text("Run Command"),
+                onPressed: () => _onRunCommand(context),
+                key: const Key("runCommand"),
+              )
+            ),
             TextField(
               controller: _scenarioNameController,
               key: const Key("scenarioName"),
@@ -158,14 +228,14 @@ class _HomePageState extends State<MazeRunnerHomePage> {
               ),
             ),
             TextButton(
-              child: const Text("Start Scenario"),
-              onPressed: () => _onStartScenario(context),
-              key: const Key("startScenario"),
-            ),
-            TextButton(
               child: const Text("Start Bugsnag"),
               onPressed: _onStartBugsnag,
               key: const Key("startBugsnag"),
+            ),
+            TextButton(
+              child: const Text("Run Scenario"),
+              onPressed: () => _onRunScenario(context),
+              key: const Key("startScenario"),
             ),
             ListView(
               children: _packages.map((e) => Text("package: $e")).toList(),

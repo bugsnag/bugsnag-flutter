@@ -16,6 +16,17 @@ import com.bugsnag.flutter.test.app.scenario.Scenario;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import java.lang.Thread;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
+
 public class MazeRunnerMethodCallHandler implements MethodChannel.MethodCallHandler {
     public static final String TAG = "MazeRunner";
     private final Handler scenarioRunner = new Handler(Looper.getMainLooper());
@@ -27,7 +38,14 @@ public class MazeRunnerMethodCallHandler implements MethodChannel.MethodCallHand
 
     @Override
     public void onMethodCall(@NonNull MethodCall call, @NonNull MethodChannel.Result result) {
-        if (call.method.equals("runScenario")) {
+        if (call.method.equals("getCommand")) {
+            Thread thread = new Thread(){
+                public void run(){
+                    getCommand(call, result);
+                }
+            };
+            thread.start();
+        } else if (call.method.equals("runScenario")) {
             runScenario(call, result);
         } else if (call.method.equals("startBugsnag")) {
             Configuration config = Configuration.load(context);
@@ -42,6 +60,26 @@ public class MazeRunnerMethodCallHandler implements MethodChannel.MethodCallHand
             result.success(null);
         } else {
             result.notImplemented();
+        }
+    }
+
+    private void getCommand(@NonNull MethodCall call, @NonNull MethodChannel.Result result) {
+
+        // TODO Pass URL in
+        String commandUrl = "http://bs-local.com:9339/command";
+        try {
+            URL url = new URL(commandUrl);
+            StringBuilder sb = new StringBuilder();
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            for (String line; (line = reader.readLine()) != null; ) {
+                sb.append(line);
+            }
+            result.success(sb.toString());
+        } catch (Exception e) {
+            result.error(e.getClass().getSimpleName(), e.getMessage(), commandUrl);
         }
     }
 

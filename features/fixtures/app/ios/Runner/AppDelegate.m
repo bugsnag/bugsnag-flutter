@@ -16,7 +16,7 @@
     FlutterMethodChannel* nativeChannel = [FlutterMethodChannel methodChannelWithName:@"com.bugsnag.mazeRunner/platform"
               binaryMessenger:controller.engine.binaryMessenger
     ];
-    
+
     [nativeChannel setMethodCallHandler:^(FlutterMethodCall *call, FlutterResult result) {
         [self onMethod :call :result];
     }];
@@ -27,7 +27,9 @@
 -(void)onMethod:(FlutterMethodCall*) call
                :(FlutterResult) result {
     
-    if([@"runScenario" isEqualToString:call.method]) {
+    if([@"getCommand" isEqualToString:call.method]) {
+        result([self getCommand]);
+    } else if([@"runScenario" isEqualToString:call.method]) {
         NSString *scenarioName = call.arguments[@"scenarioName"];
         NSString *extraConfig = call.arguments[@"extraConfig"];
         Scenario *targetScenario = [Scenario createScenarioNamed:scenarioName];
@@ -46,6 +48,15 @@
         [Bugsnag start];
         result(nil);
     }
+}
+
+
+-(NSString *)getCommand {
+    NSURL *url = [NSURL URLWithString:@"http://bs-local.com:9339/command"];
+    NSData *data = [NSData dataWithContentsOfURL:url];
+    NSString *ret = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+
+    return ret;
 }
 
 @end
