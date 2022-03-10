@@ -74,6 +74,7 @@ class MazeRunnerHomePage extends StatefulWidget {
 class _HomePageState extends State<MazeRunnerHomePage> {
   late TextEditingController _scenarioNameController;
   late TextEditingController _extraConfigController;
+  late TextEditingController _commandEndpointController;
   late TextEditingController _notifyEndpointController;
   late TextEditingController _sessionEndpointController;
 
@@ -86,6 +87,12 @@ class _HomePageState extends State<MazeRunnerHomePage> {
     super.initState();
     _scenarioNameController = TextEditingController();
     _extraConfigController = TextEditingController();
+    _commandEndpointController = TextEditingController(
+      text: const String.fromEnvironment(
+        'bsg.endpoint.command',
+        defaultValue: 'http://bs-local.com:9339/command',
+      ),
+    );
     _notifyEndpointController = TextEditingController(
       text: const String.fromEnvironment(
         'bsg.endpoint.notify',
@@ -110,6 +117,7 @@ class _HomePageState extends State<MazeRunnerHomePage> {
   void dispose() {
     _scenarioNameController.dispose();
     _extraConfigController.dispose();
+    _commandEndpointController.dispose();
     _notifyEndpointController.dispose();
     _sessionEndpointController.dispose();
 
@@ -119,7 +127,8 @@ class _HomePageState extends State<MazeRunnerHomePage> {
   /// Fetches the next command
   void _onRunCommand(BuildContext context) async {
     log('Fetching the next command');
-    final commandStr = await MazeRunnerChannels.getCommand();
+    final commandUrl = _commandEndpointController.value.text;
+    final commandStr = await MazeRunnerChannels.getCommand(commandUrl);
     log('The command is: $commandStr');
 
     final command = Command.fromJsonString(commandStr);
@@ -217,6 +226,13 @@ class _HomePageState extends State<MazeRunnerHomePage> {
                 key: const Key("extraConfig"),
                 decoration: const InputDecoration(
                   label: Text("Extra Config"),
+                ),
+              ),
+              TextField(
+                controller: _commandEndpointController,
+                key: const Key("commandEndpoint"),
+                decoration: const InputDecoration(
+                  label: Text("Command Endpoint"),
                 ),
               ),
               TextField(
