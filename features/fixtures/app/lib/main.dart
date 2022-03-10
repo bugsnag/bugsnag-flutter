@@ -1,11 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
+import 'package:MazeRunner/channels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:http/http.dart' as http;
-import 'package:MazeRunner/channels.dart';
 
 import 'packages.dart';
 import 'scenarios/scenario.dart';
@@ -17,6 +15,13 @@ void log(String message) {
 
 void main() {
   runApp(const MazeRunnerFlutterApp());
+}
+
+extension StringGet<K, V> on Map<K, V> {
+  String? string(K key) {
+    final value = this[key];
+    return value is String ? value : null;
+  }
 }
 
 /// Represents a MazeRunner command
@@ -32,15 +37,14 @@ class Command {
   });
 
   factory Command.fromJsonString(String jsonString) {
-    final map = json.decode(jsonString) as Map<String, String>;
-    if (map['action'] == null) {
-      throw new Exception('MazeRunner commands must have an action');
+    final map = json.decode(jsonString) as Map<String, dynamic>;
+    if (map.string('action') == null) {
+      throw Exception('MazeRunner commands must have an action');
     }
     return Command(
-      action: map['action']!,
-      scenarioName: map['scenario_name'] ?? '',
-      extraConfig: map['extra_config'] ?? ''
-    );
+        action: map.string('action')!,
+        scenarioName: map.string('scenario_name') ?? '',
+        extraConfig: map.string('extra_config') ?? '');
   }
 }
 
@@ -116,22 +120,24 @@ class _HomePageState extends State<MazeRunnerHomePage> {
   void _onRunCommand(BuildContext context) async {
     log('Fetching the next command');
     final commandStr = await MazeRunnerChannels.getCommand();
-    log('The command is: ${commandStr}');
+    log('The command is: $commandStr');
 
     final command = Command.fromJsonString(commandStr);
     _scenarioNameController.text = command.scenarioName;
     _extraConfigController.text = command.extraConfig;
 
-    switch(command.action) {
-      case 'start_bugsnag': {
-        _onStartBugsnag();
-      }
-      break;
+    switch (command.action) {
+      case 'start_bugsnag':
+        {
+          _onStartBugsnag();
+        }
+        break;
 
-      case 'run_scenario': {
-        _onRunScenario(context);
-      }
-      break;
+      case 'run_scenario':
+        {
+          _onRunScenario(context);
+        }
+        break;
     }
   }
 
@@ -185,62 +191,63 @@ class _HomePageState extends State<MazeRunnerHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Container(
-              height: 400.0,
-              width: double.infinity,
-              child: TextButton(
-                child: const Text("Run Command"),
-                onPressed: () => _onRunCommand(context),
-                key: const Key("runCommand"),
-              )
-            ),
-            TextField(
-              controller: _scenarioNameController,
-              key: const Key("scenarioName"),
-              decoration: const InputDecoration(
-                label: Text("Scenario Name"),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                  height: 400.0,
+                  width: double.infinity,
+                  child: TextButton(
+                    child: const Text("Run Command"),
+                    onPressed: () => _onRunCommand(context),
+                    key: const Key("runCommand"),
+                  )),
+              TextField(
+                controller: _scenarioNameController,
+                key: const Key("scenarioName"),
+                decoration: const InputDecoration(
+                  label: Text("Scenario Name"),
+                ),
               ),
-            ),
-            TextField(
-              controller: _extraConfigController,
-              key: const Key("extraConfig"),
-              decoration: const InputDecoration(
-                label: Text("Extra Config"),
+              TextField(
+                controller: _extraConfigController,
+                key: const Key("extraConfig"),
+                decoration: const InputDecoration(
+                  label: Text("Extra Config"),
+                ),
               ),
-            ),
-            TextField(
-              controller: _notifyEndpointController,
-              key: const Key("notifyEndpoint"),
-              decoration: const InputDecoration(
-                label: Text("Notify Endpoint"),
+              TextField(
+                controller: _notifyEndpointController,
+                key: const Key("notifyEndpoint"),
+                decoration: const InputDecoration(
+                  label: Text("Notify Endpoint"),
+                ),
               ),
-            ),
-            TextField(
-              controller: _sessionEndpointController,
-              key: const Key("sessionEndpoint"),
-              decoration: const InputDecoration(
-                label: Text("Session Endpoint"),
+              TextField(
+                controller: _sessionEndpointController,
+                key: const Key("sessionEndpoint"),
+                decoration: const InputDecoration(
+                  label: Text("Session Endpoint"),
+                ),
               ),
-            ),
-            TextButton(
-              child: const Text("Start Bugsnag"),
-              onPressed: _onStartBugsnag,
-              key: const Key("startBugsnag"),
-            ),
-            TextButton(
-              child: const Text("Run Scenario"),
-              onPressed: () => _onRunScenario(context),
-              key: const Key("startScenario"),
-            ),
-            ListView(
-              children: _packages.map((e) => Text("package: $e")).toList(),
-            ),
-          ],
+              TextButton(
+                child: const Text("Start Bugsnag"),
+                onPressed: _onStartBugsnag,
+                key: const Key("startBugsnag"),
+              ),
+              TextButton(
+                child: const Text("Run Scenario"),
+                onPressed: () => _onRunScenario(context),
+                key: const Key("startScenario"),
+              ),
+              ListView(
+                children: _packages.map((e) => Text("package: $e")).toList(),
+              ),
+            ],
+          ),
         ),
       ),
     );
