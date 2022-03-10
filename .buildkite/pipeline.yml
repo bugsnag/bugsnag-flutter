@@ -15,8 +15,7 @@ steps:
     key: ios-fixture
     timeout_in_minutes: 20
     commands:
-      - cd features/fixtures/app
-      - flutter build ipa --export-options-plist=ios/exportOptions.plist
+      - features/scripts/build_ios_app.sh
     plugins:
       artifacts#v1.5.0:
         upload: "features/fixtures/app/build/ios/ipa/app.ipa"
@@ -49,8 +48,7 @@ steps:
     key: android-fixture
     timeout_in_minutes: 20
     commands:
-      - cd features/fixtures/app
-      - flutter build apk
+      - features/scripts/build_android_app.sh
     plugins:
       artifacts#v1.5.0:
         upload: "features/fixtures/app/build/app/outputs/flutter-apk/app-release.apk"
