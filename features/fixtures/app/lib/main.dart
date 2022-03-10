@@ -38,7 +38,7 @@ class Command {
 
   factory Command.fromJsonString(String jsonString) {
     final map = json.decode(jsonString) as Map<String, dynamic>;
-    if (map.string('action') == null) {
+    if (!map.containsKey('action')) {
       throw Exception('MazeRunner commands must have an action');
     }
     return Command(
