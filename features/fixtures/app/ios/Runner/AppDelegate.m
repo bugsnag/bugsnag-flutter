@@ -45,7 +45,18 @@
             });
         }
     } else if([@"startBugsnag" isEqualToString:call.method]) {
-        [Bugsnag start];
+        BugsnagConfiguration *config = [BugsnagConfiguration loadConfig];
+        config.apiKey = @"abc12312312312312312312312312312";
+        
+        NSString *notifyEndpoint = call.arguments[@"notifyEndpoint"];
+        NSString *sessionEndpoint = call.arguments[@"sessionEndpoint"];
+        
+        if(notifyEndpoint != nil && sessionEndpoint != nil) {
+            config.endpoints = [[BugsnagEndpointConfiguration alloc] initWithNotify:notifyEndpoint
+                                                                           sessions:sessionEndpoint];
+        }
+        
+        [Bugsnag startWithConfiguration:config];
         result(nil);
     }
 }

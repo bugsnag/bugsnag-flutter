@@ -1,0 +1,1 @@
+-keep class com.bugsnag.flutter.test.app.scenario.** {*;}
