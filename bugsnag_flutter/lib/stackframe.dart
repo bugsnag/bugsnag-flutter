@@ -1,28 +1,20 @@
+library bugsnag;
+
 import 'package:flutter/foundation.dart';
 
-class Stackframe {
-  final Map<String, Object?> _json;
+part 'json_object.dart';
 
-  Stackframe.fromJson(Map<String, Object?> json) : _json = json;
+class Stackframe extends JsonObject {
+  Stackframe.fromJson(Map<String, Object?> json) : super.fromJson(json);
 
   Stackframe.fromStackFrame(StackFrame frame)
-      : _json = {
+      : super.fromJson({
           'type': 'flutter',
           'file': frame.packagePath,
           'lineNumber': frame.line,
           'columnNumber': frame.column,
           'method': frame.method
-        };
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is Stackframe && mapEquals(other._json, _json);
-
-  @override
-  int get hashCode => _json.hashCode;
-
-  dynamic toJson() => _json;
+        });
 
   String? get type => _json['type'] as String?;
   set type(String? value) => _json['type'] = value;
