@@ -17,6 +17,10 @@ example:
 test:
 	cd bugsnag_flutter && flutter test -r expanded --suppress-analytics
 
+test-fixtures: ## Build the end-to-end test fixtures
+	@./features/scripts/build_ios_app.sh
+	@./features/scripts/build_android_app.sh
+
 lint: aar
 	cd bugsnag_flutter && flutter analyze --suppress-analytics
 	cd bugsnag_flutter/android && ./gradlew \

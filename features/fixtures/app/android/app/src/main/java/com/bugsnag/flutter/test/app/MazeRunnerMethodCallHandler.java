@@ -64,9 +64,7 @@ public class MazeRunnerMethodCallHandler implements MethodChannel.MethodCallHand
     }
 
     private void getCommand(@NonNull MethodCall call, @NonNull MethodChannel.Result result) {
-
-        // TODO Pass URL in
-        String commandUrl = "http://bs-local.com:9339/command";
+        String commandUrl = call.argument("commandUrl");
         try {
             URL url = new URL(commandUrl);
             StringBuilder sb = new StringBuilder();

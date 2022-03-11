@@ -1,0 +1,4 @@
+.DS_Store
+Package.resolved
+Podfile.lock
+maze_output/
