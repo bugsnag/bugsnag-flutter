@@ -2,9 +2,9 @@ library bugsnag;
 
 import 'package:flutter/foundation.dart';
 
-part 'json_object.dart';
+part '_json_object.dart';
 
-class Device extends JsonObject {
+class Device extends _JsonObject {
   Device() : super();
 
   Device.fromJson(Map<String, Object?> json) : super.fromJson(json);

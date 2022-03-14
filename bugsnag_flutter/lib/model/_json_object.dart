@@ -1,16 +1,16 @@
 part of bugsnag;
 
-class JsonObject {
+class _JsonObject {
   final Map<String, Object?> _json;
 
-  JsonObject() : _json = {};
+  _JsonObject() : _json = {};
 
-  JsonObject.fromJson(Map<String, Object?> json) : _json = json;
+  _JsonObject.fromJson(Map<String, Object?> json) : _json = json;
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is JsonObject && mapEquals(other._json, _json);
+      other is _JsonObject && mapEquals(other._json, _json);
 
   @override
   int get hashCode => _json.hashCode;

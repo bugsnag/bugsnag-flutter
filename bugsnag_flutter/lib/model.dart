@@ -1,6 +1,6 @@
-export 'model/app.dart' hide JsonObject;
+export 'model/app.dart';
 export 'model/context.dart';
-export 'model/device.dart' hide JsonObject;
+export 'model/device.dart';
 export 'model/event.dart';
 export 'model/metadata.dart';
-export 'model/stackframe.dart' hide JsonObject;
+export 'model/stackframe.dart';

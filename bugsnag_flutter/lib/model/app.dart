@@ -2,9 +2,9 @@ library bugsnag;
 
 import 'package:flutter/foundation.dart' show mapEquals;
 
-part 'json_object.dart';
+part '_json_object.dart';
 
-class App extends JsonObject {
+class App extends _JsonObject {
   App() : super();
 
   App.fromJson(Map<String, Object?> json) : super.fromJson(json);

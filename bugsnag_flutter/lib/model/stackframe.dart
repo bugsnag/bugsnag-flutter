@@ -2,9 +2,9 @@ library bugsnag;
 
 import 'package:flutter/foundation.dart' show mapEquals, StackFrame;
 
-part 'json_object.dart';
+part '_json_object.dart';
 
-class Stackframe extends JsonObject {
+class Stackframe extends _JsonObject {
   Stackframe.fromJson(Map<String, Object?> json) : super.fromJson(json);
 
   Stackframe.fromStackFrame(StackFrame frame)
