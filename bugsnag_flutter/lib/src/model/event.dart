@@ -1,3 +1,5 @@
+part of model;
+
 enum ErrorType {
   android,
   c,

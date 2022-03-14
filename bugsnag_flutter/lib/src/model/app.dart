@@ -1,8 +1,4 @@
-library bugsnag;
-
-import 'package:flutter/foundation.dart' show mapEquals;
-
-part '_json_object.dart';
+part of model;
 
 class App extends _JsonObject {
   App() : super();

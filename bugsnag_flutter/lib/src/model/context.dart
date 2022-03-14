@@ -1,3 +1,5 @@
+part of model;
+
 /// Information about the current user of your application.
 class User {
   final String? id;
@@ -9,11 +11,11 @@ class User {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is User &&
-          runtimeType == other.runtimeType &&
-          id == other.id &&
-          email == other.email &&
-          name == other.name;
+          other is User &&
+              runtimeType == other.runtimeType &&
+              id == other.id &&
+              email == other.email &&
+              name == other.name;
 
   @override
   int get hashCode => id.hashCode ^ email.hashCode ^ name.hashCode;
@@ -22,16 +24,16 @@ class User {
   String toString() => 'User{id: $id, email: $email, name: $name}';
 
   dynamic toJson() => {
-        'id': id,
-        'email': email,
-        'name': name,
-      };
+    'id': id,
+    'email': email,
+    'name': name,
+  };
 
   static User fromJson(Map<String, Object?> json) => User(
-        id: json['id'] as String?,
-        email: json['email'] as String?,
-        name: json['name'] as String?,
-      );
+    id: json['id'] as String?,
+    email: json['email'] as String?,
+    name: json['name'] as String?,
+  );
 }
 
 class FeatureFlag {
@@ -41,9 +43,9 @@ class FeatureFlag {
   const FeatureFlag(this.name, [this.variant]);
 
   dynamic toJson() => {
-        'featureFlag': name,
-        if (variant != null) 'variant': variant,
-      };
+    'featureFlag': name,
+    if (variant != null) 'variant': variant,
+  };
 
   @override
   String toString() => "FeatureFlag{name: $name, variant: $variant}";
@@ -51,10 +53,10 @@ class FeatureFlag {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is FeatureFlag &&
-          runtimeType == other.runtimeType &&
-          name == other.name &&
-          variant == other.variant;
+          other is FeatureFlag &&
+              runtimeType == other.runtimeType &&
+              name == other.name &&
+              variant == other.variant;
 
   @override
   int get hashCode => name.hashCode ^ variant.hashCode;

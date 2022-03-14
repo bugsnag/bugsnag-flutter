@@ -1,3 +1,5 @@
+part of model;
+
 typedef MetadataSection = Map<String, Object>;
 typedef MetadataMap = Map<String, MetadataSection>;
 

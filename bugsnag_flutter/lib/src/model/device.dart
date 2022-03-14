@@ -1,8 +1,4 @@
-library bugsnag;
-
-import 'package:flutter/foundation.dart';
-
-part '_json_object.dart';
+part of model;
 
 class Device extends _JsonObject {
   Device() : super();

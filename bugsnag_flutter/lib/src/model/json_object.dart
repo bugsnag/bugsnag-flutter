@@ -1,4 +1,4 @@
-part of bugsnag;
+part of model;
 
 class _JsonObject {
   final Map<String, Object?> _json;
