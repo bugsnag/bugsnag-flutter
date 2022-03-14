@@ -7,10 +7,13 @@
 - (NSDictionary *)getUser:(NSDictionary *)json;
 - (void)setContext:(NSDictionary *)json;
 - (NSString *)getContext:(NSDictionary *)json;
-- (void)attach:(NSDictionary *)json;
+- (void)addFeatureFlags:(NSDictionary *)json;
+- (NSNumber *)attach:(NSDictionary *)json;
 
 @end
 
 @interface BugsnagFlutterPlugin : NSObject<FlutterPlugin, BugsnagFlutterProtocol>
+
+@property (nonatomic, getter=isAttached) BOOL attached;
 
 @end

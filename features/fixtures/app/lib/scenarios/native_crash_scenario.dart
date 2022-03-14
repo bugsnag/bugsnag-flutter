@@ -6,6 +6,6 @@ class NativeCrashScenario extends Scenario {
   @override
   Future<void> run() async {
     await startBugsnag();
-    await MazeRunnerChannels.runScenario("NativeCrashScenario");
+    await MazeRunnerChannels.runScenario('NativeCrashScenario');
   }
 }
