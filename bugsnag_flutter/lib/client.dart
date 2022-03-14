@@ -1,8 +1,9 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:bugsnag_flutter/context.dart';
 import 'package:flutter/services.dart';
+
+import 'model.dart';
 
 abstract class Client {
   Future<void> setUser({String? id, String? name, String? email});

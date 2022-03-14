@@ -1,3 +1,3 @@
 export 'client.dart';
-export 'context.dart';
-export 'event.dart';
+export 'model/context.dart';
+export 'model/event.dart';

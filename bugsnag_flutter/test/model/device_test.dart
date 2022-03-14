@@ -1,4 +1,4 @@
-import 'package:bugsnag_flutter/device.dart';
+import 'package:bugsnag_flutter/model/device.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

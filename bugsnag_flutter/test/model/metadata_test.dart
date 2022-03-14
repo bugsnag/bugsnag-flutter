@@ -1,4 +1,4 @@
-import 'package:bugsnag_flutter/metadata.dart';
+import 'package:bugsnag_flutter/model/metadata.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 

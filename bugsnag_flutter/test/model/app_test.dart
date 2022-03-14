@@ -1,4 +1,4 @@
-import 'package:bugsnag_flutter/app.dart';
+import 'package:bugsnag_flutter/model/app.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
