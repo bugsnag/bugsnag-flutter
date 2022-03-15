@@ -1,12 +1,13 @@
+part of model;
+
 typedef MetadataSection = Map<String, Object>;
 typedef MetadataMap = Map<String, MetadataSection>;
 
 class Metadata {
-  
   final MetadataMap _map;
 
-  Metadata([MetadataMap map = const {}]):
-    _map = map.map((key, val) => MapEntry(key, sanitizedMap(val)));
+  Metadata([MetadataMap map = const {}])
+      : _map = map.map((key, val) => MapEntry(key, sanitizedMap(val)));
 
   void addMetadata(String section, MetadataSection metadata) {
     _map.putIfAbsent(section, () => {}).addAll(sanitizedMap(metadata));
