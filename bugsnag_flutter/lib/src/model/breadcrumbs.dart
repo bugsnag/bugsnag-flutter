@@ -1,39 +1,34 @@
 part of model;
 
-class Breadcrumb extends _JsonObject {
+class Breadcrumb {
+  String message;
+  BreadcrumbType type;
+  MetadataSection? metadata;
+
+  DateTime _timestamp;
+
+  DateTime get timestamp => _timestamp;
+
   Breadcrumb(
-    String message, {
-    BreadcrumbType type = BreadcrumbType.user,
-    MetadataSection? metadata,
-  }) : super.fromJson({
-          'message': message,
-          'timestamp': DateTime.now().toIso8601String(),
-          'type': type.name,
-          if (metadata != null) 'metaData': Metadata.sanitizedMap(metadata),
-        });
+    this.message, {
+    this.type = BreadcrumbType.user,
+    this.metadata,
+  }) : _timestamp = DateTime.now();
 
-  Breadcrumb.fromJson(Map<String, dynamic> json) : super.fromJson(json);
+  Breadcrumb.fromJson(Map<String, dynamic> json)
+      : message = json.safeGet('name'),
+        _timestamp = DateTime.parse(json['timestamp'] as String),
+        type = BreadcrumbType.values.byName(json['type'] as String),
+        metadata = json
+            .safeGet<Map>('metaData')
+            ?.let((map) => Metadata.sanitizedMap(map.cast()));
 
-  String get message => _json['message'] as String;
-
-  set message(String message) => _json['message'] = message;
-
-  DateTime get timestamp => DateTime.parse(_json['timestamp'] as String);
-
-  BreadcrumbType get type =>
-      BreadcrumbType.values.byName(_json['type'] as String);
-
-  set type(BreadcrumbType type) => _json['type'] = type.name;
-
-  MetadataSection? get metadata => _json['metaData'] as MetadataSection?;
-
-  set metadata(MetadataSection? metadata) {
-    if (metadata != null) {
-      _json['metaData'] = Metadata.sanitizedMap(metadata);
-    } else {
-      _json.remove('metaData');
-    }
-  }
+  dynamic toJson() => {
+        'name': message,
+        'type': type.name,
+        'timestamp': _timestamp.toIso8601String(),
+        if (metadata != null) 'metaData': metadata,
+      };
 }
 
 enum BreadcrumbType {

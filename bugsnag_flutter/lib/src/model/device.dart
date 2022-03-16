@@ -1,76 +1,69 @@
 part of model;
 
-class Device extends _JsonObject {
-  Device() : super();
+class Device {
+  List<String>? cpuAbi;
+  String? id;
+  bool? jailbroken;
+  String? locale;
+  String? manufacturer;
+  String? modelNumber;
+  String? model;
+  String? osName;
+  String? osVersion;
 
-  Device.fromJson(Map<String, Object?> json) : super.fromJson(json);
+  Map<String, String>? runtimeVersions;
+  int? totalMemory;
 
-  List<String>? get cpuAbi => _json['cpuAbi'] as List<String>?;
+  Device.fromJson(Map<String, Object?> json)
+      : cpuAbi = json.safeGet('cpuAbi'),
+        id = json.safeGet('id'),
+        jailbroken = json.safeGet('jailbroken'),
+        locale = json.safeGet('locale'),
+        manufacturer = json.safeGet('manufacturer'),
+        modelNumber = json.safeGet('modelNumber'),
+        model = json.safeGet('model'),
+        osName = json.safeGet('osName'),
+        osVersion = json.safeGet('osVersion'),
+        runtimeVersions = json
+            .safeGet<Map>('runtimeVersions')
+            ?.map((key, value) => MapEntry(key as String, value as String)),
+        totalMemory = json.safeGet<num>('totalMemory')?.toInt();
 
-  set cpuAbi(List<String>? value) => _json['cpuAbi'] = value;
-
-  String? get id => _json['id'] as String?;
-
-  set id(String? value) => _json['id'] = value;
-
-  bool? get jailbroken => _json['jailbroken'] as bool?;
-
-  set jailbroken(bool? value) => _json['jailbroken'] = value;
-
-  String? get locale => _json['locale'] as String?;
-
-  set locale(String? value) => _json['locale'] = value;
-
-  String? get manufacturer => _json['manufacturer'] as String?;
-
-  set manufacturer(String? value) => _json['manufacturer'] = value;
-
-  String? get modelNumber => _json['modelNumber'] as String?;
-
-  set modelNumber(String? value) => _json['modelNumber'] = value;
-
-  String? get model => _json['model'] as String?;
-
-  set model(String? value) => _json['model'] = value;
-
-  String? get osName => _json['osName'] as String?;
-
-  set osName(String? value) => _json['osName'] = value;
-
-  String? get osVersion => _json['osVersion'] as String?;
-
-  set osVersion(String? value) => _json['osVersion'] = value;
-
-  Map<String, String>? get runtimeVersions =>
-      _json['runtimeVersions'] as Map<String, String>?;
-
-  set runtimeVersions(Map<String, String>? value) =>
-      _json['runtimeVersions'] = value;
-
-  int? get totalMemory => _json['totalMemory'] as int?;
-
-  set totalMemory(int? value) => _json['totalMemory'] = value;
+  dynamic toJson() => {
+        if (cpuAbi != null) 'cpuAbi': cpuAbi,
+        if (id != null) 'id': id,
+        if (jailbroken != null) 'jailbroken': jailbroken,
+        if (locale != null) 'locale': locale,
+        if (manufacturer != null) 'manufacturer': manufacturer,
+        if (modelNumber != null) 'modelNumber': modelNumber,
+        if (model != null) 'model': model,
+        if (osName != null) 'osName': osName,
+        if (osVersion != null) 'osVersion': osVersion,
+        if (runtimeVersions != null) 'runtimeVersions': runtimeVersions,
+        if (totalMemory != null) 'totalMemory': totalMemory,
+      };
 }
 
 class DeviceWithState extends Device {
-  DeviceWithState.fromJson(Map<String, Object?> json) : super.fromJson(json);
+  int? freeDisk;
+  int? freeMemory;
+  String? orientation;
+  DateTime? time;
 
-  int? get freeDisk => _json['freeDisk'] as int?;
+  DeviceWithState.fromJson(Map<String, Object?> json)
+      : freeDisk = json.safeGet<num>('freeDisk')?.toInt(),
+        freeMemory = json.safeGet<num>('freeMemory')?.toInt(),
+        orientation = json.safeGet('orientation'),
+        time = json.safeGet<String>('time')?.let(DateTime.parse),
+        super.fromJson(json);
 
-  set freeDisk(int? value) => _json['freeDisk'] = value;
-
-  int? get freeMemory => _json['freeMemory'] as int?;
-
-  set freeMemory(int? value) => _json['freeMemory'] = value;
-
-  String? get orientation => _json['orientation'] as String?;
-
-  set orientation(String? value) => _json['orientation'] = value;
-
-  DateTime? get time {
-    Object? value = _json['time'];
-    return value is String ? DateTime.parse(value) : null;
-  }
-
-  set time(DateTime? value) => _json['time'] = value?.toIso8601String();
+  @override
+  dynamic toJson() => {
+        for (final entry in (super.toJson() as Map<String, dynamic>).entries)
+          entry.key: entry.value,
+        if (freeDisk != null) 'freeDisk': freeDisk,
+        if (freeMemory != null) 'freeMemory': freeMemory,
+        if (orientation != null) 'orientation': orientation,
+        if (time != null) 'time': time!.toIso8601String(),
+      };
 }

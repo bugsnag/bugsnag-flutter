@@ -13,7 +13,7 @@ class Event {
   _SeverityReason _severityReason;
   List<String> _projectPackages;
   User user;
-  Session? session;
+  _Session? _session;
 
   DeviceWithState device;
   AppWithState app;
@@ -24,18 +24,18 @@ class Event {
   Event.fromJson(Map<String, dynamic> json)
       : apiKey = json['apiKey'] as String?,
         errors = (json['exceptions'] as List?)
-                ?.cast<Map<String, dynamic>>()
-                .map(Error.fromJson)
+                ?.cast<Map>()
+                .map((m) => Error.fromJson(m.cast()))
                 .toList(growable: true) ??
             [],
         threads = (json['threads'] as List?)
-                ?.cast<Map<String, dynamic>>()
-                .map(Thread.fromJson)
+                ?.cast<Map>()
+                .map((m) => Thread.fromJson(m.cast()))
                 .toList(growable: true) ??
             [],
         breadcrumbs = (json['breadcrumbs'] as List?)
-                ?.cast<Map<String, dynamic>>()
-                .map(Breadcrumb.fromJson)
+                ?.cast<Map>()
+                .map((m) => Breadcrumb.fromJson(m.cast()))
                 .toList(growable: true) ??
             [],
         context = json['context'] as String?,
@@ -48,14 +48,17 @@ class Event {
             (json['projectPackages'] as List?)?.toList(growable: true).cast() ??
                 [],
         user = User.fromJson(json['user']),
-        session = json
-            .safeGet<Map<String, dynamic>>('session')
-            ?.let((session) => Session.fromJson(session)),
+        _session = json
+            .safeGet<Map>('session')
+            ?.let((session) => _Session.fromJson(session.cast())),
         device = DeviceWithState.fromJson(json['device']),
         app = AppWithState.fromJson(json['app']),
         featureFlags = FeatureFlags.fromJson(
             json['featureFlags'].cast<Map<String, dynamic>>()),
-        metadata = Metadata.fromJson(json['metaData'] as Map<String, dynamic>);
+        metadata = json
+                .safeGet<Map>('metaData')
+                ?.let((m) => Metadata.fromJson(m.cast())) ??
+            Metadata();
 
   dynamic toJson() {
     if (unhandled != _originalUnhandled) {
@@ -74,66 +77,54 @@ class Event {
       'severityReason': _severityReason,
       'projectPackages': _projectPackages,
       'user': user,
-      if (session != null) 'session': session,
+      if (_session != null) 'session': _session,
       'device': device,
       'app': app,
       'featureFlags': featureFlags,
       'metaData': metadata,
     };
   }
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is Event &&
-          runtimeType == other.runtimeType &&
-          apiKey == other.apiKey &&
-          errors.deepEquals(other.errors) &&
-          threads.deepEquals(other.threads) &&
-          breadcrumbs.deepEquals(other.breadcrumbs) &&
-          context == other.context &&
-          groupingHash == other.groupingHash &&
-          unhandled == other.unhandled &&
-          _severityReason == other._severityReason &&
-          _projectPackages.deepEquals(other._projectPackages) &&
-          user == other.user &&
-          session == other.session &&
-          device == other.device &&
-          app == other.app &&
-          featureFlags == other.featureFlags &&
-          metadata == other.metadata;
-
-  @override
-  int get hashCode => Object.hash(
-        apiKey.hashCode,
-        errors.hashCode,
-        threads.hashCode,
-        breadcrumbs.hashCode,
-        context.hashCode,
-        groupingHash.hashCode,
-        unhandled.hashCode,
-        _severityReason.hashCode,
-        _projectPackages.hashCode,
-        user.hashCode,
-        session.hashCode,
-        device.hashCode,
-        app.hashCode,
-        featureFlags.hashCode,
-        metadata.hashCode,
-      );
 }
 
-class _SeverityReason extends _JsonObject {
-  String get type => _json['type'] as String;
+class _SeverityReason {
+  String type;
+  bool? unhandledOverridden;
 
-  set type(String type) => _json['type'] = type;
+  _SeverityReason.fromJson(Map<String, dynamic> json)
+      : type = json['type'],
+        unhandledOverridden = json.safeGet('unhandledOverridden');
 
-  bool? get unhandledOverridden => _json['unhandledOverridden'] as bool?;
+  dynamic toJson() => {
+        'type': type,
+        if (unhandledOverridden != null)
+          'unhandledOverridden': unhandledOverridden,
+      };
+}
 
-  set unhandledOverridden(bool? unhandledOverridden) =>
-      _json['unhandledOverridden'] = unhandledOverridden;
+class _Session {
+  String id;
 
-  _SeverityReason.fromJson(Map<String, dynamic> json) : super.fromJson(json);
+  int handledCount;
+  int unhandledCount;
+
+  DateTime startedAt;
+
+  _Session.fromJson(Map<String, dynamic> json)
+      : id = json['id'] as String,
+        startedAt = DateTime.parse(json['startedAt'] as String),
+        handledCount =
+            (json['events'] as Map?)?.safeGet<num>('handled')?.toInt() ?? 0,
+        unhandledCount =
+            (json['events'] as Map?)?.safeGet<num>('unhandled')?.toInt() ?? 0;
+
+  dynamic toJson() => {
+        'id': id,
+        'startedAt': startedAt.toIso8601String(),
+        'events': {
+          'handled': handledCount,
+          'unhandled': unhandledCount,
+        }
+      };
 }
 
 enum Severity {
@@ -142,35 +133,26 @@ enum Severity {
   info,
 }
 
-class Error extends _JsonObject {
-  Error.fromJson(Map<String, dynamic> json) : super.fromJson(json);
+class Error {
+  String errorClass;
+  String? message;
+  ErrorType type;
 
-  String get errorClass => _json['errorClass'] as String;
+  Stacktrace stacktrace;
 
-  set errorClass(String errorClass) => _json['errorClass'] = errorClass;
+  Error.fromJson(Map<String, dynamic> json)
+      : errorClass = json.safeGet('errorClass'),
+        message = json.safeGet('message'),
+        type = json.safeGet<String>('type')?.let(ErrorType.new) ??
+            (Platform.isAndroid ? ErrorType.android : ErrorType.cocoa),
+        stacktrace = Stacktrace.fromJson((json['stacktrace'] as List).cast());
 
-  String? get message => _json['message'] as String?;
-
-  set message(String? message) => _json['message'] = message;
-
-  ErrorType get type => ErrorType(_json['type'] as String);
-
-  set type(ErrorType errorType) => _json['type'] = errorType.name;
-
-  Stacktrace get stacktrace {
-    final st = _json['stacktrace'];
-
-    if (st is List<Map<String, dynamic>>) {
-      return Stacktrace.fromJson(st);
-    } else {
-      final frames = <Stackframe>[];
-      _json['stacktrace'] = frames;
-      return Stacktrace(frames);
-    }
-  }
-
-  set stacktrace(Stacktrace stacktrace) =>
-      _json['stacktrace'] = stacktrace.toJson();
+  dynamic toJson() => {
+        'errorClass': errorClass,
+        if (message != null) 'message': message,
+        'type': type.name,
+        'stacktrace': stacktrace,
+      };
 }
 
 class ErrorType {

@@ -19,7 +19,6 @@ void main() {
       final event = Event.fromJson(json);
 
       expect(event, jsonEquals(expectedEvent));
-      expect(event, equals(expectedEvent));
     });
 
     test('iOS deserialization / serialization', () async {
@@ -31,7 +30,6 @@ void main() {
       final event = Event.fromJson(json);
 
       expect(event, jsonEquals(expectedEvent));
-      expect(event, equals(expectedEvent));
     });
 
     test('Event is mutable', () async {
@@ -44,10 +42,6 @@ void main() {
 
       event.user.id = 'NULL';
       event.user.name = 'Bobby Tables';
-
-      event.session!.id = 'test-session-id';
-      // we expect session.user to be null, but also expect it to not throw an error
-      expect(event.session!.user, isNull);
 
       event.device.id = 'test-device-id';
       event.app.version = '0.0.0';
@@ -284,10 +278,9 @@ const expectedModifiedEvent = {
   'breadcrumbs': [
     {
       'timestamp': '2021-01-19T11:16:01.262Z',
-      'name': 'Bugsnag loaded',
+      'name': 'new message',
       'type': 'state',
       'metaData': {},
-      'message': 'new message'
     }
   ],
   'context': 'testing context',
@@ -298,7 +291,7 @@ const expectedModifiedEvent = {
   'projectPackages': [],
   'user': {'id': 'NULL', 'name': 'Bobby Tables'},
   'session': {
-    'id': 'test-session-id',
+    'id': '5C5C6908-726F-4CCE-A081-23BDA1157911',
     'startedAt': '2021-01-19T11:16:01.259Z',
     'events': {'handled': 0, 'unhandled': 1}
   },

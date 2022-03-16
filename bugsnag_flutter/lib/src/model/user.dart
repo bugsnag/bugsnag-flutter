@@ -1,24 +1,33 @@
 part of model;
 
 /// Information about the current user of your application.
-class User extends _JsonObject {
-  User({String? id, String? email, String? name}) {
-    this.id = id;
-    this.email = email;
-    this.name = name;
-  }
+class User {
+  String? id;
+  String? email;
+  String? name;
 
-  User.fromJson(Map<String, dynamic> json) : super.fromJson(json);
+  User({this.id, this.email, this.name});
 
-  String? get id => _json['id'] as String?;
+  User.fromJson(Map<String, dynamic> json)
+      : id = json.safeGet('id'),
+        email = json.safeGet('email'),
+        name = json.safeGet('name');
 
-  set id(String? id) => _json['id'] = id;
+  dynamic toJson() => {
+        if (id != null) 'id': id,
+        if (email != null) 'email': email,
+        if (name != null) 'name': name,
+      };
 
-  String? get email => _json['email'] as String?;
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is User &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          email == other.email &&
+          name == other.name;
 
-  set email(String? email) => _json['email'] = email;
-
-  String? get name => _json['name'] as String?;
-
-  set name(String? name) => _json['name'] = name;
+  @override
+  int get hashCode => Object.hash(id, email, name);
 }

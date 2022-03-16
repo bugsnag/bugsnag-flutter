@@ -6,18 +6,20 @@ part of model;
 ///
 /// See also:
 /// - [FeatureFlags]
-class FeatureFlag extends _JsonObject {
-  FeatureFlag(String name, [String? variant])
-      : super.fromJson({
-          'featureFlag': name,
-          if (variant != null) 'variant': variant,
-        });
+class FeatureFlag {
+  String name;
+  String? variant;
 
-  FeatureFlag.fromJson(Map<String, Object?> json) : super.fromJson(json);
+  FeatureFlag(this.name, [this.variant]);
 
-  String get name => _json['featureFlag'] as String;
+  FeatureFlag.fromJson(Map<String, Object?> json)
+      : name = json.safeGet('featureFlag'),
+        variant = json.safeGet('variant');
 
-  String? get variant => _json['variant'] as String?;
+  dynamic toJson() => {
+        'featureFlag': name,
+        if (variant != null) 'variant': variant,
+      };
 }
 
 class FeatureFlags {

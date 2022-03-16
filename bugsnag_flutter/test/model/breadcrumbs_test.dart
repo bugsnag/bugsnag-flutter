@@ -7,7 +7,7 @@ void main() {
       final breadcrumb = Breadcrumb('starting out on a journey', metadata: {});
       final json = breadcrumb.toJson();
 
-      expect(json['message'], equals('starting out on a journey'));
+      expect(json['name'], equals('starting out on a journey'));
       expect(json['type'], equals('user'));
       expect(json['metaData'], equals(<String, dynamic>{}));
       expect(json['timestamp'], isNotNull);
@@ -17,7 +17,7 @@ void main() {
       final breadcrumb = Breadcrumb('oak', type: BreadcrumbType.log);
       final json = breadcrumb.toJson();
 
-      expect(json['message'], equals('oak'));
+      expect(json['name'], equals('oak'));
       expect(json['type'], equals('log'));
       expect(json['metaData'], isNull);
       expect(json['timestamp'], isNotNull);
@@ -25,7 +25,7 @@ void main() {
 
     test('breadcrumb from json without metadata', () {
       const json = {
-        'message': 'from all the way over the network',
+        'name': 'from all the way over the network',
         'type': 'request',
         'timestamp': '2022-03-03T02:15:50.405Z',
       };
@@ -40,7 +40,7 @@ void main() {
 
     test('breadcrumb from json', () {
       const json = {
-        'message': 'from all the way over the network',
+        'name': 'from all the way over the network',
         'type': 'request',
         'timestamp': '2022-03-03T02:15:50.405Z',
         'metaData': {'some string': 'value goes here'},

@@ -62,21 +62,6 @@ extension _MapExtensions<K, V> on Map<K, V> {
     // we assume that it's immutable for safety
     return true;
   }
-
-  Map<K, V> asMutable() {
-    if (isImmutable()) {
-      return map((key, value) {
-        if (value is Map) {
-          return MapEntry(
-              key, (value as Map<String, dynamic>).asMutable() as V);
-        } else {
-          return MapEntry(key, value);
-        }
-      });
-    } else {
-      return this;
-    }
-  }
 }
 
 extension _IterableExtensions<E> on Iterable<E> {

@@ -1,67 +1,70 @@
 part of model;
 
-class App extends _JsonObject {
-  App() : super();
+class App {
+  String? binaryArch;
+  String? buildUUID;
+  String? bundleVersion;
+  String? codeBundleId;
+  List<String>? dsymUUIDs;
+  String? id;
+  String? releaseStage;
+  String? type;
+  String? version;
+  int? versionCode;
 
-  App.fromJson(Map<String, Object?> json) : super.fromJson(json);
+  App.fromJson(Map<String, Object?> json)
+      : binaryArch = json.safeGet('binaryArch'),
+        buildUUID = json.safeGet('buildUUID'),
+        bundleVersion = json.safeGet('bundleVersion'),
+        codeBundleId = json.safeGet('codeBundleId'),
+        dsymUUIDs = json
+            .safeGet<List>('dsymUUIDs')
+            ?.cast<String>()
+            .toList(growable: true),
+        id = json.safeGet('id'),
+        releaseStage = json.safeGet('releaseStage'),
+        type = json.safeGet('type'),
+        version = json.safeGet('version'),
+        versionCode = json.safeGet<num>('versionCode')?.toInt();
 
-  String? get binaryArch => _json['binaryArch'] as String?;
-
-  set binaryArch(String? value) => _json['binaryArch'] = value;
-
-  String? get buildUUID => _json['buildUUID'] as String?;
-
-  set buildUUID(String? value) => _json['buildUUID'] = value;
-
-  String? get bundleVersion => _json['bundleVersion'] as String?;
-
-  set bundleVersion(String? value) => _json['bundleVersion'] = value;
-
-  String? get codeBundleId => _json['codeBundleId'] as String?;
-
-  set codeBundleId(String? value) => _json['codeBundleId'] = value;
-
-  List<String>? get dsymUUIDs => _json['dsymUUIDs'] as List<String>?;
-
-  set dsymUUIDs(List<String>? value) => _json['dsymUUIDs'] = value;
-
-  String? get id => _json['id'] as String?;
-
-  set id(String? value) => _json['id'] = value;
-
-  String? get releaseStage => _json['releaseStage'] as String?;
-
-  set releaseStage(String? value) => _json['releaseStage'] = value;
-
-  String? get type => _json['type'] as String?;
-
-  set type(String? value) => _json['type'] = value;
-
-  String? get version => _json['version'] as String?;
-
-  set version(String? value) => _json['version'] = value;
-
-  int? get versionCode => _json['versionCode'] as int?;
-
-  set versionCode(int? value) => _json['versionCode'] = value;
+  dynamic toJson() =>
+      {
+        if (binaryArch != null) 'binaryArch': binaryArch,
+        if (buildUUID != null) 'buildUUID': buildUUID,
+        if (bundleVersion != null) 'bundleVersion': bundleVersion,
+        if (codeBundleId != null) 'codeBundleId': codeBundleId,
+        if (dsymUUIDs != null) 'dsymUUIDs': dsymUUIDs,
+        if (id != null) 'id': id,
+        if (releaseStage != null) 'releaseStage': releaseStage,
+        if (type != null) 'type': type,
+        if (version != null) 'version': version,
+        if (versionCode != null) 'versionCode': versionCode,
+      };
 }
 
 class AppWithState extends App {
-  AppWithState.fromJson(Map<String, Object?> json) : super.fromJson(json);
+  int? duration;
+  int? durationInForeground;
+  bool? inForeground;
+  bool? isLaunching;
 
-  int? get duration => _json['duration'] as int?;
+  AppWithState.fromJson(Map<String, Object?> json)
+      : duration = json.safeGet<num>('duration')?.toInt(),
+        durationInForeground =
+        json.safeGet<num>('durationInForeground')?.toInt(),
+        inForeground = json.safeGet('inForeground'),
+        isLaunching = json.safeGet('isLaunching'),
+        super.fromJson(json);
 
-  set duration(int? value) => _json['duration'] = value;
-
-  int? get durationInForeground => _json['durationInForeground'] as int?;
-
-  set durationInForeground(int? value) => _json['durationInForeground'] = value;
-
-  bool? get inForeground => _json['inForeground'] as bool?;
-
-  set inForeground(bool? value) => _json['inForeground'] = value;
-
-  bool? get isLaunching => _json['isLaunching'] as bool?;
-
-  set isLaunching(bool? value) => _json['isLaunching'] = value;
+  @override
+  dynamic toJson() =>
+      {
+        for (final entry in (super.toJson() as Map<String, dynamic>).entries)
+          entry.key: entry.value,
+        if (duration != null) 'duration': duration,
+        if (durationInForeground != null)
+          'durationInForeground': durationInForeground,
+        if (inForeground != null) 'inForeground': inForeground,
+        if (isLaunching != null) 'isLaunching': isLaunching,
+      };
 }

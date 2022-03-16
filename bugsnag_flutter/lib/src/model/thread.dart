@@ -1,33 +1,33 @@
 part of model;
 
-class Thread extends _JsonObject {
-  Thread.fromJson(Map<String, dynamic> json) : super.fromJson(json);
+class Thread {
+  String? id;
+  String? name;
+  bool isErrorReportingThread;
+  ThreadType type;
 
-  String? get id => _json['id'] as String?;
+  final Stacktrace _stacktrace;
 
-  set id(String? id) => _json['id'] = id;
+  Stacktrace get stacktrace => _stacktrace;
 
-  String? get name => _json['name'] as String?;
+  Thread.fromJson(Map<String, dynamic> json)
+      : id = json.safeGet('id'),
+        name = json.safeGet('name'),
+        isErrorReportingThread = json.safeGet('errorReportingThread') == true,
+        type = json.safeGet<String>('type')?.let(ThreadType.new) ??
+            (Platform.isAndroid ? ThreadType.android : ThreadType.cocoa),
+        _stacktrace = json
+                .safeGet<List>('stacktrace')
+                ?.let((frames) => Stacktrace.fromJson(frames.cast())) ??
+            Stacktrace([]);
 
-  set name(String? name) => _json['name'] = name;
-
-  bool get isErrorReportingThread => _json['errorReportingThread'] == true;
-
-  ThreadType get type => ThreadType(_json['type'] as String);
-
-  set type(ThreadType type) => _json['type'] = type.name;
-
-  Stacktrace get stacktrace {
-    final st = _json['stacktrace'];
-
-    if (st is List<Map<String, dynamic>>) {
-      return Stacktrace.fromJson(st);
-    } else {
-      final frames = <Stackframe>[];
-      _json['stacktrace'] = frames;
-      return Stacktrace(frames);
-    }
-  }
+  dynamic toJson() => {
+        if (id != null) 'id': id,
+        if (name != null) 'name': name,
+        if (isErrorReportingThread) 'errorReportingThread': true,
+        'type': type.name,
+        'stacktrace': _stacktrace,
+      };
 }
 
 class ThreadType {

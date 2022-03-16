@@ -1,85 +1,84 @@
 part of model;
 
-class Stackframe extends _JsonObject {
-  Stackframe.fromJson(Map<String, Object?> json) : super.fromJson(json);
+class Stackframe {
+  ErrorType? type;
+  String? file;
+  int? lineNumber;
+  int? columnNumber;
+  String? method;
+  Map<String, String>? code;
+  bool? inProject;
+  String? frameAddress;
+  String? loadAddress;
+  bool? isLR;
+  bool? isPC;
+  String? symbolAddress;
+  String? machoFile;
+  String? machoLoadAddress;
+  String? machoUUID;
+  String? machoVMAddress;
+
+  Stackframe.fromJson(Map<String, Object?> json)
+      : type = json.safeGet<String>('type')?.let(ErrorType.new),
+        file = json.safeGet('file'),
+        lineNumber = json.safeGet<num>('lineNumber')?.toInt(),
+        columnNumber = json.safeGet<num>('columnNumber')?.toInt(),
+        method = json.safeGet('method'),
+        code = json
+            .safeGet<Map>('code')
+            ?.map((key, value) => MapEntry(key as String, value as String)),
+        inProject = json.safeGet('inProject'),
+        frameAddress = _getAddress(json['frameAddress']),
+        loadAddress = _getAddress(json['loadAddress']),
+        isLR = json.safeGet('isLR'),
+        isPC = json.safeGet('isPC'),
+        symbolAddress = _getAddress(json['symbolAddress']),
+        machoFile = json.safeGet('machoFile'),
+        machoLoadAddress = json.safeGet('machoLoadAddress'),
+        machoUUID = json.safeGet('machoUUID'),
+        machoVMAddress = json.safeGet('machoVMAddress');
 
   Stackframe.fromStackFrame(StackFrame frame)
-      : super.fromJson({
-          'type': 'flutter',
-          'file': frame.packagePath,
-          'lineNumber': frame.line,
-          'columnNumber': frame.column,
-          'method': frame.method
-        });
+      : type = ErrorType.flutter,
+        file = frame.packagePath,
+        lineNumber = frame.line,
+        columnNumber = frame.column,
+        method = frame.method;
 
-  String? get type => _json['type'] as String?;
+  dynamic toJson() => {
+        if (type != null) 'type': type!.name,
+        if (file != null) 'file': file,
+        if (lineNumber != null) 'lineNumber': lineNumber,
+        if (columnNumber != null) 'columnNumber': columnNumber,
+        if (method != null) 'method': method,
+        if (code != null) 'code': code,
+        if (inProject != null) 'inProject': inProject,
+        if (frameAddress != null) 'frameAddress': _addressValue(frameAddress),
+        if (loadAddress != null) 'loadAddress': _addressValue(loadAddress),
+        if (isLR != null) 'isLR': isLR,
+        if (isPC != null) 'isPC': isPC,
+        if (symbolAddress != null)
+          'symbolAddress': _addressValue(symbolAddress),
+        if (machoFile != null) 'machoFile': machoFile,
+        if (machoLoadAddress != null) 'machoLoadAddress': machoLoadAddress,
+        if (machoUUID != null) 'machoUUID': machoUUID,
+        if (machoVMAddress != null) 'machoVMAddress': machoVMAddress,
+      };
 
-  set type(String? value) => _json['type'] = value;
-
-  String? get file => _json['file'] as String?;
-
-  set file(String? value) => _json['file'] = value;
-
-  int? get lineNumber => _json['lineNumber'] as int?;
-
-  set lineNumber(int? value) => _json['lineNumber'] = value;
-
-  int? get columnNumber => _json['columnNumber'] as int?;
-
-  set columnNumber(int? value) => _json['columnNumber'] = value;
-
-  String? get method => _json['method'] as String?;
-
-  set method(String? value) => _json['method'] = value;
-
-  Map<String, String>? get code => _json['code'] as Map<String, String>?;
-
-  set code(Map<String, String>? value) => _json['code'] = value;
-
-  bool? get inProject => _json['inProject'] as bool?;
-
-  set inProject(bool? value) => _json['inProject'] = value;
-
-  String? get frameAddress => _getAddress('frameAddress');
-
-  set frameAddress(String? value) => _json['frameAddress'] = value;
-
-  String? get loadAddress => _getAddress('loadAddress');
-
-  set loadAddress(String? value) => _json['loadAddress'] = value;
-
-  bool? get isLR => _json['isLR'] as bool?;
-
-  set isLR(bool? value) => _json['isLR'] = value;
-
-  bool? get isPC => _json['isPC'] as bool?;
-
-  set isPC(bool? value) => _json['isPC'] = value;
-
-  String? get symbolAddress => _getAddress('symbolAddress');
-
-  set symbolAddress(String? value) => _json['symbolAddress'] = value;
-
-  String? get machoFile => _json['machoFile'] as String?;
-
-  set machoFile(String? value) => _json['machoFile'] = value;
-
-  String? get machoLoadAddress => _json['machoLoadAddress'] as String?;
-
-  set machoLoadAddress(String? value) => _json['machoLoadAddress'] = value;
-
-  String? get machoUUID => _json['machoUUID'] as String?;
-
-  set machoUUID(String? value) => _json['machoUUID'] = value;
-
-  String? get machoVMAddress => _json['machoVMAddress'] as String?;
-
-  set machoVMAddress(String? value) => _json['machoVMAddress'] = value;
+  dynamic _addressValue(String? address) {
+    if (address == null) {
+      return null;
+    } else if (type == ErrorType.android ||
+        type == ErrorType.c && address.startsWith('0x')) {
+      return int.parse(address.substring(2), radix: 16);
+    } else {
+      return address;
+    }
+  }
 
   // Required on platforms (e.g. Android) which include numeric rather than the
   // expected string values for memory addresses.
-  String? _getAddress(String key) {
-    final value = _json[key];
+  static String? _getAddress(dynamic value) {
     if (value is String) return value;
     if (value is int) return '0x' + value.toRadixString(16);
     return null;
