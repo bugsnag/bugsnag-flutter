@@ -3,6 +3,7 @@ part of model;
 class Thread {
   String? id;
   String? name;
+  String? state;
   bool isErrorReportingThread;
   ThreadType type;
 
@@ -11,8 +12,9 @@ class Thread {
   Stacktrace get stacktrace => _stacktrace;
 
   Thread.fromJson(Map<String, dynamic> json)
-      : id = json.safeGet('id'),
+      : id = json['id']?.toString(),
         name = json.safeGet('name'),
+        state = json.safeGet('state'),
         isErrorReportingThread = json.safeGet('errorReportingThread') == true,
         type = json.safeGet<String>('type')?.let(ThreadType.new) ??
             (Platform.isAndroid ? ThreadType.android : ThreadType.cocoa),
@@ -21,9 +23,11 @@ class Thread {
                 ?.let((frames) => Stacktrace.fromJson(frames.cast())) ??
             Stacktrace([]);
 
-  dynamic toJson() => {
+  dynamic toJson() =>
+      {
         if (id != null) 'id': id,
         if (name != null) 'name': name,
+        if (state != null) 'state': state,
         if (isErrorReportingThread) 'errorReportingThread': true,
         'type': type.name,
         'stacktrace': _stacktrace,

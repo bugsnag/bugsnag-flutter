@@ -46,22 +46,6 @@ extension _MapExtensions<K, V> on Map<K, V> {
 
     return true;
   }
-
-  bool isImmutable() {
-    if (isNotEmpty) {
-      // attempt a no-op mutation and see if we get an exception
-      try {
-        final entry = entries.first;
-        this[entry.key] = entry.value;
-      } catch (e) {
-        return true;
-      }
-
-      return false;
-    }
-    // we assume that it's immutable for safety
-    return true;
-  }
 }
 
 extension _IterableExtensions<E> on Iterable<E> {
