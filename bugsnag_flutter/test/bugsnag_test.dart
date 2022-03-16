@@ -33,7 +33,6 @@ void main() {
           equals(const {
             'id': 'user-id-123',
             'name': 'Jonny Tables',
-            'email': null,
           }),
         );
 
@@ -50,8 +49,8 @@ void main() {
 
       await bugsnag.attach(
         context: 'flutter-context',
-        user: const User(id: 'user-id-123', name: 'Jonny Tables'),
-        featureFlags: const [
+        user: User(id: 'user-id-123', name: 'Jonny Tables'),
+        featureFlags: [
           FeatureFlag('demo-mode'),
           FeatureFlag('sample-group', 'a'),
         ],

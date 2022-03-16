@@ -86,4 +86,40 @@ class Stackframe extends _JsonObject {
   }
 }
 
-typedef Stacktrace = List<Stackframe>;
+class Stacktrace extends ListBase<Stackframe> {
+  final List<Stackframe> _delegate;
+
+  Stacktrace(this._delegate);
+
+  Stacktrace.fromStackTrace(StackTrace stackTrace)
+      : this(StackFrame.fromStackTrace(stackTrace)
+            .map(Stackframe.fromStackFrame)
+            .toList());
+
+  Stacktrace.fromJson(List<Map<String, dynamic>> json)
+      : this(json.map(Stackframe.fromJson).toList());
+
+  @override
+  int get length => _delegate.length;
+
+  @override
+  set length(int length) => _delegate.length = length;
+
+  @override
+  Stackframe operator [](int index) => _delegate[index];
+
+  @override
+  void operator []=(int index, Stackframe value) => _delegate[index] = value;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Stacktrace &&
+          runtimeType == other.runtimeType &&
+          _delegate.deepEquals(other._delegate);
+
+  @override
+  int get hashCode => _delegate.fold(0, (h, element) => h ^ element.hashCode);
+
+  dynamic toJson() => _delegate.map((frame) => frame.toJson()).toList();
+}
