@@ -3,10 +3,13 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 
-import 'src/model/breadcrumbs.dart';
-import 'src/model/feature_flags.dart';
-import 'src/model/session.dart';
-import 'src/model/user.dart';
+import 'model/breadcrumbs.dart';
+import 'model/feature_flags.dart';
+import 'model/session.dart';
+import 'model/user.dart';
+
+typedef OnSessionCallback = FutureOr<bool> Function(Session);
+typedef OnBreadcrumbCallback = FutureOr<bool> Function(Breadcrumb);
 
 abstract class Client {
   Future<void> setUser({String? id, String? name, String? email});
@@ -53,8 +56,6 @@ class ChannelClient implements Client {
   static const MethodChannel _channel =
       MethodChannel('com.bugsnag/client', JSONMethodCodec());
 
-  const ChannelClient();
-
   @override
   Future<User> getUser() async =>
       User.fromJson(await _channel.invokeMethod('getUser'));
@@ -96,10 +97,10 @@ class Bugsnag extends Client with DelegateClient {
     User? user,
     String? context,
     List<FeatureFlag>? featureFlags,
-    List<FutureOr<bool> Function(Session)> onSession = const [],
-    List<FutureOr<bool> Function(Breadcrumb)> onBreadcrumb = const [],
+    List<OnSessionCallback> onSession = const [],
+    List<OnBreadcrumbCallback> onBreadcrumb = const [],
   }) async {
-    const client = ChannelClient();
+    final client = ChannelClient();
     bool attached = await ChannelClient._channel.invokeMethod('attach', {
       if (user != null) 'user': user,
       if (context != null) 'context': context,

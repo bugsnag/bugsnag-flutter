@@ -154,12 +154,16 @@ class Error {
 
   Stacktrace stacktrace;
 
+  Error(this.errorClass, this.message, this.stacktrace)
+      : type = ErrorType.flutter;
+
   Error.fromJson(Map<String, dynamic> json)
       : errorClass = json.safeGet('errorClass'),
         message = json.safeGet('message'),
         type = json.safeGet<String>('type')?.let(ErrorType.forName) ??
             (Platform.isAndroid ? ErrorType.android : ErrorType.cocoa),
-        stacktrace = Stacktrace.fromJson((json['stacktrace'] as List).cast());
+        stacktrace =
+            Stackframe.stacktraceFromJson((json['stacktrace'] as List).cast());
 
   dynamic toJson() => {
         'errorClass': errorClass,

@@ -1,2 +1,2 @@
-export 'client.dart';
+export 'src/client.dart';
 export 'src/model.dart';

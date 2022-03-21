@@ -22,10 +22,9 @@ class Thread {
         isErrorReportingThread = json.safeGet('errorReportingThread') == true,
         type = json.safeGet<String>('type')?.let(ErrorType.forName) ??
             (Platform.isAndroid ? ErrorType.android : ErrorType.cocoa),
-        _stacktrace = json
-                .safeGet<List>('stacktrace')
-                ?.let((frames) => Stacktrace.fromJson(frames.cast())) ??
-            Stacktrace([]);
+        _stacktrace = json.safeGet<List>('stacktrace')?.let(
+                (frames) => Stackframe.stacktraceFromJson(frames.cast())) ??
+            [];
 
   dynamic toJson() => {
         if (id != null) 'id': id,

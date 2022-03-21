@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:flutter/foundation.dart';
 
 import '_model_extensions.dart';
@@ -22,6 +20,27 @@ class Stackframe {
   String? machoLoadAddress;
   String? machoUUID;
   String? machoVMAddress;
+  String? codeIdentifier;
+
+  Stackframe({
+    this.type,
+    this.file,
+    this.lineNumber,
+    this.columnNumber,
+    this.method,
+    this.code,
+    this.inProject,
+    this.frameAddress,
+    this.loadAddress,
+    this.isLR,
+    this.isPC,
+    this.symbolAddress,
+    this.machoFile,
+    this.machoLoadAddress,
+    this.machoUUID,
+    this.machoVMAddress,
+    this.codeIdentifier,
+  });
 
   Stackframe.fromJson(Map<String, Object?> json)
       : type = json.safeGet<String>('type')?.let(ErrorType.forName),
@@ -41,7 +60,8 @@ class Stackframe {
         machoFile = json.safeGet('machoFile'),
         machoLoadAddress = json.safeGet('machoLoadAddress'),
         machoUUID = json.safeGet('machoUUID'),
-        machoVMAddress = json.safeGet('machoVMAddress');
+        machoVMAddress = json.safeGet('machoVMAddress'),
+        codeIdentifier = json.safeGet('codeIdentifier');
 
   Stackframe.fromStackFrame(StackFrame frame)
       : type = ErrorType.flutter,
@@ -68,6 +88,7 @@ class Stackframe {
         if (machoLoadAddress != null) 'machoLoadAddress': machoLoadAddress,
         if (machoUUID != null) 'machoUUID': machoUUID,
         if (machoVMAddress != null) 'machoVMAddress': machoVMAddress,
+        if (codeIdentifier != null) 'codeIdentifier': codeIdentifier,
       };
 
   dynamic _addressValue(String? address) {
@@ -88,42 +109,9 @@ class Stackframe {
     if (value is int) return '0x' + value.toRadixString(16);
     return null;
   }
+
+  static Stacktrace stacktraceFromJson(List<Map<String, dynamic>> json) =>
+      json.map(Stackframe.fromJson).toList();
 }
 
-class Stacktrace extends ListBase<Stackframe> {
-  final List<Stackframe> _delegate;
-
-  Stacktrace(this._delegate);
-
-  Stacktrace.fromStackTrace(StackTrace stackTrace)
-      : this(StackFrame.fromStackTrace(stackTrace)
-            .map(Stackframe.fromStackFrame)
-            .toList());
-
-  Stacktrace.fromJson(List<Map<String, dynamic>> json)
-      : this(json.map(Stackframe.fromJson).toList());
-
-  @override
-  int get length => _delegate.length;
-
-  @override
-  set length(int length) => _delegate.length = length;
-
-  @override
-  Stackframe operator [](int index) => _delegate[index];
-
-  @override
-  void operator []=(int index, Stackframe value) => _delegate[index] = value;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is Stacktrace &&
-          runtimeType == other.runtimeType &&
-          _delegate.deepEquals(other._delegate);
-
-  @override
-  int get hashCode => _delegate.fold(0, (h, element) => h ^ element.hashCode);
-
-  dynamic toJson() => _delegate.map((frame) => frame.toJson()).toList();
-}
+typedef Stacktrace = List<Stackframe>;
