@@ -44,5 +44,29 @@ void main() {
         ]),
       );
     });
+
+    test('produces expected JSON payloads', () {
+      final flags = FeatureFlags();
+      flags.addFeatureFlag('my-feature-flag');
+      flags.addFeatureFlag('flag-with-variant', 'some variant');
+
+      expect(
+        flags.toJson(),
+        equals([
+          {'featureFlag': 'my-feature-flag'},
+          {'featureFlag': 'flag-with-variant', 'variant': 'some variant'},
+        ]),
+      );
+    });
+
+    test('serializes & deserializes', () {
+      final flags = FeatureFlags();
+      flags.addFeatureFlag('flag-1');
+      flags.addFeatureFlag('flag-2', 'a variant for flag-2');
+      flags.addFeatureFlag('flag-3', 'a variant for flag-3');
+
+      final deserializedFlags = FeatureFlags.fromJson(flags.toJson());
+      expect(deserializedFlags, equals(flags));
+    });
   });
 }
