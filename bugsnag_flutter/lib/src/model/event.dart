@@ -1,4 +1,14 @@
-part of model;
+import 'dart:io';
+
+import '_model_extensions.dart';
+import 'app.dart';
+import 'breadcrumbs.dart';
+import 'device.dart';
+import 'feature_flags.dart';
+import 'metadata.dart';
+import 'stackframe.dart';
+import 'thread.dart';
+import 'user.dart';
 
 class Event {
   String? apiKey;
@@ -7,19 +17,27 @@ class Event {
   List<Breadcrumb> breadcrumbs;
   String? context;
   String? groupingHash;
-  bool unhandled;
+  bool _unhandled;
   final bool _originalUnhandled;
-  Severity _severity;
-  _SeverityReason _severityReason;
-  List<String> _projectPackages;
+  final Severity _severity;
+  final _SeverityReason _severityReason;
+  final List<String> _projectPackages;
   User user;
-  _Session? _session;
+  final _Session? _session;
 
   DeviceWithState device;
   AppWithState app;
 
   FeatureFlags featureFlags;
   Metadata metadata;
+
+  bool get unhandled => _unhandled;
+
+  set unhandled(bool unhandled) {
+    _unhandled = unhandled;
+    _severityReason.unhandledOverridden =
+        (_unhandled != _originalUnhandled) ? true : null;
+  }
 
   Event.fromJson(Map<String, dynamic> json)
       : apiKey = json['apiKey'] as String?,
@@ -40,7 +58,7 @@ class Event {
             [],
         context = json['context'] as String?,
         groupingHash = json['groupingHash'] as String?,
-        unhandled = json['unhandled'] == true,
+        _unhandled = json['unhandled'] == true,
         _originalUnhandled = json['unhandled'] == true,
         _severity = Severity.values.byName(json['severity']),
         _severityReason = _SeverityReason.fromJson(json['severityReason']),
@@ -61,10 +79,6 @@ class Event {
             Metadata();
 
   dynamic toJson() {
-    if (unhandled != _originalUnhandled) {
-      _severityReason.unhandledOverridden = true;
-    }
-
     return {
       if (apiKey != null) 'apiKey': apiKey,
       'exceptions': errors,
@@ -143,7 +157,7 @@ class Error {
   Error.fromJson(Map<String, dynamic> json)
       : errorClass = json.safeGet('errorClass'),
         message = json.safeGet('message'),
-        type = json.safeGet<String>('type')?.let(ErrorType.new) ??
+        type = json.safeGet<String>('type')?.let(ErrorType.forName) ??
             (Platform.isAndroid ? ErrorType.android : ErrorType.cocoa),
         stacktrace = Stacktrace.fromJson((json['stacktrace'] as List).cast());
 
@@ -156,14 +170,14 @@ class Error {
 }
 
 class ErrorType {
-  static const android = ErrorType('android');
-  static const c = ErrorType('c');
-  static const cocoa = ErrorType('cocoa');
-  static const flutter = ErrorType('flutter');
+  static const android = ErrorType._create('android');
+  static const cocoa = ErrorType._create('cocoa');
+  static const c = ErrorType._create('c');
+  static const flutter = ErrorType._create('flutter');
 
   final String name;
 
-  const ErrorType(this.name);
+  const ErrorType._create(this.name);
 
   @override
   bool operator ==(Object other) =>
@@ -177,4 +191,13 @@ class ErrorType {
 
   @override
   String toString() => name;
+
+  factory ErrorType.forName(String name) {
+    if (name == android.name) return android;
+    if (name == cocoa.name) return cocoa;
+    if (name == c.name) return c;
+    if (name == flutter.name) return flutter;
+
+    return ErrorType._create(name);
+  }
 }

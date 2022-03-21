@@ -1,5 +1,3 @@
-part of model;
-
 bool _objectDeepEquals(Object? v1, Object? v2) {
   if (v1 == v2) return true;
 
@@ -12,7 +10,7 @@ bool _objectDeepEquals(Object? v1, Object? v2) {
   return false;
 }
 
-extension _ObjectExtensions<T> on T {
+extension ObjectExtensions<T> on T {
   /// Call `mapper` with `this` and return the result. This is largely used in
   /// JSON conversion methods with ?. to play-nicely with nullable values and
   /// non-nullable arguments in constructors:
@@ -26,7 +24,7 @@ extension _ObjectExtensions<T> on T {
   R let<R>(R Function(T) mapper) => mapper(this);
 }
 
-extension _MapExtensions<K, V> on Map<K, V> {
+extension MapExtensions<K, V> on Map<K, V> {
   R? safeGet<R>(K key) {
     final actualValue = this[key];
     return actualValue is R ? actualValue : null;
@@ -48,7 +46,7 @@ extension _MapExtensions<K, V> on Map<K, V> {
   }
 }
 
-extension _IterableExtensions<E> on Iterable<E> {
+extension IterableExtensions<E> on Iterable<E> {
   bool deepEquals(Iterable<E> other) {
     if (length != other.length) return false;
 

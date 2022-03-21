@@ -1,4 +1,7 @@
-part of model;
+import 'app.dart';
+import 'device.dart';
+import 'notifier.dart';
+import 'user.dart';
 
 class Session {
   String id;

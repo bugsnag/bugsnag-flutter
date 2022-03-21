@@ -1,4 +1,9 @@
-part of model;
+import 'dart:collection';
+
+import 'package:flutter/foundation.dart';
+
+import '_model_extensions.dart';
+import 'event.dart';
 
 class Stackframe {
   ErrorType? type;
@@ -19,7 +24,7 @@ class Stackframe {
   String? machoVMAddress;
 
   Stackframe.fromJson(Map<String, Object?> json)
-      : type = json.safeGet<String>('type')?.let(ErrorType.new),
+      : type = json.safeGet<String>('type')?.let(ErrorType.forName),
         file = json.safeGet('file'),
         lineNumber = json.safeGet<num>('lineNumber')?.toInt(),
         columnNumber = json.safeGet<num>('columnNumber')?.toInt(),

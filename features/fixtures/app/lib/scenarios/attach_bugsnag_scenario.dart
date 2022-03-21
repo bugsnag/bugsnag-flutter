@@ -1,5 +1,5 @@
 import 'package:MazeRunner/scenarios/scenario.dart';
-import 'package:bugsnag_flutter/core.dart';
+import 'package:bugsnag_flutter/bugsnag.dart';
 
 class AttachBugsnagScenario extends Scenario {
   @override

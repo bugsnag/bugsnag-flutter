@@ -1,4 +1,4 @@
-part of model;
+import '_model_extensions.dart';
 
 class Device {
   List<String>? cpuAbi;

@@ -1,4 +1,4 @@
-import 'package:bugsnag_flutter/model.dart';
+import 'package:bugsnag_flutter/src/model.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '_json_equals.dart';
@@ -22,7 +22,7 @@ void main() {
 
       expect(thread.id, equals('24'));
       expect(thread.name, equals('main-one'));
-      expect(thread.type, equals(ThreadType.android));
+      expect(thread.type, equals(ErrorType.android));
       expect(thread.state, equals('RUNNABLE'));
       expect(thread.isErrorReportingThread, isFalse);
 
@@ -72,7 +72,7 @@ void main() {
       final thread = Thread.fromJson(json);
       expect(thread.id, equals('2345'));
       expect(thread.name, equals('Jit Worker'));
-      expect(thread.type, equals(ThreadType.c));
+      expect(thread.type, equals(ErrorType.c));
       expect(thread.state, equals('sleeping'));
       expect(thread.stacktrace, isEmpty);
       expect(thread.isErrorReportingThread, isFalse);
@@ -123,7 +123,7 @@ void main() {
 
       expect(thread.id, equals('0'));
       expect(thread.isErrorReportingThread, isTrue);
-      expect(thread.type, ThreadType.cocoa);
+      expect(thread.type, ErrorType.cocoa);
 
       final stacktrace = thread.stacktrace;
       expect(stacktrace, hasLength(2));

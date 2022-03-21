@@ -1,11 +1,15 @@
-part of model;
+import 'dart:io';
+
+import '_model_extensions.dart';
+import 'event.dart';
+import 'stackframe.dart';
 
 class Thread {
   String? id;
   String? name;
   String? state;
   bool isErrorReportingThread;
-  ThreadType type;
+  ErrorType type;
 
   final Stacktrace _stacktrace;
 
@@ -16,15 +20,14 @@ class Thread {
         name = json.safeGet('name'),
         state = json.safeGet('state'),
         isErrorReportingThread = json.safeGet('errorReportingThread') == true,
-        type = json.safeGet<String>('type')?.let(ThreadType.new) ??
-            (Platform.isAndroid ? ThreadType.android : ThreadType.cocoa),
+        type = json.safeGet<String>('type')?.let(ErrorType.forName) ??
+            (Platform.isAndroid ? ErrorType.android : ErrorType.cocoa),
         _stacktrace = json
                 .safeGet<List>('stacktrace')
                 ?.let((frames) => Stacktrace.fromJson(frames.cast())) ??
             Stacktrace([]);
 
-  dynamic toJson() =>
-      {
+  dynamic toJson() => {
         if (id != null) 'id': id,
         if (name != null) 'name': name,
         if (state != null) 'state': state,
@@ -32,35 +35,4 @@ class Thread {
         'type': type.name,
         'stacktrace': _stacktrace,
       };
-}
-
-class ThreadType {
-  /// Android Only: A Thread captured from within the Android Runtime (ART)
-  static const android = ThreadType('android');
-
-  /// Android Only: A Thread captured from the NDK layer
-  static const c = ThreadType('c');
-
-  /// iOS & Android: A thread captured from a ReactNative application
-  static const reactnativejs = ThreadType('reactnativejs');
-
-  /// iOS Only: A thread captured from an iOS native application
-  static const cocoa = ThreadType('cocoa');
-
-  final String name;
-
-  const ThreadType(this.name);
-
-  @override
-  String toString() => name;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is ThreadType &&
-          runtimeType == other.runtimeType &&
-          name == other.name;
-
-  @override
-  int get hashCode => name.hashCode;
 }

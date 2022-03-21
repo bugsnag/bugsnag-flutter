@@ -1,4 +1,4 @@
-part of model;
+import '_model_extensions.dart';
 
 /// Information about the current user of your application.
 class User {

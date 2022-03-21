@@ -1,23 +1,22 @@
-part of model;
+import '_model_extensions.dart';
+import 'metadata.dart';
 
 class Breadcrumb {
   String message;
   BreadcrumbType type;
   MetadataSection? metadata;
 
-  DateTime _timestamp;
-
-  DateTime get timestamp => _timestamp;
+  final DateTime timestamp;
 
   Breadcrumb(
     this.message, {
     this.type = BreadcrumbType.user,
     this.metadata,
-  }) : _timestamp = DateTime.now();
+  }) : timestamp = DateTime.now();
 
   Breadcrumb.fromJson(Map<String, dynamic> json)
       : message = json.safeGet('name'),
-        _timestamp = DateTime.parse(json['timestamp'] as String),
+        timestamp = DateTime.parse(json['timestamp'] as String),
         type = BreadcrumbType.values.byName(json['type'] as String),
         metadata = json
             .safeGet<Map>('metaData')
@@ -26,7 +25,7 @@ class Breadcrumb {
   dynamic toJson() => {
         'name': message,
         'type': type.name,
-        'timestamp': _timestamp.toIso8601String(),
+        'timestamp': timestamp.toIso8601String(),
         if (metadata != null) 'metaData': metadata,
       };
 }

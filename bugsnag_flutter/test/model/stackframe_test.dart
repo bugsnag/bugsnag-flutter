@@ -1,4 +1,5 @@
-import 'package:bugsnag_flutter/model.dart';
+import 'package:bugsnag_flutter/src/model/event.dart';
+import 'package:bugsnag_flutter/src/model/stackframe.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 

@@ -1,4 +1,4 @@
-import 'package:bugsnag_flutter/core.dart';
+import 'package:bugsnag_flutter/src/model/feature_flags.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '_json_equals.dart';

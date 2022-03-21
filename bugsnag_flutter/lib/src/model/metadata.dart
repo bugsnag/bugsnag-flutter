@@ -1,4 +1,4 @@
-part of model;
+import '_model_extensions.dart';
 
 typedef MetadataSection = Map<String, Object>;
 typedef MetadataMap = Map<String, MetadataSection>;

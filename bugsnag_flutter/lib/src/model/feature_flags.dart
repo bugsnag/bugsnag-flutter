@@ -1,4 +1,4 @@
-part of model;
+import '_model_extensions.dart';
 
 /// Represents a single feature-flag / experiment marker within Bugsnag.
 /// Each `FeatureFlag` has a mandatory [name] and optional [variant] that can

@@ -87,7 +87,7 @@ const iosEventJson = {
           'method': '__exceptionPreprocess',
           'machoVMAddress': '0x7fff2030f000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/System\/Library\/Frameworks\/CoreFoundation.framework\/CoreFoundation',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation',
           'isPC': true,
           'symbolAddress': '0x7fff20420a04',
           'machoUUID': '8FC68AD0-5128-3700-9E63-F6F358B6321B',
@@ -98,7 +98,7 @@ const iosEventJson = {
           'method': 'objc_exception_throw',
           'machoVMAddress': '0x7fff20172000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/usr\/lib\/libobjc.A.dylib',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/usr/lib/libobjc.A.dylib',
           'symbolAddress': '0x7fff20177e48',
           'machoUUID': '0ED2E6A3-D7FC-3A31-A1CA-6BE106521240',
           'machoLoadAddress': '0x7fff20172000',
@@ -108,7 +108,7 @@ const iosEventJson = {
           'method': '-[NSObject(NSObject) doesNotRecognizeSelector:]',
           'machoVMAddress': '0x7fff2030f000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/System\/Library\/Frameworks\/CoreFoundation.framework\/CoreFoundation',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation',
           'symbolAddress': '0x7fff2042f673',
           'machoUUID': '8FC68AD0-5128-3700-9E63-F6F358B6321B',
           'machoLoadAddress': '0x7fff2030f000',
@@ -118,7 +118,7 @@ const iosEventJson = {
           'method': '-[UIResponder doesNotRecognizeSelector:]',
           'machoVMAddress': '0x7fff23a99000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/System\/Library\/PrivateFrameworks\/UIKitCore.framework\/UIKitCore',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/PrivateFrameworks/UIKitCore.framework/UIKitCore',
           'symbolAddress': '0x7fff246c5a33',
           'machoUUID': '984E55B9-03C9-3D2A-95DC-3A5F434A4A71',
           'machoLoadAddress': '0x7fff23a99000',
@@ -128,7 +128,7 @@ const iosEventJson = {
           'method': '___forwarding___',
           'machoVMAddress': '0x7fff2030f000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/System\/Library\/Frameworks\/CoreFoundation.framework\/CoreFoundation',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation',
           'symbolAddress': '0x7fff20424a65',
           'machoUUID': '8FC68AD0-5128-3700-9E63-F6F358B6321B',
           'machoLoadAddress': '0x7fff2030f000',
@@ -138,7 +138,7 @@ const iosEventJson = {
           'method': '_CF_forwarding_prep_0',
           'machoVMAddress': '0x7fff2030f000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/System\/Library\/Frameworks\/CoreFoundation.framework\/CoreFoundation',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation',
           'symbolAddress': '0x7fff20426ff0',
           'machoUUID': '8FC68AD0-5128-3700-9E63-F6F358B6321B',
           'machoLoadAddress': '0x7fff2030f000',
@@ -148,7 +148,7 @@ const iosEventJson = {
           'method': '__NSThreadPerformPerform',
           'machoVMAddress': '0x7fff2071b000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/System\/Library\/Frameworks\/Foundation.framework\/Foundation',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/Frameworks/Foundation.framework/Foundation',
           'symbolAddress': '0x7fff208581ee',
           'machoUUID': '5716A8B8-2769-3484-9FD8-196630050F5B',
           'machoLoadAddress': '0x7fff2071b000',
@@ -159,7 +159,7 @@ const iosEventJson = {
               '__CFRUNLOOP_IS_CALLING_OUT_TO_A_SOURCE0_PERFORM_FUNCTION__',
           'machoVMAddress': '0x7fff2030f000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/System\/Library\/Frameworks\/CoreFoundation.framework\/CoreFoundation',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation',
           'symbolAddress': '0x7fff2038f379',
           'machoUUID': '8FC68AD0-5128-3700-9E63-F6F358B6321B',
           'machoLoadAddress': '0x7fff2030f000',
@@ -169,7 +169,7 @@ const iosEventJson = {
           'method': '__CFRunLoopDoSource0',
           'machoVMAddress': '0x7fff2030f000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/System\/Library\/Frameworks\/CoreFoundation.framework\/CoreFoundation',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation',
           'symbolAddress': '0x7fff2038f1ce',
           'machoUUID': '8FC68AD0-5128-3700-9E63-F6F358B6321B',
           'machoLoadAddress': '0x7fff2030f000',
@@ -179,7 +179,7 @@ const iosEventJson = {
           'method': '__CFRunLoopDoSources0',
           'machoVMAddress': '0x7fff2030f000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/System\/Library\/Frameworks\/CoreFoundation.framework\/CoreFoundation',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation',
           'symbolAddress': '0x7fff2038e66c',
           'machoUUID': '8FC68AD0-5128-3700-9E63-F6F358B6321B',
           'machoLoadAddress': '0x7fff2030f000',
@@ -189,7 +189,7 @@ const iosEventJson = {
           'method': '__CFRunLoopRun',
           'machoVMAddress': '0x7fff2030f000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/System\/Library\/Frameworks\/CoreFoundation.framework\/CoreFoundation',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation',
           'symbolAddress': '0x7fff20388bc1',
           'machoUUID': '8FC68AD0-5128-3700-9E63-F6F358B6321B',
           'machoLoadAddress': '0x7fff2030f000',
@@ -199,7 +199,7 @@ const iosEventJson = {
           'method': 'CFRunLoopRunSpecific',
           'machoVMAddress': '0x7fff2030f000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/System\/Library\/Frameworks\/CoreFoundation.framework\/CoreFoundation',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation',
           'symbolAddress': '0x7fff2038849f',
           'machoUUID': '8FC68AD0-5128-3700-9E63-F6F358B6321B',
           'machoLoadAddress': '0x7fff2030f000',
@@ -209,7 +209,7 @@ const iosEventJson = {
           'method': 'GSEventRunModal',
           'machoVMAddress': '0x7fff2bedb000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/System\/Library\/PrivateFrameworks\/GraphicsServices.framework\/GraphicsServices',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/PrivateFrameworks/GraphicsServices.framework/GraphicsServices',
           'symbolAddress': '0x7fff2beded28',
           'machoUUID': 'EFA60C9C-ACAF-3326-BDC5-4B361494A126',
           'machoLoadAddress': '0x7fff2bedb000',
@@ -219,7 +219,7 @@ const iosEventJson = {
           'method': '-[UIApplication _run]',
           'machoVMAddress': '0x7fff23a99000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/System\/Library\/PrivateFrameworks\/UIKitCore.framework\/UIKitCore',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/PrivateFrameworks/UIKitCore.framework/UIKitCore',
           'symbolAddress': '0x7fff24690a7b',
           'machoUUID': '984E55B9-03C9-3D2A-95DC-3A5F434A4A71',
           'machoLoadAddress': '0x7fff23a99000',
@@ -229,7 +229,7 @@ const iosEventJson = {
           'method': 'UIApplicationMain',
           'machoVMAddress': '0x7fff23a99000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/System\/Library\/PrivateFrameworks\/UIKitCore.framework\/UIKitCore',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/PrivateFrameworks/UIKitCore.framework/UIKitCore',
           'symbolAddress': '0x7fff24695c57',
           'machoUUID': '984E55B9-03C9-3D2A-95DC-3A5F434A4A71',
           'machoLoadAddress': '0x7fff23a99000',
@@ -239,7 +239,7 @@ const iosEventJson = {
           'method': '_mh_execute_header',
           'machoVMAddress': '0x100000000',
           'machoFile':
-              '\/Users\/nick\/Library\/Developer\/CoreSimulator\/Devices\/5AFE2FCA-EB57-45D2-A705-42F81D4031F3\/data\/Containers\/Bundle\/Application\/B7477EE0-B11B-41B3-9A7A-FFEE9E28AA47\/Bugsnag Test App.app\/Bugsnag Test App',
+              '/Users/nick/Library/Developer/CoreSimulator/Devices/5AFE2FCA-EB57-45D2-A705-42F81D4031F3/data/Containers/Bundle/Application/B7477EE0-B11B-41B3-9A7A-FFEE9E28AA47/Bugsnag Test App.app/Bugsnag Test App',
           'symbolAddress': '0x10d2d0000',
           'machoUUID': 'F18A2C56-008C-3CC1-8BFF-4E79683FB1AB',
           'machoLoadAddress': '0x10d2d0000',
@@ -249,7 +249,7 @@ const iosEventJson = {
           'method': 'start',
           'machoVMAddress': '0x7fff20258000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/usr\/lib\/system\/libdyld.dylib',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/usr/lib/system/libdyld.dylib',
           'symbolAddress': '0x7fff202593e8',
           'machoUUID': '78F65EE7-1659-3B52-9FE5-FDD6C61BDCAA',
           'machoLoadAddress': '0x7fff20258000',
@@ -300,7 +300,7 @@ const iosEventJson = {
           'method': '__exceptionPreprocess',
           'machoVMAddress': '0x7fff2030f000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/System\/Library\/Frameworks\/CoreFoundation.framework\/CoreFoundation',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation',
           'isPC': true,
           'symbolAddress': '0x7fff20420a04',
           'machoUUID': '8FC68AD0-5128-3700-9E63-F6F358B6321B',
@@ -311,7 +311,7 @@ const iosEventJson = {
           'method': 'objc_exception_throw',
           'machoVMAddress': '0x7fff20172000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/usr\/lib\/libobjc.A.dylib',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/usr/lib/libobjc.A.dylib',
           'symbolAddress': '0x7fff20177e48',
           'machoUUID': '0ED2E6A3-D7FC-3A31-A1CA-6BE106521240',
           'machoLoadAddress': '0x7fff20172000',
@@ -321,7 +321,7 @@ const iosEventJson = {
           'method': '-[NSObject(NSObject) doesNotRecognizeSelector:]',
           'machoVMAddress': '0x7fff2030f000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/System\/Library\/Frameworks\/CoreFoundation.framework\/CoreFoundation',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation',
           'symbolAddress': '0x7fff2042f673',
           'machoUUID': '8FC68AD0-5128-3700-9E63-F6F358B6321B',
           'machoLoadAddress': '0x7fff2030f000',
@@ -331,7 +331,7 @@ const iosEventJson = {
           'method': '-[UIResponder doesNotRecognizeSelector:]',
           'machoVMAddress': '0x7fff23a99000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/System\/Library\/PrivateFrameworks\/UIKitCore.framework\/UIKitCore',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/PrivateFrameworks/UIKitCore.framework/UIKitCore',
           'symbolAddress': '0x7fff246c5a33',
           'machoUUID': '984E55B9-03C9-3D2A-95DC-3A5F434A4A71',
           'machoLoadAddress': '0x7fff23a99000',
@@ -341,7 +341,7 @@ const iosEventJson = {
           'method': '___forwarding___',
           'machoVMAddress': '0x7fff2030f000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/System\/Library\/Frameworks\/CoreFoundation.framework\/CoreFoundation',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation',
           'symbolAddress': '0x7fff20424a65',
           'machoUUID': '8FC68AD0-5128-3700-9E63-F6F358B6321B',
           'machoLoadAddress': '0x7fff2030f000',
@@ -351,7 +351,7 @@ const iosEventJson = {
           'method': '_CF_forwarding_prep_0',
           'machoVMAddress': '0x7fff2030f000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/System\/Library\/Frameworks\/CoreFoundation.framework\/CoreFoundation',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation',
           'symbolAddress': '0x7fff20426ff0',
           'machoUUID': '8FC68AD0-5128-3700-9E63-F6F358B6321B',
           'machoLoadAddress': '0x7fff2030f000',
@@ -361,7 +361,7 @@ const iosEventJson = {
           'method': '__NSThreadPerformPerform',
           'machoVMAddress': '0x7fff2071b000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/System\/Library\/Frameworks\/Foundation.framework\/Foundation',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/Frameworks/Foundation.framework/Foundation',
           'symbolAddress': '0x7fff208581ee',
           'machoUUID': '5716A8B8-2769-3484-9FD8-196630050F5B',
           'machoLoadAddress': '0x7fff2071b000',
@@ -372,7 +372,7 @@ const iosEventJson = {
               '__CFRUNLOOP_IS_CALLING_OUT_TO_A_SOURCE0_PERFORM_FUNCTION__',
           'machoVMAddress': '0x7fff2030f000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/System\/Library\/Frameworks\/CoreFoundation.framework\/CoreFoundation',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation',
           'symbolAddress': '0x7fff2038f379',
           'machoUUID': '8FC68AD0-5128-3700-9E63-F6F358B6321B',
           'machoLoadAddress': '0x7fff2030f000',
@@ -382,7 +382,7 @@ const iosEventJson = {
           'method': '__CFRunLoopDoSource0',
           'machoVMAddress': '0x7fff2030f000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/System\/Library\/Frameworks\/CoreFoundation.framework\/CoreFoundation',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation',
           'symbolAddress': '0x7fff2038f1ce',
           'machoUUID': '8FC68AD0-5128-3700-9E63-F6F358B6321B',
           'machoLoadAddress': '0x7fff2030f000',
@@ -392,7 +392,7 @@ const iosEventJson = {
           'method': '__CFRunLoopDoSources0',
           'machoVMAddress': '0x7fff2030f000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/System\/Library\/Frameworks\/CoreFoundation.framework\/CoreFoundation',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation',
           'symbolAddress': '0x7fff2038e66c',
           'machoUUID': '8FC68AD0-5128-3700-9E63-F6F358B6321B',
           'machoLoadAddress': '0x7fff2030f000',
@@ -402,7 +402,7 @@ const iosEventJson = {
           'method': '__CFRunLoopRun',
           'machoVMAddress': '0x7fff2030f000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/System\/Library\/Frameworks\/CoreFoundation.framework\/CoreFoundation',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation',
           'symbolAddress': '0x7fff20388bc1',
           'machoUUID': '8FC68AD0-5128-3700-9E63-F6F358B6321B',
           'machoLoadAddress': '0x7fff2030f000',
@@ -412,7 +412,7 @@ const iosEventJson = {
           'method': 'CFRunLoopRunSpecific',
           'machoVMAddress': '0x7fff2030f000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/System\/Library\/Frameworks\/CoreFoundation.framework\/CoreFoundation',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation',
           'symbolAddress': '0x7fff2038849f',
           'machoUUID': '8FC68AD0-5128-3700-9E63-F6F358B6321B',
           'machoLoadAddress': '0x7fff2030f000',
@@ -422,7 +422,7 @@ const iosEventJson = {
           'method': 'GSEventRunModal',
           'machoVMAddress': '0x7fff2bedb000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/System\/Library\/PrivateFrameworks\/GraphicsServices.framework\/GraphicsServices',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/PrivateFrameworks/GraphicsServices.framework/GraphicsServices',
           'symbolAddress': '0x7fff2beded28',
           'machoUUID': 'EFA60C9C-ACAF-3326-BDC5-4B361494A126',
           'machoLoadAddress': '0x7fff2bedb000',
@@ -432,7 +432,7 @@ const iosEventJson = {
           'method': '-[UIApplication _run]',
           'machoVMAddress': '0x7fff23a99000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/System\/Library\/PrivateFrameworks\/UIKitCore.framework\/UIKitCore',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/PrivateFrameworks/UIKitCore.framework/UIKitCore',
           'symbolAddress': '0x7fff24690a7b',
           'machoUUID': '984E55B9-03C9-3D2A-95DC-3A5F434A4A71',
           'machoLoadAddress': '0x7fff23a99000',
@@ -442,7 +442,7 @@ const iosEventJson = {
           'method': 'UIApplicationMain',
           'machoVMAddress': '0x7fff23a99000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/System\/Library\/PrivateFrameworks\/UIKitCore.framework\/UIKitCore',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/PrivateFrameworks/UIKitCore.framework/UIKitCore',
           'symbolAddress': '0x7fff24695c57',
           'machoUUID': '984E55B9-03C9-3D2A-95DC-3A5F434A4A71',
           'machoLoadAddress': '0x7fff23a99000',
@@ -452,7 +452,7 @@ const iosEventJson = {
           'method': '_mh_execute_header',
           'machoVMAddress': '0x100000000',
           'machoFile':
-              '\/Users\/nick\/Library\/Developer\/CoreSimulator\/Devices\/5AFE2FCA-EB57-45D2-A705-42F81D4031F3\/data\/Containers\/Bundle\/Application\/B7477EE0-B11B-41B3-9A7A-FFEE9E28AA47\/Bugsnag Test App.app\/Bugsnag Test App',
+              '/Users/nick/Library/Developer/CoreSimulator/Devices/5AFE2FCA-EB57-45D2-A705-42F81D4031F3/data/Containers/Bundle/Application/B7477EE0-B11B-41B3-9A7A-FFEE9E28AA47/Bugsnag Test App.app/Bugsnag Test App',
           'symbolAddress': '0x10d2d0000',
           'machoUUID': 'F18A2C56-008C-3CC1-8BFF-4E79683FB1AB',
           'machoLoadAddress': '0x10d2d0000',
@@ -462,7 +462,7 @@ const iosEventJson = {
           'method': 'start',
           'machoVMAddress': '0x7fff20258000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/usr\/lib\/system\/libdyld.dylib',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/usr/lib/system/libdyld.dylib',
           'symbolAddress': '0x7fff202593e8',
           'machoUUID': '78F65EE7-1659-3B52-9FE5-FDD6C61BDCAA',
           'machoLoadAddress': '0x7fff20258000',
@@ -479,7 +479,7 @@ const iosEventJson = {
           'method': '__workq_kernreturn',
           'machoVMAddress': '0x7fff60c51000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/usr\/lib\/system\/libsystem_kernel.dylib',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/usr/lib/system/libsystem_kernel.dylib',
           'symbolAddress': '0x7fff60c534c4',
           'machoUUID': 'FF092EE8-5BEE-3B9A-8749-F0A067115C7E',
           'machoLoadAddress': '0x7fff60c51000',
@@ -489,7 +489,7 @@ const iosEventJson = {
           'method': 'start_wqthread',
           'machoVMAddress': '0x7fff60c88000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/usr\/lib\/system\/libsystem_pthread.dylib',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/usr/lib/system/libsystem_pthread.dylib',
           'symbolAddress': '0x7fff60c89b68',
           'machoUUID': '62CB1A98-0B8F-31E7-A02B-A1139927F61D',
           'machoLoadAddress': '0x7fff60c88000',
@@ -506,7 +506,7 @@ const iosEventJson = {
           'method': '__workq_kernreturn',
           'machoVMAddress': '0x7fff60c51000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/usr\/lib\/system\/libsystem_kernel.dylib',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/usr/lib/system/libsystem_kernel.dylib',
           'symbolAddress': '0x7fff60c534c4',
           'machoUUID': 'FF092EE8-5BEE-3B9A-8749-F0A067115C7E',
           'machoLoadAddress': '0x7fff60c51000',
@@ -516,7 +516,7 @@ const iosEventJson = {
           'method': 'start_wqthread',
           'machoVMAddress': '0x7fff60c88000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/usr\/lib\/system\/libsystem_pthread.dylib',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/usr/lib/system/libsystem_pthread.dylib',
           'symbolAddress': '0x7fff60c89b68',
           'machoUUID': '62CB1A98-0B8F-31E7-A02B-A1139927F61D',
           'machoLoadAddress': '0x7fff60c88000',
@@ -533,7 +533,7 @@ const iosEventJson = {
           'method': 'mach_msg_trap',
           'machoVMAddress': '0x7fff60c51000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/usr\/lib\/system\/libsystem_kernel.dylib',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/usr/lib/system/libsystem_kernel.dylib',
           'symbolAddress': '0x7fff60c51df0',
           'machoUUID': 'FF092EE8-5BEE-3B9A-8749-F0A067115C7E',
           'machoLoadAddress': '0x7fff60c51000',
@@ -543,7 +543,7 @@ const iosEventJson = {
           'method': '__CFRunLoopServiceMachPort',
           'machoVMAddress': '0x7fff2030f000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/System\/Library\/Frameworks\/CoreFoundation.framework\/CoreFoundation',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation',
           'symbolAddress': '0x7fff2038e880',
           'machoUUID': '8FC68AD0-5128-3700-9E63-F6F358B6321B',
           'machoLoadAddress': '0x7fff2030f000',
@@ -553,7 +553,7 @@ const iosEventJson = {
           'method': '__CFRunLoopRun',
           'machoVMAddress': '0x7fff2030f000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/System\/Library\/Frameworks\/CoreFoundation.framework\/CoreFoundation',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation',
           'symbolAddress': '0x7fff20388bc1',
           'machoUUID': '8FC68AD0-5128-3700-9E63-F6F358B6321B',
           'machoLoadAddress': '0x7fff2030f000',
@@ -563,7 +563,7 @@ const iosEventJson = {
           'method': 'CFRunLoopRunSpecific',
           'machoVMAddress': '0x7fff2030f000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/System\/Library\/Frameworks\/CoreFoundation.framework\/CoreFoundation',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation',
           'symbolAddress': '0x7fff2038849f',
           'machoUUID': '8FC68AD0-5128-3700-9E63-F6F358B6321B',
           'machoLoadAddress': '0x7fff2030f000',
@@ -573,7 +573,7 @@ const iosEventJson = {
           'method': '-[NSRunLoop(NSRunLoop) runMode:beforeDate:]',
           'machoVMAddress': '0x7fff2071b000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/System\/Library\/Frameworks\/Foundation.framework\/Foundation',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/Frameworks/Foundation.framework/Foundation',
           'symbolAddress': '0x7fff2082f6e8',
           'machoUUID': '5716A8B8-2769-3484-9FD8-196630050F5B',
           'machoLoadAddress': '0x7fff2071b000',
@@ -583,7 +583,7 @@ const iosEventJson = {
           'method': '-[NSRunLoop(NSRunLoop) runUntilDate:]',
           'machoVMAddress': '0x7fff2071b000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/System\/Library\/Frameworks\/Foundation.framework\/Foundation',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/Frameworks/Foundation.framework/Foundation',
           'symbolAddress': '0x7fff2082f9e0',
           'machoUUID': '5716A8B8-2769-3484-9FD8-196630050F5B',
           'machoLoadAddress': '0x7fff2071b000',
@@ -593,7 +593,7 @@ const iosEventJson = {
           'method': '-[UIEventFetcher threadMain]',
           'machoVMAddress': '0x7fff23a99000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/System\/Library\/PrivateFrameworks\/UIKitCore.framework\/UIKitCore',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/PrivateFrameworks/UIKitCore.framework/UIKitCore',
           'symbolAddress': '0x7fff24747fa1',
           'machoUUID': '984E55B9-03C9-3D2A-95DC-3A5F434A4A71',
           'machoLoadAddress': '0x7fff23a99000',
@@ -603,7 +603,7 @@ const iosEventJson = {
           'method': '__NSThread__start__',
           'machoVMAddress': '0x7fff2071b000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/System\/Library\/Frameworks\/Foundation.framework\/Foundation',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/Frameworks/Foundation.framework/Foundation',
           'symbolAddress': '0x7fff20857a56',
           'machoUUID': '5716A8B8-2769-3484-9FD8-196630050F5B',
           'machoLoadAddress': '0x7fff2071b000',
@@ -613,7 +613,7 @@ const iosEventJson = {
           'method': '_pthread_start',
           'machoVMAddress': '0x7fff60c88000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/usr\/lib\/system\/libsystem_pthread.dylib',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/usr/lib/system/libsystem_pthread.dylib',
           'symbolAddress': '0x7fff60c8e075',
           'machoUUID': '62CB1A98-0B8F-31E7-A02B-A1139927F61D',
           'machoLoadAddress': '0x7fff60c88000',
@@ -623,7 +623,7 @@ const iosEventJson = {
           'method': 'thread_start',
           'machoVMAddress': '0x7fff60c88000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/usr\/lib\/system\/libsystem_pthread.dylib',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/usr/lib/system/libsystem_pthread.dylib',
           'symbolAddress': '0x7fff60c89b7c',
           'machoUUID': '62CB1A98-0B8F-31E7-A02B-A1139927F61D',
           'machoLoadAddress': '0x7fff60c88000',
@@ -640,7 +640,7 @@ const iosEventJson = {
           'method': 'mach_msg_trap',
           'machoVMAddress': '0x7fff60c51000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/usr\/lib\/system\/libsystem_kernel.dylib',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/usr/lib/system/libsystem_kernel.dylib',
           'symbolAddress': '0x7fff60c51df0',
           'machoUUID': 'FF092EE8-5BEE-3B9A-8749-F0A067115C7E',
           'machoLoadAddress': '0x7fff60c51000',
@@ -650,7 +650,7 @@ const iosEventJson = {
           'method': 'thread_suspend',
           'machoVMAddress': '0x7fff60c51000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/usr\/lib\/system\/libsystem_kernel.dylib',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/usr/lib/system/libsystem_kernel.dylib',
           'symbolAddress': '0x7fff60c6f7dd',
           'machoUUID': 'FF092EE8-5BEE-3B9A-8749-F0A067115C7E',
           'machoLoadAddress': '0x7fff60c51000',
@@ -660,7 +660,7 @@ const iosEventJson = {
           'method': '__cxa_throw',
           'machoVMAddress': '0x100000000',
           'machoFile':
-              '\/Users\/nick\/Library\/Developer\/CoreSimulator\/Devices\/5AFE2FCA-EB57-45D2-A705-42F81D4031F3\/data\/Containers\/Bundle\/Application\/B7477EE0-B11B-41B3-9A7A-FFEE9E28AA47\/Bugsnag Test App.app\/Bugsnag Test App',
+              '/Users/nick/Library/Developer/CoreSimulator/Devices/5AFE2FCA-EB57-45D2-A705-42F81D4031F3/data/Containers/Bundle/Application/B7477EE0-B11B-41B3-9A7A-FFEE9E28AA47/Bugsnag Test App.app/Bugsnag Test App',
           'symbolAddress': '0x10d2de0b0',
           'machoUUID': 'F18A2C56-008C-3CC1-8BFF-4E79683FB1AB',
           'machoLoadAddress': '0x10d2d0000',
@@ -670,7 +670,7 @@ const iosEventJson = {
           'method': '_pthread_start',
           'machoVMAddress': '0x7fff60c88000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/usr\/lib\/system\/libsystem_pthread.dylib',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/usr/lib/system/libsystem_pthread.dylib',
           'symbolAddress': '0x7fff60c8e075',
           'machoUUID': '62CB1A98-0B8F-31E7-A02B-A1139927F61D',
           'machoLoadAddress': '0x7fff60c88000',
@@ -680,7 +680,7 @@ const iosEventJson = {
           'method': 'thread_start',
           'machoVMAddress': '0x7fff60c88000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/usr\/lib\/system\/libsystem_pthread.dylib',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/usr/lib/system/libsystem_pthread.dylib',
           'symbolAddress': '0x7fff60c89b7c',
           'machoUUID': '62CB1A98-0B8F-31E7-A02B-A1139927F61D',
           'machoLoadAddress': '0x7fff60c88000',
@@ -697,7 +697,7 @@ const iosEventJson = {
           'method': 'mach_msg_trap',
           'machoVMAddress': '0x7fff60c51000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/usr\/lib\/system\/libsystem_kernel.dylib',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/usr/lib/system/libsystem_kernel.dylib',
           'symbolAddress': '0x7fff60c51df0',
           'machoUUID': 'FF092EE8-5BEE-3B9A-8749-F0A067115C7E',
           'machoLoadAddress': '0x7fff60c51000',
@@ -707,7 +707,7 @@ const iosEventJson = {
           'method': '__cxa_throw',
           'machoVMAddress': '0x100000000',
           'machoFile':
-              '\/Users\/nick\/Library\/Developer\/CoreSimulator\/Devices\/5AFE2FCA-EB57-45D2-A705-42F81D4031F3\/data\/Containers\/Bundle\/Application\/B7477EE0-B11B-41B3-9A7A-FFEE9E28AA47\/Bugsnag Test App.app\/Bugsnag Test App',
+              '/Users/nick/Library/Developer/CoreSimulator/Devices/5AFE2FCA-EB57-45D2-A705-42F81D4031F3/data/Containers/Bundle/Application/B7477EE0-B11B-41B3-9A7A-FFEE9E28AA47/Bugsnag Test App.app/Bugsnag Test App',
           'symbolAddress': '0x10d2de0b0',
           'machoUUID': 'F18A2C56-008C-3CC1-8BFF-4E79683FB1AB',
           'machoLoadAddress': '0x10d2d0000',
@@ -717,7 +717,7 @@ const iosEventJson = {
           'method': '_pthread_start',
           'machoVMAddress': '0x7fff60c88000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/usr\/lib\/system\/libsystem_pthread.dylib',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/usr/lib/system/libsystem_pthread.dylib',
           'symbolAddress': '0x7fff60c8e075',
           'machoUUID': '62CB1A98-0B8F-31E7-A02B-A1139927F61D',
           'machoLoadAddress': '0x7fff60c88000',
@@ -727,7 +727,7 @@ const iosEventJson = {
           'method': 'thread_start',
           'machoVMAddress': '0x7fff60c88000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/usr\/lib\/system\/libsystem_pthread.dylib',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/usr/lib/system/libsystem_pthread.dylib',
           'symbolAddress': '0x7fff60c89b7c',
           'machoUUID': '62CB1A98-0B8F-31E7-A02B-A1139927F61D',
           'machoLoadAddress': '0x7fff60c88000',
@@ -744,7 +744,7 @@ const iosEventJson = {
           'method': 'mach_msg_trap',
           'machoVMAddress': '0x7fff60c51000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/usr\/lib\/system\/libsystem_kernel.dylib',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/usr/lib/system/libsystem_kernel.dylib',
           'symbolAddress': '0x7fff60c51df0',
           'machoUUID': 'FF092EE8-5BEE-3B9A-8749-F0A067115C7E',
           'machoLoadAddress': '0x7fff60c51000',
@@ -754,7 +754,7 @@ const iosEventJson = {
           'method': '__CFRunLoopServiceMachPort',
           'machoVMAddress': '0x7fff2030f000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/System\/Library\/Frameworks\/CoreFoundation.framework\/CoreFoundation',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation',
           'symbolAddress': '0x7fff2038e880',
           'machoUUID': '8FC68AD0-5128-3700-9E63-F6F358B6321B',
           'machoLoadAddress': '0x7fff2030f000',
@@ -764,7 +764,7 @@ const iosEventJson = {
           'method': '__CFRunLoopRun',
           'machoVMAddress': '0x7fff2030f000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/System\/Library\/Frameworks\/CoreFoundation.framework\/CoreFoundation',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation',
           'symbolAddress': '0x7fff20388bc1',
           'machoUUID': '8FC68AD0-5128-3700-9E63-F6F358B6321B',
           'machoLoadAddress': '0x7fff2030f000',
@@ -774,7 +774,7 @@ const iosEventJson = {
           'method': 'CFRunLoopRunSpecific',
           'machoVMAddress': '0x7fff2030f000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/System\/Library\/Frameworks\/CoreFoundation.framework\/CoreFoundation',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation',
           'symbolAddress': '0x7fff2038849f',
           'machoUUID': '8FC68AD0-5128-3700-9E63-F6F358B6321B',
           'machoLoadAddress': '0x7fff2030f000',
@@ -784,7 +784,7 @@ const iosEventJson = {
           'method': '_CFURLStorageSessionCopyCache',
           'machoVMAddress': '0x7fff2350f000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/System\/Library\/Frameworks\/CFNetwork.framework\/CFNetwork',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/Frameworks/CFNetwork.framework/CFNetwork',
           'symbolAddress': '0x7fff2372af3f',
           'machoUUID': 'D9DAA7CF-DDC1-361B-A7AD-0D4783893E72',
           'machoLoadAddress': '0x7fff2350f000',
@@ -794,7 +794,7 @@ const iosEventJson = {
           'method': '__NSThread__start__',
           'machoVMAddress': '0x7fff2071b000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/System\/Library\/Frameworks\/Foundation.framework\/Foundation',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/Frameworks/Foundation.framework/Foundation',
           'symbolAddress': '0x7fff20857a56',
           'machoUUID': '5716A8B8-2769-3484-9FD8-196630050F5B',
           'machoLoadAddress': '0x7fff2071b000',
@@ -804,7 +804,7 @@ const iosEventJson = {
           'method': '_pthread_start',
           'machoVMAddress': '0x7fff60c88000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/usr\/lib\/system\/libsystem_pthread.dylib',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/usr/lib/system/libsystem_pthread.dylib',
           'symbolAddress': '0x7fff60c8e075',
           'machoUUID': '62CB1A98-0B8F-31E7-A02B-A1139927F61D',
           'machoLoadAddress': '0x7fff60c88000',
@@ -814,7 +814,7 @@ const iosEventJson = {
           'method': 'thread_start',
           'machoVMAddress': '0x7fff60c88000',
           'machoFile':
-              '\/Applications\/Xcode.app\/Contents\/Developer\/Platforms\/iPhoneOS.platform\/Library\/Developer\/CoreSimulator\/Profiles\/Runtimes\/iOS.simruntime\/Contents\/Resources\/RuntimeRoot\/usr\/lib\/system\/libsystem_pthread.dylib',
+              '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/usr/lib/system/libsystem_pthread.dylib',
           'symbolAddress': '0x7fff60c89b7c',
           'machoUUID': '62CB1A98-0B8F-31E7-A02B-A1139927F61D',
           'machoLoadAddress': '0x7fff60c88000',

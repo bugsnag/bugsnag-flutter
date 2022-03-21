@@ -1,4 +1,4 @@
-import 'package:bugsnag_flutter/core.dart';
+import 'package:bugsnag_flutter/src/model/breadcrumbs.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
