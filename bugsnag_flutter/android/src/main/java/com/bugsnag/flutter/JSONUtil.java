@@ -9,8 +9,9 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.Map;
 
-class JSONUtil {
+public class JSONUtil {
     private JSONUtil() {
     }
 
@@ -21,7 +22,7 @@ class JSONUtil {
      * @return the {@code JSONObject} equivilent of {@code json}
      */
     @Nullable
-    static JSONObject toJson(JsonStream.Streamable json) {
+    public static JSONObject toJson(JsonStream.Streamable json) {
         StringWriter writer = new StringWriter();
         JsonStream stream = new JsonStream(writer);
         try {
@@ -32,5 +33,9 @@ class JSONUtil {
         } catch (JSONException e) {
             return null;
         }
+    }
+
+    public static Map<String, Object> toMap(JSONObject object) {
+        return (Map<String, Object>) io.flutter.plugin.common.JSONUtil.unwrap(object);
     }
 }

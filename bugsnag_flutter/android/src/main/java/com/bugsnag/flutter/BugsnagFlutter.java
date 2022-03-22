@@ -5,20 +5,13 @@ import android.content.Context;
 import androidx.annotation.Nullable;
 
 import com.bugsnag.android.Bugsnag;
+import com.bugsnag.android.BugsnagAndroid;
+import com.bugsnag.android.Event;
 import com.bugsnag.android.FeatureFlag;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-/**
- * This sits between the Flutter layer of function calls, and the native {@link Bugsnag} class.
- * Each method in this class corresponds to a {@link BSGFunction} listed in
- * {@link BugsnagFlutterPlugin}, and is responsible for unwrapping and wrapping the JSON arguments
- * passed from and to the Flutter layer.
- *
- * In order to support the contract imposed by {@link BSGFunction} methods may need to return
- * {@code Void} (the object) instead of {@code void} as would be typical.
- */
 import java.util.ArrayList;
 import java.util.List;
 
@@ -110,6 +103,28 @@ class BugsnagFlutter {
             }
         }
 
+        return null;
+    }
+
+    JSONObject createEvent(@Nullable JSONObject args) {
+        if (args == null) {
+            return null;
+        }
+
+        Event event = BugsnagAndroid.createEmptyEvent(args.optBoolean("unhandled"));
+        JSONObject error = args.optJSONObject("error");
+
+        event.getErrors().add(BugsnagAndroid.decodeError(error));
+
+        return JSONUtil.toJson(event);
+    }
+
+    JSONObject deliverEvent(@Nullable JSONObject args) {
+        if (args == null) {
+            return null;
+        }
+
+        BugsnagAndroid.notify(args);
         return null;
     }
 

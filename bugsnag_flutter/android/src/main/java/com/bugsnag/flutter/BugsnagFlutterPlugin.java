@@ -24,6 +24,8 @@ public class BugsnagFlutterPlugin implements FlutterPlugin, MethodCallHandler {
     private MethodChannel channel;
 
     public BugsnagFlutterPlugin() {
+        functions.put("createEvent", bugsnag::createEvent);
+        functions.put("deliverEvent", bugsnag::deliverEvent);
         functions.put("setUser", bugsnag::setUser);
         functions.put("getUser", bugsnag::getUser);
         functions.put("setContext", bugsnag::setContext);

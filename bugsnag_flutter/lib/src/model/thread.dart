@@ -15,6 +15,16 @@ class Thread {
 
   Stacktrace get stacktrace => _stacktrace;
 
+  Thread({
+    this.id,
+    this.name,
+    this.state,
+    bool? isErrorReportingThread,
+    this.type = ErrorType.flutter,
+    required Stacktrace stacktrace,
+  })  : _stacktrace = stacktrace,
+        isErrorReportingThread = isErrorReportingThread == true;
+
   Thread.fromJson(Map<String, dynamic> json)
       : id = json['id']?.toString(),
         name = json.safeGet('name'),
