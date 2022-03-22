@@ -1,5 +1,8 @@
 package com.bugsnag.android;
 
+import androidx.annotation.Nullable;
+
+import com.bugsnag.android.internal.ImmutableConfig;
 import com.bugsnag.flutter.JSONUtil;
 
 import org.json.JSONArray;
@@ -7,21 +10,24 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
- * Bugsnag Android internal API compatibility.
+ * Bugsnag Android internal API compatibility. All of this needs to move away the Flutter plugin
+ * otherwise we likely won't be able to publish.
  */
 public class BugsnagAndroid {
     private BugsnagAndroid() {
     }
 
     public static void notify(JSONObject eventJson) {
-        Map<String, Object> eventMap = (Map<String, Object>) io.flutter.plugin.common.JSONUtil.unwrap(eventJson);
+        Client client = Bugsnag.getClient();
+        EventStore eventStore = client.getEventStore();
+        ImmutableConfig config = client.immutableConfig;
 
-        BugsnagEventMapper eventMapper = new BugsnagEventMapper(getLogger());
-        Event event = new Event(eventMapper.convertToEventImpl$bugsnag_android_core_release(eventMap, Bugsnag.getClient().immutableConfig.getApiKey()), getLogger());
-        Bugsnag.getClient().notifyInternal(event, null);
+        if (!config.shouldDiscardByReleaseStage()) {
+            String filename = eventStore.getFilename(eventJson.optString("apiKey", config.getApiKey()));
+            eventStore.enqueueContentForDelivery(eventJson.toString(), filename);
+        }
     }
 
     public static Error decodeError(JSONObject error) {
@@ -74,11 +80,16 @@ public class BugsnagAndroid {
         return Bugsnag.getClient().getLogger();
     }
 
-    private static ErrorType decodeErrorType(String errorType) {
-        ErrorType type = ErrorType.Companion.fromDescriptor$bugsnag_android_core_release(errorType);
-        if (type == null) {
-            type = ErrorType.ANDROID;
+    private static ErrorType decodeErrorType(@Nullable String errorType) {
+        if (errorType == null || errorType.equals("android")) {
+            return ErrorType.ANDROID;
+        } else if (errorType.equals("c")) {
+            return ErrorType.C;
+        } else if (errorType.equals("reactnativejs")) {
+            return ErrorType.REACTNATIVEJS;
+        } else {
+            getLogger().w("Cannot convert '" + errorType + "' to Android compatible ErrorType");
+            return ErrorType.ANDROID;
         }
-        return type;
     }
 }
