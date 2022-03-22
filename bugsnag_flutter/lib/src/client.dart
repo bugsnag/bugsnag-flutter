@@ -8,9 +8,9 @@ import 'package:flutter/services.dart';
 
 import 'model.dart';
 
-typedef OnErrorCallback = FutureOr<bool> Function(Event);
-typedef OnSessionCallback = FutureOr<bool> Function(Session);
-typedef OnBreadcrumbCallback = FutureOr<bool> Function(Breadcrumb);
+typedef OnErrorCallback = FutureOr<bool> Function(Event event);
+typedef OnSessionCallback = FutureOr<bool> Function(Session session);
+typedef OnBreadcrumbCallback = FutureOr<bool> Function(Breadcrumb breadcrumb);
 
 abstract class Client {
   Future<void> setUser({String? id, String? name, String? email});
@@ -118,16 +118,19 @@ class ChannelClient implements Client {
     OnErrorCallback? callback,
   }) async {
     final errorPayload = ErrorFactory.instance.createError(error, stackTrace);
-    final event = await _createEvent(errorPayload, unhandled: false);
-
-    // The Platform doesn't "know" about the `Isolate` "thread" - so we add it
-    event.threads.add(
-      _createIsolateThread(Isolate.current, StackTrace.current),
+    final event = await _createEvent(
+      errorPayload,
+      unhandled: false,
+      isolateStackTrace: StackTrace.current,
     );
 
     for (final callback in _onErrorCallbacks) {
-      if (!await callback(event)) {
-        return;
+      try {
+        if (!await callback(event)) {
+          return;
+        }
+      } catch (e) {
+        // ignore these errors, and continue processing any remaining callbacks
       }
     }
 
@@ -140,6 +143,7 @@ class ChannelClient implements Client {
 
   Future<Event> _createEvent(
     Error error, {
+    StackTrace? isolateStackTrace,
     required bool unhandled,
   }) async {
     final eventJson = await _channel.invokeMethod(
@@ -150,7 +154,16 @@ class ChannelClient implements Client {
       },
     );
 
-    return Event.fromJson(eventJson);
+    final event = Event.fromJson(eventJson);
+    event.threads.insert(
+      0, // make the Dart Isolate the first "Thread" we report
+      _createIsolateThread(
+        Isolate.current,
+        isolateStackTrace ?? StackTrace.current,
+      ),
+    );
+
+    return event;
   }
 
   Future<void> _deliverEvent(Event event) =>
@@ -185,6 +198,7 @@ class Bugsnag extends Client with DelegateClient {
   /// * [setUser]
   /// * [setContext]
   /// * [addFeatureFlags]
+  /// * [addOnError]
   Future<void> attach({
     User? user,
     String? context,
