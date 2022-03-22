@@ -116,7 +116,13 @@ class BugsnagFlutter {
 
         event.getErrors().add(BugsnagAndroid.decodeError(error));
 
-        return JSONUtil.toJson(event);
+        if (args.optBoolean("delivery")) {
+            // Flutter layer has asked us to deliver the Event immediately
+            BugsnagAndroid.notify(event);
+            return null;
+        } else {
+            return JSONUtil.toJson(event);
+        }
     }
 
     JSONObject deliverEvent(@Nullable JSONObject args) {

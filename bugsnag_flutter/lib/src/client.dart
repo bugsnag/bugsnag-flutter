@@ -122,7 +122,12 @@ class ChannelClient implements Client {
       errorPayload,
       unhandled: false,
       isolateStackTrace: StackTrace.current,
+      deliver: _onErrorCallbacks.isEmpty && callback == null,
     );
+
+    if (event == null) {
+      return;
+    }
 
     for (final callback in _onErrorCallbacks) {
       try {
@@ -141,29 +146,35 @@ class ChannelClient implements Client {
     await _deliverEvent(event);
   }
 
-  Future<Event> _createEvent(
+  /// Create an Event by having it built and enriched by the native notifier,
+  /// if [deliver] is `true` return `null` and schedule the `Event` for immediate
+  /// delivery. If [deliver] is `false` then the `Event` is only constructed
+  /// and returned to be processed by the Flutter notifier.
+  Future<Event?> _createEvent(
     Error error, {
     StackTrace? isolateStackTrace,
     required bool unhandled,
+    required bool deliver,
   }) async {
     final eventJson = await _channel.invokeMethod(
       'createEvent',
-      {
-        'error': error,
-        'unhandled': unhandled,
-      },
+      {'error': error, 'unhandled': unhandled, 'deliver': deliver},
     );
 
-    final event = Event.fromJson(eventJson);
-    event.threads.insert(
-      0, // make the Dart Isolate the first "Thread" we report
-      _createIsolateThread(
-        Isolate.current,
-        isolateStackTrace ?? StackTrace.current,
-      ),
-    );
+    if (!deliver) {
+      final event = Event.fromJson(eventJson);
+      event.threads.insert(
+        0, // make the Dart Isolate the first "Thread" we report
+        _createIsolateThread(
+          Isolate.current,
+          isolateStackTrace ?? StackTrace.current,
+        ),
+      );
 
-    return event;
+      return event;
+    }
+
+    return null;
   }
 
   Future<void> _deliverEvent(Event event) =>

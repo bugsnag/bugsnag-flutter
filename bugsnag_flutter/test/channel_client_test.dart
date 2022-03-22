@@ -3,6 +3,7 @@ import 'package:bugsnag_flutter/src/client.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+var createdEvents = <Map<String, dynamic>>[];
 var deliveredEvents = <Map<String, dynamic>>[];
 
 void main() {
@@ -15,6 +16,7 @@ void main() {
     late ChannelClient client;
     setUp(() {
       client = ChannelClient();
+      createdEvents.clear();
       deliveredEvents.clear();
     });
 
@@ -61,6 +63,17 @@ void main() {
         );
       });
     });
+
+    group('Client.notify', () {
+      test('delivers events in createEvent if possible', () async {
+        await client.notify('no error', stackTrace: StackTrace.current);
+
+        expect(createdEvents, hasLength(1));
+        expect(createdEvents[0]['deliver'], isTrue);
+
+        expect(deliveredEvents, isEmpty);
+      });
+    });
   });
 }
 
@@ -68,6 +81,7 @@ Future<Object?> _handleClientMethodCall(MethodCall message) async {
   if (message.method == 'attach') {
     return true;
   } else if (message.method == 'createEvent') {
+    createdEvents.add(message.arguments);
     return Event.fromJson(const {
       'metaData': <String, dynamic>{},
       'severity': 'warning',

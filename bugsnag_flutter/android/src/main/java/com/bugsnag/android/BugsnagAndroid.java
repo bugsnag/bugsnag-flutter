@@ -19,8 +19,12 @@ public class BugsnagAndroid {
     private BugsnagAndroid() {
     }
 
+    public static void notify(Event event) {
+        getClient().notifyInternal(event, null);
+    }
+
     public static void notify(JSONObject eventJson) {
-        Client client = Bugsnag.getClient();
+        Client client = getClient();
         EventStore eventStore = client.getEventStore();
         ImmutableConfig config = client.immutableConfig;
 
@@ -53,9 +57,11 @@ public class BugsnagAndroid {
     }
 
     public static Event createEmptyEvent(boolean unhandled) {
+        Client client = getClient();
+
         Event event = new Event(
                 new EventInternal(
-                        Bugsnag.getClient().immutableConfig,
+                        client.immutableConfig,
                         new SeverityReason(
                                 unhandled
                                         ? SeverityReason.REASON_UNHANDLED_EXCEPTION
@@ -70,14 +76,18 @@ public class BugsnagAndroid {
                 getLogger()
         );
 
-        event.setApp(Bugsnag.getClient().getAppDataCollector().generateAppWithState());
-        event.setDevice(Bugsnag.getClient().getDeviceDataCollector().generateDeviceWithState(System.currentTimeMillis()));
+        event.setApp(client.getAppDataCollector().generateAppWithState());
+        event.setDevice(client.getDeviceDataCollector().generateDeviceWithState(System.currentTimeMillis()));
 
         return event;
     }
 
     private static Logger getLogger() {
-        return Bugsnag.getClient().getLogger();
+        return getClient().getLogger();
+    }
+
+    private static Client getClient() {
+        return Bugsnag.getClient();
     }
 
     private static ErrorType decodeErrorType(@Nullable String errorType) {
