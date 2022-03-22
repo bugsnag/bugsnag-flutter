@@ -1,8 +1,8 @@
-import 'package:bugsnag_flutter/src/native_stacktrace.dart';
+import 'package:bugsnag_flutter/src/bugsnag_stacktrace.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group('nativeStacktrace', () {
+  group('native stacktrace', () {
     test('parses as Stacktrace', () {
       final stacktrace = parseNativeStackTrace(obfuscatedStackTrace);
 
@@ -30,8 +30,19 @@ void main() {
 
     test('returns null for non-native StackTraces', () {
       final stacktrace = parseNativeStackTrace(StackTrace.current.toString());
-
       expect(stacktrace, isNull);
+    });
+  });
+
+  group('parseStackTrace', () {
+    test('parses StackTrace objects', () {
+      final stacktrace = parseStackTrace(StackTrace.current.toString());
+
+      expect(stacktrace, isNotNull);
+      expect(stacktrace!, hasLength(greaterThan(3)));
+
+      expect(stacktrace[0].method, equals('main'));
+      expect(stacktrace[0].file, endsWith('test/bugsnag_stacktrace_test.dart'));
     });
   });
 }

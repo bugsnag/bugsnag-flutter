@@ -1,4 +1,5 @@
 import 'package:bugsnag_flutter/bugsnag.dart';
+import 'package:flutter/foundation.dart';
 
 // This file is heavily based on:
 // https://github.com/dart-lang/sdk/blob/main/pkg/native_stack_traces/lib/src/convert.dart
@@ -30,6 +31,16 @@ int? _retrievePCOffset(String line) {
   return null;
 }
 
+Stacktrace? parseStackTrace(String stackTraceString) {
+  try {
+    return StackFrame.fromStackTrace(StackTrace.fromString(stackTraceString))
+        .map(Stackframe.fromStackFrame)
+        .toList();
+  } catch (e) {
+    return null;
+  }
+}
+
 /// If possible parse the given [stackTrace] as an obfuscated native stackTrace.
 /// If the given `stackTrace` is not a valid native stack trace return `null`.
 Stacktrace? parseNativeStackTrace(String stackTrace) {
@@ -52,4 +63,8 @@ Stacktrace? parseNativeStackTrace(String stackTrace) {
   }
 
   return buildId != null ? stacktrace : null;
+}
+
+Stacktrace? parseStackTraceString(String stackTrace) {
+  return parseNativeStackTrace(stackTrace) ?? parseStackTrace(stackTrace);
 }

@@ -1,5 +1,4 @@
-import 'package:bugsnag_flutter/src/native_stacktrace.dart';
-import 'package:flutter/foundation.dart';
+import 'package:bugsnag_flutter/src/bugsnag_stacktrace.dart';
 
 import 'model/event.dart';
 import 'model/stackframe.dart';
@@ -14,7 +13,7 @@ class ErrorFactory {
     // where the error was first thrown
     final stack = _stackTraceFrom(error) ??
         (stackTrace != null
-            ? _parseStackTrace(stackTrace)
+            ? (parseStackTrace(stackTrace.toString()) ?? _fallbackStacktrace())
             : _fallbackStacktrace());
 
     return Error(
@@ -68,11 +67,9 @@ class ErrorFactory {
     try {
       final stack = error.stackTrace;
       if (stack is StackTrace) {
-        return parseNativeStackTrace(stack.toString()) ??
-            _parseStackTrace(stack);
+        return parseStackTrace(stack.toString()) ?? _fallbackStacktrace();
       } else if (stack is String) {
-        return parseNativeStackTrace(stack) ??
-            _parseStackTrace(StackTrace.fromString(stack));
+        return parseStackTrace(stack) ?? _fallbackStacktrace();
       }
     } catch (e) {
       // the error clearly doesn't have a usable stackTrace field, go to fallback
@@ -81,12 +78,8 @@ class ErrorFactory {
     return null;
   }
 
-  Stacktrace _parseStackTrace(StackTrace stackTrace) =>
-      StackFrame.fromStackTrace(stackTrace)
-          .map(Stackframe.fromStackFrame)
-          .toList();
-
-  Stacktrace _fallbackStacktrace() => _parseStackTrace(StackTrace.current);
+  Stacktrace _fallbackStacktrace() =>
+      parseStackTrace(StackTrace.current.toString())!;
 
   /// Extract the probable "Display name" for an error based on it's type.
   /// This method trims any `_` off the front of the type name.
