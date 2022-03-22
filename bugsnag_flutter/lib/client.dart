@@ -3,7 +3,10 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 
-import 'model.dart';
+import 'src/model/breadcrumbs.dart';
+import 'src/model/feature_flags.dart';
+import 'src/model/session.dart';
+import 'src/model/user.dart';
 
 abstract class Client {
   Future<void> setUser({String? id, String? name, String? email});

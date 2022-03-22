@@ -1,5 +1,5 @@
 import 'package:MazeRunner/scenarios/scenario.dart';
-import 'package:bugsnag_flutter/core.dart';
+import 'package:bugsnag_flutter/bugsnag.dart';
 
 class AttachBugsnagScenario extends Scenario {
   @override
@@ -7,11 +7,11 @@ class AttachBugsnagScenario extends Scenario {
     await startBugsnag();
     await bugsnag.attach(
       context: 'flutter-test-context',
-      user: const User(
+      user: User(
         id: 'test-user-id',
         name: 'Old Man Tables',
       ),
-      featureFlags: const [
+      featureFlags: [
         FeatureFlag('demo-mode'),
         FeatureFlag('sample-group', '123'),
       ],

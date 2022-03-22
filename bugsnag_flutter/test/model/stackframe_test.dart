@@ -1,4 +1,5 @@
-import 'package:bugsnag_flutter/model.dart';
+import 'package:bugsnag_flutter/src/model/event.dart';
+import 'package:bugsnag_flutter/src/model/stackframe.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -37,7 +38,7 @@ void main() {
       expect(stackframe.frameAddress, '0x7fb4f670e0');
       expect(stackframe.symbolAddress, '0x7fb4f670c0');
       expect(stackframe.loadAddress, '0x7fb4f4b000');
-      expect(stackframe.type, 'c');
+      expect(stackframe.type, ErrorType.c);
 
       expect(stackframe.toJson(), json);
     });
