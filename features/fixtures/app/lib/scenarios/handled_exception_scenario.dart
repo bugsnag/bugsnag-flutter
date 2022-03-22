@@ -6,10 +6,18 @@ class HandledExceptionScenario extends Scenario {
   @override
   Future<void> run() async {
     await startBugsnag();
+    await bugsnag.attach();
     try {
       throw Exception('test error message');
     } catch (e) {
-      await bugsnag.notify(e);
+      if (extraConfig?.contains('callback') == true) {
+        await bugsnag.notify(e, callback: (event) {
+          event.unhandled = true;
+          return true;
+        });
+      } else {
+        await bugsnag.notify(e);
+      }
     }
   }
 }

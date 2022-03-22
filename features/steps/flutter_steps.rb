@@ -11,6 +11,10 @@ When('I configure Bugsnag for {string}') do |scenario_name|
   execute_command :start_bugsnag, scenario_name
 end
 
+When('I configure the app to run in the {string} state') do |extra_config|
+  $extra_config = extra_config
+end
+
 def execute_command(action, scenario_name)
   extra_config = $extra_config || ''
   command = { action: action, scenario_name: scenario_name, extra_config: extra_config }
