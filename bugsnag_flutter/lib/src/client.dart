@@ -6,11 +6,8 @@ import 'package:bugsnag_flutter/src/bugsnag_stacktrace.dart';
 import 'package:bugsnag_flutter/src/error_factory.dart';
 import 'package:flutter/services.dart';
 
+import 'callbacks.dart';
 import 'model.dart';
-
-typedef OnErrorCallback = FutureOr<bool> Function(Event event);
-typedef OnSessionCallback = FutureOr<bool> Function(Session session);
-typedef OnBreadcrumbCallback = FutureOr<bool> Function(Breadcrumb breadcrumb);
 
 abstract class Client {
   Future<void> setUser({String? id, String? name, String? email});
@@ -81,7 +78,7 @@ class ChannelClient implements Client {
   static const MethodChannel _channel =
       MethodChannel('com.bugsnag/client', JSONMethodCodec());
 
-  final Set<OnErrorCallback> _onErrorCallbacks = {};
+  final CallbackCollection<Event> _onErrorCallbacks = {};
 
   @override
   Future<User> getUser() async =>
@@ -129,17 +126,13 @@ class ChannelClient implements Client {
       return;
     }
 
-    for (final callback in _onErrorCallbacks) {
-      try {
-        if (!await callback(event)) {
-          return;
-        }
-      } catch (e) {
-        // ignore these errors, and continue processing any remaining callbacks
-      }
+    if (!await _onErrorCallbacks.dispatchEvent(event)) {
+      // callback rejected the payload - so we don't deliver it
+      return;
     }
 
-    if (callback != null && !await callback(event)) {
+    if (callback != null && !await callback.invokeSafely(event)) {
+      // callback rejected the payload - so we don't deliver it
       return;
     }
 
@@ -161,7 +154,7 @@ class ChannelClient implements Client {
       {'error': error, 'unhandled': unhandled, 'deliver': deliver},
     );
 
-    if (!deliver) {
+    if (eventJson != null) {
       final event = Event.fromJson(eventJson);
       event.threads.insert(
         0, // make the Dart Isolate the first "Thread" we report
