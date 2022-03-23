@@ -116,7 +116,7 @@ class BugsnagFlutter {
 
         event.getErrors().add(BugsnagAndroid.decodeError(error));
 
-        if (args.optBoolean("delivery")) {
+        if (args.optBoolean("deliver")) {
             // Flutter layer has asked us to deliver the Event immediately
             BugsnagAndroid.notify(event);
             return null;

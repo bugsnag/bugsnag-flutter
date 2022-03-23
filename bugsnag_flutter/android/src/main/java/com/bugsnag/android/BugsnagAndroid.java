@@ -1,5 +1,7 @@
 package com.bugsnag.android;
 
+import android.util.Log;
+
 import androidx.annotation.Nullable;
 
 import com.bugsnag.android.internal.ImmutableConfig;
@@ -10,10 +12,10 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-/**
- * Bugsnag Android internal API compatibility. All of this needs to move away the Flutter plugin
- * otherwise we likely won't be able to publish.
+/*
+ * Bugsnag Android internal API compatibility. This class shouldn't need to exist.
  */
 public class BugsnagAndroid {
     private BugsnagAndroid() {
@@ -25,13 +27,15 @@ public class BugsnagAndroid {
 
     public static void notify(JSONObject eventJson) {
         Client client = getClient();
-        EventStore eventStore = client.getEventStore();
         ImmutableConfig config = client.immutableConfig;
-
-        if (!config.shouldDiscardByReleaseStage()) {
-            String filename = eventStore.getFilename(eventJson.optString("apiKey", config.getApiKey()));
-            eventStore.enqueueContentForDelivery(eventJson.toString(), filename);
-        }
+        BugsnagEventMapper eventMapper = new BugsnagEventMapper(getLogger());
+        notify(new Event(
+                eventMapper.convertToEventImpl$bugsnag_android_core_release(
+                        (Map<String, Object>) io.flutter.plugin.common.JSONUtil.unwrap(eventJson),
+                        eventJson.optString("apiKey", config.getApiKey())
+                ),
+                getLogger()
+        ));
     }
 
     public static Error decodeError(JSONObject error) {
