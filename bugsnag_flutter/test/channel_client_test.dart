@@ -82,6 +82,10 @@ Future<Object?> _handleClientMethodCall(MethodCall message) async {
     return true;
   } else if (message.method == 'createEvent') {
     createdEvents.add(message.arguments);
+    if (message.arguments['deliver']) {
+      return null;
+    }
+
     return Event.fromJson(const {
       'metaData': <String, dynamic>{},
       'severity': 'warning',

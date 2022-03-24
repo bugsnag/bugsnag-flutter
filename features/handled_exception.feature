@@ -5,7 +5,7 @@ Feature: bugsnag.notify
     Then I wait to receive an error
     And the error payload field "events" is an array with 1 elements
     And the exception "errorClass" equals "_Exception"
-    And the event 0 is handled
+    And the error payload field "events.0.unhandled" is false
     And the error payload field "events.0.exceptions.0.message" equals "test error message"
     And the error payload field "events.0.threads.0.name" equals "main"
 
@@ -15,6 +15,6 @@ Feature: bugsnag.notify
     Then I wait to receive an error
     And the error payload field "events" is an array with 1 elements
     And the exception "errorClass" equals "_Exception"
-    And the event 0 is unhandled
+    And the error payload field "events.0.unhandled" is true
     And the error payload field "events.0.exceptions.0.message" equals "test error message"
     And the error payload field "events.0.threads.0.name" equals "main"
