@@ -36,7 +36,7 @@ void main() {
 
   group('parseStackTrace', () {
     test('parses StackTrace objects', () {
-      final stacktrace = parseStackTrace(StackTrace.current.toString());
+      final stacktrace = parseStackTraceString(StackTrace.current.toString());
 
       expect(stacktrace, isNotNull);
       expect(stacktrace!, hasLength(greaterThan(3)));

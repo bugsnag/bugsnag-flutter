@@ -31,7 +31,7 @@ int? _retrievePCOffset(String line) {
   return null;
 }
 
-Stacktrace? parseStackTrace(String stackTraceString) {
+Stacktrace? _parseStackTrace(String stackTraceString) {
   try {
     return StackFrame.fromStackTrace(StackTrace.fromString(stackTraceString))
         .map(Stackframe.fromStackFrame)
@@ -66,5 +66,5 @@ Stacktrace? parseNativeStackTrace(String stackTrace) {
 }
 
 Stacktrace? parseStackTraceString(String stackTrace) {
-  return parseNativeStackTrace(stackTrace) ?? parseStackTrace(stackTrace);
+  return parseNativeStackTrace(stackTrace) ?? _parseStackTrace(stackTrace);
 }

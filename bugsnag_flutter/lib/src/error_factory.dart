@@ -11,15 +11,18 @@ class ErrorFactory {
   Error createError(dynamic error, [StackTrace? stackTrace]) {
     // we favour the stackTrace on the `error` object, if one exists as this is
     // where the error was first thrown
-    final stack = _stackTraceFrom(error) ??
-        (stackTrace != null
-            ? (parseStackTrace(stackTrace.toString()) ?? _fallbackStacktrace())
-            : _fallbackStacktrace());
+    final errorStackTraceString = _getErrorStackTraceString(error);
+
+    // as a fallback we use the StackTrace that was passing in as `stackTrace`
+    final stackTraceString = errorStackTraceString ?? stackTrace?.toString();
+    final bugsnagStacktrace = stackTraceString != null
+        ? parseStackTraceString(stackTraceString)
+        : null;
 
     return Error(
       error.runtimeType.toString(),
       _safeMessageForError(error),
-      stack,
+      bugsnagStacktrace ?? _fallbackStacktrace(),
     );
   }
 
@@ -63,13 +66,13 @@ class ErrorFactory {
     }
   }
 
-  Stacktrace? _stackTraceFrom(dynamic error) {
+  String? _getErrorStackTraceString(dynamic error) {
     try {
       final stack = error.stackTrace;
       if (stack is StackTrace) {
-        return parseStackTrace(stack.toString()) ?? _fallbackStacktrace();
+        return stack.toString();
       } else if (stack is String) {
-        return parseStackTrace(stack) ?? _fallbackStacktrace();
+        return stack;
       }
     } catch (e) {
       // the error clearly doesn't have a usable stackTrace field, go to fallback
@@ -79,7 +82,7 @@ class ErrorFactory {
   }
 
   Stacktrace _fallbackStacktrace() =>
-      parseStackTrace(StackTrace.current.toString())!;
+      parseStackTraceString(StackTrace.current.toString())!;
 
   /// Extract the probable "Display name" for an error based on it's type.
   /// This method trims any `_` off the front of the type name.
