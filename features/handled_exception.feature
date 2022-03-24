@@ -7,7 +7,7 @@ Feature: bugsnag.notify
     And the exception "errorClass" equals "_Exception"
     And the error payload field "events.0.unhandled" is false
     And the error payload field "events.0.exceptions.0.message" equals "test error message"
-    And the error payload field "events.0.threads.0.name" equals "main"
+    And the error payload field "events.0.threads" is a non-empty array
 
   Scenario: Notify with a callback
     When I configure the app to run in the "callback" state
@@ -17,4 +17,4 @@ Feature: bugsnag.notify
     And the exception "errorClass" equals "_Exception"
     And the error payload field "events.0.unhandled" is true
     And the error payload field "events.0.exceptions.0.message" equals "test error message"
-    And the error payload field "events.0.threads.0.name" equals "main"
+    And the error payload field "events.0.threads" is a non-empty array

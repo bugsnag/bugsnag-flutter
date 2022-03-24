@@ -1,6 +1,15 @@
 #import "BugsnagFlutterPlugin.h"
 
+#import <Bugsnag/BSG_KSSystemInfo.h>
 #import <Bugsnag/Bugsnag+Private.h>
+#import <Bugsnag/BugsnagBreadcrumbs.h>
+#import <Bugsnag/BugsnagClient+Private.h>
+#import <Bugsnag/BugsnagError+Private.h>
+#import <Bugsnag/BugsnagEvent+Private.h>
+#import <Bugsnag/BugsnagHandledState.h>
+#import <Bugsnag/BugsnagSessionTracker.h>
+#import <Bugsnag/BugsnagThread+Private.h>
+
 #import <objc/runtime.h>
 
 static NSString *NSStringOrNil(id value) {
@@ -126,6 +135,40 @@ static NSString *NSStringOrNil(id value) {
     
     self.attached = YES;
     return @YES;
+}
+
+- (NSDictionary *)createEvent:(NSDictionary *)json {
+    NSDictionary *systemInfo = [BSG_KSSystemInfo systemInfo];
+    BugsnagClient *client = Bugsnag.client;
+    BugsnagError *error = [BugsnagError errorFromJson:json[@"error"]];
+    BugsnagEvent *event = [[BugsnagEvent alloc] initWithApp:[client generateAppWithState:systemInfo]
+                                                     device:[client generateDeviceWithState:systemInfo]
+                                               handledState:[BugsnagHandledState handledStateWithSeverityReason:
+                                                             [json[@"unhandled"] boolValue] ? UnhandledException : HandledException]
+                                                       user:client.user
+                                                   metadata:[client.metadata deepCopy]
+                                                breadcrumbs:client.breadcrumbs.breadcrumbs ?: @[]
+                                                     errors:@[error]
+                                                    threads:@[]
+                                                    session:client.sessionTracker.runningSession];
+    event.apiKey = client.configuration.apiKey;
+    event.context = client.context;
+    
+    if (client.configuration.sendThreads == BSGThreadSendPolicyAlways) {
+        event.threads = [BugsnagThread allThreads:YES callStackReturnAddresses:NSThread.callStackReturnAddresses];
+    }
+    
+    if ([json[@"deliver"] boolValue]) {
+        [client notifyInternal:event block:nil];
+        return nil;
+    } else {
+        return [event toJsonWithRedactedKeys:nil];
+    }
+}
+
+- (void)deliverEvent:(NSDictionary *)json {
+    BugsnagEvent *event = [[BugsnagEvent alloc] initWithJson:json];
+    [Bugsnag.client notifyInternal:event block:nil];
 }
 
 @end
