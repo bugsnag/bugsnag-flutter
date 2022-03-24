@@ -26,6 +26,7 @@
 
 -(void)onMethod:(FlutterMethodCall*) call
                :(FlutterResult) result {
+    NSLog(@"FlutterMethodCallHandler: %@ %@", call.method, call.arguments);
     
     if([@"getCommand" isEqualToString:call.method]) {
         result([self getCommand]);
@@ -57,6 +58,17 @@
         }
         
         [Bugsnag startWithConfiguration:config];
+        result(nil);
+    } else if ([@"clearPersistentData" isEqual:call.method]) {
+        [NSUserDefaults.standardUserDefaults removePersistentDomainForName:NSBundle.mainBundle.bundleIdentifier];
+        NSString *appSupportDir = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES)[0];
+        NSString *bugsnagDir = [appSupportDir stringByAppendingPathComponent:@"com.bugsnag.Bugsnag"];
+        NSError *error = nil;
+        if (![NSFileManager.defaultManager removeItemAtPath:bugsnagDir error:&error]) {
+            if (![error.domain isEqualToString:NSCocoaErrorDomain] && error.code != NSFileNoSuchFileError) {
+                NSLog(@"%@", error);
+            }
+        }
         result(nil);
     }
 }
