@@ -46,17 +46,18 @@ static NSString *NSStringOrNil(id value) {
             [invocation setSelector:selector];
             [invocation setArgument:&arguments atIndex:2];
             [invocation invoke];
-            id returnValue = nil;
             const char *returnType = [methodSignature methodReturnType];
             if (strcmp(methodSignature.methodReturnType, @encode(id)) == 0) {
+                void *returnValue = NULL;
                 [invocation getReturnValue:&returnValue];
+                result((__bridge id)(returnValue));
             } else if (strcmp(returnType, @encode(void)) != 0) {
                 result([FlutterError errorWithCode:@"Invalid return type" message:
                         [NSString stringWithFormat:@"'%@' does not return id or void",
                          NSStringFromSelector(selector)] details:nil]);
                 return;
             }
-            result(returnValue);
+            result(nil);
         } @catch (NSException *exception) {
             result([FlutterError errorWithCode:exception.name message:exception.reason details:nil]);
         }
