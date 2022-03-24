@@ -106,6 +106,7 @@ class BugsnagFlutter {
                         (String) featureFlag.opt("variant")
                 ));
             }
+            Bugsnag.addFeatureFlags(flags);
         }
 
         return null;

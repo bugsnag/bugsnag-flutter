@@ -36,9 +36,18 @@ public class InternalHooks {
                 logger
         );
 
+        User user = client.getUser();
+        event.setUser(user.getId(), user.getEmail(), user.getName());
+
+        AppDataCollector appDataCollector = client.getAppDataCollector();
+        event.setApp(appDataCollector.generateAppWithState());
+        event.addMetadata("app", appDataCollector.getAppDataMetadata());
+
+        DeviceDataCollector deviceDataCollector = client.getDeviceDataCollector();
+        event.setDevice(deviceDataCollector.generateDeviceWithState(System.currentTimeMillis()));
+        event.addMetadata("device", deviceDataCollector.getDeviceMetadata());
+
         event.setContext(client.getContext());
-        event.setApp(client.getAppDataCollector().generateAppWithState());
-        event.setDevice(client.getDeviceDataCollector().generateDeviceWithState(System.currentTimeMillis()));
 
         return event;
     }
