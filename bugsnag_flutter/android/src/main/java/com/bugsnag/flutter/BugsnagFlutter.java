@@ -1,13 +1,15 @@
 package com.bugsnag.flutter;
 
+import static com.bugsnag.flutter.JsonHelper.unwrap;
+
 import android.content.Context;
 
 import androidx.annotation.Nullable;
 
 import com.bugsnag.android.Bugsnag;
-import com.bugsnag.android.BugsnagAndroid;
 import com.bugsnag.android.Event;
 import com.bugsnag.android.FeatureFlag;
+import com.bugsnag.android.InternalHooks;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -18,6 +20,8 @@ import java.util.List;
 class BugsnagFlutter {
 
     private boolean isAttached = false;
+
+    private InternalHooks client;
 
     /*
      ***********************************************************************************************
@@ -52,12 +56,13 @@ class BugsnagFlutter {
             }
         }
 
+        client = new InternalHooks(Bugsnag.getClient());
         isAttached = true;
         return true;
     }
 
     JSONObject getUser(@Nullable JSONObject args) {
-        return JSONUtil.toJson(Bugsnag.getUser());
+        return JsonHelper.toJson(Bugsnag.getUser());
     }
 
     Void setUser(@Nullable JSONObject user) {
@@ -111,26 +116,33 @@ class BugsnagFlutter {
             return null;
         }
 
-        Event event = BugsnagAndroid.createEmptyEvent(args.optBoolean("unhandled"));
-        JSONObject error = args.optJSONObject("error");
+        boolean unhandled = args.optBoolean("unhandled");
 
-        event.getErrors().add(BugsnagAndroid.decodeError(error));
+        Event event = client.createEvent(
+                client.createSeverityReason(
+                        unhandled ? "unhandledException" : "handledException"
+                )
+        );
+
+        JSONObject error = args.optJSONObject("error");
+        event.getErrors().add(client.unmapError(unwrap(error)));
 
         if (args.optBoolean("deliver")) {
             // Flutter layer has asked us to deliver the Event immediately
-            BugsnagAndroid.notify(event);
+            client.deliverEvent(event);
             return null;
         } else {
-            return JSONUtil.toJson(event);
+            return client.mapEvent(event);
         }
     }
 
-    JSONObject deliverEvent(@Nullable JSONObject args) {
-        if (args == null) {
+    JSONObject deliverEvent(@Nullable JSONObject eventJson) {
+        if (eventJson == null) {
             return null;
         }
 
-        BugsnagAndroid.notify(args);
+        Event event = client.unmapEvent(unwrap(eventJson));
+        client.deliverEvent(event);
         return null;
     }
 

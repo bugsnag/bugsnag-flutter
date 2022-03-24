@@ -19,7 +19,7 @@ class Event {
   String? groupingHash;
   bool _unhandled;
   final bool _originalUnhandled;
-  final Severity _severity;
+  Severity severity;
   final _SeverityReason _severityReason;
   final List<String> _projectPackages;
   User user;
@@ -60,7 +60,7 @@ class Event {
         groupingHash = json['groupingHash'] as String?,
         _unhandled = json['unhandled'] == true,
         _originalUnhandled = json['unhandled'] == true,
-        _severity = Severity.values.byName(json['severity']),
+        severity = Severity.values.byName(json['severity']),
         _severityReason = _SeverityReason.fromJson(json['severityReason']),
         _projectPackages =
             (json['projectPackages'] as List?)?.toList(growable: true).cast() ??
@@ -87,7 +87,7 @@ class Event {
       if (context != null) 'context': context,
       if (groupingHash != null) 'groupingHash': groupingHash,
       'unhandled': unhandled,
-      'severity': _severity.name,
+      'severity': severity.name,
       'severityReason': _severityReason,
       'projectPackages': _projectPackages,
       'user': user,
