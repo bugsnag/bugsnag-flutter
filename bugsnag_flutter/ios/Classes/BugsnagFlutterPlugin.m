@@ -1,6 +1,15 @@
 #import "BugsnagFlutterPlugin.h"
 
+#import <Bugsnag/BSG_KSSystemInfo.h>
 #import <Bugsnag/Bugsnag+Private.h>
+#import <Bugsnag/BugsnagBreadcrumbs.h>
+#import <Bugsnag/BugsnagClient+Private.h>
+#import <Bugsnag/BugsnagError+Private.h>
+#import <Bugsnag/BugsnagEvent+Private.h>
+#import <Bugsnag/BugsnagHandledState.h>
+#import <Bugsnag/BugsnagSessionTracker.h>
+#import <Bugsnag/BugsnagThread+Private.h>
+
 #import <objc/runtime.h>
 
 static NSString *NSStringOrNil(id value) {
@@ -46,17 +55,18 @@ static NSString *NSStringOrNil(id value) {
             [invocation setSelector:selector];
             [invocation setArgument:&arguments atIndex:2];
             [invocation invoke];
-            id returnValue = nil;
             const char *returnType = [methodSignature methodReturnType];
             if (strcmp(methodSignature.methodReturnType, @encode(id)) == 0) {
+                void *returnValue = NULL;
                 [invocation getReturnValue:&returnValue];
+                result((__bridge id)(returnValue));
             } else if (strcmp(returnType, @encode(void)) != 0) {
                 result([FlutterError errorWithCode:@"Invalid return type" message:
                         [NSString stringWithFormat:@"'%@' does not return id or void",
                          NSStringFromSelector(selector)] details:nil]);
                 return;
             }
-            result(returnValue);
+            result(nil);
         } @catch (NSException *exception) {
             result([FlutterError errorWithCode:exception.name message:exception.reason details:nil]);
         }
@@ -119,12 +129,46 @@ static NSString *NSStringOrNil(id value) {
         [self setContext:json];
     }
     
-    if ([json[@"featureFlags"] isKindOfClass:[NSDictionary class]]) {
+    if ([json[@"featureFlags"] isKindOfClass:[NSArray class]]) {
         [self addFeatureFlags:json];
     }
     
     self.attached = YES;
     return @YES;
+}
+
+- (NSDictionary *)createEvent:(NSDictionary *)json {
+    NSDictionary *systemInfo = [BSG_KSSystemInfo systemInfo];
+    BugsnagClient *client = Bugsnag.client;
+    BugsnagError *error = [BugsnagError errorFromJson:json[@"error"]];
+    BugsnagEvent *event = [[BugsnagEvent alloc] initWithApp:[client generateAppWithState:systemInfo]
+                                                     device:[client generateDeviceWithState:systemInfo]
+                                               handledState:[BugsnagHandledState handledStateWithSeverityReason:
+                                                             [json[@"unhandled"] boolValue] ? UnhandledException : HandledException]
+                                                       user:client.user
+                                                   metadata:[client.metadata deepCopy]
+                                                breadcrumbs:client.breadcrumbs.breadcrumbs ?: @[]
+                                                     errors:@[error]
+                                                    threads:@[]
+                                                    session:client.sessionTracker.runningSession];
+    event.apiKey = client.configuration.apiKey;
+    event.context = client.context;
+    
+    if (client.configuration.sendThreads == BSGThreadSendPolicyAlways) {
+        event.threads = [BugsnagThread allThreads:YES callStackReturnAddresses:NSThread.callStackReturnAddresses];
+    }
+    
+    if ([json[@"deliver"] boolValue]) {
+        [client notifyInternal:event block:nil];
+        return nil;
+    } else {
+        return [event toJsonWithRedactedKeys:nil];
+    }
+}
+
+- (void)deliverEvent:(NSDictionary *)json {
+    BugsnagEvent *event = [[BugsnagEvent alloc] initWithJson:json];
+    [Bugsnag.client notifyInternal:event block:nil];
 }
 
 @end

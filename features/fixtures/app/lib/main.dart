@@ -154,6 +154,8 @@ class _HomePageState extends State<MazeRunnerHomePage> {
       return;
     }
 
+    await MazeRunnerChannels.clearPersistentData();
+
     final extraConfig = _extraConfigController.value.text;
     scenario.extraConfig = extraConfig;
     scenario.startBugsnag = _onStartBugsnag;

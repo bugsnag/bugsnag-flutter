@@ -8,7 +8,7 @@ Feature: Attach to running native Bugsnag instance
     And the exception "errorClass" equals "_Exception"
     And the error payload field "events.0.unhandled" is false
     And the error payload field "events.0.exceptions.0.message" equals "Exception with attached info"
-    And the error payload field "events.0.threads.0.name" equals "main"
+    And the error payload field "events.0.threads" is a non-empty array
     And the event "severity" equals "warning"
 
     And the event "user.id" equals "test-user-id"
