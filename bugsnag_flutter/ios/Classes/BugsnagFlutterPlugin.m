@@ -137,6 +137,104 @@ static NSString *NSStringOrNil(id value) {
     return @YES;
 }
 
+- (void)start:(NSDictionary *)arguments {
+    if (Bugsnag.client) {
+        @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"bugsnag.start may not be called after starting Bugsnag natively" userInfo:nil];
+    }
+    
+    BugsnagConfiguration *configuration = [BugsnagConfiguration loadConfig];
+    
+    for (NSString *key in @[@"apiKey",
+                            @"appType",
+                            @"appVersion",
+                            @"autoTrackSessions",
+                            @"bundleVersion",
+                            @"context",
+                            @"launchDurationMillis",
+                            @"maxBreadcrumbs",
+                            @"maxPersistedEvents",
+                            @"maxPersistedSessions",
+                            @"redactedKeys",
+                            @"releaseStage"]) {
+        id value = arguments[key];
+        if (value && value != [NSNull null]) {
+            [configuration setValue:value forKey:key];
+        }
+    }
+    
+    NSDictionary *user = arguments[@"user"];
+    if ([user isKindOfClass:[NSDictionary class]]) {
+        [configuration setUser:user[@"id"]
+                     withEmail:user[@"email"]
+                       andName:user[@"name"]];
+    }
+    
+    NSNumber *persistUser = arguments[@"persistUser"];
+    if ([persistUser isKindOfClass:[NSNumber class]] &&
+        configuration.persistUser != [persistUser boolValue]) {
+        configuration.persistUser = [persistUser boolValue];
+    }
+    
+    NSDictionary *endpoints = arguments[@"endpoints"];
+    if ([endpoints isKindOfClass:[NSDictionary class]]) {
+        configuration.endpoints.notify = endpoints[@"notify"];
+        configuration.endpoints.sessions = endpoints[@"sessions"];
+    }
+    
+    NSString *sendThreads = arguments[@"sendThreads"];
+    if ([sendThreads isKindOfClass:[NSString class]]) {
+        if ([sendThreads isEqualToString:@"always"]) {
+            configuration.sendThreads = BSGThreadSendPolicyAlways;
+        } else if ([sendThreads isEqualToString:@"unhandledOnly"]) {
+            configuration.sendThreads = BSGThreadSendPolicyUnhandledOnly;
+        } else if ([sendThreads isEqualToString:@"never"]) {
+            configuration.sendThreads = BSGThreadSendPolicyNever;
+        }
+    }
+    
+    NSArray *enabledBreadcrumbTypes = arguments[@"enabledBreadcrumbTypes"];
+    if ([enabledBreadcrumbTypes isKindOfClass:[NSArray class]]) {
+        BSGEnabledBreadcrumbType value =
+        ([enabledBreadcrumbTypes containsObject:@"error"]       ? BSGEnabledBreadcrumbTypeError         : 0) |
+        ([enabledBreadcrumbTypes containsObject:@"log"]         ? BSGEnabledBreadcrumbTypeLog           : 0) |
+        ([enabledBreadcrumbTypes containsObject:@"navigation"]  ? BSGEnabledBreadcrumbTypeNavigation    : 0) |
+        ([enabledBreadcrumbTypes containsObject:@"process"]     ? BSGEnabledBreadcrumbTypeProcess       : 0) |
+        ([enabledBreadcrumbTypes containsObject:@"request"]     ? BSGEnabledBreadcrumbTypeRequest       : 0) |
+        ([enabledBreadcrumbTypes containsObject:@"state"]       ? BSGEnabledBreadcrumbTypeState         : 0) |
+        ([enabledBreadcrumbTypes containsObject:@"user"]        ? BSGEnabledBreadcrumbTypeUser          : 0);
+        configuration.enabledBreadcrumbTypes = value;
+    }
+    
+    NSDictionary *enabledErrorTypes = arguments[@"enabledErrorTypes"];
+    if ([enabledErrorTypes isKindOfClass:[NSDictionary class]]) {
+        configuration.enabledErrorTypes.unhandledExceptions = [enabledErrorTypes[@"crashes"] boolValue];
+        configuration.enabledErrorTypes.signals             = [enabledErrorTypes[@"crashes"] boolValue];
+        configuration.enabledErrorTypes.cppExceptions       = [enabledErrorTypes[@"crashes"] boolValue];
+        configuration.enabledErrorTypes.machExceptions      = [enabledErrorTypes[@"crashes"] boolValue];
+        configuration.enabledErrorTypes.ooms                = [enabledErrorTypes[@"ooms"] boolValue];
+        configuration.enabledErrorTypes.thermalKills        = [enabledErrorTypes[@"thermalKills"] boolValue];
+        configuration.enabledErrorTypes.appHangs            = [enabledErrorTypes[@"appHangs"] boolValue];
+    }
+    
+    NSDictionary *metadata = arguments[@"metadata"];
+    if ([metadata isKindOfClass:[NSDictionary class]]) {
+        for (NSString *section in metadata) {
+            [configuration addMetadata:metadata[section] toSection:section];
+        }
+    }
+    
+    NSArray *featureFlags = arguments[@"featureFlags"];
+    if ([featureFlags isKindOfClass:[NSArray class]]) {
+        for (NSDictionary *flag in featureFlags) {
+            [configuration addFeatureFlagWithName:flag[@"featureFlag"] variant:flag[@"variant"]];
+        }
+    }
+    
+    [Bugsnag startWithConfiguration:configuration];
+    
+    self.attached = YES;
+}
+
 - (NSDictionary *)createEvent:(NSDictionary *)json {
     NSDictionary *systemInfo = [BSG_KSSystemInfo systemInfo];
     BugsnagClient *client = Bugsnag.client;

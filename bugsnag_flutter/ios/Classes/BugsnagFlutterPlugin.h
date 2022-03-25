@@ -13,6 +13,8 @@
 
 - (NSNumber *)attach:(NSDictionary *)json;
 
+- (void)start:(NSDictionary *)arguments;
+
 - (NSDictionary *)createEvent:(NSDictionary *)json;
 - (void)deliverEvent:(NSDictionary *)json;
 
