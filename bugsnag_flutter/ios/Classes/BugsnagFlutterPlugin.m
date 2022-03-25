@@ -129,7 +129,7 @@ static NSString *NSStringOrNil(id value) {
         [self setContext:json];
     }
     
-    if ([json[@"featureFlags"] isKindOfClass:[NSDictionary class]]) {
+    if ([json[@"featureFlags"] isKindOfClass:[NSArray class]]) {
         [self addFeatureFlags:json];
     }
     
