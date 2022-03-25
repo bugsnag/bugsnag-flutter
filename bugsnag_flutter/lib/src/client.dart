@@ -1,15 +1,11 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:bugsnag_flutter/src/error_factory.dart';
 import 'package:flutter/services.dart';
 
-import 'model/breadcrumbs.dart';
-import 'model/feature_flags.dart';
-import 'model/session.dart';
-import 'model/user.dart';
-
-typedef OnSessionCallback = FutureOr<bool> Function(Session);
-typedef OnBreadcrumbCallback = FutureOr<bool> Function(Breadcrumb);
+import 'callbacks.dart';
+import 'model.dart';
 
 abstract class Client {
   Future<void> setUser({String? id, String? name, String? email});
@@ -19,6 +15,16 @@ abstract class Client {
   Future<void> setContext(String? context);
 
   Future<String?> getContext();
+
+  Future<void> notify(
+    dynamic error, {
+    StackTrace? stackTrace,
+    OnErrorCallback? callback,
+  });
+
+  void addOnError(OnErrorCallback onError);
+
+  void removeOnError(OnErrorCallback onError);
 }
 
 class DelegateClient implements Client {
@@ -50,11 +56,27 @@ class DelegateClient implements Client {
 
   @override
   Future<String?> getContext() => client.getContext();
+
+  @override
+  Future<void> notify(
+    dynamic error, {
+    StackTrace? stackTrace,
+    OnErrorCallback? callback,
+  }) =>
+      client.notify(error, stackTrace: stackTrace, callback: callback);
+
+  @override
+  void addOnError(OnErrorCallback onError) => client.addOnError(onError);
+
+  @override
+  void removeOnError(OnErrorCallback onError) => client.removeOnError(onError);
 }
 
 class ChannelClient implements Client {
   static const MethodChannel _channel =
       MethodChannel('com.bugsnag/client', JSONMethodCodec());
+
+  final CallbackCollection<Event> _onErrorCallbacks = {};
 
   @override
   Future<User> getUser() async =>
@@ -73,6 +95,70 @@ class ChannelClient implements Client {
 
   @override
   Future<String?> getContext() => _channel.invokeMethod('getContext');
+
+  @override
+  void addOnError(OnErrorCallback onError) {
+    _onErrorCallbacks.add(onError);
+  }
+
+  @override
+  void removeOnError(OnErrorCallback onError) {
+    _onErrorCallbacks.remove(onError);
+  }
+
+  @override
+  Future<void> notify(
+    dynamic error, {
+    StackTrace? stackTrace,
+    OnErrorCallback? callback,
+  }) async {
+    final errorPayload = ErrorFactory.instance.createError(error, stackTrace);
+    final event = await _createEvent(
+      errorPayload,
+      unhandled: false,
+      deliver: _onErrorCallbacks.isEmpty && callback == null,
+    );
+
+    if (event == null) {
+      return;
+    }
+
+    if (!await _onErrorCallbacks.dispatchEvent(event)) {
+      // callback rejected the payload - so we don't deliver it
+      return;
+    }
+
+    if (callback != null && !await callback.invokeSafely(event)) {
+      // callback rejected the payload - so we don't deliver it
+      return;
+    }
+
+    await _deliverEvent(event);
+  }
+
+  /// Create an Event by having it built by the native notifier,
+  /// if [deliver] is `true` return `null` and schedule the `Event` for immediate
+  /// delivery. If [deliver] is `false` then the `Event` is only constructed
+  /// and returned to be processed by the Flutter notifier.
+  Future<Event?> _createEvent(
+    Error error, {
+    required bool unhandled,
+    required bool deliver,
+  }) async {
+    final eventJson = await _channel.invokeMethod(
+      'createEvent',
+      {'error': error, 'unhandled': unhandled, 'deliver': deliver},
+    );
+
+    if (eventJson != null) {
+      return Event.fromJson(eventJson);
+    }
+
+    return null;
+  }
+
+  Future<void> _deliverEvent(Event event) =>
+      _channel.invokeMethod('deliverEvent', event);
 }
 
 class Bugsnag extends Client with DelegateClient {
@@ -93,12 +179,14 @@ class Bugsnag extends Client with DelegateClient {
   /// * [setUser]
   /// * [setContext]
   /// * [addFeatureFlags]
+  /// * [addOnError]
   Future<void> attach({
     User? user,
     String? context,
     List<FeatureFlag>? featureFlags,
     List<OnSessionCallback> onSession = const [],
     List<OnBreadcrumbCallback> onBreadcrumb = const [],
+    List<OnErrorCallback> onError = const [],
   }) async {
     final client = ChannelClient();
     bool attached = await ChannelClient._channel.invokeMethod('attach', {
@@ -116,6 +204,8 @@ class Bugsnag extends Client with DelegateClient {
         'bugsnag.attach can only be called when the native layer has already been started, have you called $platformStart in your $platformName code?',
       );
     }
+
+    client._onErrorCallbacks.addAll(onError);
 
     this.client = client;
   }

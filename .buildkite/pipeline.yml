@@ -8,6 +8,11 @@ steps:
     commands:
       - make test
 
+  - label: ":lint-roller:"
+    timeout_in_minutes: 10
+    commands:
+      - make lint
+
   #
   # iOS
   #

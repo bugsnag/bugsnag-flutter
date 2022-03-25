@@ -9,6 +9,10 @@ class MazeRunnerChannels {
     }).then((value) => value ?? "");
   }
 
+  static Future<void> clearPersistentData() {
+    return platform.invokeMethod('clearPersistentData');
+  }
+
   static Future<void> runScenario(String scenarioName, {String? extraConfig}) {
     return platform.invokeMethod("runScenario", {
       'scenarioName': scenarioName,

@@ -9,19 +9,20 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.Map;
 
-class JSONUtil {
-    private JSONUtil() {
+public class JsonHelper {
+    private JsonHelper() {
     }
 
     /**
      * Convenience function to encode a {@code Streamable} as a {@code JSONObject}.
      *
      * @param json the object to encode
-     * @return the {@code JSONObject} equivilent of {@code json}
+     * @return the {@code JSONObject} equivalent of {@code json}
      */
     @Nullable
-    static JSONObject toJson(JsonStream.Streamable json) {
+    public static JSONObject toJson(JsonStream.Streamable json) {
         StringWriter writer = new StringWriter();
         JsonStream stream = new JsonStream(writer);
         try {
@@ -32,5 +33,15 @@ class JSONUtil {
         } catch (JSONException e) {
             return null;
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static Map<String, Object> unwrap(JSONObject object) {
+        return (Map<String, Object>) io.flutter.plugin.common.JSONUtil.unwrap(object);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static JSONObject wrap(Map<String, Object> wrappedJson) {
+        return (JSONObject) io.flutter.plugin.common.JSONUtil.wrap(wrappedJson);
     }
 }

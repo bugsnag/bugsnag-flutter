@@ -1,8 +1,12 @@
 import 'dart:async';
 
+import 'package:bugsnag_flutter/bugsnag.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await bugsnag.attach();
+
   runApp(const MyApp());
 }
 
@@ -16,6 +20,14 @@ class MyApp extends StatelessWidget {
   void _asyncUnhandledFlutterError() async {
     await Future.delayed(const Duration(milliseconds: 1));
     throw Exception('Async Exception on Timer');
+  }
+
+  void _handledException() async {
+    try {
+      throw Exception('handled exception');
+    } catch (e) {
+      await bugsnag.notify(e);
+    }
   }
 
   @override
@@ -39,6 +51,10 @@ class MyApp extends StatelessWidget {
               ElevatedButton(
                 onPressed: _asyncUnhandledFlutterError,
                 child: const Text('Async Unhandled Error'),
+              ),
+              ElevatedButton(
+                onPressed: _handledException,
+                child: const Text('Notify Handled Error'),
               ),
             ],
           ),

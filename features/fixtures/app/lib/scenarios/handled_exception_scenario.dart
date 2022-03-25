@@ -1,0 +1,23 @@
+import 'package:bugsnag_flutter/bugsnag.dart';
+
+import 'scenario.dart';
+
+class HandledExceptionScenario extends Scenario {
+  @override
+  Future<void> run() async {
+    await startBugsnag();
+    await bugsnag.attach();
+    try {
+      throw Exception('test error message');
+    } catch (e) {
+      if (extraConfig?.contains('callback') == true) {
+        await bugsnag.notify(e, callback: (event) {
+          event.unhandled = true;
+          return true;
+        });
+      } else {
+        await bugsnag.notify(e);
+      }
+    }
+  }
+}

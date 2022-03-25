@@ -13,19 +13,16 @@ import com.bugsnag.android.Configuration;
 import com.bugsnag.android.EndpointConfiguration;
 import com.bugsnag.flutter.test.app.scenario.Scenario;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Deque;
+import java.util.LinkedList;
+
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
-
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import java.lang.Thread;
-
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
 
 public class MazeRunnerMethodCallHandler implements MethodChannel.MethodCallHandler {
     public static final String TAG = "MazeRunner";
@@ -39,8 +36,8 @@ public class MazeRunnerMethodCallHandler implements MethodChannel.MethodCallHand
     @Override
     public void onMethodCall(@NonNull MethodCall call, @NonNull MethodChannel.Result result) {
         if (call.method.equals("getCommand")) {
-            Thread thread = new Thread(){
-                public void run(){
+            Thread thread = new Thread() {
+                public void run() {
                     getCommand(call, result);
                 }
             };
@@ -58,8 +55,39 @@ public class MazeRunnerMethodCallHandler implements MethodChannel.MethodCallHand
             }
             Bugsnag.start(context, config);
             result.success(null);
+        } else if (call.method.equals("clearPersistentData")) {
+            clearPersistentData();
+            result.success(null);
         } else {
             result.notImplemented();
+        }
+    }
+
+    private void clearPersistentData() {
+        Deque<File> stack = new LinkedList<>();
+        stack.push(context.getCacheDir());
+
+        while (!stack.isEmpty()) {
+            File dir = stack.pop();
+            File[] entries = dir.listFiles();
+
+            if (entries.length == 0) {
+                if (!dir.delete()) {
+                    Log.w("MazeRunner", "Couldn't delete directory: " + dir);
+                }
+            } else {
+                stack.push(dir);
+
+                for (File entry : entries) {
+                    if (entry.isDirectory()) {
+                        stack.push(entry);
+                    } else {
+                        if (!entry.delete()) {
+                            Log.w("MazeRunner", "Couldn't delete file: " + entry);
+                        }
+                    }
+                }
+            }
         }
     }
 

@@ -3,9 +3,7 @@ import 'dart:convert';
 
 import 'package:MazeRunner/channels.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
-import 'packages.dart';
 import 'scenarios/scenario.dart';
 import 'scenarios/scenarios.dart';
 
@@ -42,9 +40,10 @@ class Command {
       throw Exception('MazeRunner commands must have an action');
     }
     return Command(
-        action: map.string('action')!,
-        scenarioName: map.string('scenario_name') ?? '',
-        extraConfig: map.string('extra_config') ?? '');
+      action: map.string('action')!,
+      scenarioName: map.string('scenario_name') ?? '',
+      extraConfig: map.string('extra_config') ?? '',
+    );
   }
 }
 
@@ -78,10 +77,6 @@ class _HomePageState extends State<MazeRunnerHomePage> {
   late TextEditingController _notifyEndpointController;
   late TextEditingController _sessionEndpointController;
 
-  static const platform = MethodChannel('com.bugsnag.mazeRunner/platform');
-
-  List<String> _packages = const [];
-
   @override
   void initState() {
     super.initState();
@@ -105,12 +100,6 @@ class _HomePageState extends State<MazeRunnerHomePage> {
         defaultValue: 'http://bs-local.com:9339/session',
       ),
     );
-
-    listPackages().then((value) {
-      setState(() {
-        _packages = value;
-      });
-    });
   }
 
   @override
@@ -137,15 +126,11 @@ class _HomePageState extends State<MazeRunnerHomePage> {
 
     switch (command.action) {
       case 'start_bugsnag':
-        {
-          _onStartBugsnag();
-        }
+        _onStartBugsnag();
         break;
 
       case 'run_scenario':
-        {
-          _onRunScenario(context);
-        }
+        _onRunScenario(context);
         break;
     }
   }
@@ -169,6 +154,9 @@ class _HomePageState extends State<MazeRunnerHomePage> {
       return;
     }
 
+    log('Clearing Persistent Data...');
+    await MazeRunnerChannels.clearPersistentData();
+
     final extraConfig = _extraConfigController.value.text;
     scenario.extraConfig = extraConfig;
     scenario.startBugsnag = _onStartBugsnag;
@@ -184,10 +172,12 @@ class _HomePageState extends State<MazeRunnerHomePage> {
         scenarios.indexWhere((element) => element.name == name);
 
     if (scenarioIndex == -1) {
+      log('Cannot find Scenario $name. Has it been added to scenarios.dart?');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("Cannot find Scenario $name. "
-              "Has it been added to scenario.dart?"),
+          content: Text(
+            'Cannot find Scenario $name. Has it been added to scenarios.dart?',
+          ),
         ),
       );
 
@@ -258,9 +248,6 @@ class _HomePageState extends State<MazeRunnerHomePage> {
                 child: const Text("Run Scenario"),
                 onPressed: () => _onRunScenario(context),
                 key: const Key("startScenario"),
-              ),
-              ListView(
-                children: _packages.map((e) => Text("package: $e")).toList(),
               ),
             ],
           ),
