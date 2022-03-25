@@ -5,6 +5,7 @@ import 'package:bugsnag_flutter/src/error_factory.dart';
 import 'package:flutter/services.dart';
 
 import 'callbacks.dart';
+import 'config.dart';
 import 'model.dart';
 
 abstract class Client {
@@ -233,6 +234,72 @@ class Bugsnag extends Client with DelegateClient {
 
     client._onErrorCallbacks.addAll(onError);
 
+    this.client = client;
+  }
+
+  Future<void> start({
+    String? apiKey,
+    User? user,
+    bool persistUser = true,
+    String? context,
+    String? appType,
+    String? appVersion,
+    String? bundleVersion,
+    String? releaseStage,
+    EnabledErrorTypes enabledErrorTypes =
+        const EnabledErrorTypes(true, true, true, true, true, true),
+    EndpointConfiguration endpoints = const EndpointConfiguration(
+        'https://notify.bugsnag.com', 'https://sessions.bugsnag.com'),
+    int maxBreadcrumbs = 50,
+    int maxPersistedSessions = 128,
+    int maxPersistedEvents = 32,
+    bool autoTrackSessions = true,
+    ThreadSendPolicy sendThreads = ThreadSendPolicy.always,
+    int launchDurationMillis = 5000,
+    Set<String> redactedKeys = const {'password'},
+    Set<String>? enabledReleaseStages,
+    Set<BreadcrumbType> enabledBreadcrumbTypes = const {
+      BreadcrumbType.navigation,
+      BreadcrumbType.request,
+      BreadcrumbType.log,
+      BreadcrumbType.user,
+      BreadcrumbType.state,
+      BreadcrumbType.error,
+      BreadcrumbType.manual
+    },
+    Metadata? metadata,
+    List<FeatureFlag>? featureFlags,
+    List<OnSessionCallback> onSession = const [],
+    List<OnBreadcrumbCallback> onBreadcrumb = const [],
+    List<OnErrorCallback> onError = const [],
+  }) async {
+    final client = ChannelClient();
+    await ChannelClient._channel.invokeMethod('start', <String, dynamic>{
+      'apiKey': apiKey,
+      'user': user,
+      'persistUser': persistUser,
+      'context': context,
+      'appType': appType,
+      'appVersion': appVersion,
+      'bundleVersion': bundleVersion,
+      'releaseStage': releaseStage,
+      'enabledErrorTypes': enabledErrorTypes,
+      'endpoints': endpoints,
+      'maxBreadcrumbs': maxBreadcrumbs,
+      'maxPersistedSessions': maxPersistedSessions,
+      'maxPersistedEvents': maxPersistedEvents,
+      'autoTrackSessions': autoTrackSessions,
+      'sendThreads': sendThreads.toString().split('.').last,
+      'launchDurationMillis': launchDurationMillis,
+      'redactedKeys': List<String>.from(redactedKeys),
+      if (enabledReleaseStages != null)
+        'enabledReleaseStages': List<String>.from(enabledReleaseStages),
+      'enabledBreadcrumbTypes': List<String>.from(
+          enabledBreadcrumbTypes.map((e) => e.toString().split('.').last)),
+      'metadata': metadata,
+      'featureFlags': featureFlags,
+    });
+    client._onErrorCallbacks.addAll(onError);
     this.client = client;
   }
 }
