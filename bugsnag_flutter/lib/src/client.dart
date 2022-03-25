@@ -139,7 +139,7 @@ class ChannelClient implements Client {
     await _deliverEvent(event);
   }
 
-  /// Create an Event by having it built and enriched by the native notifier,
+  /// Create an Event by having it built by the native notifier,
   /// if [deliver] is `true` return `null` and schedule the `Event` for immediate
   /// delivery. If [deliver] is `false` then the `Event` is only constructed
   /// and returned to be processed by the Flutter notifier.
