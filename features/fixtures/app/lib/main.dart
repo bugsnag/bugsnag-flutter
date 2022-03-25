@@ -154,6 +154,7 @@ class _HomePageState extends State<MazeRunnerHomePage> {
       return;
     }
 
+    log('Clearing Persistent Data...');
     await MazeRunnerChannels.clearPersistentData();
 
     final extraConfig = _extraConfigController.value.text;
@@ -171,10 +172,12 @@ class _HomePageState extends State<MazeRunnerHomePage> {
         scenarios.indexWhere((element) => element.name == name);
 
     if (scenarioIndex == -1) {
+      log('Cannot find Scenario $name. Has it been added to scenarios.dart?');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("Cannot find Scenario $name. "
-              "Has it been added to scenario.dart?"),
+          content: Text(
+            'Cannot find Scenario $name. Has it been added to scenarios.dart?',
+          ),
         ),
       );
 

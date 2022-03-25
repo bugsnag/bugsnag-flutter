@@ -1,5 +1,7 @@
 package com.bugsnag.flutter;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import org.json.JSONObject;
