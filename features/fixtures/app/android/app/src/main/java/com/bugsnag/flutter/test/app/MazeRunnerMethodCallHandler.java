@@ -24,7 +24,6 @@ import java.util.LinkedList;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 
-
 public class MazeRunnerMethodCallHandler implements MethodChannel.MethodCallHandler {
     public static final String TAG = "MazeRunner";
     private final Handler scenarioRunner = new Handler(Looper.getMainLooper());

@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:isolate';
 
-import 'package:bugsnag_flutter/src/bugsnag_stacktrace.dart';
 import 'package:bugsnag_flutter/src/error_factory.dart';
 import 'package:flutter/services.dart';
 
@@ -118,7 +116,6 @@ class ChannelClient implements Client {
     final event = await _createEvent(
       errorPayload,
       unhandled: false,
-      isolateStackTrace: StackTrace.current,
       deliver: _onErrorCallbacks.isEmpty && callback == null,
     );
 
@@ -145,7 +142,6 @@ class ChannelClient implements Client {
   /// and returned to be processed by the Flutter notifier.
   Future<Event?> _createEvent(
     Error error, {
-    StackTrace? isolateStackTrace,
     required bool unhandled,
     required bool deliver,
   }) async {
@@ -155,16 +151,7 @@ class ChannelClient implements Client {
     );
 
     if (eventJson != null) {
-      final event = Event.fromJson(eventJson);
-      event.threads.insert(
-        0, // make the Dart Isolate the first "Thread" we report
-        _createIsolateThread(
-          Isolate.current,
-          isolateStackTrace ?? StackTrace.current,
-        ),
-      );
-
-      return event;
+      return Event.fromJson(eventJson);
     }
 
     return null;
@@ -172,16 +159,6 @@ class ChannelClient implements Client {
 
   Future<void> _deliverEvent(Event event) =>
       _channel.invokeMethod('deliverEvent', event);
-
-  Thread _createIsolateThread(Isolate isolate, StackTrace stackTrace) {
-    return Thread(
-      id: null,
-      name: isolate.debugName,
-      state: 'RUNNING',
-      isErrorReportingThread: true,
-      stacktrace: parseStackTraceString(stackTrace.toString())!,
-    );
-  }
 }
 
 class Bugsnag extends Client with DelegateClient {
