@@ -8,6 +8,8 @@ import 'callbacks.dart';
 import 'model.dart';
 
 abstract class Client {
+  void Function(dynamic error, StackTrace? stack) get errorHandler;
+
   Future<void> setUser({String? id, String? name, String? email});
 
   Future<User> getUser();
@@ -16,8 +18,7 @@ abstract class Client {
 
   Future<String?> getContext();
 
-  Future<void> notify(
-    dynamic error, {
+  Future<void> notify(dynamic error, {
     StackTrace? stackTrace,
     OnErrorCallback? callback,
   });
@@ -43,6 +44,10 @@ class DelegateClient implements Client {
   set client(Client client) {
     _client = client;
   }
+
+  @override
+  void Function(dynamic error, StackTrace? stack) get errorHandler =>
+      client.errorHandler;
 
   @override
   Future<User> getUser() => client.getUser();
@@ -77,6 +82,10 @@ class ChannelClient implements Client {
       MethodChannel('com.bugsnag/client', JSONMethodCodec());
 
   final CallbackCollection<Event> _onErrorCallbacks = {};
+
+  @override
+  void Function(dynamic error, StackTrace? stack) get errorHandler =>
+      _notifyUnhandled;
 
   @override
   Future<User> getUser() async =>
@@ -129,6 +138,27 @@ class ChannelClient implements Client {
     }
 
     if (callback != null && !await callback.invokeSafely(event)) {
+      // callback rejected the payload - so we don't deliver it
+      return;
+    }
+
+    await _deliverEvent(event);
+  }
+
+  void _notifyUnhandled(dynamic error, StackTrace? stackTrace) async {
+    final errorPayload = ErrorFactory.instance.createError(error, stackTrace);
+    final event = await _createEvent(
+      errorPayload,
+      unhandled: true,
+      isolateStackTrace: StackTrace.current,
+      deliver: _onErrorCallbacks.isEmpty,
+    );
+
+    if (event == null) {
+      return;
+    }
+
+    if (!await _onErrorCallbacks.dispatchEvent(event)) {
       // callback rejected the payload - so we don't deliver it
       return;
     }
