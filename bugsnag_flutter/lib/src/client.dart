@@ -8,6 +8,9 @@ import 'callbacks.dart';
 import 'model.dart';
 
 abstract class Client {
+  /// An utility error handling function that will send reported errors to
+  /// Bugsnag as unhandled. The [errorHandler] is suitable for use with
+  /// common Dart error callbacks such as [runZonedGuarded] or [Future.onError].
   void Function(dynamic error, StackTrace? stack) get errorHandler;
 
   Future<void> setUser({String? id, String? name, String? email});
@@ -18,7 +21,8 @@ abstract class Client {
 
   Future<String?> getContext();
 
-  Future<void> notify(dynamic error, {
+  Future<void> notify(
+    dynamic error, {
     StackTrace? stackTrace,
     OnErrorCallback? callback,
   });
@@ -115,16 +119,16 @@ class ChannelClient implements Client {
     _onErrorCallbacks.remove(onError);
   }
 
-  @override
-  Future<void> notify(
-    dynamic error, {
+  Future<void> _notifyInternal(
+    dynamic error,
+    bool unhandled,
     StackTrace? stackTrace,
     OnErrorCallback? callback,
-  }) async {
+  ) async {
     final errorPayload = ErrorFactory.instance.createError(error, stackTrace);
     final event = await _createEvent(
       errorPayload,
-      unhandled: false,
+      unhandled: unhandled,
       deliver: _onErrorCallbacks.isEmpty && callback == null,
     );
 
@@ -145,25 +149,17 @@ class ChannelClient implements Client {
     await _deliverEvent(event);
   }
 
+  @override
+  Future<void> notify(
+    dynamic error, {
+    StackTrace? stackTrace,
+    OnErrorCallback? callback,
+  }) {
+    return _notifyInternal(error, false, stackTrace, callback);
+  }
+
   void _notifyUnhandled(dynamic error, StackTrace? stackTrace) async {
-    final errorPayload = ErrorFactory.instance.createError(error, stackTrace);
-    final event = await _createEvent(
-      errorPayload,
-      unhandled: true,
-      isolateStackTrace: StackTrace.current,
-      deliver: _onErrorCallbacks.isEmpty,
-    );
-
-    if (event == null) {
-      return;
-    }
-
-    if (!await _onErrorCallbacks.dispatchEvent(event)) {
-      // callback rejected the payload - so we don't deliver it
-      return;
-    }
-
-    await _deliverEvent(event);
+    _notifyInternal(error, true, stackTrace, null);
   }
 
   /// Create an Event by having it built by the native notifier,

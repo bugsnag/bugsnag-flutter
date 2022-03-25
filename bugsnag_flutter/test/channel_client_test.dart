@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bugsnag_flutter/bugsnag.dart';
 import 'package:bugsnag_flutter/src/client.dart';
 import 'package:flutter/services.dart';
@@ -47,7 +49,7 @@ void main() {
 
       test('can modify the event', () async {
         client.addOnError((event) {
-          event.unhandled = false;
+          event.unhandled = true;
           event.threads = [];
           return true;
         });
@@ -56,7 +58,7 @@ void main() {
 
         expect(deliveredEvents, hasLength(1));
         expect(deliveredEvents[0]['threads'], hasLength(0));
-        expect(deliveredEvents[0]['unhandled'], isFalse);
+        expect(deliveredEvents[0]['unhandled'], isTrue);
         expect(
           deliveredEvents[0]['severityReason']['unhandledOverridden'],
           isTrue,
@@ -67,6 +69,20 @@ void main() {
     group('Client.notify', () {
       test('delivers events in createEvent if possible', () async {
         await client.notify('no error', stackTrace: StackTrace.current);
+
+        expect(createdEvents, hasLength(1));
+        expect(createdEvents[0]['deliver'], isTrue);
+
+        expect(deliveredEvents, isEmpty);
+      });
+    });
+
+    group('errorHandler', () {
+      test('delivers unhandled exceptions', () async {
+        runZonedGuarded(() {
+          dynamic string = "this is not a number";
+          return string / 10;
+        }, client.errorHandler);
 
         expect(createdEvents, hasLength(1));
         expect(createdEvents[0]['deliver'], isTrue);
@@ -86,10 +102,10 @@ Future<Object?> _handleClientMethodCall(MethodCall message) async {
       return null;
     }
 
-    return Event.fromJson(const {
+    return Event.fromJson({
       'metaData': <String, dynamic>{},
       'severity': 'warning',
-      'unhandled': true,
+      'unhandled': message.arguments['unhandled'],
       'severityReason': {
         'type': 'unhandledException',
         'unhandledOverridden': false,

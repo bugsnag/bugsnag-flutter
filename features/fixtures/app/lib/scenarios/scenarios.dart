@@ -1,4 +1,5 @@
 import 'attach_bugsnag_scenario.dart';
+import 'error_handler_scenario.dart';
 import 'ffi_crash_scenario.dart';
 import 'handled_exception_scenario.dart';
 import 'native_crash_scenario.dart';
@@ -19,4 +20,5 @@ const List<ScenarioInfo<Scenario>> scenarios = [
   ScenarioInfo('FFICrashScenario', FFICrashScenario.new),
   ScenarioInfo('AttachBugsnagScenario', AttachBugsnagScenario.new),
   ScenarioInfo('HandledExceptionScenario', HandledExceptionScenario.new),
+  ScenarioInfo('ErrorHandlerScenario', ErrorHandlerScenario.new),
 ];
