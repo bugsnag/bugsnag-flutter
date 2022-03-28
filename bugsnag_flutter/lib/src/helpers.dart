@@ -3,8 +3,9 @@ import 'dart:async';
 import 'package:bugsnag_flutter/bugsnag.dart';
 
 extension ZoneHelpers on Client {
-  /// Helper function
-  R? runZoned<R>(R Function() body) {
-    return runZonedGuarded(body, errorHandler);
-  }
+  /// Exactly equivalent to:
+  /// ```dart
+  /// return runZonedGuarded(body, bugsnag.errorHandler);
+  /// ```
+  R? runZoned<R>(R Function() body) => runZonedGuarded(body, errorHandler);
 }

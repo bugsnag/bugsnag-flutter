@@ -78,7 +78,7 @@ void main() {
     });
 
     group('errorHandler', () {
-      test('delivers unhandled exceptions', () async {
+      test('delivers unhandled exceptions', () {
         runZonedGuarded(() {
           dynamic string = "this is not a number";
           return string / 10;
@@ -88,6 +88,24 @@ void main() {
         expect(createdEvents[0]['deliver'], isTrue);
 
         expect(deliveredEvents, isEmpty);
+      });
+
+      test('runZoned helper', () {
+        bool shouldThrowError() {
+          return true;
+        }
+
+        final value = client.runZoned(() {
+          if (shouldThrowError()) {
+            throw Exception('this ia a test exception');
+          }
+
+          return 'hello';
+        });
+
+        expect(value, isNull);
+        expect(createdEvents, hasLength(1));
+        expect(createdEvents[0]['deliver'], isTrue);
       });
     });
   });
