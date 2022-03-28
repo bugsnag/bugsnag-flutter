@@ -8,6 +8,11 @@ import 'callbacks.dart';
 import 'model.dart';
 
 abstract class Client {
+  /// An utility error handling function that will send reported errors to
+  /// Bugsnag as unhandled. The [errorHandler] is suitable for use with
+  /// common Dart error callbacks such as [runZonedGuarded] or [Future.onError].
+  void Function(dynamic error, StackTrace? stack) get errorHandler;
+
   Future<void> setUser({String? id, String? name, String? email});
 
   Future<User> getUser();
@@ -45,6 +50,10 @@ class DelegateClient implements Client {
   }
 
   @override
+  void Function(dynamic error, StackTrace? stack) get errorHandler =>
+      client.errorHandler;
+
+  @override
   Future<User> getUser() => client.getUser();
 
   @override
@@ -79,6 +88,10 @@ class ChannelClient implements Client {
   final CallbackCollection<Event> _onErrorCallbacks = {};
 
   @override
+  void Function(dynamic error, StackTrace? stack) get errorHandler =>
+      _notifyUnhandled;
+
+  @override
   Future<User> getUser() async =>
       User.fromJson(await _channel.invokeMethod('getUser'));
 
@@ -106,16 +119,16 @@ class ChannelClient implements Client {
     _onErrorCallbacks.remove(onError);
   }
 
-  @override
-  Future<void> notify(
-    dynamic error, {
+  Future<void> _notifyInternal(
+    dynamic error,
+    bool unhandled,
     StackTrace? stackTrace,
     OnErrorCallback? callback,
-  }) async {
+  ) async {
     final errorPayload = ErrorFactory.instance.createError(error, stackTrace);
     final event = await _createEvent(
       errorPayload,
-      unhandled: false,
+      unhandled: unhandled,
       deliver: _onErrorCallbacks.isEmpty && callback == null,
     );
 
@@ -134,6 +147,19 @@ class ChannelClient implements Client {
     }
 
     await _deliverEvent(event);
+  }
+
+  @override
+  Future<void> notify(
+    dynamic error, {
+    StackTrace? stackTrace,
+    OnErrorCallback? callback,
+  }) {
+    return _notifyInternal(error, false, stackTrace, callback);
+  }
+
+  void _notifyUnhandled(dynamic error, StackTrace? stackTrace) async {
+    _notifyInternal(error, true, stackTrace, null);
   }
 
   /// Create an Event by having it built by the native notifier,
