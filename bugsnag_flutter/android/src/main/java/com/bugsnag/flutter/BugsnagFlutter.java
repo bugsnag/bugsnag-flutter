@@ -1,5 +1,7 @@
 package com.bugsnag.flutter;
 
+import static com.bugsnag.flutter.JsonHelper.unpackFeatureFlags;
+import static com.bugsnag.flutter.JsonHelper.unpackMetadata;
 import static com.bugsnag.flutter.JsonHelper.unwrap;
 
 import android.content.Context;
@@ -7,19 +9,19 @@ import android.content.Context;
 import androidx.annotation.Nullable;
 
 import com.bugsnag.android.Bugsnag;
+import com.bugsnag.android.Configuration;
+import com.bugsnag.android.EndpointConfiguration;
+import com.bugsnag.android.ErrorTypes;
 import com.bugsnag.android.Event;
-import com.bugsnag.android.FeatureFlag;
 import com.bugsnag.android.InternalHooks;
+import com.bugsnag.android.ThreadSendPolicy;
 
-import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 
 class BugsnagFlutter {
-
-    private boolean isAttached = false;
 
     private InternalHooks client;
 
@@ -37,7 +39,7 @@ class BugsnagFlutter {
             return false;
         }
 
-        if (isAttached) {
+        if (isAttached()) {
             throw new IllegalStateException("bugsnag.attach may not be called more than once");
         }
 
@@ -57,8 +59,85 @@ class BugsnagFlutter {
         }
 
         client = new InternalHooks(Bugsnag.getClient());
-        isAttached = true;
         return true;
+    }
+
+    Void start(@Nullable JSONObject args) throws JSONException {
+        if (isBugsnagStarted()) {
+            throw new IllegalArgumentException("bugsnag.start may not be called after starting Bugsnag natively");
+        }
+
+        Configuration configuration = Configuration.load(context);
+
+        configuration.setApiKey(args.optString("apiKey", configuration.getApiKey()));
+        configuration.setAppType(args.optString("appType", configuration.getAppType()));
+        configuration.setAppVersion(args.optString("appVersion", configuration.getAppVersion()));
+        configuration.setAutoTrackSessions(args.optBoolean("autoTrackSessions", configuration.getAutoTrackSessions()));
+        configuration.setContext(args.optString("context", configuration.getContext()));
+        configuration.setLaunchDurationMillis(args.optLong("launchDurationMillis", configuration.getLaunchDurationMillis()));
+        configuration.setMaxBreadcrumbs(args.optInt("maxBreadcrumbs", configuration.getMaxBreadcrumbs()));
+        configuration.setMaxPersistedEvents(args.optInt("maxPersistedEvents", configuration.getMaxPersistedEvents()));
+        configuration.setMaxPersistedSessions(args.optInt("maxPersistedSessions", configuration.getMaxPersistedSessions()));
+        configuration.setReleaseStage(args.optString("releaseStage", configuration.getReleaseStage()));
+        configuration.setPersistUser(args.optBoolean("persistUser", configuration.getPersistUser()));
+
+        if (args.has("redactedKeys")) {
+            configuration.setRedactedKeys(unwrap(args.optJSONArray("redactedKeys"), new HashSet<>()));
+        }
+
+        if (args.has("enabledReleaseStages")) {
+            configuration.setEnabledReleaseStages(unwrap(args.optJSONArray("enabledReleaseStages"), new HashSet<>()));
+        }
+
+        JSONObject user = args.optJSONObject("user");
+        if (user != null) {
+            configuration.setUser(
+                    user.optString("id", null),
+                    user.optString("email", null),
+                    user.optString("name", null)
+            );
+        }
+
+        JSONObject endpoints = args.optJSONObject("endpoints");
+        if (endpoints != null) {
+            configuration.setEndpoints(
+                    new EndpointConfiguration(
+                            endpoints.getString("notify"),
+                            endpoints.getString("sessions")
+                    )
+            );
+        }
+
+        String sendThreads = args.optString("sendThreads");
+        if (sendThreads.equals("always")) {
+            configuration.setSendThreads(ThreadSendPolicy.ALWAYS);
+        } else if (sendThreads.equals("unhandledOnly")) {
+            configuration.setSendThreads(ThreadSendPolicy.UNHANDLED_ONLY);
+        } else if (sendThreads.equals("never")) {
+            configuration.setSendThreads(ThreadSendPolicy.NEVER);
+        }
+
+        configuration.setEnabledBreadcrumbTypes(
+                EnumHelper.unwrapBreadcrumbTypes(args.optJSONArray("enabledBreadcrumbTypes"))
+        );
+
+        JSONObject enabledErrorTypes = args.optJSONObject("enabledErrorTypes");
+        if (enabledErrorTypes != null) {
+            ErrorTypes errorTypes = new ErrorTypes();
+            errorTypes.setUnhandledExceptions(enabledErrorTypes.optBoolean("unhandledExceptions"));
+            errorTypes.setNdkCrashes(enabledErrorTypes.optBoolean("crashes"));
+            errorTypes.setAnrs(enabledErrorTypes.optBoolean("anrs"));
+
+            configuration.setEnabledErrorTypes(errorTypes);
+        }
+
+        unpackMetadata(args.optJSONObject("metadata"), configuration);
+
+        configuration.addFeatureFlags(unpackFeatureFlags(args.optJSONArray("featureFlags")));
+
+        client = new InternalHooks(Bugsnag.start(context, configuration));
+
+        return null;
     }
 
     JSONObject getUser(@Nullable JSONObject args) {
@@ -96,19 +175,7 @@ class BugsnagFlutter {
             return null;
         }
 
-        JSONArray featureFlags = args.optJSONArray("featureFlags");
-        if (featureFlags != null) {
-            List<FeatureFlag> flags = new ArrayList<>(featureFlags.length());
-            for (int index = 0; index < featureFlags.length(); index++) {
-                JSONObject featureFlag = featureFlags.optJSONObject(index);
-                flags.add(new FeatureFlag(
-                        featureFlag.optString("featureFlag"),
-                        (String) featureFlag.opt("variant")
-                ));
-            }
-            Bugsnag.addFeatureFlags(flags);
-        }
-
+        Bugsnag.addFeatureFlags(unpackFeatureFlags(args.optJSONArray("featureFlags")));
         return null;
     }
 
@@ -151,8 +218,12 @@ class BugsnagFlutter {
         try {
             Bugsnag.getClient();
             return true;
-        } catch (IllegalArgumentException iae) {
+        } catch (IllegalStateException iae) {
             return false;
         }
+    }
+
+    private boolean isAttached() {
+        return client != null;
     }
 }

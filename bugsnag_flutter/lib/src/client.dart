@@ -273,14 +273,14 @@ class Bugsnag extends Client with DelegateClient {
   }) async {
     final client = ChannelClient();
     await ChannelClient._channel.invokeMethod('start', <String, dynamic>{
-      'apiKey': apiKey,
-      'user': user,
+      if (apiKey != null) 'apiKey': apiKey,
+      if (user != null) 'user': user,
       'persistUser': persistUser,
-      'context': context,
-      'appType': appType,
-      'appVersion': appVersion,
-      'bundleVersion': bundleVersion,
-      'releaseStage': releaseStage,
+      if (context != null) 'context': context,
+      if (appType != null) 'appType': appType,
+      if (appVersion != null) 'appVersion': appVersion,
+      if (bundleVersion != null) 'bundleVersion': bundleVersion,
+      if (releaseStage != null) 'releaseStage': releaseStage,
       'enabledErrorTypes': enabledErrorTypes,
       'endpoints': endpoints,
       'maxBreadcrumbs': maxBreadcrumbs,
