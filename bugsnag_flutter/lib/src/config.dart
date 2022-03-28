@@ -17,6 +17,9 @@ class EnabledErrorTypes {
         'appHangs': appHangs,
         'anrs': anrs
       };
+
+  static const EnabledErrorTypes all =
+      EnabledErrorTypes(true, true, true, true, true, true);
 }
 
 class EndpointConfiguration {
@@ -26,6 +29,9 @@ class EndpointConfiguration {
   const EndpointConfiguration(this.notify, this.sessions);
 
   dynamic toJson() => {'notify': notify, 'sessions': sessions};
+
+  static const EndpointConfiguration bugsnag = EndpointConfiguration(
+      'https://notify.bugsnag.com', 'https://sessions.bugsnag.com');
 }
 
 enum ThreadSendPolicy {

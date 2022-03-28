@@ -182,8 +182,9 @@ class _HomePageState extends State<MazeRunnerHomePage> {
   }
 
   EndpointConfiguration _endpoints() => EndpointConfiguration(
-      _notifyEndpointController.value.text,
-      _sessionEndpointController.value.text);
+        _notifyEndpointController.value.text,
+        _sessionEndpointController.value.text,
+      );
 
   @override
   Widget build(BuildContext context) {

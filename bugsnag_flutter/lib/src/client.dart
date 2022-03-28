@@ -246,10 +246,8 @@ class Bugsnag extends Client with DelegateClient {
     String? appVersion,
     String? bundleVersion,
     String? releaseStage,
-    EnabledErrorTypes enabledErrorTypes =
-        const EnabledErrorTypes(true, true, true, true, true, true),
-    EndpointConfiguration endpoints = const EndpointConfiguration(
-        'https://notify.bugsnag.com', 'https://sessions.bugsnag.com'),
+    EnabledErrorTypes enabledErrorTypes = EnabledErrorTypes.all,
+    EndpointConfiguration endpoints = EndpointConfiguration.bugsnag,
     int maxBreadcrumbs = 50,
     int maxPersistedSessions = 128,
     int maxPersistedEvents = 32,
@@ -289,13 +287,13 @@ class Bugsnag extends Client with DelegateClient {
       'maxPersistedSessions': maxPersistedSessions,
       'maxPersistedEvents': maxPersistedEvents,
       'autoTrackSessions': autoTrackSessions,
-      'sendThreads': sendThreads.toString().split('.').last,
+      'sendThreads': sendThreads._toName(),
       'launchDurationMillis': launchDurationMillis,
       'redactedKeys': List<String>.from(redactedKeys),
       if (enabledReleaseStages != null)
         'enabledReleaseStages': List<String>.from(enabledReleaseStages),
-      'enabledBreadcrumbTypes': List<String>.from(
-          enabledBreadcrumbTypes.map((e) => e.toString().split('.').last)),
+      'enabledBreadcrumbTypes':
+          List<String>.from(enabledBreadcrumbTypes.map((e) => e._toName())),
       'metadata': metadata,
       'featureFlags': featureFlags,
     });
@@ -305,3 +303,8 @@ class Bugsnag extends Client with DelegateClient {
 }
 
 final Bugsnag bugsnag = Bugsnag();
+
+// The official EnumName extension was only added in 2.15
+extension _EnumName on Enum {
+  String _toName() => toString().split('.').last;
+}
