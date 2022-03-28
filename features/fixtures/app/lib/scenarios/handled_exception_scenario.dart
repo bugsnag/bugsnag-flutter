@@ -6,7 +6,6 @@ class HandledExceptionScenario extends Scenario {
   @override
   Future<void> run() async {
     await startBugsnag();
-    await bugsnag.attach();
     try {
       throw Exception('test error message');
     } catch (e) {

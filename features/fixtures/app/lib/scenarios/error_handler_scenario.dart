@@ -7,7 +7,6 @@ class ErrorHandlerScenario extends Scenario {
   @override
   Future<void> run() async {
     await startBugsnag();
-    await bugsnag.attach();
 
     if (extraConfig?.contains("zone") == true) {
       runZonedGuarded(

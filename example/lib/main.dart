@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await bugsnag.attach();
+  await bugsnag.start();
 
   runApp(const MyApp());
 }
