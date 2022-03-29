@@ -1,12 +1,16 @@
+import 'package:bugsnag_flutter/bugsnag.dart';
+
+import '../channels.dart';
+
 abstract class Scenario {
+  late EndpointConfiguration endpoints;
+
   String? extraConfig;
 
-  // this is a variable to allow it to be overwritten
-  @Deprecated('to be replaced by the actual notifier API')
-  // ignore: prefer_function_declarations_over_variables
-  Future<void> Function() startBugsnag = () async {
-    throw UnsupportedError('Scenario not properly initialised');
-  };
+  Future<void> startNativeNotifier() =>
+      MazeRunnerChannels.startBugsnag(endpoints);
+
+  Future<void> startBugsnag() => bugsnag.start(endpoints: endpoints);
 
   Future<void> run();
 }

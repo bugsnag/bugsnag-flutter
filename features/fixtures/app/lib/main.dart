@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:MazeRunner/channels.dart';
+import 'package:bugsnag_flutter/bugsnag.dart';
 import 'package:flutter/material.dart';
 
 import 'scenarios/scenario.dart';
@@ -138,13 +139,7 @@ class _HomePageState extends State<MazeRunnerHomePage> {
   /// Starts Bugsnag
   Future<void> _onStartBugsnag() async {
     log('Starting Bugsnag');
-    final notifyEndpoint = _notifyEndpointController.value.text;
-    final sessionEndpoint = _sessionEndpointController.value.text;
-
-    await MazeRunnerChannels.startBugsnag(
-      notifyEndpoint: notifyEndpoint,
-      sessionEndpoint: sessionEndpoint,
-    );
+    await bugsnag.start(endpoints: _endpoints());
   }
 
   /// Runs a scenario, starting bugsnag first
@@ -157,9 +152,8 @@ class _HomePageState extends State<MazeRunnerHomePage> {
     log('Clearing Persistent Data...');
     await MazeRunnerChannels.clearPersistentData();
 
-    final extraConfig = _extraConfigController.value.text;
-    scenario.extraConfig = extraConfig;
-    scenario.startBugsnag = _onStartBugsnag;
+    scenario.endpoints = _endpoints();
+    scenario.extraConfig = _extraConfigController.value.text;
     log('Running scenario');
     await scenario.run();
   }
@@ -186,6 +180,11 @@ class _HomePageState extends State<MazeRunnerHomePage> {
 
     return scenarios[scenarioIndex].init();
   }
+
+  EndpointConfiguration _endpoints() => EndpointConfiguration(
+        _notifyEndpointController.value.text,
+        _sessionEndpointController.value.text,
+      );
 
   @override
   Widget build(BuildContext context) {

@@ -1,7 +1,5 @@
 package com.bugsnag.flutter;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 
 import org.json.JSONObject;
@@ -34,6 +32,7 @@ public class BugsnagFlutterPlugin implements FlutterPlugin, MethodCallHandler {
         functions.put("getContext", bugsnag::getContext);
         functions.put("addFeatureFlags", bugsnag::addFeatureFlags);
         functions.put("attach", bugsnag::attach);
+        functions.put("start", bugsnag::start);
     }
 
     @Override

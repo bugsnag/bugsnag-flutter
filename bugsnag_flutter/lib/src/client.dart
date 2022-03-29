@@ -5,6 +5,7 @@ import 'package:bugsnag_flutter/src/error_factory.dart';
 import 'package:flutter/services.dart';
 
 import 'callbacks.dart';
+import 'config.dart';
 import 'model.dart';
 
 abstract class Client {
@@ -235,6 +236,75 @@ class Bugsnag extends Client with DelegateClient {
 
     this.client = client;
   }
+
+  Future<void> start({
+    String? apiKey,
+    User? user,
+    bool persistUser = true,
+    String? context,
+    String? appType,
+    String? appVersion,
+    String? bundleVersion,
+    String? releaseStage,
+    EnabledErrorTypes enabledErrorTypes = EnabledErrorTypes.all,
+    EndpointConfiguration endpoints = EndpointConfiguration.bugsnag,
+    int maxBreadcrumbs = 50,
+    int maxPersistedSessions = 128,
+    int maxPersistedEvents = 32,
+    bool autoTrackSessions = true,
+    ThreadSendPolicy sendThreads = ThreadSendPolicy.always,
+    int launchDurationMillis = 5000,
+    Set<String> redactedKeys = const {'password'},
+    Set<String>? enabledReleaseStages,
+    Set<BreadcrumbType> enabledBreadcrumbTypes = const {
+      BreadcrumbType.navigation,
+      BreadcrumbType.request,
+      BreadcrumbType.log,
+      BreadcrumbType.user,
+      BreadcrumbType.state,
+      BreadcrumbType.error,
+      BreadcrumbType.manual
+    },
+    Metadata? metadata,
+    List<FeatureFlag>? featureFlags,
+    List<OnSessionCallback> onSession = const [],
+    List<OnBreadcrumbCallback> onBreadcrumb = const [],
+    List<OnErrorCallback> onError = const [],
+  }) async {
+    final client = ChannelClient();
+    await ChannelClient._channel.invokeMethod('start', <String, dynamic>{
+      if (apiKey != null) 'apiKey': apiKey,
+      if (user != null) 'user': user,
+      'persistUser': persistUser,
+      if (context != null) 'context': context,
+      if (appType != null) 'appType': appType,
+      if (appVersion != null) 'appVersion': appVersion,
+      if (bundleVersion != null) 'bundleVersion': bundleVersion,
+      if (releaseStage != null) 'releaseStage': releaseStage,
+      'enabledErrorTypes': enabledErrorTypes,
+      'endpoints': endpoints,
+      'maxBreadcrumbs': maxBreadcrumbs,
+      'maxPersistedSessions': maxPersistedSessions,
+      'maxPersistedEvents': maxPersistedEvents,
+      'autoTrackSessions': autoTrackSessions,
+      'sendThreads': sendThreads._toName(),
+      'launchDurationMillis': launchDurationMillis,
+      'redactedKeys': List<String>.from(redactedKeys),
+      if (enabledReleaseStages != null)
+        'enabledReleaseStages': List<String>.from(enabledReleaseStages),
+      'enabledBreadcrumbTypes':
+          List<String>.from(enabledBreadcrumbTypes.map((e) => e._toName())),
+      'metadata': metadata,
+      'featureFlags': featureFlags,
+    });
+    client._onErrorCallbacks.addAll(onError);
+    this.client = client;
+  }
 }
 
 final Bugsnag bugsnag = Bugsnag();
+
+// The official EnumName extension was only added in 2.15
+extension _EnumName on Enum {
+  String _toName() => toString().split('.').last;
+}

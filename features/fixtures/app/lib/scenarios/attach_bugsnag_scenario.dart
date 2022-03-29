@@ -4,7 +4,7 @@ import 'package:bugsnag_flutter/bugsnag.dart';
 class AttachBugsnagScenario extends Scenario {
   @override
   Future<void> run() async {
-    await startBugsnag();
+    await startNativeNotifier();
     await bugsnag.attach(
       context: 'flutter-test-context',
       user: User(

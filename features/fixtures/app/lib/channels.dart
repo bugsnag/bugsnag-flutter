@@ -1,3 +1,4 @@
+import 'package:bugsnag_flutter/bugsnag.dart';
 import 'package:flutter/services.dart';
 
 class MazeRunnerChannels {
@@ -20,16 +21,10 @@ class MazeRunnerChannels {
     });
   }
 
-  /// Invoke Bugsnag.start on the native side as a temporary stand-in for
-  /// a Flutter API
-  @Deprecated("use bugsnag-flutter api once available")
-  static Future<void> startBugsnag({
-    required String notifyEndpoint,
-    required String sessionEndpoint,
-  }) {
+  static Future<void> startBugsnag(EndpointConfiguration endpoints) {
     return platform.invokeMethod("startBugsnag", {
-      "notifyEndpoint": notifyEndpoint,
-      "sessionEndpoint": sessionEndpoint,
+      'notifyEndpoint': endpoints.notify,
+      'sessionEndpoint': endpoints.sessions,
     });
   }
 }
