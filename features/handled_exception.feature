@@ -17,4 +17,6 @@ Feature: bugsnag.notify
     And the exception "errorClass" equals "_Exception"
     And the error payload field "events.0.unhandled" is true
     And the error payload field "events.0.exceptions.0.message" equals "test error message"
+    And the error payload field "events.0.metaData.callback.message" equals "Hello, World!"
+    And the error payload field "events.0.breadcrumbs.0.name" equals "Crumbs!"
     And the error payload field "events.0.threads" is a non-empty array
