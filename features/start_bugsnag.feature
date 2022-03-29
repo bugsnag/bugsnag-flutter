@@ -1,6 +1,6 @@
 Feature: Start Bugsnag from Flutter
 
-  Scenario: Start Bugsnag and notify a handled exceptino
+  Scenario: Start Bugsnag and notify a handled exception
     Given I run "StartBugsnagScenario"
     And I wait to receive an error
     Then the error payload field "events" is an array with 1 elements

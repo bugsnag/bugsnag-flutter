@@ -3,6 +3,7 @@ package com.bugsnag.flutter;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.bugsnag.android.BreadcrumbType;
 import com.bugsnag.android.FeatureFlag;
 import com.bugsnag.android.JsonStream;
 import com.bugsnag.android.MetadataAware;
@@ -98,5 +99,18 @@ public class JsonHelper {
             ));
         }
         return flags;
+    }
+
+    public static BreadcrumbType unpackBreadcrumbType(String type) {
+        switch (type) {
+            case "error": return BreadcrumbType.ERROR;
+            case "log": return BreadcrumbType.LOG;
+            case "navigation": return BreadcrumbType.NAVIGATION;
+            case "process": return BreadcrumbType.PROCESS;
+            case "request": return BreadcrumbType.REQUEST;
+            case "state": return BreadcrumbType.STATE;
+            case "user": return BreadcrumbType.USER;
+            default: return BreadcrumbType.MANUAL;
+        }
     }
 }

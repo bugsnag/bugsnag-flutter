@@ -36,6 +36,8 @@ public class InternalHooks {
                 logger
         );
 
+        event.setBreadcrumbs(client.getBreadcrumbs());
+
         User user = client.getUser();
         event.setUser(user.getId(), user.getEmail(), user.getName());
 

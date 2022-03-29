@@ -1,10 +1,9 @@
 package com.bugsnag.flutter;
 
-import androidx.annotation.Nullable;
+import androidx.annotation.NonNull;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 interface BSGFunction<T> {
-    T invoke(@Nullable JSONObject argument) throws JSONException;
+    T invoke(@NonNull JSONObject argument) throws Exception;
 }

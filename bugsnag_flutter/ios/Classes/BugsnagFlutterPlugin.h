@@ -9,6 +9,9 @@
 - (void)setContext:(NSDictionary *)json;
 - (NSString *)getContext:(NSDictionary *)json;
 
+- (void)leaveBreadcrumb:(NSDictionary *)arguments;
+- (NSArray<NSDictionary *> *)getBreadcrumbs:(NSDictionary *)arguments;
+
 - (void)addFeatureFlags:(NSDictionary *)json;
 
 - (NSNumber *)attach:(NSDictionary *)json;
