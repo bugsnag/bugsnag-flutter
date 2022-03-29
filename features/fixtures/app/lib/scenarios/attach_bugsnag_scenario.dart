@@ -15,15 +15,16 @@ class AttachBugsnagScenario extends Scenario {
         FeatureFlag('demo-mode'),
         FeatureFlag('sample-group', '123'),
       ],
+      runApp: () async {
+        if (extraConfig?.contains("handled") == true) {
+          await bugsnag.notify(
+            Exception('Exception with attached info'),
+            stackTrace: StackTrace.current,
+          );
+        } else {
+          throw Exception('Exception with attached info');
+        }
+      },
     );
-
-    if (extraConfig?.contains("handled") == true) {
-      await bugsnag.notify(
-        Exception('Exception with attached info'),
-        stackTrace: StackTrace.current,
-      );
-    } else {
-      throw Exception('Exception with attached info');
-    }
   }
 }

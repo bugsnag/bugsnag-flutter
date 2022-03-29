@@ -193,6 +193,14 @@ class Bugsnag extends Client with DelegateClient {
   /// adding to its existing configuration. Use [start] if your application
   /// is entirely built in Flutter.
   ///
+  /// Typical hybrid Flutter applications with Bugsnag will start with
+  /// ```dart
+  /// Future<void> main() => Bugsnag.attach(
+  ///   runApp: () => runApp(MyApplication()),
+  ///   // other configuration here
+  /// );
+  /// ```
+  ///
   /// Use this method to initialize Flutter when developing a Hybrid app,
   /// where Bugsnag is being started by the native part of the app. For more
   /// information on starting Bugsnag natively, see our platform guides for:
@@ -208,6 +216,7 @@ class Bugsnag extends Client with DelegateClient {
   /// * [addFeatureFlags]
   /// * [addOnError]
   Future<void> attach({
+    FutureOr<void> Function()? runApp,
     User? user,
     String? context,
     List<FeatureFlag>? featureFlags,
@@ -235,10 +244,36 @@ class Bugsnag extends Client with DelegateClient {
     client._onErrorCallbacks.addAll(onError);
 
     this.client = client;
+
+    if (runApp != null) {
+      await runZoned(runApp);
+    }
   }
 
+  /// Initialize the Bugsnag notifier with the configuration options specified.
+  /// Use [attach] if you are building a Hybrid application where Bugsnag
+  /// is initialised by the Native layer.
+  ///
+  /// [start] will pick up any native configuration options that are specified.
+  ///
+  /// Typical Flutter-only applications with Bugsnag will start with:
+  /// ```dart
+  /// Future<void> main() => Bugsnag.start(
+  ///   apiKey: 'your-api-key',
+  ///   runApp: () => runApp(MyApplication()),
+  /// );
+  /// ```
+  ///
+  /// See also:
+  ///
+  /// * [attach]
+  /// * [setUser]
+  /// * [setContext]
+  /// * [addFeatureFlags]
+  /// * [addOnError]
   Future<void> start({
     String? apiKey,
+    FutureOr<void> Function()? runApp,
     User? user,
     bool persistUser = true,
     String? context,
@@ -292,13 +327,18 @@ class Bugsnag extends Client with DelegateClient {
       'redactedKeys': List<String>.from(redactedKeys),
       if (enabledReleaseStages != null)
         'enabledReleaseStages': List<String>.from(enabledReleaseStages),
-      'enabledBreadcrumbTypes':
-          List<String>.from(enabledBreadcrumbTypes.map((e) => e._toName())),
+      'enabledBreadcrumbTypes': List<String>.from(
+        enabledBreadcrumbTypes.map((e) => e._toName()),
+      ),
       'metadata': metadata,
       'featureFlags': featureFlags,
     });
     client._onErrorCallbacks.addAll(onError);
     this.client = client;
+
+    if (runApp != null) {
+      await runZoned(runApp);
+    }
   }
 }
 

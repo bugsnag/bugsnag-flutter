@@ -30,8 +30,12 @@ class StartBugsnagScenario extends Scenario {
         }
       }),
       sendThreads: ThreadSendPolicy.never,
+      runApp: () async {
+        await bugsnag.notify(
+          Exception('Exception with attached info'),
+          stackTrace: StackTrace.current,
+        );
+      },
     );
-    await bugsnag.notify(Exception('Exception with attached info'),
-        stackTrace: StackTrace.current);
   }
 }
