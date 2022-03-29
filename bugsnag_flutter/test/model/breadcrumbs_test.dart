@@ -8,7 +8,7 @@ void main() {
       final json = breadcrumb.toJson();
 
       expect(json['name'], equals('starting out on a journey'));
-      expect(json['type'], equals('user'));
+      expect(json['type'], equals('manual'));
       expect(json['metaData'], equals(<String, dynamic>{}));
       expect(json['timestamp'], endsWith('Z'));
     });
