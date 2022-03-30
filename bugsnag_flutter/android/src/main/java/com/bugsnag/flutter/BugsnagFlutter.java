@@ -16,12 +16,13 @@ import com.bugsnag.android.EndpointConfiguration;
 import com.bugsnag.android.ErrorTypes;
 import com.bugsnag.android.Event;
 import com.bugsnag.android.InternalHooks;
+import com.bugsnag.android.Notifier;
 import com.bugsnag.android.ThreadSendPolicy;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Collections;
 import java.util.HashSet;
 
 class BugsnagFlutter {
@@ -62,7 +63,14 @@ class BugsnagFlutter {
         }
 
         client = new InternalHooks(Bugsnag.getClient());
-        client.setNotifier(args.getJSONObject("notifier"));
+
+        Notifier notifier = client.getNotifier();
+        JSONObject notifierJson = args.getJSONObject("notifier");
+        notifier.setName(notifierJson.getString("name"));
+        notifier.setVersion(notifierJson.getString("version"));
+        notifier.setUrl(notifierJson.getString("url"));
+        notifier.setDependencies(Collections.singletonList(new Notifier()));
+
         return true;
     }
 
@@ -139,7 +147,12 @@ class BugsnagFlutter {
 
         configuration.addFeatureFlags(unpackFeatureFlags(args.optJSONArray("featureFlags")));
 
-        InternalHooks.setNotifier(configuration, args.getJSONObject("notifier"));
+        Notifier notifier = InternalHooks.getNotifier(configuration);
+        JSONObject notifierJson = args.getJSONObject("notifier");
+        notifier.setName(notifierJson.getString("name"));
+        notifier.setVersion(notifierJson.getString("version"));
+        notifier.setUrl(notifierJson.getString("url"));
+        notifier.setDependencies(Collections.singletonList(new Notifier()));
 
         client = new InternalHooks(Bugsnag.start(context, configuration));
 
