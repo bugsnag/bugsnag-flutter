@@ -42,6 +42,10 @@ abstract class Client {
     OnErrorCallback? callback,
   });
 
+  void addOnBreadcrumb(OnBreadcrumbCallback onBreadcrumb);
+
+  void removeOnBreadcrumb(OnBreadcrumbCallback onBreadcrumb);
+
   void addOnError(OnErrorCallback onError);
 
   void removeOnError(OnErrorCallback onError);
@@ -101,6 +105,14 @@ class DelegateClient implements Client {
       client.notify(error, stackTrace: stackTrace, callback: callback);
 
   @override
+  void addOnBreadcrumb(OnBreadcrumbCallback onBreadcrumb) =>
+      client.addOnBreadcrumb(onBreadcrumb);
+
+  @override
+  void removeOnBreadcrumb(OnBreadcrumbCallback onBreadcrumb) =>
+      client.removeOnBreadcrumb(onBreadcrumb);
+
+  @override
   void addOnError(OnErrorCallback onError) => client.addOnError(onError);
 
   @override
@@ -111,6 +123,7 @@ class ChannelClient implements Client {
   static const MethodChannel _channel =
       MethodChannel('com.bugsnag/client', JSONMethodCodec());
 
+  final CallbackCollection<Breadcrumb> _onBreadcrumbCallbacks = {};
   final CallbackCollection<Event> _onErrorCallbacks = {};
 
   @override
@@ -140,17 +153,25 @@ class ChannelClient implements Client {
     String message, {
     MetadataSection? metadata,
     BreadcrumbType type = BreadcrumbType.manual,
-  }) =>
-      _channel.invokeMethod('leaveBreadcrumb', {
-        'message': message,
-        'metaData': metadata ?? {},
-        'type': type._toName()
-      });
+  }) async {
+    final crumb = Breadcrumb(message, type: type, metadata: metadata);
+    if (await _onBreadcrumbCallbacks.dispatch(crumb)) {
+      await _channel.invokeMethod('leaveBreadcrumb', crumb);
+    }
+  }
 
   @override
   Future<List<Breadcrumb>> getBreadcrumbs() async =>
       List.from((await _channel.invokeMethod('getBreadcrumbs') as List)
           .map((e) => Breadcrumb.fromJson(e)));
+
+  @override
+  void addOnBreadcrumb(OnBreadcrumbCallback onBreadcrumb) =>
+      _onBreadcrumbCallbacks.add(onBreadcrumb);
+
+  @override
+  void removeOnBreadcrumb(OnBreadcrumbCallback onBreadcrumb) =>
+      _onBreadcrumbCallbacks.remove(onBreadcrumb);
 
   @override
   void addOnError(OnErrorCallback onError) {

@@ -190,7 +190,7 @@ class BugsnagFlutter {
     }
 
     Void leaveBreadcrumb(@NonNull JSONObject args) throws Exception {
-        Bugsnag.leaveBreadcrumb(args.getString("message"),
+        Bugsnag.leaveBreadcrumb(args.getString("name"),
                 JsonHelper.unwrap(args.getJSONObject("metaData")),
                 JsonHelper.unpackBreadcrumbType(args.getString("type")));
         return null;
