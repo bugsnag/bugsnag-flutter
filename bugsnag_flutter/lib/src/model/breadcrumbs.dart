@@ -10,9 +10,9 @@ class Breadcrumb {
 
   Breadcrumb(
     this.message, {
-    this.type = BreadcrumbType.user,
+    this.type = BreadcrumbType.manual,
     this.metadata,
-  }) : timestamp = DateTime.now();
+  }) : timestamp = DateTime.now().toUtc();
 
   Breadcrumb.fromJson(Map<String, dynamic> json)
       : message = json.safeGet('name'),
@@ -26,7 +26,7 @@ class Breadcrumb {
         'name': message,
         'type': type.name,
         'timestamp': timestamp.toIso8601String(),
-        if (metadata != null) 'metaData': metadata,
+        'metaData': metadata ?? {},
       };
 }
 

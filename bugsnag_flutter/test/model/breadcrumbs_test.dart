@@ -8,9 +8,9 @@ void main() {
       final json = breadcrumb.toJson();
 
       expect(json['name'], equals('starting out on a journey'));
-      expect(json['type'], equals('user'));
+      expect(json['type'], equals('manual'));
       expect(json['metaData'], equals(<String, dynamic>{}));
-      expect(json['timestamp'], isNotNull);
+      expect(json['timestamp'], endsWith('Z'));
     });
 
     test('breadcrumb with no metadata toJson', () {
@@ -19,8 +19,8 @@ void main() {
 
       expect(json['name'], equals('oak'));
       expect(json['type'], equals('log'));
-      expect(json['metaData'], isNull);
-      expect(json['timestamp'], isNotNull);
+      expect(json['metaData'], {});
+      expect(json['timestamp'], endsWith('Z'));
     });
 
     test('breadcrumb from json without metadata', () {
