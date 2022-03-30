@@ -3,8 +3,7 @@ Feature: Start Bugsnag from Flutter
   Scenario: Start Bugsnag and notify a handled exception
     Given I run "StartBugsnagScenario"
     And I wait to receive an error
-    Then the error payload field "events" is an array with 1 elements
-    And the error payload field "apiKey" equals "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    Then the error is valid for the error reporting API version "4.0" for the "Flutter Bugsnag Notifier" notifier with the apiKey "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
     And the error payload field "events.0.breadcrumbs" is an array with 0 elements
     And the error payload field "events.0.threads" is an array with 0 elements
     And the event "app.releaseStage" equals "testing"

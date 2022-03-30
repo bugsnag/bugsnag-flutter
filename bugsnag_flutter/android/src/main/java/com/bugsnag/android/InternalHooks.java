@@ -7,9 +7,13 @@ import com.bugsnag.flutter.JsonHelper;
 
 import org.json.JSONObject;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Provides access to Bugsnag internals by being part of package com.bugsnag.android
+ */
 public class InternalHooks {
     private final Client client;
     private final Logger logger;
@@ -22,6 +26,20 @@ public class InternalHooks {
         this.logger = client.getLogger();
         this.config = client.getConfig();
         this.eventMapper = new BugsnagEventMapper(logger);
+    }
+
+    public void setNotifier(JSONObject notifier) throws Exception {
+        client.notifier.setName(notifier.getString("name"));
+        client.notifier.setVersion(notifier.getString("version"));
+        client.notifier.setUrl(notifier.getString("url"));
+        client.notifier.setDependencies(Collections.singletonList(new Notifier()));
+    }
+
+    public static void setNotifier(Configuration configuration, JSONObject notifier) throws Exception {
+        configuration.getNotifier().setName(notifier.getString("name"));
+        configuration.getNotifier().setVersion(notifier.getString("version"));
+        configuration.getNotifier().setUrl(notifier.getString("url"));
+        configuration.getNotifier().setDependencies(Collections.singletonList(new Notifier()));
     }
 
     public Event createEvent(Object severityReason) {

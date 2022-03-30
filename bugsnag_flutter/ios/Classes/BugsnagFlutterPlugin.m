@@ -5,9 +5,11 @@
 #import <Bugsnag/BugsnagBreadcrumb+Private.h>
 #import <Bugsnag/BugsnagBreadcrumbs.h>
 #import <Bugsnag/BugsnagClient+Private.h>
+#import <Bugsnag/BugsnagConfiguration+Private.h>
 #import <Bugsnag/BugsnagError+Private.h>
 #import <Bugsnag/BugsnagEvent+Private.h>
 #import <Bugsnag/BugsnagHandledState.h>
+#import <Bugsnag/BugsnagNotifier.h>
 #import <Bugsnag/BugsnagSessionTracker.h>
 #import <Bugsnag/BugsnagThread+Private.h>
 
@@ -127,7 +129,7 @@ static NSString *NSStringOrNil(id value) {
     }
 }
 
-- (NSNumber *)attach:(NSDictionary *)json {
+- (NSNumber *)attach:(NSDictionary *)arguments {
     if (Bugsnag.client == nil) {
         return @NO;
     }
@@ -136,17 +138,23 @@ static NSString *NSStringOrNil(id value) {
         @throw [NSException exceptionWithName:@"CannotAttach" reason:@"bugsnag.attach may not be called more than once" userInfo:nil];
     }
 
-    if ([json[@"user"] isKindOfClass:[NSDictionary class]]) {
-        [self setUser:json[@"user"]];
+    if ([arguments[@"user"] isKindOfClass:[NSDictionary class]]) {
+        [self setUser:arguments[@"user"]];
     }
     
-    if ([json[@"context"] isKindOfClass:[NSString class]]) {
-        [self setContext:json];
+    if ([arguments[@"context"] isKindOfClass:[NSString class]]) {
+        [self setContext:arguments];
     }
     
-    if ([json[@"featureFlags"] isKindOfClass:[NSArray class]]) {
-        [self addFeatureFlags:json];
+    if ([arguments[@"featureFlags"] isKindOfClass:[NSArray class]]) {
+        [self addFeatureFlags:arguments];
     }
+    
+    NSDictionary *notifier = arguments[@"notifier"];
+    Bugsnag.client.notifier.name = notifier[@"name"];
+    Bugsnag.client.notifier.version = notifier[@"version"];
+    Bugsnag.client.notifier.url = notifier[@"url"];
+    Bugsnag.client.notifier.dependencies = @[[[BugsnagNotifier alloc] init]];
     
     self.attached = YES;
     return @YES;
@@ -244,6 +252,12 @@ static NSString *NSStringOrNil(id value) {
             [configuration addFeatureFlagWithName:flag[@"featureFlag"] variant:flag[@"variant"]];
         }
     }
+    
+    NSDictionary *notifier = arguments[@"notifier"];
+    configuration.notifier = [[BugsnagNotifier alloc] initWithName:notifier[@"name"]
+                                                           version:notifier[@"version"]
+                                                               url:notifier[@"url"]
+                                                      dependencies:@[[[BugsnagNotifier alloc] init]]];
     
     [Bugsnag startWithConfiguration:configuration];
     

@@ -8,6 +8,12 @@ import 'callbacks.dart';
 import 'config.dart';
 import 'model.dart';
 
+final _notifier = {
+  'name': 'Flutter Bugsnag Notifier',
+  'url': 'https://github.com/bugsnag/bugsnag-flutter',
+  'version': '0.0.1'
+};
+
 abstract class Client {
   /// An utility error handling function that will send reported errors to
   /// Bugsnag as unhandled. The [errorHandler] is suitable for use with
@@ -265,6 +271,7 @@ class Bugsnag extends Client with DelegateClient {
       if (user != null) 'user': user,
       if (context != null) 'context': context,
       if (featureFlags != null) 'featureFlags': featureFlags,
+      'notifier': _notifier,
     });
 
     if (!attached) {
@@ -368,6 +375,7 @@ class Bugsnag extends Client with DelegateClient {
       ),
       'metadata': metadata,
       'featureFlags': featureFlags,
+      'notifier': _notifier,
     });
     client._onErrorCallbacks.addAll(onError);
     this.client = client;

@@ -37,7 +37,7 @@ class BugsnagFlutter {
 
     Context context;
 
-    Boolean attach(@Nullable JSONObject args) {
+    Boolean attach(@NonNull JSONObject args) throws Exception {
         if (!isBugsnagStarted()) {
             return false;
         }
@@ -62,10 +62,11 @@ class BugsnagFlutter {
         }
 
         client = new InternalHooks(Bugsnag.getClient());
+        client.setNotifier(args.getJSONObject("notifier"));
         return true;
     }
 
-    Void start(@Nullable JSONObject args) throws JSONException {
+    Void start(@NonNull JSONObject args) throws Exception {
         if (isBugsnagStarted()) {
             throw new IllegalArgumentException("bugsnag.start may not be called after starting Bugsnag natively");
         }
@@ -137,6 +138,8 @@ class BugsnagFlutter {
         unpackMetadata(args.optJSONObject("metadata"), configuration);
 
         configuration.addFeatureFlags(unpackFeatureFlags(args.optJSONArray("featureFlags")));
+
+        InternalHooks.setNotifier(configuration, args.getJSONObject("notifier"));
 
         client = new InternalHooks(Bugsnag.start(context, configuration));
 
