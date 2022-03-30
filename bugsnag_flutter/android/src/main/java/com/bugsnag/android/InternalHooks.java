@@ -10,6 +10,9 @@ import org.json.JSONObject;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Provides access to Bugsnag internals by being part of package com.bugsnag.android
+ */
 public class InternalHooks {
     private final Client client;
     private final Logger logger;
@@ -22,6 +25,14 @@ public class InternalHooks {
         this.logger = client.getLogger();
         this.config = client.getConfig();
         this.eventMapper = new BugsnagEventMapper(logger);
+    }
+
+    public Notifier getNotifier() {
+        return client.notifier;
+    }
+
+    public static Notifier getNotifier(Configuration configuration) {
+        return configuration.getNotifier();
     }
 
     public Event createEvent(Object severityReason) {
