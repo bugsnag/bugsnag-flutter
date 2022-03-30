@@ -179,7 +179,7 @@ class ChannelClient implements Client {
       return;
     }
 
-    if (!await _onErrorCallbacks.dispatchEvent(event)) {
+    if (!await _onErrorCallbacks.dispatch(event)) {
       // callback rejected the payload - so we don't deliver it
       return;
     }
