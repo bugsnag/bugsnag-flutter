@@ -22,8 +22,11 @@ abstract class Client {
 
   Future<String?> getContext();
 
-  Future<void> leaveBreadcrumb(String message,
-      {MetadataSection? metadata, BreadcrumbType type = BreadcrumbType.manual});
+  Future<void> leaveBreadcrumb(
+    String message, {
+    MetadataSection? metadata,
+    BreadcrumbType type = BreadcrumbType.manual,
+  });
 
   Future<List<Breadcrumb>> getBreadcrumbs();
 
@@ -73,9 +76,11 @@ class DelegateClient implements Client {
   Future<String?> getContext() => client.getContext();
 
   @override
-  Future<void> leaveBreadcrumb(String message,
-          {MetadataSection? metadata,
-          BreadcrumbType type = BreadcrumbType.manual}) =>
+  Future<void> leaveBreadcrumb(
+    String message, {
+    MetadataSection? metadata,
+    BreadcrumbType type = BreadcrumbType.manual,
+  }) =>
       client.leaveBreadcrumb(message, metadata: metadata, type: type);
 
   @override
@@ -125,9 +130,11 @@ class ChannelClient implements Client {
   Future<String?> getContext() => _channel.invokeMethod('getContext');
 
   @override
-  Future<void> leaveBreadcrumb(String message,
-          {MetadataSection? metadata,
-          BreadcrumbType type = BreadcrumbType.manual}) =>
+  Future<void> leaveBreadcrumb(
+    String message, {
+    MetadataSection? metadata,
+    BreadcrumbType type = BreadcrumbType.manual,
+  }) =>
       _channel.invokeMethod('leaveBreadcrumb', {
         'message': message,
         'metaData': metadata ?? {},
