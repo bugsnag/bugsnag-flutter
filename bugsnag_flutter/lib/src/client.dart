@@ -22,6 +22,11 @@ abstract class Client {
 
   Future<String?> getContext();
 
+  Future<void> leaveBreadcrumb(String message,
+      {MetadataSection? metadata, BreadcrumbType type = BreadcrumbType.manual});
+
+  Future<List<Breadcrumb>> getBreadcrumbs();
+
   Future<void> notify(
     dynamic error, {
     StackTrace? stackTrace,
@@ -68,6 +73,15 @@ class DelegateClient implements Client {
   Future<String?> getContext() => client.getContext();
 
   @override
+  Future<void> leaveBreadcrumb(String message,
+          {MetadataSection? metadata,
+          BreadcrumbType type = BreadcrumbType.manual}) =>
+      client.leaveBreadcrumb(message, metadata: metadata, type: type);
+
+  @override
+  Future<List<Breadcrumb>> getBreadcrumbs() => client.getBreadcrumbs();
+
+  @override
   Future<void> notify(
     dynamic error, {
     StackTrace? stackTrace,
@@ -109,6 +123,21 @@ class ChannelClient implements Client {
 
   @override
   Future<String?> getContext() => _channel.invokeMethod('getContext');
+
+  @override
+  Future<void> leaveBreadcrumb(String message,
+          {MetadataSection? metadata,
+          BreadcrumbType type = BreadcrumbType.manual}) =>
+      _channel.invokeMethod('leaveBreadcrumb', {
+        'message': message,
+        'metaData': metadata ?? {},
+        'type': type._toName()
+      });
+
+  @override
+  Future<List<Breadcrumb>> getBreadcrumbs() async =>
+      List.from((await _channel.invokeMethod('getBreadcrumbs') as List)
+          .map((e) => Breadcrumb.fromJson(e)));
 
   @override
   void addOnError(OnErrorCallback onError) {

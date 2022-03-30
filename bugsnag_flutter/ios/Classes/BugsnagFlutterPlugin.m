@@ -2,6 +2,7 @@
 
 #import <Bugsnag/BSG_KSSystemInfo.h>
 #import <Bugsnag/Bugsnag+Private.h>
+#import <Bugsnag/BugsnagBreadcrumb+Private.h>
 #import <Bugsnag/BugsnagBreadcrumbs.h>
 #import <Bugsnag/BugsnagClient+Private.h>
 #import <Bugsnag/BugsnagError+Private.h>
@@ -96,6 +97,20 @@ static NSString *NSStringOrNil(id value) {
 
 - (NSString *)getContext:(NSDictionary *)json {
     return Bugsnag.context;
+}
+
+- (void)leaveBreadcrumb:(NSDictionary *)arguments {
+    [Bugsnag leaveBreadcrumbWithMessage:arguments[@"message"]
+                               metadata:arguments[@"metaData"]
+                                andType:BSGBreadcrumbTypeFromString(arguments[@"type"])];
+}
+
+- (NSArray<NSDictionary *> *)getBreadcrumbs:(__unused NSDictionary *)arguments {
+    NSMutableArray *result = [NSMutableArray array];
+    for (BugsnagBreadcrumb *breadcrumb in [Bugsnag breadcrumbs]) {
+        [result addObject:[breadcrumb objectValue]];
+    }
+    return result;
 }
 
 - (void)addFeatureFlags:(NSDictionary *)json {

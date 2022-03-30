@@ -6,8 +6,10 @@ import static com.bugsnag.flutter.JsonHelper.unwrap;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.bugsnag.android.Breadcrumb;
 import com.bugsnag.android.Bugsnag;
 import com.bugsnag.android.Configuration;
 import com.bugsnag.android.EndpointConfiguration;
@@ -16,6 +18,7 @@ import com.bugsnag.android.Event;
 import com.bugsnag.android.InternalHooks;
 import com.bugsnag.android.ThreadSendPolicy;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -168,6 +171,21 @@ class BugsnagFlutter {
 
     String getContext(@Nullable JSONObject args) {
         return Bugsnag.getContext();
+    }
+
+    Void leaveBreadcrumb(@NonNull JSONObject args) throws Exception {
+        Bugsnag.leaveBreadcrumb(args.getString("message"),
+                JsonHelper.unwrap(args.getJSONObject("metaData")),
+                JsonHelper.unpackBreadcrumbType(args.getString("type")));
+        return null;
+    }
+
+    JSONArray getBreadcrumbs(@Nullable JSONObject args) {
+        JSONArray array = new JSONArray();
+        for (Breadcrumb breadcrumb : Bugsnag.getBreadcrumbs()) {
+            array.put(JsonHelper.toJson(breadcrumb));
+        }
+        return array;
     }
 
     Void addFeatureFlags(@Nullable JSONObject args) {
