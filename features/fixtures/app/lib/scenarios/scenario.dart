@@ -1,4 +1,5 @@
 import 'package:bugsnag_flutter/bugsnag.dart';
+import 'package:flutter/widgets.dart';
 
 import '../channels.dart';
 
@@ -11,6 +12,8 @@ abstract class Scenario {
       MazeRunnerChannels.startBugsnag(endpoints);
 
   Future<void> startBugsnag() => bugsnag.start(endpoints: endpoints);
+
+  Widget? createWidget() => null;
 
   Future<void> run();
 }

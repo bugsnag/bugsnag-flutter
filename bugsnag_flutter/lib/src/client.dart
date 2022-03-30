@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:bugsnag_flutter/src/error_factory.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart' show WidgetsFlutterBinding;
 
 import 'callbacks.dart';
 import 'config.dart';
@@ -28,16 +29,14 @@ abstract class Client {
 
   Future<String?> getContext();
 
-  Future<void> leaveBreadcrumb(
-    String message, {
+  Future<void> leaveBreadcrumb(String message, {
     MetadataSection? metadata,
     BreadcrumbType type = BreadcrumbType.manual,
   });
 
   Future<List<Breadcrumb>> getBreadcrumbs();
 
-  Future<void> notify(
-    dynamic error, {
+  Future<void> notify(dynamic error, {
     StackTrace? stackTrace,
     OnErrorCallback? callback,
   });
@@ -82,8 +81,7 @@ class DelegateClient implements Client {
   Future<String?> getContext() => client.getContext();
 
   @override
-  Future<void> leaveBreadcrumb(
-    String message, {
+  Future<void> leaveBreadcrumb(String message, {
     MetadataSection? metadata,
     BreadcrumbType type = BreadcrumbType.manual,
   }) =>
@@ -93,8 +91,7 @@ class DelegateClient implements Client {
   Future<List<Breadcrumb>> getBreadcrumbs() => client.getBreadcrumbs();
 
   @override
-  Future<void> notify(
-    dynamic error, {
+  Future<void> notify(dynamic error, {
     StackTrace? stackTrace,
     OnErrorCallback? callback,
   }) =>
@@ -109,7 +106,7 @@ class DelegateClient implements Client {
 
 class ChannelClient implements Client {
   static const MethodChannel _channel =
-      MethodChannel('com.bugsnag/client', JSONMethodCodec());
+  MethodChannel('com.bugsnag/client', JSONMethodCodec());
 
   final CallbackCollection<Event> _onErrorCallbacks = {};
 
@@ -136,8 +133,7 @@ class ChannelClient implements Client {
   Future<String?> getContext() => _channel.invokeMethod('getContext');
 
   @override
-  Future<void> leaveBreadcrumb(
-    String message, {
+  Future<void> leaveBreadcrumb(String message, {
     MetadataSection? metadata,
     BreadcrumbType type = BreadcrumbType.manual,
   }) =>
@@ -162,12 +158,10 @@ class ChannelClient implements Client {
     _onErrorCallbacks.remove(onError);
   }
 
-  Future<void> _notifyInternal(
-    dynamic error,
-    bool unhandled,
-    StackTrace? stackTrace,
-    OnErrorCallback? callback,
-  ) async {
+  Future<void> _notifyInternal(dynamic error,
+      bool unhandled,
+      StackTrace? stackTrace,
+      OnErrorCallback? callback,) async {
     final errorPayload = ErrorFactory.instance.createError(error, stackTrace);
     final event = await _createEvent(
       errorPayload,
@@ -193,8 +187,7 @@ class ChannelClient implements Client {
   }
 
   @override
-  Future<void> notify(
-    dynamic error, {
+  Future<void> notify(dynamic error, {
     StackTrace? stackTrace,
     OnErrorCallback? callback,
   }) {
@@ -209,8 +202,7 @@ class ChannelClient implements Client {
   /// if [deliver] is `true` return `null` and schedule the `Event` for immediate
   /// delivery. If [deliver] is `false` then the `Event` is only constructed
   /// and returned to be processed by the Flutter notifier.
-  Future<Event?> _createEvent(
-    Error error, {
+  Future<Event?> _createEvent(Error error, {
     required bool unhandled,
     required bool deliver,
   }) async {
@@ -266,6 +258,11 @@ class Bugsnag extends Client with DelegateClient {
     List<OnBreadcrumbCallback> onBreadcrumb = const [],
     List<OnErrorCallback> onError = const [],
   }) async {
+    await runZonedGuarded(() async {
+      // make sure we can use Channels before calling runApp
+      WidgetsFlutterBinding.ensureInitialized();
+    }, _reportZonedError);
+
     final client = ChannelClient();
     bool attached = await ChannelClient._channel.invokeMethod('attach', {
       if (user != null) 'user': user,
@@ -276,7 +273,7 @@ class Bugsnag extends Client with DelegateClient {
 
     if (!attached) {
       final platformStart =
-          Platform.isAndroid ? 'Bugsnag.start()' : '[Bugsnag start]';
+      Platform.isAndroid ? 'Bugsnag.start()' : '[Bugsnag start]';
       final platformName = Platform.isAndroid ? 'Android' : 'iOS';
 
       throw Exception(
@@ -288,9 +285,9 @@ class Bugsnag extends Client with DelegateClient {
 
     this.client = client;
 
-    if (runApp != null) {
-      await runZoned(runApp);
-    }
+    await runZonedGuarded(() async {
+      await runApp?.call();
+    }, _reportZonedError);
   }
 
   /// Initialize the Bugsnag notifier with the configuration options specified.
@@ -349,6 +346,13 @@ class Bugsnag extends Client with DelegateClient {
     List<OnBreadcrumbCallback> onBreadcrumb = const [],
     List<OnErrorCallback> onError = const [],
   }) async {
+    // guarding WidgetsFlutterBinding.ensureInitialized() catches
+    // async errors within the Flutter app
+    await runZonedGuarded(() async {
+      // make sure we can use Channels before calling runApp
+      WidgetsFlutterBinding.ensureInitialized();
+    }, _reportZonedError);
+
     final client = ChannelClient();
     await ChannelClient._channel.invokeMethod('start', <String, dynamic>{
       if (apiKey != null) 'apiKey': apiKey,
@@ -375,13 +379,23 @@ class Bugsnag extends Client with DelegateClient {
       ),
       'metadata': metadata,
       'featureFlags': featureFlags,
-      'notifier': _notifier,
-    });
+      'notifier': _notifier,});
     client._onErrorCallbacks.addAll(onError);
     this.client = client;
 
-    if (runApp != null) {
-      await runZoned(runApp);
+    await runZonedGuarded(() async {
+      await runApp?.call();
+    }, _reportZonedError);
+  }
+
+  /// Safely report an error that occurred within a guardedZone - if attached
+  /// to a [Client] then use its [Client.errorHandler], otherwise push the error
+  /// upwards using [Zone.handleUncaughtError]
+  void _reportZonedError(dynamic error, StackTrace stackTrace) {
+    if (_client != null) {
+      errorHandler(error, stackTrace);
+    } else {
+      Zone.current.handleUncaughtError(error, stackTrace);
     }
   }
 }
@@ -390,5 +404,8 @@ final Bugsnag bugsnag = Bugsnag();
 
 // The official EnumName extension was only added in 2.15
 extension _EnumName on Enum {
-  String _toName() => toString().split('.').last;
+  String _toName() =>
+      toString()
+          .split('.')
+          .last;
 }

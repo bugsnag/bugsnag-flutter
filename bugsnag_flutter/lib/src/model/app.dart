@@ -27,8 +27,7 @@ class App {
         version = json.safeGet('version'),
         versionCode = json.safeGet<num>('versionCode')?.toInt();
 
-  dynamic toJson() =>
-      {
+  dynamic toJson() => {
         if (binaryArch != null) 'binaryArch': binaryArch,
         if (buildUUID != null) 'buildUUID': buildUUID,
         if (bundleVersion != null) 'bundleVersion': bundleVersion,
@@ -51,14 +50,13 @@ class AppWithState extends App {
   AppWithState.fromJson(Map<String, Object?> json)
       : duration = json.safeGet<num>('duration')?.toInt(),
         durationInForeground =
-        json.safeGet<num>('durationInForeground')?.toInt(),
+            json.safeGet<num>('durationInForeground')?.toInt(),
         inForeground = json.safeGet('inForeground'),
         isLaunching = json.safeGet('isLaunching'),
         super.fromJson(json);
 
   @override
-  dynamic toJson() =>
-      {
+  dynamic toJson() => {
         for (final entry in (super.toJson() as Map<String, dynamic>).entries)
           entry.key: entry.value,
         if (duration != null) 'duration': duration,

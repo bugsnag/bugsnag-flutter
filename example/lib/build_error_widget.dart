@@ -15,7 +15,7 @@ class _BuildErrorWidgetState extends State<BuildErrorWidget> {
     if (!_isError) {
       return ElevatedButton(
         onPressed: _setErrorState,
-        child: const Text('Throw Build Error'),
+        child: const Text('Throw Error from Widget.build()'),
       );
     } else {
       throw Exception('I am a very bad widget.');

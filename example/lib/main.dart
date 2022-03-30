@@ -6,13 +6,9 @@ import 'package:flutter/material.dart';
 
 import 'build_error_widget.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await bugsnag.start();
-  initErrorWidget();
-
-  runApp(const MyApp());
-}
+void main() => bugsnag.start(
+      runApp: () => runApp(const MyApp()),
+    );
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -62,7 +58,7 @@ class MyApp extends StatelessWidget {
               ),
               ErrorBoundary(
                 child: const BuildErrorWidget(),
-                fallback: () => const Text(
+                fallback: (context) => const Text(
                   'A build() error has occurred and been reported',
                 ),
               ),

@@ -1,4 +1,5 @@
 import 'attach_bugsnag_scenario.dart';
+import 'error_boundary_scenario.dart';
 import 'breadcrumbs_scenario.dart';
 import 'error_handler_scenario.dart';
 import 'ffi_crash_scenario.dart';
@@ -25,4 +26,5 @@ const List<ScenarioInfo<Scenario>> scenarios = [
   ScenarioInfo('NativeCrashScenario', NativeCrashScenario.new),
   ScenarioInfo('StartBugsnagScenario', StartBugsnagScenario.new),
   ScenarioInfo('ThrowExceptionScenario', ThrowExceptionScenario.new),
+  ScenarioInfo('ErrorBoundaryWidgetScenario', ErrorBoundaryWidgetScenario.new),
 ];
