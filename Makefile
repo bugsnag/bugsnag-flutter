@@ -1,12 +1,19 @@
 all: build lint test
 
-.PHONY: clean build aar example test lint e2e_android_local e2e_ios_local
+.PHONY: clean build bump aar example test lint e2e_android_local e2e_ios_local
 
 clean:
 	cd bugsnag_flutter && flutter clean --suppress-analytics
 	cd example && flutter clean --suppress-analytics
 
 build: aar example
+
+bump: ## Bump the version numbers to $VERSION
+ifeq ($(VERSION),)
+	@$(error VERSION is not defined. Run with `make VERSION=number bump`)
+endif
+	sed -i '' "s/^version: .*/version: $(VERSION)/" bugsnag_flutter/pubspec.yaml
+	sed -i '' "s/^  'version': .*/  'version': '$(VERSION)'/" bugsnag_flutter/lib/src/client.dart
 
 aar:
 	cd bugsnag_flutter && flutter build aar --suppress-analytics
