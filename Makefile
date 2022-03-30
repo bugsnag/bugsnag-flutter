@@ -25,7 +25,7 @@ lint:
 	cd bugsnag_flutter && flutter analyze --suppress-analytics
 
 e2e_android_local: features/fixtures/app/build/app/outputs/flutter-apk/app-release.apk
-	$(HOME)/Library/Android/sdk/platform-tools/adb shell pm uninstall com.bugsnag.flutter.test.app || true
+	$(HOME)/Library/Android/sdk/platform-tools/adb uninstall com.bugsnag.flutter.test.app || true
 	bundle exec maze-runner --app=$< --farm=local --os=android --os-version=10 $(FEATURES)
 
 features/fixtures/app/build/app/outputs/flutter-apk/app-release.apk: $(shell find bugsnag_flutter features/fixtures/app/android/app/src features/fixtures/app/lib -type f)
