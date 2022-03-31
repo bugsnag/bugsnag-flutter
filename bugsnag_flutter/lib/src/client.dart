@@ -29,14 +29,16 @@ abstract class Client {
 
   Future<String?> getContext();
 
-  Future<void> leaveBreadcrumb(String message, {
+  Future<void> leaveBreadcrumb(
+    String message, {
     MetadataSection? metadata,
     BreadcrumbType type = BreadcrumbType.manual,
   });
 
   Future<List<Breadcrumb>> getBreadcrumbs();
 
-  Future<void> notify(dynamic error, {
+  Future<void> notify(
+    dynamic error, {
     StackTrace? stackTrace,
     OnErrorCallback? callback,
   });
@@ -81,7 +83,8 @@ class DelegateClient implements Client {
   Future<String?> getContext() => client.getContext();
 
   @override
-  Future<void> leaveBreadcrumb(String message, {
+  Future<void> leaveBreadcrumb(
+    String message, {
     MetadataSection? metadata,
     BreadcrumbType type = BreadcrumbType.manual,
   }) =>
@@ -91,7 +94,8 @@ class DelegateClient implements Client {
   Future<List<Breadcrumb>> getBreadcrumbs() => client.getBreadcrumbs();
 
   @override
-  Future<void> notify(dynamic error, {
+  Future<void> notify(
+    dynamic error, {
     StackTrace? stackTrace,
     OnErrorCallback? callback,
   }) =>
@@ -106,7 +110,7 @@ class DelegateClient implements Client {
 
 class ChannelClient implements Client {
   static const MethodChannel _channel =
-  MethodChannel('com.bugsnag/client', JSONMethodCodec());
+      MethodChannel('com.bugsnag/client', JSONMethodCodec());
 
   final CallbackCollection<Event> _onErrorCallbacks = {};
 
@@ -133,7 +137,8 @@ class ChannelClient implements Client {
   Future<String?> getContext() => _channel.invokeMethod('getContext');
 
   @override
-  Future<void> leaveBreadcrumb(String message, {
+  Future<void> leaveBreadcrumb(
+    String message, {
     MetadataSection? metadata,
     BreadcrumbType type = BreadcrumbType.manual,
   }) =>
@@ -158,10 +163,12 @@ class ChannelClient implements Client {
     _onErrorCallbacks.remove(onError);
   }
 
-  Future<void> _notifyInternal(dynamic error,
-      bool unhandled,
-      StackTrace? stackTrace,
-      OnErrorCallback? callback,) async {
+  Future<void> _notifyInternal(
+    dynamic error,
+    bool unhandled,
+    StackTrace? stackTrace,
+    OnErrorCallback? callback,
+  ) async {
     final errorPayload = ErrorFactory.instance.createError(error, stackTrace);
     final event = await _createEvent(
       errorPayload,
@@ -187,7 +194,8 @@ class ChannelClient implements Client {
   }
 
   @override
-  Future<void> notify(dynamic error, {
+  Future<void> notify(
+    dynamic error, {
     StackTrace? stackTrace,
     OnErrorCallback? callback,
   }) {
@@ -202,7 +210,8 @@ class ChannelClient implements Client {
   /// if [deliver] is `true` return `null` and schedule the `Event` for immediate
   /// delivery. If [deliver] is `false` then the `Event` is only constructed
   /// and returned to be processed by the Flutter notifier.
-  Future<Event?> _createEvent(Error error, {
+  Future<Event?> _createEvent(
+    Error error, {
     required bool unhandled,
     required bool deliver,
   }) async {
@@ -273,7 +282,7 @@ class Bugsnag extends Client with DelegateClient {
 
     if (!attached) {
       final platformStart =
-      Platform.isAndroid ? 'Bugsnag.start()' : '[Bugsnag start]';
+          Platform.isAndroid ? 'Bugsnag.start()' : '[Bugsnag start]';
       final platformName = Platform.isAndroid ? 'Android' : 'iOS';
 
       throw Exception(
@@ -285,7 +294,7 @@ class Bugsnag extends Client with DelegateClient {
 
     this.client = client;
 
-    await runZonedGuarded(() async {
+    runZonedGuarded(() async {
       await runApp?.call();
     }, _reportZonedError);
   }
@@ -379,11 +388,12 @@ class Bugsnag extends Client with DelegateClient {
       ),
       'metadata': metadata,
       'featureFlags': featureFlags,
-      'notifier': _notifier,});
+      'notifier': _notifier,
+    });
     client._onErrorCallbacks.addAll(onError);
     this.client = client;
 
-    await runZonedGuarded(() async {
+    runZonedGuarded(() async {
       await runApp?.call();
     }, _reportZonedError);
   }
@@ -404,8 +414,5 @@ final Bugsnag bugsnag = Bugsnag();
 
 // The official EnumName extension was only added in 2.15
 extension _EnumName on Enum {
-  String _toName() =>
-      toString()
-          .split('.')
-          .last;
+  String _toName() => toString().split('.').last;
 }

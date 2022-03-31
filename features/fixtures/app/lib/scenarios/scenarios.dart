@@ -1,6 +1,6 @@
 import 'attach_bugsnag_scenario.dart';
-import 'error_boundary_scenario.dart';
 import 'breadcrumbs_scenario.dart';
+import 'error_boundary_scenario.dart';
 import 'error_handler_scenario.dart';
 import 'ffi_crash_scenario.dart';
 import 'handled_exception_scenario.dart';
