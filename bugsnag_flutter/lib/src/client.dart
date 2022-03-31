@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:bugsnag_flutter/src/error_factory.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart' show WidgetsFlutterBinding;
 
@@ -169,6 +170,13 @@ class DelegateClient implements Client {
 }
 
 class ChannelClient implements Client {
+  FlutterExceptionHandler? _previousFlutterOnError;
+
+  ChannelClient() {
+    _previousFlutterOnError = FlutterError.onError;
+    FlutterError.onError = _onFlutterError;
+  }
+
   static const MethodChannel _channel =
       MethodChannel('com.bugsnag/client', JSONMethodCodec());
 
@@ -266,6 +274,11 @@ class ChannelClient implements Client {
   @override
   void removeOnError(OnErrorCallback onError) {
     _onErrorCallbacks.remove(onError);
+  }
+
+  void _onFlutterError(FlutterErrorDetails details) {
+    _notifyInternal(details.exception, true, details.stack, null);
+    _previousFlutterOnError!(details);
   }
 
   Future<void> _notifyInternal(

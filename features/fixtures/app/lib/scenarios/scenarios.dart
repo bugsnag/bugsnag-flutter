@@ -11,6 +11,7 @@ import 'native_crash_scenario.dart';
 import 'scenario.dart';
 import 'start_bugsnag_scenario.dart';
 import 'throw_exception_scenario.dart';
+import 'unhandled_exception_scenario.dart';
 
 class ScenarioInfo<T extends Scenario> {
   const ScenarioInfo(this.name, this.init);
@@ -23,6 +24,7 @@ class ScenarioInfo<T extends Scenario> {
 const List<ScenarioInfo<Scenario>> scenarios = [
   ScenarioInfo('AttachBugsnagScenario', AttachBugsnagScenario.new),
   ScenarioInfo('BreadcrumbsScenario', BreadcrumbsScenario.new),
+  ScenarioInfo('ErrorBoundaryWidgetScenario', ErrorBoundaryWidgetScenario.new),
   ScenarioInfo('ErrorHandlerScenario', ErrorHandlerScenario.new),
   ScenarioInfo('FeatureFlagsScenario', FeatureFlagsScenario.new),
   ScenarioInfo('FFICrashScenario', FFICrashScenario.new),
@@ -32,5 +34,5 @@ const List<ScenarioInfo<Scenario>> scenarios = [
   ScenarioInfo('NativeCrashScenario', NativeCrashScenario.new),
   ScenarioInfo('StartBugsnagScenario', StartBugsnagScenario.new),
   ScenarioInfo('ThrowExceptionScenario', ThrowExceptionScenario.new),
-  ScenarioInfo('ErrorBoundaryWidgetScenario', ErrorBoundaryWidgetScenario.new),
+  ScenarioInfo('UnhandledExceptionScenario', UnhandledExceptionScenario.new),
 ];
