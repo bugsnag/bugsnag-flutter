@@ -102,7 +102,7 @@ static NSString *NSStringOrNil(id value) {
 }
 
 - (void)leaveBreadcrumb:(NSDictionary *)arguments {
-    [Bugsnag leaveBreadcrumbWithMessage:arguments[@"message"]
+    [Bugsnag leaveBreadcrumbWithMessage:arguments[@"name"]
                                metadata:arguments[@"metaData"]
                                 andType:BSGBreadcrumbTypeFromString(arguments[@"type"])];
 }
