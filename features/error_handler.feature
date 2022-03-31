@@ -3,8 +3,9 @@ Feature: bugsnag.errorHandler
   Scenario: Reports unhandled errors from guarded zones
     When I configure the app to run in the "zone" state
     And I run "ErrorHandlerScenario"
-    And I relaunch the app after a crash
-    And I configure Bugsnag for "ErrorHandlerScenario"
+    # TODO: PLAT-8234
+    And on Android, I relaunch the app
+    And on Android, I configure Bugsnag for "ErrorHandlerScenario"
     Then I wait to receive an error
     And the error is valid for the error reporting API version "4.0" for the "Flutter Bugsnag Notifier" notifier
     And the exception "errorClass" equals "_CastError"
@@ -15,8 +16,9 @@ Feature: bugsnag.errorHandler
   Scenario: Reports unhandled errors from Future.onError
     When I configure the app to run in the "future" state
     And I run "ErrorHandlerScenario"
-    And I relaunch the app after a crash
-    And I configure Bugsnag for "ErrorHandlerScenario"
+    # TODO: PLAT-8234
+    And on Android, I relaunch the app
+    And on Android, I configure Bugsnag for "ErrorHandlerScenario"
     Then I wait to receive an error
     And the error is valid for the error reporting API version "4.0" for the "Flutter Bugsnag Notifier" notifier
     And the exception "errorClass" equals "String"
