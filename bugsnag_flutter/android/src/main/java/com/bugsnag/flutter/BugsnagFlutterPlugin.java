@@ -2,8 +2,6 @@ package com.bugsnag.flutter;
 
 import androidx.annotation.NonNull;
 
-import org.json.JSONObject;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,17 +22,24 @@ public class BugsnagFlutterPlugin implements FlutterPlugin, MethodCallHandler {
     private MethodChannel channel;
 
     public BugsnagFlutterPlugin() {
-        functions.put("createEvent", bugsnag::createEvent);
-        functions.put("deliverEvent", bugsnag::deliverEvent);
-        functions.put("setUser", bugsnag::setUser);
-        functions.put("getUser", bugsnag::getUser);
-        functions.put("setContext", bugsnag::setContext);
-        functions.put("getContext", bugsnag::getContext);
-        functions.put("leaveBreadcrumb", bugsnag::leaveBreadcrumb);
-        functions.put("getBreadcrumbs", bugsnag::getBreadcrumbs);
-        functions.put("addFeatureFlags", bugsnag::addFeatureFlags);
-        functions.put("attach", bugsnag::attach);
-        functions.put("start", bugsnag::start);
+        addFunction("createEvent",          bugsnag::createEvent);
+        addFunction("deliverEvent",         bugsnag::deliverEvent);
+        addFunction("setUser",              bugsnag::setUser);
+        addFunction("getUser",              bugsnag::getUser);
+        addFunction("setContext",           bugsnag::setContext);
+        addFunction("getContext",           bugsnag::getContext);
+        addFunction("leaveBreadcrumb",      bugsnag::leaveBreadcrumb);
+        addFunction("getBreadcrumbs",       bugsnag::getBreadcrumbs);
+        addFunction("addFeatureFlag",       bugsnag::addFeatureFlag);
+        addFunction("addFeatureFlags",      bugsnag::addFeatureFlags);
+        addFunction("clearFeatureFlag",     bugsnag::clearFeatureFlag);
+        addFunction("clearFeatureFlags",    bugsnag::clearFeatureFlags);
+        addFunction("attach",               bugsnag::attach);
+        addFunction("start",                bugsnag::start);
+    }
+
+    private <T> void addFunction(String name, BSGFunction<T> function) {
+        functions.put(name, function);
     }
 
     @Override
@@ -51,7 +56,7 @@ public class BugsnagFlutterPlugin implements FlutterPlugin, MethodCallHandler {
 
         if (function != null) {
             try {
-                result.success(function.invoke((JSONObject) call.arguments));
+                result.success(function.invoke(call.arguments()));
             } catch (Exception exception) {
                 result.error(
                         exception.getClass().getSimpleName(),

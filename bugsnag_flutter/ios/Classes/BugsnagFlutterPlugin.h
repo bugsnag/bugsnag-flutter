@@ -12,7 +12,10 @@
 - (void)leaveBreadcrumb:(NSDictionary *)arguments;
 - (NSArray<NSDictionary *> *)getBreadcrumbs:(NSDictionary *)arguments;
 
-- (void)addFeatureFlags:(NSDictionary *)json;
+- (void)addFeatureFlag:(NSDictionary *)arguments;
+- (void)addFeatureFlags:(NSArray *)featureFlags;
+- (void)clearFeatureFlag:(NSDictionary *)arguments;
+- (void)clearFeatureFlags:(NSDictionary *)arguments;
 
 - (NSNumber *)attach:(NSDictionary *)json;
 
