@@ -15,6 +15,11 @@ void main() {
       );
 
       expect(
+        stacktrace.map((f) => f.loadAddress),
+        everyElement('0x7c9f10447000'),
+      );
+
+      expect(
         stacktrace.map((f) => f.frameAddress),
         equals(const [
           '0x1f8ae6',
