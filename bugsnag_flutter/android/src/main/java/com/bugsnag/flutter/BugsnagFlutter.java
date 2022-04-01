@@ -203,11 +203,6 @@ class BugsnagFlutter {
         return array;
     }
 
-    Void addFeatureFlag(@NonNull JSONObject args) throws JSONException {
-        Bugsnag.addFeatureFlag(args.getString("name"), args.optString("variant", null));
-        return null;
-    }
-
     Void addFeatureFlags(@Nullable JSONArray args) {
         if (args != null) {
             Bugsnag.addFeatureFlags(unpackFeatureFlags(args));

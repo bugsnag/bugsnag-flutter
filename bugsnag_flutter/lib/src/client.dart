@@ -189,8 +189,7 @@ class ChannelClient implements Client {
 
   @override
   Future<void> addFeatureFlag(String name, [String? variant]) =>
-      _channel.invokeMethod('addFeatureFlag',
-          {'name': name, if (variant != null) 'variant': variant});
+      _channel.invokeMethod('addFeatureFlags', [FeatureFlag(name, variant)]);
 
   @override
   Future<void> addFeatureFlags(List<FeatureFlag> featureFlags) =>

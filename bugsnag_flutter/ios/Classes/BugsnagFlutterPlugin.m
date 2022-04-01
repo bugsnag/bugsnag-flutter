@@ -115,10 +115,6 @@ static NSString *NSStringOrNil(id value) {
     return result;
 }
 
-- (void)addFeatureFlag:(NSDictionary *)arguments {
-    [Bugsnag addFeatureFlagWithName:arguments[@"name"] variant:arguments[@"variant"]];
-}
-
 - (void)addFeatureFlags:(NSArray *)featureFlags {
     NSMutableArray *array = [NSMutableArray arrayWithCapacity:[featureFlags count]];
     for (NSDictionary *flag in featureFlags) {

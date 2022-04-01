@@ -12,7 +12,6 @@
 - (void)leaveBreadcrumb:(NSDictionary *)arguments;
 - (NSArray<NSDictionary *> *)getBreadcrumbs:(NSDictionary *)arguments;
 
-- (void)addFeatureFlag:(NSDictionary *)arguments;
 - (void)addFeatureFlags:(NSArray *)featureFlags;
 - (void)clearFeatureFlag:(NSDictionary *)arguments;
 - (void)clearFeatureFlags:(NSDictionary *)arguments;
