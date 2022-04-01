@@ -38,6 +38,8 @@ extension InvokeSafelyExtension<E> on _Callback<E> {
     try {
       return await this(object);
     } catch (e) {
+      // ignore: avoid_print
+      print('[Bugsnag] callback threw an exception: $e');
       return true;
     }
   }
