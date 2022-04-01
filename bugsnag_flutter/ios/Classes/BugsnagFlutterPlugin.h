@@ -20,6 +20,10 @@
 
 - (void)start:(NSDictionary *)arguments;
 
+- (void)startSession:(NSDictionary *)arguments;
+- (void)pauseSession:(NSDictionary *)arguments;
+- (NSNumber *)resumeSession:(NSDictionary *)arguments;
+
 - (NSDictionary *)createEvent:(NSDictionary *)json;
 - (void)deliverEvent:(NSDictionary *)json;
 

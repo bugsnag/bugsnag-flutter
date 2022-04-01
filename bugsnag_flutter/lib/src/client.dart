@@ -44,6 +44,12 @@ abstract class Client {
 
   Future<void> clearFeatureFlags();
 
+  Future<void> startSession();
+
+  Future<void> pauseSession();
+
+  Future<bool> resumeSession();
+
   Future<void> notify(
     dynamic error, {
     StackTrace? stackTrace,
@@ -117,6 +123,15 @@ class DelegateClient implements Client {
 
   @override
   Future<void> clearFeatureFlags() => client.clearFeatureFlags();
+
+  @override
+  Future<void> startSession() => client.startSession();
+
+  @override
+  Future<void> pauseSession() => client.pauseSession();
+
+  @override
+  Future<bool> resumeSession() => client.resumeSession();
 
   @override
   Future<void> notify(
@@ -202,6 +217,16 @@ class ChannelClient implements Client {
   @override
   Future<void> clearFeatureFlags() =>
       _channel.invokeMethod('clearFeatureFlags');
+
+  @override
+  Future<void> startSession() => _channel.invokeMethod('startSession');
+
+  @override
+  Future<void> pauseSession() => _channel.invokeMethod('pauseSession');
+
+  @override
+  Future<bool> resumeSession() async =>
+      await _channel.invokeMethod('resumeSession') as bool;
 
   @override
   void addOnBreadcrumb(OnBreadcrumbCallback onBreadcrumb) =>

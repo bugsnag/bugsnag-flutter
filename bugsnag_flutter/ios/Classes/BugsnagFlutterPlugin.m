@@ -268,6 +268,18 @@ static NSString *NSStringOrNil(id value) {
     self.attached = YES;
 }
 
+- (void)startSession:(NSDictionary *)arguments {
+    [Bugsnag startSession];
+}
+
+- (void)pauseSession:(NSDictionary *)arguments {
+    [Bugsnag pauseSession];
+}
+
+- (NSNumber *)resumeSession:(NSDictionary *)arguments {
+    return @([Bugsnag resumeSession]);
+}
+
 - (NSDictionary *)createEvent:(NSDictionary *)json {
     NSDictionary *systemInfo = [BSG_KSSystemInfo systemInfo];
     BugsnagClient *client = Bugsnag.client;
