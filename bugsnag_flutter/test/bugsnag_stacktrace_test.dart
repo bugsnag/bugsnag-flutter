@@ -20,6 +20,11 @@ void main() {
       );
 
       expect(
+        stacktrace.map((f) => f.method),
+        everyElement('_kDartIsolateSnapshotInstructions'),
+      );
+
+      expect(
         stacktrace.map((f) => f.frameAddress),
         equals(const [
           '0x1f8ae6',
