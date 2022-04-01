@@ -2,24 +2,22 @@ import 'dart:async';
 
 import 'package:bugsnag_flutter/bugsnag.dart';
 import 'package:bugsnag_flutter/src/client.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-var createdEvents = <Map<String, dynamic>>[];
-var deliveredEvents = <Map<String, dynamic>>[];
+import 'test_channel.dart';
 
 void main() {
-  const channel = MethodChannel('com.bugsnag/client', JSONMethodCodec());
-  TestWidgetsFlutterBinding.ensureInitialized();
-  TestDefaultBinaryMessengerBinding.instance?.defaultBinaryMessenger
-      .setMockMethodCallHandler(channel, _handleClientMethodCall);
+  final channel = MockChannelClientController();
 
   group('ChannelClient', () {
     late ChannelClient client;
     setUp(() {
       client = ChannelClient();
-      createdEvents.clear();
-      deliveredEvents.clear();
+      channel.reset({
+        'attach': true,
+        'createEvent': _mockCreateEvent,
+        'deliverEvent': null,
+      });
     });
 
     group('OnError Callbacks', () {
@@ -44,7 +42,7 @@ void main() {
 
         await client.notify('no error', stackTrace: StackTrace.current);
 
-        expect(deliveredEvents, hasLength(0));
+        expect(channel['deliverEvent'], hasLength(0));
       });
 
       test('can modify the event', () async {
@@ -56,11 +54,11 @@ void main() {
 
         await client.notify('no error', stackTrace: StackTrace.current);
 
-        expect(deliveredEvents, hasLength(1));
-        expect(deliveredEvents[0]['threads'], hasLength(0));
-        expect(deliveredEvents[0]['unhandled'], isTrue);
+        expect(channel['deliverEvent'], hasLength(1));
+        expect(channel['deliverEvent'][0]['threads'], hasLength(0));
+        expect(channel['deliverEvent'][0]['unhandled'], isTrue);
         expect(
-          deliveredEvents[0]['severityReason']['unhandledOverridden'],
+          channel['deliverEvent'][0]['severityReason']['unhandledOverridden'],
           isTrue,
         );
       });
@@ -68,12 +66,13 @@ void main() {
 
     group('Client.notify', () {
       test('delivers events in createEvent if possible', () async {
+        channel.results['createEvent'] = null;
         await client.notify('no error', stackTrace: StackTrace.current);
 
-        expect(createdEvents, hasLength(1));
-        expect(createdEvents[0]['deliver'], isTrue);
+        expect(channel['createEvent'], hasLength(1));
+        expect(channel['createEvent'][0]['deliver'], isTrue);
 
-        expect(deliveredEvents, isEmpty);
+        expect(channel['deliverEvent'], isEmpty);
       });
     });
 
@@ -84,10 +83,10 @@ void main() {
           return string / 10;
         }, client.errorHandler);
 
-        expect(createdEvents, hasLength(1));
-        expect(createdEvents[0]['deliver'], isTrue);
+        expect(channel['createEvent'], hasLength(1));
+        expect(channel['createEvent'][0]['deliver'], isTrue);
 
-        expect(deliveredEvents, isEmpty);
+        expect(channel['deliverEvent'], isEmpty);
       });
 
       test('runZoned helper', () {
@@ -104,26 +103,17 @@ void main() {
         });
 
         expect(value, isNull);
-        expect(createdEvents, hasLength(1));
-        expect(createdEvents[0]['deliver'], isTrue);
+        expect(channel['createEvent'], hasLength(1));
+        expect(channel['createEvent'][0]['deliver'], isTrue);
       });
     });
   });
 }
 
-Future<Object?> _handleClientMethodCall(MethodCall message) async {
-  if (message.method == 'attach') {
-    return true;
-  } else if (message.method == 'createEvent') {
-    createdEvents.add(message.arguments);
-    if (message.arguments['deliver']) {
-      return null;
-    }
-
-    return Event.fromJson({
+Event _mockCreateEvent(arguments) => Event.fromJson({
       'metaData': <String, dynamic>{},
       'severity': 'warning',
-      'unhandled': message.arguments['unhandled'],
+      'unhandled': arguments['unhandled'],
       'severityReason': {
         'type': 'unhandledException',
         'unhandledOverridden': false,
@@ -165,7 +155,3 @@ Future<Object?> _handleClientMethodCall(MethodCall message) async {
         'time': '1970-01-01T00:00:00.000Z',
       },
     });
-  } else if (message.method == 'deliverEvent') {
-    deliveredEvents.add(message.arguments);
-  }
-}

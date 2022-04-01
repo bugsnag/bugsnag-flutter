@@ -1,14 +1,14 @@
 import 'dart:async';
 
 import 'package:bugsnag_flutter/bugsnag.dart';
+import 'package:bugsnag_flutter/widgets.dart';
 import 'package:flutter/material.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await bugsnag.start();
+import 'bad_widget.dart';
 
-  runApp(const MyApp());
-}
+void main() => bugsnag.start(
+      runApp: () => runApp(const MyApp()),
+    );
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -55,6 +55,12 @@ class MyApp extends StatelessWidget {
               ElevatedButton(
                 onPressed: _handledException,
                 child: const Text('Notify Handled Error'),
+              ),
+              ErrorBoundary(
+                child: const BadWidget(),
+                fallback: (context) => const Text(
+                  'A build() error has occurred and been reported',
+                ),
               ),
             ],
           ),

@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:bugsnag_flutter/src/error_factory.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart' show WidgetsFlutterBinding;
 
 import 'callbacks.dart';
 import 'config.dart';
@@ -350,6 +351,11 @@ class Bugsnag extends Client with DelegateClient {
     List<OnBreadcrumbCallback> onBreadcrumb = const [],
     List<OnErrorCallback> onError = const [],
   }) async {
+    await runZonedGuarded(() async {
+      // make sure we can use Channels before calling runApp
+      WidgetsFlutterBinding.ensureInitialized();
+    }, _reportZonedError);
+
     final client = ChannelClient();
     bool attached = await ChannelClient._channel.invokeMethod('attach', {
       if (user != null) 'user': user,
@@ -372,9 +378,9 @@ class Bugsnag extends Client with DelegateClient {
 
     this.client = client;
 
-    if (runApp != null) {
-      await runZoned(runApp);
-    }
+    runZonedGuarded(() async {
+      await runApp?.call();
+    }, _reportZonedError);
   }
 
   /// Initialize the Bugsnag notifier with the configuration options specified.
@@ -433,6 +439,13 @@ class Bugsnag extends Client with DelegateClient {
     List<OnBreadcrumbCallback> onBreadcrumb = const [],
     List<OnErrorCallback> onError = const [],
   }) async {
+    // guarding WidgetsFlutterBinding.ensureInitialized() catches
+    // async errors within the Flutter app
+    await runZonedGuarded(() async {
+      // make sure we can use Channels before calling runApp
+      WidgetsFlutterBinding.ensureInitialized();
+    }, _reportZonedError);
+
     final client = ChannelClient();
     await ChannelClient._channel.invokeMethod('start', <String, dynamic>{
       if (apiKey != null) 'apiKey': apiKey,
@@ -464,8 +477,19 @@ class Bugsnag extends Client with DelegateClient {
     client._onErrorCallbacks.addAll(onError);
     this.client = client;
 
-    if (runApp != null) {
-      await runZoned(runApp);
+    runZonedGuarded(() async {
+      await runApp?.call();
+    }, _reportZonedError);
+  }
+
+  /// Safely report an error that occurred within a guardedZone - if attached
+  /// to a [Client] then use its [Client.errorHandler], otherwise push the error
+  /// upwards using [Zone.handleUncaughtError]
+  void _reportZonedError(dynamic error, StackTrace stackTrace) {
+    if (_client != null) {
+      errorHandler(error, stackTrace);
+    } else {
+      Zone.current.handleUncaughtError(error, stackTrace);
     }
   }
 }

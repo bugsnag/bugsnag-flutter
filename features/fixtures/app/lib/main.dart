@@ -154,6 +154,15 @@ class _HomePageState extends State<MazeRunnerHomePage> {
 
     scenario.endpoints = _endpoints();
     scenario.extraConfig = _extraConfigController.value.text;
+
+    Widget? scenarioWidget = scenario.createWidget();
+    if (scenarioWidget != null) {
+      log('Mounting Scenario Widget');
+      final route = MaterialPageRoute(builder: (context) => scenarioWidget);
+      Navigator.push(context, route);
+      await route.didPush();
+    }
+
     log('Running scenario');
     await scenario.run();
   }
