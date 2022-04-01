@@ -154,8 +154,7 @@ class Error {
 
   Stacktrace stacktrace;
 
-  Error(this.errorClass, this.message, this.stacktrace)
-      : type = ErrorType.flutter;
+  Error(this.errorClass, this.message, this.stacktrace) : type = ErrorType.dart;
 
   Error.fromJson(Map<String, dynamic> json)
       : errorClass = json.safeGet('errorClass'),
@@ -177,7 +176,7 @@ class ErrorType {
   static const android = ErrorType._create('android');
   static const cocoa = ErrorType._create('cocoa');
   static const c = ErrorType._create('c');
-  static const flutter = ErrorType._create('flutter');
+  static const dart = ErrorType._create('dart');
 
   final String name;
 
@@ -200,7 +199,7 @@ class ErrorType {
     if (name == android.name) return android;
     if (name == cocoa.name) return cocoa;
     if (name == c.name) return c;
-    if (name == flutter.name) return flutter;
+    if (name == dart.name) return dart;
 
     return ErrorType._create(name);
   }
