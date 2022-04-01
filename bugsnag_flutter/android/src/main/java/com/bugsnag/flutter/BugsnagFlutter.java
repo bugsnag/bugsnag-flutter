@@ -16,6 +16,7 @@ import com.bugsnag.android.EndpointConfiguration;
 import com.bugsnag.android.ErrorTypes;
 import com.bugsnag.android.Event;
 import com.bugsnag.android.InternalHooks;
+import com.bugsnag.android.LastRunInfo;
 import com.bugsnag.android.Notifier;
 import com.bugsnag.android.ThreadSendPolicy;
 
@@ -232,6 +233,19 @@ class BugsnagFlutter {
 
     Boolean resumeSession(@Nullable Void args) {
         return Bugsnag.resumeSession();
+    }
+
+    Void markLaunchComplete(@Nullable Void args) {
+        Bugsnag.markLaunchCompleted();
+        return null;
+    }
+
+    JSONObject getLastRunInfo(@Nullable Void args) throws JSONException {
+        LastRunInfo lastRunInfo = Bugsnag.getLastRunInfo();
+        return (lastRunInfo == null) ? null : new JSONObject()
+                .put("consecutiveLaunchCrashes", lastRunInfo.getConsecutiveLaunchCrashes())
+                .put("crashed", lastRunInfo.getCrashed())
+                .put("crashedDuringLaunch", lastRunInfo.getCrashedDuringLaunch());
     }
 
     JSONObject createEvent(@Nullable JSONObject args) {

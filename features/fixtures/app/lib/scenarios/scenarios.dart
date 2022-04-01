@@ -5,6 +5,7 @@ import 'error_handler_scenario.dart';
 import 'feature_flags_scenario.dart';
 import 'ffi_crash_scenario.dart';
 import 'handled_exception_scenario.dart';
+import 'last_run_info_scenario.dart';
 import 'manual_sessions_scenario.dart';
 import 'native_crash_scenario.dart';
 import 'scenario.dart';
@@ -26,6 +27,7 @@ const List<ScenarioInfo<Scenario>> scenarios = [
   ScenarioInfo('FeatureFlagsScenario', FeatureFlagsScenario.new),
   ScenarioInfo('FFICrashScenario', FFICrashScenario.new),
   ScenarioInfo('HandledExceptionScenario', HandledExceptionScenario.new),
+  ScenarioInfo('LastRunInfoScenario', LastRunInfoScenario.new),
   ScenarioInfo('ManualSessionsScenario', ManualSessionsScenario.new),
   ScenarioInfo('NativeCrashScenario', NativeCrashScenario.new),
   ScenarioInfo('StartBugsnagScenario', StartBugsnagScenario.new),
