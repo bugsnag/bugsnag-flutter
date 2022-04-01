@@ -36,6 +36,14 @@ abstract class Client {
 
   Future<List<Breadcrumb>> getBreadcrumbs();
 
+  Future<void> addFeatureFlag(String name, [String? variant]);
+
+  Future<void> addFeatureFlags(List<FeatureFlag> featureFlags);
+
+  Future<void> clearFeatureFlag(String name);
+
+  Future<void> clearFeatureFlags();
+
   Future<void> notify(
     dynamic error, {
     StackTrace? stackTrace,
@@ -95,6 +103,20 @@ class DelegateClient implements Client {
 
   @override
   Future<List<Breadcrumb>> getBreadcrumbs() => client.getBreadcrumbs();
+
+  @override
+  Future<void> addFeatureFlag(String name, [String? variant]) =>
+      client.addFeatureFlag(name, variant);
+
+  @override
+  Future<void> addFeatureFlags(List<FeatureFlag> featureFlags) =>
+      client.addFeatureFlags(featureFlags);
+
+  @override
+  Future<void> clearFeatureFlag(String name) => client.clearFeatureFlag(name);
+
+  @override
+  Future<void> clearFeatureFlags() => client.clearFeatureFlags();
 
   @override
   Future<void> notify(
@@ -164,6 +186,22 @@ class ChannelClient implements Client {
   Future<List<Breadcrumb>> getBreadcrumbs() async =>
       List.from((await _channel.invokeMethod('getBreadcrumbs') as List)
           .map((e) => Breadcrumb.fromJson(e)));
+
+  @override
+  Future<void> addFeatureFlag(String name, [String? variant]) =>
+      _channel.invokeMethod('addFeatureFlags', [FeatureFlag(name, variant)]);
+
+  @override
+  Future<void> addFeatureFlags(List<FeatureFlag> featureFlags) =>
+      _channel.invokeMethod('addFeatureFlags', featureFlags);
+
+  @override
+  Future<void> clearFeatureFlag(String name) =>
+      _channel.invokeMethod('clearFeatureFlag', {'name': name});
+
+  @override
+  Future<void> clearFeatureFlags() =>
+      _channel.invokeMethod('clearFeatureFlags');
 
   @override
   void addOnBreadcrumb(OnBreadcrumbCallback onBreadcrumb) =>
