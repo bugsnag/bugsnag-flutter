@@ -102,7 +102,7 @@ static NSString *NSStringOrNil(id value) {
 }
 
 - (void)leaveBreadcrumb:(NSDictionary *)arguments {
-    [Bugsnag leaveBreadcrumbWithMessage:arguments[@"message"]
+    [Bugsnag leaveBreadcrumbWithMessage:arguments[@"name"]
                                metadata:arguments[@"metaData"]
                                 andType:BSGBreadcrumbTypeFromString(arguments[@"type"])];
 }
@@ -115,18 +115,21 @@ static NSString *NSStringOrNil(id value) {
     return result;
 }
 
-- (void)addFeatureFlags:(NSDictionary *)json {
-    if ([json[@"featureFlags"] isKindOfClass:[NSArray class]]) {
-        NSArray *jsonFeatureFlags = json[@"featureFlags"];
-        NSMutableArray *featureFlags = [NSMutableArray arrayWithCapacity:[jsonFeatureFlags count]];
-        
-        for (NSDictionary *flag in jsonFeatureFlags) {
-            [featureFlags addObject:[BugsnagFeatureFlag flagWithName:flag[@"featureFlag"]
-                                                             variant:NSStringOrNil(flag[@"variant"])]];
-        }
-        
-        [Bugsnag addFeatureFlags:featureFlags];
+- (void)addFeatureFlags:(NSArray *)featureFlags {
+    NSMutableArray *array = [NSMutableArray arrayWithCapacity:[featureFlags count]];
+    for (NSDictionary *flag in featureFlags) {
+        [array addObject:[BugsnagFeatureFlag flagWithName:flag[@"featureFlag"]
+                                                  variant:flag[@"variant"]]];
     }
+    [Bugsnag addFeatureFlags:array];
+}
+
+- (void)clearFeatureFlag:(NSDictionary *)arguments {
+    [Bugsnag clearFeatureFlagWithName:arguments[@"name"]];
+}
+
+- (void)clearFeatureFlags:(__unused NSDictionary *)arguments {
+    [Bugsnag clearFeatureFlags];
 }
 
 - (NSNumber *)attach:(NSDictionary *)arguments {
@@ -146,8 +149,9 @@ static NSString *NSStringOrNil(id value) {
         [self setContext:arguments];
     }
     
-    if ([arguments[@"featureFlags"] isKindOfClass:[NSArray class]]) {
-        [self addFeatureFlags:arguments];
+    NSArray *featureFlags = arguments[@"featureFlags"];
+    if ([featureFlags isKindOfClass:[NSArray class]]) {
+        [self addFeatureFlags:featureFlags];
     }
     
     NSDictionary *notifier = arguments[@"notifier"];

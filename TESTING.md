@@ -1,10 +1,10 @@
-# Testing the Bugsnag Cocoa notifier
+# Testing the Bugsnag Flutter notifier
 
 ## End-to-end tests
 
 These tests are implemented with our notifier testing tool [Maze runner](https://github.com/bugsnag/maze-runner).
 
-End to end tests are written in cucumber-style `.feature` files, and need Ruby-backed "steps" in order to know what to
+End-to-end tests are written in Cucumber-style `.feature` files, and need Ruby-backed "steps" in order to know what to
 run. The tests are located in the ['features'](/features/) directory.
 
 ### Requirements

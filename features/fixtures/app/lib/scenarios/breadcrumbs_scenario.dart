@@ -9,10 +9,23 @@ class BreadcrumbsScenario extends Scenario {
       endpoints: endpoints,
     );
 
-    await bugsnag.leaveBreadcrumb('Manual breadcrumb from Flutter', metadata: {
+    bugsnag.addOnBreadcrumb(ignoreAllBreadcrumbs);
+    bugsnag.removeOnBreadcrumb(ignoreAllBreadcrumbs);
+
+    bugsnag.addOnBreadcrumb((breadcrumb) {
+      if (breadcrumb.message.contains('ignore')) {
+        return false;
+      }
+      breadcrumb.message += ' from Flutter';
+      return true;
+    });
+
+    await bugsnag.leaveBreadcrumb('Manual breadcrumb', metadata: {
       'foo': 'bar',
       'object': {'test': 'hello'}
     });
+
+    await bugsnag.leaveBreadcrumb('This breadcrumb should be ignored');
 
     final breadcrumbs = await bugsnag.getBreadcrumbs();
     expect(breadcrumbs[0].message, 'Bugsnag loaded');
@@ -22,6 +35,8 @@ class BreadcrumbsScenario extends Scenario {
 
     await bugsnag.notify(Exception('BreadcrumbsScenarioException'));
   }
+
+  bool ignoreAllBreadcrumbs(Breadcrumb _) => false;
 }
 
 void expect(dynamic actual, dynamic expected) {

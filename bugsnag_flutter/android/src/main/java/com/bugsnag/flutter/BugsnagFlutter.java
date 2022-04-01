@@ -20,6 +20,7 @@ import com.bugsnag.android.Notifier;
 import com.bugsnag.android.ThreadSendPolicy;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Collections;
@@ -56,11 +57,9 @@ class BugsnagFlutter {
             if (args.has("context")) {
                 setContext(args);
             }
-
-            if (args.has("featureFlags")) {
-                addFeatureFlags(args);
-            }
         }
+
+        addFeatureFlags(args.optJSONArray("featureFlags"));
 
         client = new InternalHooks(Bugsnag.getClient());
 
@@ -190,7 +189,7 @@ class BugsnagFlutter {
     }
 
     Void leaveBreadcrumb(@NonNull JSONObject args) throws Exception {
-        Bugsnag.leaveBreadcrumb(args.getString("message"),
+        Bugsnag.leaveBreadcrumb(args.getString("name"),
                 JsonHelper.unwrap(args.getJSONObject("metaData")),
                 JsonHelper.unpackBreadcrumbType(args.getString("type")));
         return null;
@@ -204,12 +203,20 @@ class BugsnagFlutter {
         return array;
     }
 
-    Void addFeatureFlags(@Nullable JSONObject args) {
-        if (args == null) {
-            return null;
+    Void addFeatureFlags(@Nullable JSONArray args) {
+        if (args != null) {
+            Bugsnag.addFeatureFlags(unpackFeatureFlags(args));
         }
+        return null;
+    }
 
-        Bugsnag.addFeatureFlags(unpackFeatureFlags(args.optJSONArray("featureFlags")));
+    Void clearFeatureFlag(@NonNull JSONObject args) throws JSONException {
+        Bugsnag.clearFeatureFlag(args.getString("name"));
+        return null;
+    }
+
+    Void clearFeatureFlags(@Nullable JSONObject args) {
+        Bugsnag.clearFeatureFlags();
         return null;
     }
 

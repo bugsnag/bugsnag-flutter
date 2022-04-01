@@ -37,11 +37,23 @@ abstract class Client {
 
   Future<List<Breadcrumb>> getBreadcrumbs();
 
+  Future<void> addFeatureFlag(String name, [String? variant]);
+
+  Future<void> addFeatureFlags(List<FeatureFlag> featureFlags);
+
+  Future<void> clearFeatureFlag(String name);
+
+  Future<void> clearFeatureFlags();
+
   Future<void> notify(
     dynamic error, {
     StackTrace? stackTrace,
     OnErrorCallback? callback,
   });
+
+  void addOnBreadcrumb(OnBreadcrumbCallback onBreadcrumb);
+
+  void removeOnBreadcrumb(OnBreadcrumbCallback onBreadcrumb);
 
   void addOnError(OnErrorCallback onError);
 
@@ -94,12 +106,34 @@ class DelegateClient implements Client {
   Future<List<Breadcrumb>> getBreadcrumbs() => client.getBreadcrumbs();
 
   @override
+  Future<void> addFeatureFlag(String name, [String? variant]) =>
+      client.addFeatureFlag(name, variant);
+
+  @override
+  Future<void> addFeatureFlags(List<FeatureFlag> featureFlags) =>
+      client.addFeatureFlags(featureFlags);
+
+  @override
+  Future<void> clearFeatureFlag(String name) => client.clearFeatureFlag(name);
+
+  @override
+  Future<void> clearFeatureFlags() => client.clearFeatureFlags();
+
+  @override
   Future<void> notify(
     dynamic error, {
     StackTrace? stackTrace,
     OnErrorCallback? callback,
   }) =>
       client.notify(error, stackTrace: stackTrace, callback: callback);
+
+  @override
+  void addOnBreadcrumb(OnBreadcrumbCallback onBreadcrumb) =>
+      client.addOnBreadcrumb(onBreadcrumb);
+
+  @override
+  void removeOnBreadcrumb(OnBreadcrumbCallback onBreadcrumb) =>
+      client.removeOnBreadcrumb(onBreadcrumb);
 
   @override
   void addOnError(OnErrorCallback onError) => client.addOnError(onError);
@@ -112,6 +146,7 @@ class ChannelClient implements Client {
   static const MethodChannel _channel =
       MethodChannel('com.bugsnag/client', JSONMethodCodec());
 
+  final CallbackCollection<Breadcrumb> _onBreadcrumbCallbacks = {};
   final CallbackCollection<Event> _onErrorCallbacks = {};
 
   @override
@@ -141,17 +176,41 @@ class ChannelClient implements Client {
     String message, {
     MetadataSection? metadata,
     BreadcrumbType type = BreadcrumbType.manual,
-  }) =>
-      _channel.invokeMethod('leaveBreadcrumb', {
-        'message': message,
-        'metaData': metadata ?? {},
-        'type': type._toName()
-      });
+  }) async {
+    final crumb = Breadcrumb(message, type: type, metadata: metadata);
+    if (await _onBreadcrumbCallbacks.dispatch(crumb)) {
+      await _channel.invokeMethod('leaveBreadcrumb', crumb);
+    }
+  }
 
   @override
   Future<List<Breadcrumb>> getBreadcrumbs() async =>
       List.from((await _channel.invokeMethod('getBreadcrumbs') as List)
           .map((e) => Breadcrumb.fromJson(e)));
+
+  @override
+  Future<void> addFeatureFlag(String name, [String? variant]) =>
+      _channel.invokeMethod('addFeatureFlags', [FeatureFlag(name, variant)]);
+
+  @override
+  Future<void> addFeatureFlags(List<FeatureFlag> featureFlags) =>
+      _channel.invokeMethod('addFeatureFlags', featureFlags);
+
+  @override
+  Future<void> clearFeatureFlag(String name) =>
+      _channel.invokeMethod('clearFeatureFlag', {'name': name});
+
+  @override
+  Future<void> clearFeatureFlags() =>
+      _channel.invokeMethod('clearFeatureFlags');
+
+  @override
+  void addOnBreadcrumb(OnBreadcrumbCallback onBreadcrumb) =>
+      _onBreadcrumbCallbacks.add(onBreadcrumb);
+
+  @override
+  void removeOnBreadcrumb(OnBreadcrumbCallback onBreadcrumb) =>
+      _onBreadcrumbCallbacks.remove(onBreadcrumb);
 
   @override
   void addOnError(OnErrorCallback onError) {
@@ -180,7 +239,7 @@ class ChannelClient implements Client {
       return;
     }
 
-    if (!await _onErrorCallbacks.dispatchEvent(event)) {
+    if (!await _onErrorCallbacks.dispatch(event)) {
       // callback rejected the payload - so we don't deliver it
       return;
     }

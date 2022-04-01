@@ -1,6 +1,6 @@
 all: build lint test
 
-.PHONY: clean build bump aar example test lint e2e_android_local e2e_ios_local
+.PHONY: clean build bump aar example test format lint e2e_android_local e2e_ios_local
 
 clean:
 	cd bugsnag_flutter && flutter clean --suppress-analytics
@@ -27,6 +27,9 @@ test:
 test-fixtures: ## Build the end-to-end test fixtures
 	@./features/scripts/build_ios_app.sh
 	@./features/scripts/build_android_app.sh
+
+format:
+	flutter format bugsnag_flutter example features/fixtures/app
 
 lint:
 	cd bugsnag_flutter && flutter analyze --suppress-analytics

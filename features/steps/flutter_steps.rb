@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 When('I run {string}') do |scenario_name|
   execute_command :run_scenario, scenario_name
 end
@@ -31,6 +33,10 @@ def execute_command(action, scenario_name)
   raise 'Test fixture did not GET /command' unless Maze::Server.commands.remaining.empty?
 end
 
+When('I relaunch the app') do
+  Maze.driver.launch_app
+end
+
 When("I relaunch the app after a crash") do
   # Wait for the app to stop running before relaunching
   step 'the app is not running'
@@ -41,4 +47,16 @@ Then('the app is not running') do
   Maze::Wait.new(interval: 1, timeout: 20).until do
     Maze.driver.app_state('com.bugsnag.flutter.test.app') == :not_running
   end
+end
+
+Then(/^on (Android|iOS), (.+)/) do |platform, step_text|
+  current_platform = case Maze.config.farm
+                     when :bs
+                       Maze.driver.capabilities['os']
+                     when :sl, :local
+                       Maze.driver.capabilities['platformName']
+                     else
+                       Maze.driver.os
+                     end
+  step(step_text) if current_platform.casecmp(platform).zero?
 end
