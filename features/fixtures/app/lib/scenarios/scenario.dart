@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:bugsnag_flutter/bugsnag.dart';
 import 'package:flutter/widgets.dart';
 
@@ -7,6 +9,11 @@ abstract class Scenario {
   late EndpointConfiguration endpoints;
 
   String? extraConfig;
+
+  Future<void> clearPersistentData() async {
+    print('[MazeRunner] Clearing Persistent Data...');
+    await MazeRunnerChannels.clearPersistentData();
+  }
 
   Future<void> startNativeNotifier() =>
       MazeRunnerChannels.startBugsnag(endpoints);

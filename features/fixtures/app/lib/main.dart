@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:async';
 import 'dart:convert';
 
@@ -149,8 +151,7 @@ class _HomePageState extends State<MazeRunnerHomePage> {
       return;
     }
 
-    log('Clearing Persistent Data...');
-    await MazeRunnerChannels.clearPersistentData();
+    await scenario.clearPersistentData();
 
     scenario.endpoints = _endpoints();
     scenario.extraConfig = _extraConfigController.value.text;

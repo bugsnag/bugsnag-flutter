@@ -280,6 +280,19 @@ static NSString *NSStringOrNil(id value) {
     return @([Bugsnag resumeSession]);
 }
 
+- (void)markLaunchComplete:(NSDictionary *)arguments {
+    [Bugsnag markLaunchCompleted];
+}
+
+- (NSDictionary *)getLastRunInfo:(NSDictionary *)arguments {
+    BugsnagLastRunInfo *lastRunInfo = Bugsnag.lastRunInfo;
+    return lastRunInfo ? @{
+        @"consecutiveLaunchCrashes": @(lastRunInfo.consecutiveLaunchCrashes),
+        @"crashed": @(lastRunInfo.crashed),
+        @"crashedDuringLaunch": @(lastRunInfo.crashedDuringLaunch),
+    } : nil;
+}
+
 - (NSDictionary *)createEvent:(NSDictionary *)json {
     NSDictionary *systemInfo = [BSG_KSSystemInfo systemInfo];
     BugsnagClient *client = Bugsnag.client;

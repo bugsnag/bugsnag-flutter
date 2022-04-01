@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart' show WidgetsFlutterBinding;
 
 import 'callbacks.dart';
 import 'config.dart';
+import 'last_run_info.dart';
 import 'model.dart';
 
 final _notifier = {
@@ -50,6 +51,10 @@ abstract class Client {
   Future<void> pauseSession();
 
   Future<bool> resumeSession();
+
+  Future<void> markLaunchComplete();
+
+  Future<LastRunInfo?> getLastRunInfo();
 
   Future<void> notify(
     dynamic error, {
@@ -133,6 +138,12 @@ class DelegateClient implements Client {
 
   @override
   Future<bool> resumeSession() => client.resumeSession();
+
+  @override
+  Future<void> markLaunchComplete() => client.markLaunchComplete();
+
+  @override
+  Future<LastRunInfo?> getLastRunInfo() => client.getLastRunInfo();
 
   @override
   Future<void> notify(
@@ -228,6 +239,16 @@ class ChannelClient implements Client {
   @override
   Future<bool> resumeSession() async =>
       await _channel.invokeMethod('resumeSession') as bool;
+
+  @override
+  Future<void> markLaunchComplete() =>
+      _channel.invokeMethod('markLaunchComplete');
+
+  @override
+  Future<LastRunInfo?> getLastRunInfo() async {
+    final json = await _channel.invokeMethod('getLastRunInfo');
+    return (json == null) ? null : LastRunInfo.fromJson(json);
+  }
 
   @override
   void addOnBreadcrumb(OnBreadcrumbCallback onBreadcrumb) =>
