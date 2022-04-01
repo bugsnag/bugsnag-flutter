@@ -4,7 +4,7 @@ import 'package:bugsnag_flutter/bugsnag.dart';
 import 'package:bugsnag_flutter/widgets.dart';
 import 'package:flutter/material.dart';
 
-import 'build_error_widget.dart';
+import 'bad_widget.dart';
 
 void main() => bugsnag.start(
       runApp: () => runApp(const MyApp()),
@@ -57,7 +57,7 @@ class MyApp extends StatelessWidget {
                 child: const Text('Notify Handled Error'),
               ),
               ErrorBoundary(
-                child: const BuildErrorWidget(),
+                child: const BadWidget(),
                 fallback: (context) => const Text(
                   'A build() error has occurred and been reported',
                 ),

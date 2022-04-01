@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class BuildErrorWidget extends StatefulWidget {
-  const BuildErrorWidget({Key? key}) : super(key: key);
+class BadWidget extends StatefulWidget {
+  const BadWidget({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _BuildErrorWidgetState();
+  State<StatefulWidget> createState() => _BadWidgetState();
 }
 
-class _BuildErrorWidgetState extends State<BuildErrorWidget> {
+class _BadWidgetState extends State<BadWidget> {
   bool _isError = false;
 
   @override
