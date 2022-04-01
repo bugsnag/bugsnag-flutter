@@ -5,11 +5,50 @@ import 'package:flutter/foundation.dart';
 // https://github.com/dart-lang/sdk/blob/main/pkg/native_stack_traces/lib/src/convert.dart
 // the primary difference is that we're only interested in the virtual address
 
-final _traceLineRE =
-    RegExp(r'\s*#(\d+) abs [\da-f]+(?: virt (?<virtual>[\da-f]+))? .*$');
+final _traceLineRE = RegExp(
+    r'\s*#(\d+) abs [\da-f]+(?: virt (?<virtual>[\da-f]+))? (?<rest>.*)$');
 
 final _buildIdRegExp = RegExp(r"build_id: \'([a-f0-9]+)\'");
 final _baseAddressRegExp = RegExp(r"isolate_dso_base: ([a-f0-9]+),");
+
+class _Frame {
+  final int offset;
+  final String? method;
+
+  const _Frame(this.offset, this.method);
+
+  static final _symbolOffsetRE =
+      RegExp(r'(?<symbol>\w+)\+(?<offset>(?:0x)?[\da-f]+)');
+
+  static _Frame? parse(String line) {
+    final match = _traceLineRE.firstMatch(line);
+    if (match == null) return null;
+    // If all other cases failed, check for a virtual address. Until this package
+    // depends on a version of Dart which only prints virtual addresses when the
+    // virtual addresses in the snapshot are the same as in separately saved
+    // debugging information, the other methods should be tried first.
+    final virtualString = match.namedGroup('virtual');
+    final rest = match.namedGroup('rest');
+
+    final address =
+        virtualString != null ? int.tryParse(virtualString, radix: 16) : null;
+
+    if (address != null) {
+      return _Frame(address, _extractMethodName(rest));
+    }
+
+    return null;
+  }
+
+  static String? _extractMethodName(String? symbolString) {
+    if (symbolString == null) {
+      return null;
+    }
+
+    final match = _symbolOffsetRE.firstMatch(symbolString);
+    return match?.namedGroup('symbol');
+  }
+}
 
 // Try to parse the build_id from the line, returning it's value if it existed
 String? _parseBuildId(String line) {
@@ -30,21 +69,6 @@ String? _parseBaseAddress(String line) {
     }
   }
 
-  return null;
-}
-
-int? _retrievePCOffset(String line) {
-  final match = _traceLineRE.firstMatch(line);
-  if (match == null) return null;
-  // If all other cases failed, check for a virtual address. Until this package
-  // depends on a version of Dart which only prints virtual addresses when the
-  // virtual addresses in the snapshot are the same as in separately saved
-  // debugging information, the other methods should be tried first.
-  final virtualString = match.namedGroup('virtual');
-  if (virtualString != null) {
-    final address = int.tryParse(virtualString, radix: 16);
-    return address;
-  }
   return null;
 }
 
@@ -71,13 +95,14 @@ Stacktrace? parseNativeStackTrace(String stackTrace) {
   for (final line in stackTraceLines) {
     buildId ??= _parseBuildId(line);
     baseOffsetString ??= _parseBaseAddress(line);
-    final pcOffset = _retrievePCOffset(line);
+    final frame = _Frame.parse(line);
 
-    if (pcOffset != null) {
+    if (frame != null) {
       stacktrace.add(Stackframe(
-        frameAddress: '0x' + pcOffset.toRadixString(16),
+        frameAddress: '0x' + frame.offset.toRadixString(16),
         loadAddress: baseOffsetString,
         codeIdentifier: buildId,
+        method: frame.method,
       ));
     }
   }
