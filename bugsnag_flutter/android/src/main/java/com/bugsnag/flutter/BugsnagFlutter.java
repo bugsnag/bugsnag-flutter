@@ -220,6 +220,20 @@ class BugsnagFlutter {
         return null;
     }
 
+    Void startSession(@Nullable Void args) {
+        Bugsnag.startSession();
+        return null;
+    }
+
+    Void pauseSession(@Nullable Void args) {
+        Bugsnag.pauseSession();
+        return null;
+    }
+
+    Boolean resumeSession(@Nullable Void args) {
+        return Bugsnag.resumeSession();
+    }
+
     JSONObject createEvent(@Nullable JSONObject args) {
         if (args == null) {
             return null;

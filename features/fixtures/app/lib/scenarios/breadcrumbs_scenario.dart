@@ -38,9 +38,3 @@ class BreadcrumbsScenario extends Scenario {
 
   bool ignoreAllBreadcrumbs(Breadcrumb _) => false;
 }
-
-void expect(dynamic actual, dynamic expected) {
-  if (actual != expected) {
-    throw AssertionError('Expected \'$expected\' but got \'$actual\'');
-  }
-}

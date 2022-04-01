@@ -98,7 +98,7 @@ class _HomePageState extends State<MazeRunnerHomePage> {
     _sessionEndpointController = TextEditingController(
       text: const String.fromEnvironment(
         'bsg.endpoint.session',
-        defaultValue: 'http://bs-local.com:9339/session',
+        defaultValue: 'http://bs-local.com:9339/sessions',
       ),
     );
   }
