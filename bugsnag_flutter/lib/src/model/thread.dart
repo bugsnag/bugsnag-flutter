@@ -20,7 +20,7 @@ class Thread {
     this.name,
     this.state,
     bool? isErrorReportingThread,
-    this.type = ErrorType.flutter,
+    this.type = ErrorType.dart,
     required Stacktrace stacktrace,
   })  : _stacktrace = stacktrace,
         isErrorReportingThread = isErrorReportingThread == true;

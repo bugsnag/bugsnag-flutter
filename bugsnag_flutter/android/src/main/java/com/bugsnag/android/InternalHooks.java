@@ -111,7 +111,7 @@ public class InternalHooks {
 
     private void fixErrorType(Map<String, Object> mappedError) {
         // Remove this once bugsnag-android supports Flutter ErrorTypes
-        if ("flutter".equals(mappedError.get("type"))) {
+        if ("dart".equals(mappedError.get("type"))) {
             mappedError.put("type", "android");
         }
     }

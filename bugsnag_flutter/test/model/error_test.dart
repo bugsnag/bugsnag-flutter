@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('Error', () {
     test('ErrorType identical', () {
-      expect(ErrorType.flutter, same(ErrorType.forName('flutter')));
+      expect(ErrorType.dart, same(ErrorType.forName('dart')));
       expect(ErrorType.android, same(ErrorType.forName(('android'))));
       expect(ErrorType.cocoa, same(ErrorType.forName(('cocoa'))));
     });
@@ -17,7 +17,7 @@ void main() {
     });
 
     test('toString', () {
-      expect(ErrorType.flutter.toString(), equals('flutter'));
+      expect(ErrorType.dart.toString(), equals('dart'));
       expect(ErrorType.android.toString(), equals('android'));
       expect(ErrorType.cocoa.toString(), equals('cocoa'));
       expect(ErrorType.c.toString(), equals('c'));

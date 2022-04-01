@@ -64,7 +64,7 @@ class Stackframe {
         codeIdentifier = json.safeGet('codeIdentifier');
 
   Stackframe.fromStackFrame(StackFrame frame)
-      : type = ErrorType.flutter,
+      : type = ErrorType.dart,
         file = frame.packagePath,
         lineNumber = frame.line,
         columnNumber = frame.column,
