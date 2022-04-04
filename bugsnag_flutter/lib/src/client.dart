@@ -278,7 +278,7 @@ class ChannelClient implements Client {
 
   void _onFlutterError(FlutterErrorDetails details) {
     _notifyInternal(details.exception, true, details.stack, null);
-    _previousFlutterOnError!(details);
+    _previousFlutterOnError?.call(details);
   }
 
   Future<void> _notifyInternal(
