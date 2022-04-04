@@ -6,16 +6,16 @@ import 'package:flutter/foundation.dart';
 // the primary difference is that we're only interested in the virtual address
 
 final _traceLineRE = RegExp(
-    r'\s*#(\d+) abs [\da-f]+(?: virt (?<virtual>[\da-f]+))? (?<rest>.*)$');
+    r'\s*#(\d+) abs (?<absolute>[\da-f]+)(?: virt (?<virtual>[\da-f]+))? (?<rest>.*)$');
 
 final _buildIdRegExp = RegExp(r"build_id: \'([a-f0-9]+)\'");
 final _baseAddressRegExp = RegExp(r"isolate_dso_base: ([a-f0-9]+),");
 
 class _Frame {
-  final int offset;
+  final int absoluteAddress;
   final String? method;
 
-  const _Frame(this.offset, this.method);
+  const _Frame(this.absoluteAddress, this.method);
 
   static final _symbolOffsetRE =
       RegExp(r'(?<symbol>\w+)\+(?<offset>(?:0x)?[\da-f]+)');
@@ -23,15 +23,11 @@ class _Frame {
   static _Frame? parse(String line) {
     final match = _traceLineRE.firstMatch(line);
     if (match == null) return null;
-    // If all other cases failed, check for a virtual address. Until this package
-    // depends on a version of Dart which only prints virtual addresses when the
-    // virtual addresses in the snapshot are the same as in separately saved
-    // debugging information, the other methods should be tried first.
-    final virtualString = match.namedGroup('virtual');
+    final addressString = match.namedGroup('absolute');
     final rest = match.namedGroup('rest');
 
     final address =
-        virtualString != null ? int.tryParse(virtualString, radix: 16) : null;
+        addressString != null ? int.tryParse(addressString, radix: 16) : null;
 
     if (address != null) {
       return _Frame(address, _extractMethodName(rest));
@@ -93,25 +89,23 @@ Stacktrace? parseNativeStackTrace(String stackTrace) {
       stacktrace.add(
         Stackframe.fromStackFrame(StackFrame.asynchronousSuspension),
       );
+    } else {
+      buildId ??= _parseBuildId(line);
+      baseOffset ??= _parseBaseAddress(line);
+      final frame = _Frame.parse(line);
 
-      continue;
-    }
-
-    buildId ??= _parseBuildId(line);
-    baseOffset ??= _parseBaseAddress(line);
-    final frame = _Frame.parse(line);
-
-    if (frame != null && baseOffset != null) {
-      stacktrace.add(Stackframe(
-        frameAddress: '0x' + (baseOffset + frame.offset).toRadixString(16),
-        loadAddress: '0x' + baseOffset.toRadixString(16),
-        codeIdentifier: buildId,
-        method: frame.method,
-      ));
+      if (frame != null && baseOffset != null) {
+        stacktrace.add(Stackframe(
+          frameAddress: '0x' + frame.absoluteAddress.toRadixString(16),
+          loadAddress: '0x' + baseOffset.toRadixString(16),
+          codeIdentifier: buildId,
+          method: frame.method,
+        ));
+      }
     }
   }
 
-  return stacktrace;
+  return (stacktrace.isNotEmpty && baseOffset != null) ? stacktrace : null;
 }
 
 Stacktrace? parseStackTraceString(String stackTrace) {

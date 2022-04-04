@@ -50,7 +50,7 @@ void main() {
       );
 
       expect(
-        stacktrace!
+        stacktrace
             .map((f) => f.loadAddress)
             .where((element) => element != null),
         everyElement('0x10bfbc000'),
