@@ -57,16 +57,12 @@ String? _parseBuildId(String line) {
 }
 
 // Try to parse the Isolate base address from the line (isolate_dso_base)
-String? _parseBaseAddress(String line) {
+int? _parseBaseAddress(String line) {
   final match = _baseAddressRegExp.firstMatch(line);
   final matchedAddressString = match?.group(1);
 
   if (matchedAddressString != null) {
-    // we parse and re-format the address to remove any padding, etc.
-    final matchedAddress = int.tryParse(matchedAddressString, radix: 16);
-    if (matchedAddress != null) {
-      return '0x${matchedAddress.toRadixString(16)}';
-    }
+    return int.tryParse(matchedAddressString, radix: 16);
   }
 
   return null;
@@ -88,19 +84,19 @@ Stacktrace? parseNativeStackTrace(String stackTrace) {
   final stackTraceLines = stackTrace.split('\n');
 
   String? buildId;
-  String? baseOffsetString;
+  int? baseOffset;
 
   List<Stackframe> stacktrace = [];
 
   for (final line in stackTraceLines) {
     buildId ??= _parseBuildId(line);
-    baseOffsetString ??= _parseBaseAddress(line);
+    baseOffset ??= _parseBaseAddress(line);
     final frame = _Frame.parse(line);
 
-    if (frame != null) {
+    if (frame != null && baseOffset != null) {
       stacktrace.add(Stackframe(
-        frameAddress: '0x' + frame.offset.toRadixString(16),
-        loadAddress: baseOffsetString,
+        frameAddress: '0x' + (baseOffset + frame.offset).toRadixString(16),
+        loadAddress: '0x' + baseOffset.toRadixString(16),
         codeIdentifier: buildId,
         method: frame.method,
       ));

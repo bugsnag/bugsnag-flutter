@@ -27,13 +27,13 @@ void main() {
       expect(
         stacktrace.map((f) => f.frameAddress),
         equals(const [
-          '0x1f8ae6',
-          '0x272034',
-          '0x235dc7',
-          '0x231409',
-          '0x235291',
-          '0x231409',
-          '0x23d8a5',
+          '0x7c9f1063fae6',
+          '0x7c9f106b9034',
+          '0x7c9f1067cdc7',
+          '0x7c9f10678409',
+          '0x7c9f1067c291',
+          '0x7c9f10678409',
+          '0x7c9f106848a5',
         ]),
       );
     });
