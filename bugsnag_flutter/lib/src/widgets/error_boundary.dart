@@ -53,26 +53,10 @@ class ErrorBoundary extends StatefulWidget {
 class _ErrorBoundaryState extends State<ErrorBoundary> {
   bool _isErrorState = false;
 
-  void reportError(FlutterErrorDetails errorDetails) {
+  void markErrorState() {
     // we schedule the actual setState between frames
     SchedulerBinding.instance?.scheduleTask(
       () {
-        try {
-          // FIXME: Notify this as a full FlutterErrorDetails
-          widget.client.notify(
-            errorDetails.exception,
-            stackTrace: errorDetails.stack,
-            callback: (event) {
-              event.context = widget.errorContext;
-              return true;
-            },
-          ).ignore();
-        } catch (e, stack) {
-          // most likely Bugsnag has not been attached / started - we need to
-          // report this error *without* re-triggering the ErrorBoundary
-          _handleNotifyFailure(e, stack);
-        }
-
         setState(() => _isErrorState = true);
       },
       Priority.animation,
@@ -87,19 +71,6 @@ class _ErrorBoundaryState extends State<ErrorBoundary> {
       return widget.fallback(context);
     }
   }
-
-  void _handleNotifyFailure(dynamic e, StackTrace stack) {
-    // we attempt to report this using the default FlutterError mechanism
-    // this bypassing a `throw` which is likely to cause an error-loop with
-    // any parent ErrorBoundary widgets
-    FlutterError.onError?.call(
-      FlutterErrorDetails(
-        exception: e,
-        stack: stack,
-        library: 'Bugsnag',
-      ),
-    );
-  }
 }
 
 class _BugsnagErrorWidget extends StatelessWidget {
@@ -112,7 +83,7 @@ class _BugsnagErrorWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final boundary = context.findAncestorStateOfType<_ErrorBoundaryState>();
     if (boundary != null) {
-      boundary.reportError(errorDetails);
+      boundary.markErrorState();
       return const SizedBox.shrink();
     } else {
       return fallbackErrorBuilder(errorDetails);
