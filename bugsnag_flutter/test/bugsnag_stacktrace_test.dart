@@ -38,6 +38,45 @@ void main() {
       );
     });
 
+    test('parses iOS Stacktrace', () {
+      final stacktrace = parseNativeStackTrace(obfuscatedStackTraceIOS);
+
+      expect(stacktrace, isNotNull);
+      expect(stacktrace, hasLength(4));
+
+      expect(
+        stacktrace!.map((f) => f.codeIdentifier),
+        everyElement(isNull),
+      );
+
+      expect(
+        stacktrace!
+            .map((f) => f.loadAddress)
+            .where((element) => element != null),
+        everyElement('0x10bfbc000'),
+      );
+
+      expect(
+        stacktrace.map((f) => f.method),
+        equals(const [
+          '_kDartIsolateSnapshotInstructions',
+          'asynchronous suspension',
+          '_kDartIsolateSnapshotInstructions',
+          'asynchronous suspension',
+        ]),
+      );
+
+      expect(
+        stacktrace.map((f) => f.frameAddress),
+        equals(const [
+          '0x10c207b77',
+          null,
+          '0x10c1f53e3',
+          null,
+        ]),
+      );
+    });
+
     test('returns null for non-native StackTraces', () {
       final stacktrace = parseNativeStackTrace(StackTrace.current.toString());
       expect(stacktrace, isNull);
@@ -71,3 +110,14 @@ const obfuscatedStackTrace =
     '    #04 abs 00007c9f1067c291 virt 0000000000235291 _kDartIsolateSnapshotInstructions+0x179661\n'
     '    #05 abs 00007c9f10678409 virt 0000000000231409 _kDartIsolateSnapshotInstructions+0x1757d9\n'
     '    #06 abs 00007c9f106848a5 virt 000000000023d8a5 _kDartIsolateSnapshotInstructions+0x181c75\n';
+
+const obfuscatedStackTraceIOS =
+    'Apr  4 14:17:52 Runner(Flutter)[820] <Notice>: flutter: Warning: This VM has been configured to produce stack traces that violate the Dart standard.\n'
+    '*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***\n'
+    'pid: 820, tid: 6105427968, name io.flutter.1.ui\n'
+    'isolate_dso_base: 10bfbc000, vm_dso_base: 10bfbc000\n'
+    'isolate_instructions: 10bfc7840, vm_instructions: 10bfc2ad0\n'
+    '    #00 abs 000000010c207b77 _kDartIsolateSnapshotInstructions+0x240337\n'
+    '    <asynchronous suspension>\n'
+    '    #01 abs 000000010c1f53e3 _kDartIsolateSnapshotInstructions+0x22dba3\n'
+    '    <asynchronous suspension>\n';

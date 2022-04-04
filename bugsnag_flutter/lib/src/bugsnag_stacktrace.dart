@@ -89,6 +89,14 @@ Stacktrace? parseNativeStackTrace(String stackTrace) {
   List<Stackframe> stacktrace = [];
 
   for (final line in stackTraceLines) {
+    if (line.contains('<asynchronous suspension>')) {
+      stacktrace.add(
+        Stackframe.fromStackFrame(StackFrame.asynchronousSuspension),
+      );
+
+      continue;
+    }
+
     buildId ??= _parseBuildId(line);
     baseOffset ??= _parseBaseAddress(line);
     final frame = _Frame.parse(line);
@@ -103,7 +111,7 @@ Stacktrace? parseNativeStackTrace(String stackTrace) {
     }
   }
 
-  return buildId != null ? stacktrace : null;
+  return stacktrace;
 }
 
 Stacktrace? parseStackTraceString(String stackTrace) {
