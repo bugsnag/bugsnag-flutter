@@ -11,6 +11,7 @@
 #import <Bugsnag/BugsnagHandledState.h>
 #import <Bugsnag/BugsnagNotifier.h>
 #import <Bugsnag/BugsnagSessionTracker.h>
+#import <Bugsnag/BugsnagStackframe+Private.h>
 #import <Bugsnag/BugsnagThread+Private.h>
 
 #import <objc/runtime.h>
@@ -309,6 +310,12 @@ static NSString *NSStringOrNil(id value) {
                                                     session:client.sessionTracker.runningSession];
     event.apiKey = client.configuration.apiKey;
     event.context = client.context;
+    
+    for (BugsnagStackframe *frame in error.stacktrace) {
+        if ([frame.type isEqualToString:@"dart"] && !frame.codeIdentifier) {
+            frame.codeIdentifier = event.app.dsymUuid;
+        }
+    }
     
     if (client.configuration.sendThreads == BSGThreadSendPolicyAlways) {
         event.threads = [BugsnagThread allThreads:YES callStackReturnAddresses:NSThread.callStackReturnAddresses];
