@@ -16,7 +16,7 @@
 - (void)clearFeatureFlag:(NSDictionary *)arguments;
 - (void)clearFeatureFlags:(NSDictionary *)arguments;
 
-- (NSNumber *)attach:(NSDictionary *)json;
+- (void)attach:(NSDictionary *)json;
 
 - (void)start:(NSDictionary *)arguments;
 
@@ -33,7 +33,5 @@
 @end
 
 @interface BugsnagFlutterPlugin : NSObject<FlutterPlugin, BugsnagFlutterProtocol>
-
-@property (nonatomic, getter=isAttached) BOOL attached;
 
 @end

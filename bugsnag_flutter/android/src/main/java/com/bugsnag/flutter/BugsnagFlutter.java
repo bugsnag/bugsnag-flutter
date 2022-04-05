@@ -5,12 +5,14 @@ import static com.bugsnag.flutter.JsonHelper.unpackMetadata;
 import static com.bugsnag.flutter.JsonHelper.unwrap;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.bugsnag.android.Breadcrumb;
 import com.bugsnag.android.Bugsnag;
+import com.bugsnag.android.Client;
 import com.bugsnag.android.Configuration;
 import com.bugsnag.android.EndpointConfiguration;
 import com.bugsnag.android.ErrorTypes;
@@ -31,6 +33,12 @@ class BugsnagFlutter {
 
     private InternalHooks client;
 
+    private static boolean isAnyAttached = false;
+    private boolean isAttached = false;
+
+    private static boolean isAnyStarted = false;
+    private boolean isStarted = false;
+
     /*
      ***********************************************************************************************
      * All methods listed here must also be registered in the BugsnagFlutterPlugin otherwise they
@@ -40,13 +48,19 @@ class BugsnagFlutter {
 
     Context context;
 
-    Boolean attach(@NonNull JSONObject args) throws Exception {
-        if (!isBugsnagStarted()) {
-            return false;
+    Void attach(@NonNull JSONObject args) throws Exception {
+        if (isAttached) {
+            throw new IllegalStateException("bugsnag.attach() may not be called more than once");
         }
 
-        if (isAttached()) {
-            throw new IllegalStateException("bugsnag.attach may not be called more than once");
+        if (isAnyAttached) {
+            Log.i("BugsnagFlutter", "bugsnag.attach() was called from a previous Flutter context. Ignoring.");
+            return null;
+        }
+
+        Client nativeClient = InternalHooks.getClient();
+        if (nativeClient == null) {
+            throw new IllegalStateException("bugsnag.attach() can only be called once the native layer has already been started, have you called Bugsnag.start() from your Android code?");
         }
 
         if (args != null) {
@@ -62,7 +76,7 @@ class BugsnagFlutter {
 
         addFeatureFlags(args.optJSONArray("featureFlags"));
 
-        client = new InternalHooks(Bugsnag.getClient());
+        client = new InternalHooks(nativeClient);
 
         Notifier notifier = client.getNotifier();
         JSONObject notifierJson = args.getJSONObject("notifier");
@@ -71,12 +85,24 @@ class BugsnagFlutter {
         notifier.setUrl(notifierJson.getString("url"));
         notifier.setDependencies(Collections.singletonList(new Notifier()));
 
-        return true;
+        isAnyAttached = true;
+        isAttached = true;
+        return null;
     }
 
     Void start(@NonNull JSONObject args) throws Exception {
-        if (isBugsnagStarted()) {
-            throw new IllegalArgumentException("bugsnag.start may not be called after starting Bugsnag natively");
+        if (isStarted) {
+            Log.w("BugsnagFlutter", "bugsnag.start() was called more than once. Ignoring.");
+            return null;
+        }
+
+        if (isAnyStarted) {
+            Log.i("BugsnagFlutter", "bugsnag.start() was called from a previous Flutter context. Ignoring.");
+            return null;
+        }
+
+        if (InternalHooks.getClient() != null) {
+            throw new IllegalStateException("bugsnag.start() may not be called after starting Bugsnag natively");
         }
 
         Configuration configuration = Configuration.load(context);
@@ -155,7 +181,8 @@ class BugsnagFlutter {
         notifier.setDependencies(Collections.singletonList(new Notifier()));
 
         client = new InternalHooks(Bugsnag.start(context, configuration));
-
+        isAnyStarted = true;
+        isStarted = true;
         return null;
     }
 
@@ -281,18 +308,5 @@ class BugsnagFlutter {
         Event event = client.unmapEvent(unwrap(eventJson));
         client.deliverEvent(event);
         return null;
-    }
-
-    private boolean isBugsnagStarted() {
-        try {
-            Bugsnag.getClient();
-            return true;
-        } catch (IllegalStateException iae) {
-            return false;
-        }
-    }
-
-    private boolean isAttached() {
-        return client != null;
     }
 }
