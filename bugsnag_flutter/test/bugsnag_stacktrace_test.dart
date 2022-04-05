@@ -93,7 +93,27 @@ void main() {
       expect(stacktrace[0].method, equals('main'));
       expect(stacktrace[0].file, endsWith('test/bugsnag_stacktrace_test.dart'));
     });
+
+    test('parses StackTrace objects from classes', () {
+      try {
+        BuggyClass().throwException();
+      } catch (_, stackTrace) {
+        final stacktrace = parseStackTraceString(stackTrace.toString());
+
+        expect(stacktrace, isNotNull);
+        expect(stacktrace!, hasLength(greaterThan(3)));
+
+        expect(stacktrace[0].method, equals('BuggyClass.throwException'));
+        expect(stacktrace[1].method, equals('main'));
+      }
+    });
   });
+}
+
+class BuggyClass {
+  void throwException() {
+    throw Exception('BuggyClass throwing exceptions');
+  }
 }
 
 const obfuscatedStackTrace =
