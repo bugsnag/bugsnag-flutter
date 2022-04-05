@@ -13,3 +13,8 @@ Feature: Unhandled Flutter Exceptions
     And the error payload field "events.0.unhandled" is true
     And the error payload field "events.0.exceptions.0.message" equals "test error message"
     And the error payload field "events.0.threads" is a non-empty array
+    And the event "metaData.flutter.defaultRouteName" equals "/"
+    And the event "metaData.flutter.errorContext" equals "during a task callback"
+    And the event "metaData.flutter.errorLibrary" equals "scheduler library"
+    And the event "metaData.flutter.initialLifecycleState" is not null
+    And the event "metaData.flutter.lifecycleState" is not null
