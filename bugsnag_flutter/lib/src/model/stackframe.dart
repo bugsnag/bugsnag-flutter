@@ -68,7 +68,9 @@ class Stackframe {
         file = frame.packagePath,
         lineNumber = frame.line,
         columnNumber = frame.column,
-        method = frame.method;
+        method = (frame.className.isNotEmpty)
+            ? '${frame.className}.${frame.method}'
+            : frame.method;
 
   dynamic toJson() => {
         if (type != null) 'type': type!.name,
