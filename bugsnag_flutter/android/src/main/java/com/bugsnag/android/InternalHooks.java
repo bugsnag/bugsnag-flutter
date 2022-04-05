@@ -71,6 +71,10 @@ public class InternalHooks {
 
     public void deliverEvent(@NonNull Event event) {
         client.notifyInternal(event, null);
+
+        if (event.getImpl().getOriginalUnhandled()) {
+            client.getEventStore().flushAsync();
+        }
     }
 
     public JSONObject mapError(Error error) {
