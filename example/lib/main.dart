@@ -17,7 +17,7 @@ void main() async => bugsnag.start(
         (event) {
           if (event.unhandled) {
             // Metadata can be added on a per-event basis
-            event.metadata.addMetadata('info', {'hint': 'Something useful'});
+            event.metadata.addMetadata('info', const {'hint': 'Example'});
           }
           // Return `true` to allow or `false` to prevent sending the event.
           return true;
