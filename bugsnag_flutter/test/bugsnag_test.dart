@@ -11,16 +11,6 @@ void main() {
       channel.reset();
     });
 
-    test('attach throws error on failure', () async {
-      channel.results['attach'] = false;
-      try {
-        await bugsnag.attach();
-        fail('bugsnag.attach should have thrown an exception');
-      } catch (e) {
-        expect(e, isInstanceOf<Exception>());
-      }
-    });
-
     test('attach', () async {
       channel.results['attach'] = true;
 

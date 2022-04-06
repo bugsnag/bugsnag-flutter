@@ -20,6 +20,13 @@ static NSString *NSStringOrNil(id value) {
     return [value isKindOfClass:[NSString class]] ? value : nil;
 }
 
+@interface BugsnagFlutterPlugin ()
+
+@property (nonatomic, getter=isAttached) BOOL attached;
+@property (nonatomic, getter=isStarted) BOOL started;
+
+@end
+
 @implementation BugsnagFlutterPlugin
 
 // MARK: - @protocol FlutterPlugin
@@ -133,13 +140,20 @@ static NSString *NSStringOrNil(id value) {
     [Bugsnag clearFeatureFlags];
 }
 
-- (NSNumber *)attach:(NSDictionary *)arguments {
-    if (Bugsnag.client == nil) {
-        return @NO;
+- (void)attach:(NSDictionary *)arguments {
+    if (self.isAttached) {
+        [NSException raise:NSInternalInconsistencyException format:@"bugsnag.attach() may not be called more than once"];
     }
     
-    if (self.isAttached) {
-        @throw [NSException exceptionWithName:@"CannotAttach" reason:@"bugsnag.attach may not be called more than once" userInfo:nil];
+    static BOOL isAnyAttached;
+    if (isAnyAttached) {
+        NSLog(@"bugsnag.attach() was called from a previous Flutter context. Ignoring.");
+        return;
+    }
+    
+    if (!Bugsnag.client) {
+        [NSException raise:NSInternalInconsistencyException format:
+         @"bugsnag.attach() can only be called once the native layer has already been started, have you called [Bugsnag start] from your iOS code?"];
     }
 
     if ([arguments[@"user"] isKindOfClass:[NSDictionary class]]) {
@@ -161,13 +175,24 @@ static NSString *NSStringOrNil(id value) {
     Bugsnag.client.notifier.url = notifier[@"url"];
     Bugsnag.client.notifier.dependencies = @[[[BugsnagNotifier alloc] init]];
     
+    isAnyAttached = YES;
     self.attached = YES;
-    return @YES;
 }
 
 - (void)start:(NSDictionary *)arguments {
+    if (self.isStarted) {
+        NSLog(@"bugsnag.start() was called more than once. Ignoring.");
+        return;
+    }
+
+    static BOOL isAnyStarted;
+    if (isAnyStarted) {
+        NSLog(@"bugsnag.start() was called from a previous Flutter context. Ignoring.");
+        return;
+    }
+
     if (Bugsnag.client) {
-        @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"bugsnag.start may not be called after starting Bugsnag natively" userInfo:nil];
+        [NSException raise:NSInternalInconsistencyException format:@"bugsnag.start() may not be called after starting Bugsnag natively"];
     }
     
     BugsnagConfiguration *configuration = [BugsnagConfiguration loadConfig];
@@ -266,7 +291,8 @@ static NSString *NSStringOrNil(id value) {
     
     [Bugsnag startWithConfiguration:configuration];
     
-    self.attached = YES;
+    self.started = YES;
+    isAnyStarted = YES;
 }
 
 - (void)startSession:(NSDictionary *)arguments {

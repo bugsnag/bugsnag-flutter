@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 import 'dart:ui';
 
 import 'package:bugsnag_flutter/src/error_factory.dart';
@@ -409,26 +408,15 @@ class Bugsnag extends Client with DelegateClient {
       WidgetsFlutterBinding.ensureInitialized();
     }, _reportZonedError);
 
-    final client = ChannelClient();
-    bool attached = await ChannelClient._channel.invokeMethod('attach', {
+    await ChannelClient._channel.invokeMethod('attach', {
       if (user != null) 'user': user,
       if (context != null) 'context': context,
       if (featureFlags != null) 'featureFlags': featureFlags,
       'notifier': _notifier,
     });
 
-    if (!attached) {
-      final platformStart =
-          Platform.isAndroid ? 'Bugsnag.start()' : '[Bugsnag start]';
-      final platformName = Platform.isAndroid ? 'Android' : 'iOS';
-
-      throw Exception(
-        'bugsnag.attach can only be called when the native layer has already been started, have you called $platformStart in your $platformName code?',
-      );
-    }
-
+    final client = ChannelClient();
     client._onErrorCallbacks.addAll(onError);
-
     this.client = client;
 
     runZonedGuarded(() async {
@@ -499,7 +487,6 @@ class Bugsnag extends Client with DelegateClient {
       WidgetsFlutterBinding.ensureInitialized();
     }, _reportZonedError);
 
-    final client = ChannelClient();
     await ChannelClient._channel.invokeMethod('start', <String, dynamic>{
       if (apiKey != null) 'apiKey': apiKey,
       if (user != null) 'user': user,
@@ -527,6 +514,8 @@ class Bugsnag extends Client with DelegateClient {
       'featureFlags': featureFlags,
       'notifier': _notifier,
     });
+
+    final client = ChannelClient();
     client._onErrorCallbacks.addAll(onError);
     this.client = client;
 

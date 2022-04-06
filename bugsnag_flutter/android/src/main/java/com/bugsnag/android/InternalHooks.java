@@ -27,6 +27,10 @@ public class InternalHooks {
         this.eventMapper = new BugsnagEventMapper(logger);
     }
 
+    public static Client getClient() {
+        return Bugsnag.client;
+    }
+
     public Notifier getNotifier() {
         return client.notifier;
     }
