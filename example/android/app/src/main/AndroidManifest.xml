@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.bugsnag.bugsnag_flutter_example">
+    package="com.bugsnag.flutter-example">
    <application
         android:label="bugsnag_flutter_example"
         android:name="${applicationName}"
@@ -25,10 +25,6 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-       <meta-data
-           android:name="com.bugsnag.android.API_KEY"
-           android:value="add-your-api-key-here" />
-
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data
