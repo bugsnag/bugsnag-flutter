@@ -20,6 +20,7 @@ steps:
     key: ios-fixture
     timeout_in_minutes: 20
     commands:
+      - pod repo update trunk
       - features/scripts/build_ios_app.sh
     plugins:
       artifacts#v1.5.0:
