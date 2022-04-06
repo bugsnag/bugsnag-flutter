@@ -9,10 +9,13 @@ Feature: bugsnag.notify
     * the event "unhandled" is false
     * the error payload field "events.0.threads" is a non-empty array
     * the "file" of stack frame 5 equals "scenarios/handled_exception_scenario.dart"
-    * the "method" of stack frame 5 equals "run"
+    * the "method" of stack frame 5 equals "HandledExceptionScenario.run"
     * the "lineNumber" of stack frame 5 equals 20
     * on iOS, the "codeIdentifier" of stack frame 5 is not null
     * on iOS, the "type" of stack frame 5 equals "dart"
+    * the event "metaData.flutter.defaultRouteName" equals "/"
+    * the event "metaData.flutter.initialLifecycleState" is not null
+    * the event "metaData.flutter.lifecycleState" is not null
 
   Scenario: Notify with a callback
     Given I configure the app to run in the "callback" state
@@ -26,7 +29,10 @@ Feature: bugsnag.notify
     * the error payload field "events.0.breadcrumbs.0.name" equals "Crumbs!"
     * the error payload field "events.0.threads" is a non-empty array
     * the "file" of stack frame 5 equals "scenarios/handled_exception_scenario.dart"
-    * the "method" of stack frame 5 equals "run"
+    * the "method" of stack frame 5 equals "HandledExceptionScenario.run"
     * the "lineNumber" of stack frame 5 equals 13
     * on iOS, the "codeIdentifier" of stack frame 5 is not null
     * on iOS, the "type" of stack frame 5 equals "dart"
+    * the event "metaData.flutter.defaultRouteName" equals "/"
+    * the event "metaData.flutter.initialLifecycleState" is not null
+    * the event "metaData.flutter.lifecycleState" is not null

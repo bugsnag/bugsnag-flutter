@@ -78,7 +78,10 @@ void main() {
         expect(stackframe.file, f.packagePath);
         expect(stackframe.lineNumber, f.line);
         expect(stackframe.columnNumber, f.column);
-        expect(stackframe.method, f.method);
+        expect(
+          stackframe.method,
+          f.className.isNotEmpty ? '${f.className}.${f.method}' : f.method,
+        );
       }
     });
   });

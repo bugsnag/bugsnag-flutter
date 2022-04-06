@@ -346,6 +346,11 @@ static NSString *NSStringOrNil(id value) {
     if (client.configuration.sendThreads == BSGThreadSendPolicyAlways) {
         event.threads = [BugsnagThread allThreads:YES callStackReturnAddresses:NSThread.callStackReturnAddresses];
     }
+
+    NSDictionary *metadata = json[@"flutterMetadata"];
+    if (metadata != nil) {
+        [event addMetadata:metadata toSection:@"flutter"];
+    }
     
     if ([json[@"deliver"] boolValue]) {
         [client notifyInternal:event block:nil];

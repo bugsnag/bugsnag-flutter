@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:bugsnag_flutter/src/error_factory.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart' show WidgetsFlutterBinding;
 
@@ -276,19 +278,21 @@ class ChannelClient implements Client {
   }
 
   void _onFlutterError(FlutterErrorDetails details) {
-    _notifyInternal(details.exception, true, details.stack, null);
+    _notifyInternal(details.exception, true, details, details.stack, null);
     _previousFlutterOnError?.call(details);
   }
 
   Future<void> _notifyInternal(
     dynamic error,
     bool unhandled,
+    FlutterErrorDetails? details,
     StackTrace? stackTrace,
     OnErrorCallback? callback,
   ) async {
     final errorPayload = ErrorFactory.instance.createError(error, stackTrace);
     final event = await _createEvent(
       errorPayload,
+      details: details,
       unhandled: unhandled,
       deliver: _onErrorCallbacks.isEmpty && callback == null,
     );
@@ -316,11 +320,11 @@ class ChannelClient implements Client {
     StackTrace? stackTrace,
     OnErrorCallback? callback,
   }) {
-    return _notifyInternal(error, false, stackTrace, callback);
+    return _notifyInternal(error, false, null, stackTrace, callback);
   }
 
   void _notifyUnhandled(dynamic error, StackTrace? stackTrace) async {
-    _notifyInternal(error, true, stackTrace, null);
+    _notifyInternal(error, true, null, stackTrace, null);
   }
 
   /// Create an Event by having it built by the native notifier,
@@ -329,12 +333,27 @@ class ChannelClient implements Client {
   /// and returned to be processed by the Flutter notifier.
   Future<Event?> _createEvent(
     Error error, {
+    FlutterErrorDetails? details,
     required bool unhandled,
     required bool deliver,
   }) async {
+    final buildID = error.stacktrace.first.codeIdentifier;
+    final errorInfo = details?.informationCollector?.call() ?? [];
+    final errorContext = details?.context?.toDescription();
+    final errorLibrary = details?.library;
+    final lifecycleState = SchedulerBinding.instance?.lifecycleState.toString();
+    final metadata = {
+      if (buildID != null) 'buildID': buildID,
+      if (errorContext != null) 'errorContext': errorContext,
+      if (errorLibrary != null) 'errorLibrary': errorLibrary,
+      if (errorInfo.isNotEmpty) 'errorInformation': (StringBuffer()..writeAll(errorInfo, '\n')).toString(),
+      'defaultRouteName': PlatformDispatcher.instance.defaultRouteName,
+      'initialLifecycleState': PlatformDispatcher.instance.initialLifecycleState,
+      if (lifecycleState != null) 'lifecycleState': lifecycleState,
+    };
     final eventJson = await _channel.invokeMethod(
       'createEvent',
-      {'error': error, 'unhandled': unhandled, 'deliver': deliver},
+      {'error': error, 'flutterMetadata': metadata, 'unhandled': unhandled, 'deliver': deliver},
     );
 
     if (eventJson != null) {

@@ -2,11 +2,6 @@ Feature: ErrorBoundary Widget
 
   Scenario: Errors are reported by ErrorBoundary widgets
     Given I run "ErrorBoundaryWidgetScenario"
-
-    # TODO: PLAT-8234
-    And on Android, I relaunch the app
-    And on Android, I configure Bugsnag for "UnhandledExceptionScenario"
-
     And I wait to receive an error
     Then the error payload field "events" is an array with 1 elements
     And the exception "errorClass" equals "_Exception"

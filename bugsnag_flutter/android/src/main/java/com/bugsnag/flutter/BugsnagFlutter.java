@@ -26,8 +26,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 class BugsnagFlutter {
 
@@ -290,6 +295,11 @@ class BugsnagFlutter {
 
         JSONObject error = args.optJSONObject("error");
         event.getErrors().add(client.unmapError(unwrap(error)));
+
+        Object flutterMetadata = JsonHelper.unwrap(args.optJSONObject("flutterMetadata"));
+        if (flutterMetadata instanceof Map) {
+            event.addMetadata("flutter", (Map<String, Object>)flutterMetadata);
+        }
 
         if (args.optBoolean("deliver")) {
             // Flutter layer has asked us to deliver the Event immediately
