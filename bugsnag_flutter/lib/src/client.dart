@@ -64,10 +64,6 @@ abstract class Client {
     OnErrorCallback? callback,
   });
 
-  void addOnBreadcrumb(OnBreadcrumbCallback onBreadcrumb);
-
-  void removeOnBreadcrumb(OnBreadcrumbCallback onBreadcrumb);
-
   void addOnError(OnErrorCallback onError);
 
   void removeOnError(OnErrorCallback onError);
@@ -156,14 +152,6 @@ class DelegateClient implements Client {
       client.notify(error, stackTrace: stackTrace, callback: callback);
 
   @override
-  void addOnBreadcrumb(OnBreadcrumbCallback onBreadcrumb) =>
-      client.addOnBreadcrumb(onBreadcrumb);
-
-  @override
-  void removeOnBreadcrumb(OnBreadcrumbCallback onBreadcrumb) =>
-      client.removeOnBreadcrumb(onBreadcrumb);
-
-  @override
   void addOnError(OnErrorCallback onError) => client.addOnError(onError);
 
   @override
@@ -181,7 +169,6 @@ class ChannelClient implements Client {
   static const MethodChannel _channel =
       MethodChannel('com.bugsnag/client', JSONMethodCodec());
 
-  final CallbackCollection<Breadcrumb> _onBreadcrumbCallbacks = {};
   final CallbackCollection<Event> _onErrorCallbacks = {};
 
   @override
@@ -213,9 +200,7 @@ class ChannelClient implements Client {
     BreadcrumbType type = BreadcrumbType.manual,
   }) async {
     final crumb = Breadcrumb(message, type: type, metadata: metadata);
-    if (await _onBreadcrumbCallbacks.dispatch(crumb)) {
-      await _channel.invokeMethod('leaveBreadcrumb', crumb);
-    }
+    await _channel.invokeMethod('leaveBreadcrumb', crumb);
   }
 
   @override
@@ -258,14 +243,6 @@ class ChannelClient implements Client {
     final json = await _channel.invokeMethod('getLastRunInfo');
     return (json == null) ? null : LastRunInfo.fromJson(json);
   }
-
-  @override
-  void addOnBreadcrumb(OnBreadcrumbCallback onBreadcrumb) =>
-      _onBreadcrumbCallbacks.add(onBreadcrumb);
-
-  @override
-  void removeOnBreadcrumb(OnBreadcrumbCallback onBreadcrumb) =>
-      _onBreadcrumbCallbacks.remove(onBreadcrumb);
 
   @override
   void addOnError(OnErrorCallback onError) {
@@ -346,14 +323,22 @@ class ChannelClient implements Client {
       if (buildID != null) 'buildID': buildID,
       if (errorContext != null) 'errorContext': errorContext,
       if (errorLibrary != null) 'errorLibrary': errorLibrary,
-      if (errorInfo.isNotEmpty) 'errorInformation': (StringBuffer()..writeAll(errorInfo, '\n')).toString(),
+      if (errorInfo.isNotEmpty)
+        'errorInformation':
+            (StringBuffer()..writeAll(errorInfo, '\n')).toString(),
       'defaultRouteName': PlatformDispatcher.instance.defaultRouteName,
-      'initialLifecycleState': PlatformDispatcher.instance.initialLifecycleState,
+      'initialLifecycleState':
+          PlatformDispatcher.instance.initialLifecycleState,
       if (lifecycleState != null) 'lifecycleState': lifecycleState,
     };
     final eventJson = await _channel.invokeMethod(
       'createEvent',
-      {'error': error, 'flutterMetadata': metadata, 'unhandled': unhandled, 'deliver': deliver},
+      {
+        'error': error,
+        'flutterMetadata': metadata,
+        'unhandled': unhandled,
+        'deliver': deliver
+      },
     );
 
     if (eventJson != null) {
@@ -399,8 +384,6 @@ class Bugsnag extends Client with DelegateClient {
     User? user,
     String? context,
     List<FeatureFlag>? featureFlags,
-    List<OnSessionCallback> onSession = const [],
-    List<OnBreadcrumbCallback> onBreadcrumb = const [],
     List<OnErrorCallback> onError = const [],
   }) async {
     await runZonedGuarded(() async {
@@ -476,8 +459,6 @@ class Bugsnag extends Client with DelegateClient {
     },
     Metadata? metadata,
     List<FeatureFlag>? featureFlags,
-    List<OnSessionCallback> onSession = const [],
-    List<OnBreadcrumbCallback> onBreadcrumb = const [],
     List<OnErrorCallback> onError = const [],
   }) async {
     // guarding WidgetsFlutterBinding.ensureInitialized() catches
