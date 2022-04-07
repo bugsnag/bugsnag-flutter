@@ -3,7 +3,6 @@ import 'dart:async';
 import 'model.dart';
 
 typedef OnErrorCallback = FutureOr<bool> Function(Event event);
-typedef OnSessionCallback = FutureOr<bool> Function(Session session);
 typedef OnBreadcrumbCallback = FutureOr<bool> Function(Breadcrumb breadcrumb);
 
 typedef _Callback<E> = FutureOr<bool> Function(E);
