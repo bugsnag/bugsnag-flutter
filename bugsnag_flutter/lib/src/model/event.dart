@@ -29,7 +29,7 @@ class Event {
   AppWithState app;
 
   FeatureFlags featureFlags;
-  Metadata metadata;
+  final Metadata _metadata;
 
   bool get unhandled => _unhandled;
 
@@ -38,6 +38,15 @@ class Event {
     _severityReason.unhandledOverridden =
         (_unhandled != _originalUnhandled) ? true : null;
   }
+
+  void addMetadata(String section, MetadataSection metadata) =>
+      _metadata.addMetadata(section, metadata);
+
+  void clearMetadata(String section, [String? key]) =>
+      _metadata.clearMetadata(section, key);
+
+  MetadataSection? getMetadata(String section) =>
+      _metadata.getMetadata(section);
 
   Event.fromJson(Map<String, dynamic> json)
       : apiKey = json['apiKey'] as String?,
@@ -73,7 +82,7 @@ class Event {
         app = AppWithState.fromJson(json['app']),
         featureFlags = FeatureFlags.fromJson(
             json['featureFlags'].cast<Map<String, dynamic>>()),
-        metadata = json
+        _metadata = json
                 .safeGet<Map>('metaData')
                 ?.let((m) => Metadata.fromJson(m.cast())) ??
             Metadata();
@@ -95,7 +104,7 @@ class Event {
       'device': device,
       'app': app,
       'featureFlags': featureFlags,
-      'metaData': metadata,
+      'metaData': _metadata,
     };
   }
 }

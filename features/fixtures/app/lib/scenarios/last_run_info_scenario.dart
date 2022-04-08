@@ -15,7 +15,7 @@ class LastRunInfoScenario extends Scenario {
 
     await bugsnag.notify(Exception('After launch'), callback: (event) async {
       final lastRunInfo = await bugsnag.getLastRunInfo() as LastRunInfo;
-      event.metadata.addMetadata('lastRunInfo', {
+      event.addMetadata('lastRunInfo', {
         'consecutiveLaunchCrashes': lastRunInfo.consecutiveLaunchCrashes,
         'crashed': lastRunInfo.crashed,
         'crashedDuringLaunch': lastRunInfo.crashedDuringLaunch,

@@ -48,9 +48,9 @@ void main() {
 
       event.featureFlags.addFeatureFlag('test-feature-flag');
 
-      event.metadata.clearMetadata('app');
-      event.metadata.clearMetadata('device');
-      event.metadata.addMetadata('test-section', const {'test-metadata': 1234});
+      event.clearMetadata('app');
+      event.clearMetadata('device');
+      event.addMetadata('test-section', const {'test-metadata': 1234});
 
       // we both mutate each list, and replace it - both are valid changes
 
