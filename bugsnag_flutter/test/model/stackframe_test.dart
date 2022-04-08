@@ -75,7 +75,7 @@ void main() {
       final currentFrames = StackFrame.fromStackTrace(StackTrace.current);
       for (StackFrame f in currentFrames) {
         final stackframe = Stackframe.fromStackFrame(f);
-        expect(stackframe.file, f.packagePath);
+        expect(stackframe.file, endsWith(f.packagePath));
         expect(stackframe.lineNumber, f.line);
         expect(stackframe.columnNumber, f.column);
         expect(

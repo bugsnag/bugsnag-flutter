@@ -18,3 +18,4 @@ Feature: Start Bugsnag from Flutter
       | featureFlag  | variant |
       | demo-mode    |         |
       | sample-group | 123     |
+    And on Android, the event "app.versionCode" equals 4321

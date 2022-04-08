@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:bugsnag_flutter/src/error_factory.dart';
@@ -346,14 +347,22 @@ class ChannelClient implements Client {
       if (buildID != null) 'buildID': buildID,
       if (errorContext != null) 'errorContext': errorContext,
       if (errorLibrary != null) 'errorLibrary': errorLibrary,
-      if (errorInfo.isNotEmpty) 'errorInformation': (StringBuffer()..writeAll(errorInfo, '\n')).toString(),
+      if (errorInfo.isNotEmpty)
+        'errorInformation':
+            (StringBuffer()..writeAll(errorInfo, '\n')).toString(),
       'defaultRouteName': PlatformDispatcher.instance.defaultRouteName,
-      'initialLifecycleState': PlatformDispatcher.instance.initialLifecycleState,
+      'initialLifecycleState':
+          PlatformDispatcher.instance.initialLifecycleState,
       if (lifecycleState != null) 'lifecycleState': lifecycleState,
     };
     final eventJson = await _channel.invokeMethod(
       'createEvent',
-      {'error': error, 'flutterMetadata': metadata, 'unhandled': unhandled, 'deliver': deliver},
+      {
+        'error': error,
+        'flutterMetadata': metadata,
+        'unhandled': unhandled,
+        'deliver': deliver
+      },
     );
 
     if (eventJson != null) {
@@ -474,11 +483,14 @@ class Bugsnag extends Client with DelegateClient {
       BreadcrumbType.error,
       BreadcrumbType.manual
     },
+    Set<String>? projectPackages,
     Metadata? metadata,
     List<FeatureFlag>? featureFlags,
     List<OnSessionCallback> onSession = const [],
     List<OnBreadcrumbCallback> onBreadcrumb = const [],
     List<OnErrorCallback> onError = const [],
+    Directory? persistenceDirectory,
+    int? versionCode,
   }) async {
     // guarding WidgetsFlutterBinding.ensureInitialized() catches
     // async errors within the Flutter app
@@ -510,9 +522,14 @@ class Bugsnag extends Client with DelegateClient {
       'enabledBreadcrumbTypes': List<String>.from(
         enabledBreadcrumbTypes.map((e) => e._toName()),
       ),
+      if (projectPackages != null)
+        'projectPackages': List<String>.from(projectPackages),
       'metadata': metadata,
       'featureFlags': featureFlags,
       'notifier': _notifier,
+      if (persistenceDirectory != null)
+        'persistenceDirectory': persistenceDirectory.absolute.path,
+      if (versionCode != null) 'versionCode': versionCode,
     });
 
     final client = ChannelClient();

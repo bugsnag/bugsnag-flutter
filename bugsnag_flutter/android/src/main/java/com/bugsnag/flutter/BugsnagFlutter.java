@@ -26,13 +26,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
+import java.io.File;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 class BugsnagFlutter {
 
@@ -110,9 +108,10 @@ class BugsnagFlutter {
             throw new IllegalStateException("bugsnag.start() may not be called after starting Bugsnag natively");
         }
 
-        Configuration configuration = Configuration.load(context);
+        Configuration configuration = args.has("apiKey")
+                ? new Configuration(args.getString("apiKey"))
+                : Configuration.load(context);
 
-        configuration.setApiKey(args.optString("apiKey", configuration.getApiKey()));
         configuration.setAppType(args.optString("appType", configuration.getAppType()));
         configuration.setAppVersion(args.optString("appVersion", configuration.getAppVersion()));
         configuration.setAutoTrackSessions(args.optBoolean("autoTrackSessions", configuration.getAutoTrackSessions()));
@@ -184,6 +183,26 @@ class BugsnagFlutter {
         notifier.setVersion(notifierJson.getString("version"));
         notifier.setUrl(notifierJson.getString("url"));
         notifier.setDependencies(Collections.singletonList(new Notifier()));
+
+        if (args.has("persistenceDirectory")) {
+            configuration.setPersistenceDirectory(new File(args.getString("persistenceDirectory")));
+        }
+
+        if (args.has("projectPackages")) {
+            JSONArray projectPackages = args.optJSONArray("projectPackages");
+            final int packageCount = projectPackages.length();
+            Set<String> packagesSet = new HashSet<>(packageCount);
+
+            for (int index = 0; index < packageCount; index++) {
+                packagesSet.add(projectPackages.getString(index));
+            }
+
+            configuration.setProjectPackages(packagesSet);
+        }
+
+        if (args.has("versionCode")) {
+            configuration.setVersionCode(args.getInt("versionCode"));
+        }
 
         client = new InternalHooks(Bugsnag.start(context, configuration));
         isAnyStarted = true;
@@ -298,7 +317,7 @@ class BugsnagFlutter {
 
         Object flutterMetadata = JsonHelper.unwrap(args.optJSONObject("flutterMetadata"));
         if (flutterMetadata instanceof Map) {
-            event.addMetadata("flutter", (Map<String, Object>)flutterMetadata);
+            event.addMetadata("flutter", (Map<String, Object>) flutterMetadata);
         }
 
         if (args.optBoolean("deliver")) {

@@ -8,6 +8,7 @@ class StartBugsnagScenario extends Scenario {
       apiKey: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
       appType: 'test',
       appVersion: '1.2.3',
+      versionCode: 4321,
       context: 'awesome',
       user: User(
         id: '123',
