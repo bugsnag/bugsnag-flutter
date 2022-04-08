@@ -12,7 +12,7 @@ class HandledExceptionScenario extends Scenario {
       if (extraConfig?.contains('callback') == true) {
         await bugsnag.notify(e, callback: (event) {
           event.breadcrumbs = [Breadcrumb('Crumbs!')];
-          event.metadata.addMetadata('callback', {'message': 'Hello, World!'});
+          event.addMetadata('callback', {'message': 'Hello, World!'});
           event.unhandled = true;
           return true;
         });

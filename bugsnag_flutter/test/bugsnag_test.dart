@@ -17,7 +17,7 @@ void main() {
       await bugsnag.attach(
         context: 'flutter-context',
         user: User(id: 'user-id-123', name: 'Bobby Tables'),
-        featureFlags: [
+        featureFlags: const [
           FeatureFlag('demo-mode'),
           FeatureFlag('sample-group', 'a'),
         ],

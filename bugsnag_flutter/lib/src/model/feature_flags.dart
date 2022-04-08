@@ -7,10 +7,10 @@ import '_model_extensions.dart';
 /// See also:
 /// - [FeatureFlags]
 class FeatureFlag {
-  String name;
-  String? variant;
+  final String name;
+  final String? variant;
 
-  FeatureFlag(this.name, [this.variant]);
+  const FeatureFlag(this.name, [this.variant]);
 
   FeatureFlag.fromJson(Map<String, Object?> json)
       : name = json.safeGet('featureFlag'),
