@@ -65,7 +65,7 @@ class Stackframe {
 
   Stackframe.fromStackFrame(StackFrame frame)
       : type = ErrorType.dart,
-        file = frame.packagePath,
+        file = "${frame.packageScheme}:${frame.package}/${frame.packagePath}",
         lineNumber = frame.line,
         columnNumber = frame.column,
         method = (frame.className.isNotEmpty)

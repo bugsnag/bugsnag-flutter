@@ -1,4 +1,4 @@
-package com.bugsnag.bugsnag_flutter_example;
+package com.bugsnag.examples.flutter;
 
 import android.os.Bundle;
 

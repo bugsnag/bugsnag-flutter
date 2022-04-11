@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:bugsnag_flutter/src/error_factory.dart';
@@ -457,9 +458,12 @@ class Bugsnag extends Client with DelegateClient {
       BreadcrumbType.error,
       BreadcrumbType.manual
     },
+    Set<String>? projectPackages,
     Metadata? metadata,
     List<FeatureFlag>? featureFlags,
     List<OnErrorCallback> onError = const [],
+    Directory? persistenceDirectory,
+    int? versionCode,
   }) async {
     // guarding WidgetsFlutterBinding.ensureInitialized() catches
     // async errors within the Flutter app
@@ -491,9 +495,14 @@ class Bugsnag extends Client with DelegateClient {
       'enabledBreadcrumbTypes': List<String>.from(
         enabledBreadcrumbTypes.map((e) => e._toName()),
       ),
+      if (projectPackages != null)
+        'projectPackages': List<String>.from(projectPackages),
       'metadata': metadata,
       'featureFlags': featureFlags,
       'notifier': _notifier,
+      if (persistenceDirectory != null)
+        'persistenceDirectory': persistenceDirectory.absolute.path,
+      if (versionCode != null) 'versionCode': versionCode,
     });
 
     final client = ChannelClient();
