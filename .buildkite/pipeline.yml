@@ -13,6 +13,11 @@ steps:
     commands:
       - make lint
 
+  - label: Build Example App
+    timeout_in_minutes: 10
+    commands:
+      - make example
+
   #
   # iOS
   #
