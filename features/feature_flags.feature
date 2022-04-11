@@ -10,3 +10,4 @@ Feature: Feature flags
       | three       |         |
       | four        |         |
       | five        | six     |
+      | callback    | yes     |

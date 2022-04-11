@@ -8,7 +8,7 @@ class FeatureFlagsScenario extends Scenario {
   Future<void> run() async {
     await bugsnag.start(
       endpoints: endpoints,
-      featureFlags: [
+      featureFlags: const [
         FeatureFlag('1'),
         FeatureFlag('2', 'foo'),
         FeatureFlag('3'),
@@ -17,7 +17,7 @@ class FeatureFlagsScenario extends Scenario {
 
     await bugsnag.clearFeatureFlags();
 
-    await bugsnag.addFeatureFlags([
+    await bugsnag.addFeatureFlags(const [
       FeatureFlag('one'),
       FeatureFlag('two', 'foo'),
       FeatureFlag('three'),
@@ -27,6 +27,9 @@ class FeatureFlagsScenario extends Scenario {
     await bugsnag.clearFeatureFlag('one');
     await bugsnag.addFeatureFlag('two', 'bar');
 
-    await bugsnag.notify(Exception('Feature flags'));
+    await bugsnag.notify(Exception('Feature flags'), callback: (event) {
+      event.addFeatureFlag('callback', 'yes');
+      return true;
+    });
   }
 }
