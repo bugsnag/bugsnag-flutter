@@ -19,17 +19,17 @@ class StartBugsnagScenario extends Scenario {
       enabledReleaseStages: {'testing'},
       enabledBreadcrumbTypes: {BreadcrumbType.error},
       endpoints: endpoints,
-      featureFlags: [
+      featureFlags: const [
         FeatureFlag('demo-mode'),
         FeatureFlag('sample-group', '123'),
       ],
-      metadata: Metadata({
+      metadata: const {
         'custom': {
           'foo': 'bar',
           'secret': 'should be hidden',
           'password': 'not redacted'
         }
-      }),
+      },
       sendThreads: ThreadSendPolicy.never,
       runApp: () async {
         await bugsnag.notify(

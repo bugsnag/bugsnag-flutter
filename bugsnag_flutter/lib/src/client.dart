@@ -459,7 +459,7 @@ class Bugsnag extends Client with DelegateClient {
       BreadcrumbType.manual
     },
     Set<String>? projectPackages,
-    Metadata? metadata,
+    Map<String, Map<String, Object>>? metadata,
     List<FeatureFlag>? featureFlags,
     List<OnErrorCallback> onError = const [],
     Directory? persistenceDirectory,
@@ -497,7 +497,7 @@ class Bugsnag extends Client with DelegateClient {
       ),
       if (projectPackages != null)
         'projectPackages': List<String>.from(projectPackages),
-      'metadata': metadata,
+      if (metadata != null) 'metadata': Metadata(metadata),
       'featureFlags': featureFlags,
       'notifier': _notifier,
       if (persistenceDirectory != null)
