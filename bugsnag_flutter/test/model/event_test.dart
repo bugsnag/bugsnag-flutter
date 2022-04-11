@@ -46,7 +46,7 @@ void main() {
       event.device.id = 'test-device-id';
       event.app.version = '0.0.0';
 
-      event.featureFlags.addFeatureFlag('test-feature-flag');
+      event.addFeatureFlag('test-feature-flag');
 
       event.clearMetadata('app');
       event.clearMetadata('device');
