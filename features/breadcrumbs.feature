@@ -9,5 +9,5 @@ Feature: Start Bugsnag from Flutter
     And the error payload field "events.0.breadcrumbs.0.type" equals "state"
     And the error payload field "events.0.breadcrumbs.1.metaData.foo" equals "bar"
     And the error payload field "events.0.breadcrumbs.1.metaData.object.test" equals "hello"
-    And the error payload field "events.0.breadcrumbs.1.name" equals "Manual breadcrumb from Flutter"
+    And the error payload field "events.0.breadcrumbs.1.name" equals "Manual breadcrumb"
     And the error payload field "events.0.breadcrumbs.1.type" equals "manual"
