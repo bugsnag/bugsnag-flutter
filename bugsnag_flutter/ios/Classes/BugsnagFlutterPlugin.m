@@ -209,7 +209,6 @@ static NSString *NSStringOrNil(id value) {
                             @"maxBreadcrumbs",
                             @"maxPersistedEvents",
                             @"maxPersistedSessions",
-                            @"redactedKeys",
                             @"releaseStage",
                             @"sendLaunchCrashesSynchronously"]) {
         id value = arguments[key];
@@ -217,7 +216,17 @@ static NSString *NSStringOrNil(id value) {
             [configuration setValue:value forKey:key];
         }
     }
-    
+
+    NSArray *redactedKeys = arguments[@"redactedKeys"];
+    if ([redactedKeys isKindOfClass:[NSArray class]]) {
+        configuration.redactedKeys = [NSSet setWithArray:redactedKeys];
+    }
+
+    NSArray *discardClasses = arguments[@"discardClasses"];
+    if ([discardClasses isKindOfClass:[NSArray class]]) {
+        configuration.discardClasses = [NSSet setWithArray:discardClasses];
+    }
+
     NSDictionary *user = arguments[@"user"];
     if ([user isKindOfClass:[NSDictionary class]]) {
         [configuration setUser:user[@"id"]
