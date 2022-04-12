@@ -41,6 +41,6 @@ android {
 }
 
 dependencies {
-    implementation 'com.bugsnag:bugsnag-android:5.19.1'
+    implementation 'com.bugsnag:bugsnag-android:5.22.0'
     testImplementation 'junit:junit:4.12'
 }

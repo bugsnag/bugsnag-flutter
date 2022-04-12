@@ -337,6 +337,12 @@ static NSString *NSStringOrNil(id value) {
                                                     session:client.sessionTracker.runningSession];
     event.apiKey = client.configuration.apiKey;
     event.context = client.context;
+
+    // TODO: Expose BugsnagClient's featureFlagStore or provide a better way to create an event
+    id featureFlagStore = [client valueForKey:@"featureFlagStore"];
+    @synchronized (featureFlagStore) {
+        event.featureFlagStore = [featureFlagStore copy];
+    }
     
     for (BugsnagStackframe *frame in error.stacktrace) {
         if ([frame.type isEqualToString:@"dart"] && !frame.codeIdentifier) {

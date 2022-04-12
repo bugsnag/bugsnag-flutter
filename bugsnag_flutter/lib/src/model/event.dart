@@ -28,7 +28,7 @@ class Event {
   DeviceWithState device;
   AppWithState app;
 
-  FeatureFlags featureFlags;
+  final FeatureFlags _featureFlags;
   final Metadata _metadata;
 
   bool get unhandled => _unhandled;
@@ -49,6 +49,13 @@ class Event {
 
   MetadataSection? getMetadata(String section) =>
       _metadata.getMetadata(section);
+
+  void addFeatureFlag(String name, [String? variant]) =>
+      _featureFlags.addFeatureFlag(name, variant);
+
+  void clearFeatureFlag(String name) => _featureFlags.clearFeatureFlag(name);
+
+  void clearFeatureFlags() => _featureFlags.clearFeatureFlags();
 
   void setUser({String? id, String? email, String? name}) {
     _user = User(id: id, email: email, name: name);
@@ -86,7 +93,7 @@ class Event {
         _user = User.fromJson(json['user']),
         device = DeviceWithState.fromJson(json['device']),
         app = AppWithState.fromJson(json['app']),
-        featureFlags = FeatureFlags.fromJson(
+        _featureFlags = FeatureFlags.fromJson(
             json['featureFlags'].cast<Map<String, dynamic>>()),
         _metadata = json
                 .safeGet<Map>('metaData')
@@ -109,7 +116,7 @@ class Event {
       if (_session != null) 'session': _session,
       'device': device,
       'app': app,
-      'featureFlags': featureFlags,
+      'featureFlags': _featureFlags,
       'metaData': _metadata,
     };
   }
