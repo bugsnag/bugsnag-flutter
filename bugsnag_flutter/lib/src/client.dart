@@ -459,14 +459,7 @@ class Bugsnag extends Client with DelegateClient {
     int appHangThresholdMillis = appHangThresholdFatalOnly,
     Set<String> redactedKeys = const {'password'},
     Set<String>? enabledReleaseStages,
-    Set<EnabledBreadcrumbType> enabledBreadcrumbTypes = const {
-      EnabledBreadcrumbType.navigation,
-      EnabledBreadcrumbType.request,
-      EnabledBreadcrumbType.log,
-      EnabledBreadcrumbType.user,
-      EnabledBreadcrumbType.state,
-      EnabledBreadcrumbType.error,
-    },
+    Set<EnabledBreadcrumbType>? enabledBreadcrumbTypes,
     Set<String>? projectPackages,
     Map<String, Map<String, Object>>? metadata,
     List<FeatureFlag>? featureFlags,
@@ -505,7 +498,9 @@ class Bugsnag extends Client with DelegateClient {
       if (enabledReleaseStages != null)
         'enabledReleaseStages': enabledReleaseStages.toList(),
       'enabledBreadcrumbTypes':
-          enabledBreadcrumbTypes.map((e) => e._toName()).toList(),
+          (enabledBreadcrumbTypes ?? EnabledBreadcrumbType.values)
+              .map((e) => e._toName())
+              .toList(),
       if (projectPackages != null)
         'projectPackages': List<String>.from(projectPackages),
       if (metadata != null) 'metadata': Metadata(metadata),
