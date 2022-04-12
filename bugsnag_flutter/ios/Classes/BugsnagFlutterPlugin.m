@@ -210,7 +210,8 @@ static NSString *NSStringOrNil(id value) {
                             @"maxPersistedEvents",
                             @"maxPersistedSessions",
                             @"redactedKeys",
-                            @"releaseStage"]) {
+                            @"releaseStage",
+                            @"sendLaunchCrashesSynchronously"]) {
         id value = arguments[key];
         if (value && value != [NSNull null]) {
             [configuration setValue:value forKey:key];

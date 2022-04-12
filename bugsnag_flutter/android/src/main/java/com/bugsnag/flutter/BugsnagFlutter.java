@@ -118,6 +118,7 @@ class BugsnagFlutter {
         configuration.setAutoDetectErrors(args.optBoolean("autoDetectErrors", configuration.getAutoDetectErrors()));
         configuration.setContext(args.optString("context", configuration.getContext()));
         configuration.setLaunchDurationMillis(args.optLong("launchDurationMillis", configuration.getLaunchDurationMillis()));
+        configuration.setSendLaunchCrashesSynchronously(args.optBoolean("sendLaunchCrashesSynchronously", configuration.getSendLaunchCrashesSynchronously()));
         configuration.setMaxBreadcrumbs(args.optInt("maxBreadcrumbs", configuration.getMaxBreadcrumbs()));
         configuration.setMaxPersistedEvents(args.optInt("maxPersistedEvents", configuration.getMaxPersistedEvents()));
         configuration.setMaxPersistedSessions(args.optInt("maxPersistedSessions", configuration.getMaxPersistedSessions()));

@@ -455,6 +455,7 @@ class Bugsnag extends Client with DelegateClient {
     bool autoDetectErrors = true,
     ThreadSendPolicy sendThreads = ThreadSendPolicy.always,
     int launchDurationMillis = 5000,
+    bool sendLaunchCrashesSynchronously = true,
     int appHangThresholdMillis = appHangThresholdFatalOnly,
     Set<String> redactedKeys = const {'password'},
     Set<String>? enabledReleaseStages,
@@ -499,6 +500,7 @@ class Bugsnag extends Client with DelegateClient {
       'autoDetectErrors': autoDetectErrors,
       'sendThreads': sendThreads._toName(),
       'launchDurationMillis': launchDurationMillis,
+      'sendLaunchCrashesSynchronously': sendLaunchCrashesSynchronously,
       'appHangThresholdMillis': appHangThresholdMillis,
       'redactedKeys': List<String>.from(redactedKeys),
       if (enabledReleaseStages != null)
