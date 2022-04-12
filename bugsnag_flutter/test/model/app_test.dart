@@ -40,7 +40,7 @@ void main() {
       final app = App.fromJson(json);
       expect(app.binaryArch, 'x86_64');
       expect(app.bundleVersion, '12301');
-      expect(app.dsymUUIDs, ['AC9210F7-55B6-3C88-8BA5-3004AA1A1D4E']);
+      expect(app.dsymUuids, ['AC9210F7-55B6-3C88-8BA5-3004AA1A1D4E']);
       expect(app.id, 'com.bugsnag.macOSTestApp');
       expect(app.releaseStage, 'development');
       expect(app.type, 'macOS');
@@ -100,7 +100,7 @@ void main() {
       final app = AppWithState.fromJson(json);
       expect(app.binaryArch, 'x86_64');
       expect(app.bundleVersion, '12301');
-      expect(app.dsymUUIDs, ['AC9210F7-55B6-3C88-8BA5-3004AA1A1D4E']);
+      expect(app.dsymUuids, ['AC9210F7-55B6-3C88-8BA5-3004AA1A1D4E']);
       expect(app.duration, 5);
       expect(app.durationInForeground, 5);
       expect(app.id, 'com.bugsnag.macOSTestApp');

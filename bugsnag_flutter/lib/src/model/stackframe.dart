@@ -9,7 +9,6 @@ class Stackframe {
   int? lineNumber;
   int? columnNumber;
   String? method;
-  Map<String, String>? code;
   bool? inProject;
   String? frameAddress;
   String? loadAddress;
@@ -28,7 +27,6 @@ class Stackframe {
     this.lineNumber,
     this.columnNumber,
     this.method,
-    this.code,
     this.inProject,
     this.frameAddress,
     this.loadAddress,
@@ -48,9 +46,6 @@ class Stackframe {
         lineNumber = json.safeGet<num>('lineNumber')?.toInt(),
         columnNumber = json.safeGet<num>('columnNumber')?.toInt(),
         method = json.safeGet('method'),
-        code = json
-            .safeGet<Map>('code')
-            ?.map((key, value) => MapEntry(key as String, value as String)),
         inProject = json.safeGet('inProject'),
         frameAddress = _getAddress(json['frameAddress']),
         loadAddress = _getAddress(json['loadAddress']),
@@ -78,7 +73,6 @@ class Stackframe {
         if (lineNumber != null) 'lineNumber': lineNumber,
         if (columnNumber != null) 'columnNumber': columnNumber,
         if (method != null) 'method': method,
-        if (code != null) 'code': code,
         if (inProject != null) 'inProject': inProject,
         if (frameAddress != null) 'frameAddress': _addressValue(frameAddress),
         if (loadAddress != null) 'loadAddress': _addressValue(loadAddress),
