@@ -27,9 +27,18 @@ class FeatureFlagsScenario extends Scenario {
     await bugsnag.clearFeatureFlag('one');
     await bugsnag.addFeatureFlag('two', 'bar');
 
-    await bugsnag.notify(Exception('Feature flags'), callback: (event) {
-      event.addFeatureFlag('callback', 'yes');
-      return true;
-    });
+    try {
+      throw Exception('Feature flags');
+    } catch (e, stack) {
+      if (extraConfig?.contains('callback') == true) {
+        await bugsnag.notify(e, stackTrace: stack, callback: (event) {
+          event.clearFeatureFlag('three');
+          event.addFeatureFlag('callback', 'yes');
+          return true;
+        });
+      } else {
+        await bugsnag.notify(e, stackTrace: stack);
+      }
+    }
   }
 }

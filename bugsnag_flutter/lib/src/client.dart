@@ -25,7 +25,7 @@ abstract class Client {
   /// common Dart error callbacks such as [runZonedGuarded] or [Future.onError].
   void Function(dynamic error, StackTrace? stack) get errorHandler;
 
-  Future<void> setUser({String? id, String? name, String? email});
+  Future<void> setUser({String? id, String? email, String? name});
 
   Future<User> getUser();
 
@@ -95,8 +95,8 @@ class DelegateClient implements Client {
   Future<User> getUser() => client.getUser();
 
   @override
-  Future<void> setUser({String? id, String? name, String? email}) =>
-      client.setUser(id: id, name: name, email: email);
+  Future<void> setUser({String? id, String? email, String? name}) =>
+      client.setUser(id: id, email: email, name: name);
 
   @override
   Future<void> setContext(String? context) => client.setContext(context);
@@ -181,10 +181,10 @@ class ChannelClient implements Client {
       User.fromJson(await _channel.invokeMethod('getUser'));
 
   @override
-  Future<void> setUser({String? id, String? name, String? email}) =>
+  Future<void> setUser({String? id, String? email, String? name}) =>
       _channel.invokeMethod(
         'setUser',
-        User(id: id, name: name, email: email),
+        User(id: id, email: email, name: name),
       );
 
   @override
