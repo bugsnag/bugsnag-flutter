@@ -162,9 +162,13 @@ class DelegateClient implements Client {
 class ChannelClient implements Client {
   FlutterExceptionHandler? _previousFlutterOnError;
 
-  ChannelClient() {
-    _previousFlutterOnError = FlutterError.onError;
-    FlutterError.onError = _onFlutterError;
+  ChannelClient(bool autoDetectErrors) {
+    if (autoDetectErrors) {
+      // as ChannelClient is the only implementation that can run within the
+      // same Isolate as Flutter, we install the FlutterError handler here
+      _previousFlutterOnError = FlutterError.onError;
+      FlutterError.onError = _onFlutterError;
+    }
   }
 
   static const MethodChannel _channel =
@@ -384,13 +388,15 @@ class Bugsnag extends Client with DelegateClient {
     FutureOr<void> Function()? runApp,
     User? user,
     String? context,
+    bool autoDetectErrors = true,
     List<FeatureFlag>? featureFlags,
     List<OnErrorCallback> onError = const [],
   }) async {
-    await runZonedGuarded(() async {
-      // make sure we can use Channels before calling runApp
-      WidgetsFlutterBinding.ensureInitialized();
-    }, _reportZonedError);
+    // make sure we can use Channels before calling runApp
+    _runWithErrorDetection(
+      autoDetectErrors,
+      () => WidgetsFlutterBinding.ensureInitialized(),
+    );
 
     await ChannelClient._channel.invokeMethod('attach', {
       if (user != null) 'user': user,
@@ -399,13 +405,14 @@ class Bugsnag extends Client with DelegateClient {
       'notifier': _notifier,
     });
 
-    final client = ChannelClient();
+    final client = ChannelClient(autoDetectErrors);
     client._onErrorCallbacks.addAll(onError);
     this.client = client;
 
-    runZonedGuarded(() async {
-      await runApp?.call();
-    }, _reportZonedError);
+    _runWithErrorDetection(
+      autoDetectErrors,
+      () => runApp?.call(),
+    );
   }
 
   /// Initialize the Bugsnag notifier with the configuration options specified.
@@ -445,6 +452,7 @@ class Bugsnag extends Client with DelegateClient {
     int maxPersistedSessions = 128,
     int maxPersistedEvents = 32,
     bool autoTrackSessions = true,
+    bool autoDetectErrors = true,
     ThreadSendPolicy sendThreads = ThreadSendPolicy.always,
     int launchDurationMillis = 5000,
     Set<String> redactedKeys = const {'password'},
@@ -467,10 +475,10 @@ class Bugsnag extends Client with DelegateClient {
   }) async {
     // guarding WidgetsFlutterBinding.ensureInitialized() catches
     // async errors within the Flutter app
-    await runZonedGuarded(() async {
-      // make sure we can use Channels before calling runApp
-      WidgetsFlutterBinding.ensureInitialized();
-    }, _reportZonedError);
+    _runWithErrorDetection(
+      autoDetectErrors,
+      () => WidgetsFlutterBinding.ensureInitialized(),
+    );
 
     await ChannelClient._channel.invokeMethod('start', <String, dynamic>{
       if (apiKey != null) 'apiKey': apiKey,
@@ -487,6 +495,7 @@ class Bugsnag extends Client with DelegateClient {
       'maxPersistedSessions': maxPersistedSessions,
       'maxPersistedEvents': maxPersistedEvents,
       'autoTrackSessions': autoTrackSessions,
+      'autoDetectErrors': autoDetectErrors,
       'sendThreads': sendThreads._toName(),
       'launchDurationMillis': launchDurationMillis,
       'redactedKeys': List<String>.from(redactedKeys),
@@ -505,13 +514,24 @@ class Bugsnag extends Client with DelegateClient {
       if (versionCode != null) 'versionCode': versionCode,
     });
 
-    final client = ChannelClient();
+    final client = ChannelClient(autoDetectErrors);
     client._onErrorCallbacks.addAll(onError);
     this.client = client;
 
-    runZonedGuarded(() async {
-      await runApp?.call();
-    }, _reportZonedError);
+    _runWithErrorDetection(autoDetectErrors, () => runApp?.call());
+  }
+
+  void _runWithErrorDetection(
+    bool errorDetectionEnabled,
+    FutureOr<void> Function() block,
+  ) async {
+    if (errorDetectionEnabled) {
+      await runZonedGuarded(() async {
+        await block();
+      }, _reportZonedError);
+    } else {
+      await block();
+    }
   }
 
   /// Safely report an error that occurred within a guardedZone - if attached

@@ -200,6 +200,7 @@ static NSString *NSStringOrNil(id value) {
     for (NSString *key in @[@"apiKey",
                             @"appType",
                             @"appVersion",
+                            @"autoDetectErrors",
                             @"autoTrackSessions",
                             @"bundleVersion",
                             @"context",
