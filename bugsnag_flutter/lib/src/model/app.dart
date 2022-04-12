@@ -5,7 +5,7 @@ class App {
   String? buildUUID;
   String? bundleVersion;
   String? codeBundleId;
-  List<String>? dsymUUIDs;
+  List<String>? dsymUuids;
   String? id;
   String? releaseStage;
   String? type;
@@ -17,7 +17,7 @@ class App {
         buildUUID = json.safeGet('buildUUID'),
         bundleVersion = json.safeGet('bundleVersion'),
         codeBundleId = json.safeGet('codeBundleId'),
-        dsymUUIDs = json
+        dsymUuids = json
             .safeGet<List>('dsymUUIDs')
             ?.cast<String>()
             .toList(growable: true),
@@ -32,7 +32,7 @@ class App {
         if (buildUUID != null) 'buildUUID': buildUUID,
         if (bundleVersion != null) 'bundleVersion': bundleVersion,
         if (codeBundleId != null) 'codeBundleId': codeBundleId,
-        if (dsymUUIDs != null) 'dsymUUIDs': dsymUUIDs,
+        if (dsymUuids != null) 'dsymUUIDs': dsymUuids,
         if (id != null) 'id': id,
         if (releaseStage != null) 'releaseStage': releaseStage,
         if (type != null) 'type': type,
