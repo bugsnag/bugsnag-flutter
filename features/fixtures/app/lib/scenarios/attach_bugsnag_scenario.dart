@@ -11,7 +11,7 @@ class AttachBugsnagScenario extends Scenario {
         id: 'test-user-id',
         name: 'Old Man Tables',
       ),
-      featureFlags: [
+      featureFlags: const [
         FeatureFlag('demo-mode'),
         FeatureFlag('sample-group', '123'),
       ],
@@ -19,7 +19,7 @@ class AttachBugsnagScenario extends Scenario {
         if (extraConfig?.contains("handled") == true) {
           await bugsnag.notify(
             Exception('Exception with attached info'),
-            stackTrace: StackTrace.current,
+            StackTrace.current,
           );
         } else {
           throw Exception('Exception with attached info');

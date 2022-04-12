@@ -6,6 +6,6 @@ class ProjectPackagesScenario extends Scenario {
   @override
   Future<void> run() async {
     await bugsnag.start(endpoints: endpoints, projectPackages: {'app'});
-    await bugsnag.notify(Exception());
+    await bugsnag.notify(Exception(), null);
   }
 }

@@ -45,8 +45,8 @@ class ExampleApp extends StatelessWidget {
   void _handledException() async {
     try {
       throw Exception('handled exception');
-    } catch (e) {
-      await bugsnag.notify(e);
+    } catch (e, stack) {
+      await bugsnag.notify(e, stack);
     }
   }
 

@@ -60,8 +60,8 @@ abstract class Client {
   Future<LastRunInfo?> getLastRunInfo();
 
   Future<void> notify(
-    dynamic error, {
-    StackTrace? stackTrace,
+    dynamic error,
+    StackTrace? stackTrace, {
     OnErrorCallback? callback,
   });
 
@@ -146,11 +146,11 @@ class DelegateClient implements Client {
 
   @override
   Future<void> notify(
-    dynamic error, {
-    StackTrace? stackTrace,
+    dynamic error,
+    StackTrace? stackTrace, {
     OnErrorCallback? callback,
   }) =>
-      client.notify(error, stackTrace: stackTrace, callback: callback);
+      client.notify(error, stackTrace, callback: callback);
 
   @override
   void addOnError(OnErrorCallback onError) => client.addOnError(onError);
@@ -298,14 +298,14 @@ class ChannelClient implements Client {
 
   @override
   Future<void> notify(
-    dynamic error, {
-    StackTrace? stackTrace,
+    dynamic error,
+    StackTrace? stackTrace, {
     OnErrorCallback? callback,
   }) {
     return _notifyInternal(error, false, null, stackTrace, callback);
   }
 
-  void _notifyUnhandled(dynamic error, StackTrace? stackTrace) async {
+  void _notifyUnhandled(dynamic error, StackTrace? stackTrace) {
     _notifyInternal(error, true, null, stackTrace, null);
   }
 

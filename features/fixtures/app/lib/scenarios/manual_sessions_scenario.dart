@@ -9,13 +9,13 @@ class ManualSessionsScenario extends Scenario {
       autoTrackSessions: false,
       endpoints: endpoints,
     );
-    await bugsnag.notify(Exception('No session'));
+    await bugsnag.notify(Exception('No session'), null);
     await bugsnag.startSession();
-    await bugsnag.notify(Exception('Session started'));
+    await bugsnag.notify(Exception('Session started'), null);
     await bugsnag.pauseSession();
-    await bugsnag.notify(Exception('Session paused'));
+    await bugsnag.notify(Exception('Session paused'), null);
     final resumed = await bugsnag.resumeSession();
     expect(resumed, true);
-    await bugsnag.notify(Exception('Session resumed'));
+    await bugsnag.notify(Exception('Session resumed'), null);
   }
 }

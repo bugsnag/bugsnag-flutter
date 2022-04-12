@@ -34,7 +34,7 @@ class StartBugsnagScenario extends Scenario {
       runApp: () async {
         await bugsnag.notify(
           Exception('Exception with attached info'),
-          stackTrace: StackTrace.current,
+          StackTrace.current,
         );
       },
     );

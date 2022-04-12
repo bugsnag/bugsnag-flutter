@@ -20,6 +20,6 @@ class BreadcrumbsScenario extends Scenario {
     expect(breadcrumbs[1].message, 'Manual breadcrumb');
     expect(breadcrumbs[1].type, BreadcrumbType.manual);
 
-    await bugsnag.notify(Exception('BreadcrumbsScenarioException'));
+    await bugsnag.notify(Exception('BreadcrumbsScenarioException'), null);
   }
 }
