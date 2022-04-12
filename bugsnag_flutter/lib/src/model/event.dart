@@ -22,8 +22,8 @@ class Event {
   Severity severity;
   final _SeverityReason _severityReason;
   final List<String> _projectPackages;
-  User user;
   final _Session? _session;
+  User _user;
 
   DeviceWithState device;
   AppWithState app;
@@ -32,6 +32,8 @@ class Event {
   final Metadata _metadata;
 
   bool get unhandled => _unhandled;
+
+  User get user => _user;
 
   set unhandled(bool unhandled) {
     _unhandled = unhandled;
@@ -47,6 +49,10 @@ class Event {
 
   MetadataSection? getMetadata(String section) =>
       _metadata.getMetadata(section);
+
+  void setUser({String? id, String? email, String? name}) {
+    _user = User(id: id, email: email, name: name);
+  }
 
   Event.fromJson(Map<String, dynamic> json)
       : apiKey = json['apiKey'] as String?,
@@ -74,10 +80,10 @@ class Event {
         _projectPackages =
             (json['projectPackages'] as List?)?.toList(growable: true).cast() ??
                 [],
-        user = User.fromJson(json['user']),
         _session = json
             .safeGet<Map>('session')
             ?.let((session) => _Session.fromJson(session.cast())),
+        _user = User.fromJson(json['user']),
         device = DeviceWithState.fromJson(json['device']),
         app = AppWithState.fromJson(json['app']),
         featureFlags = FeatureFlags.fromJson(
