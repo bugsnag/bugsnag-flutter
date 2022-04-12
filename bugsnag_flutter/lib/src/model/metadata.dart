@@ -3,12 +3,12 @@ import '_model_extensions.dart';
 typedef MetadataSection = Map<String, Object>;
 typedef MetadataMap = Map<String, MetadataSection>;
 
-class Metadata {
+class BugsnagMetadata {
   final MetadataMap _map;
 
-  Metadata([MetadataMap map = const {}]) : this.fromJson(map);
+  BugsnagMetadata([MetadataMap map = const {}]) : this.fromJson(map);
 
-  Metadata.fromJson(Map<String, dynamic> json)
+  BugsnagMetadata.fromJson(Map<String, dynamic> json)
       : _map = json.map((key, val) => MapEntry(key, sanitizedMap(val)));
 
   void addMetadata(String section, MetadataSection metadata) {
@@ -32,7 +32,7 @@ class Metadata {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is Metadata &&
+      other is BugsnagMetadata &&
           runtimeType == other.runtimeType &&
           _map.deepEquals(other._map);
 

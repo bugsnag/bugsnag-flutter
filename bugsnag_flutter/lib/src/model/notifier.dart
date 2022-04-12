@@ -1,22 +1,22 @@
 import '_model_extensions.dart';
 
-class Notifier {
+class BugsnagNotifier {
   String name;
   String version;
   String url;
 
-  List<Notifier> dependencies;
+  List<BugsnagNotifier> dependencies;
 
-  Notifier.fromJson(Map<String, dynamic> json)
+  BugsnagNotifier.fromJson(Map<String, dynamic> json)
       : name = json['name'],
         version = json['version'],
         url = json['url'],
         dependencies = json
                 .safeGet<List>('dependencies')
                 ?.cast<Map>()
-                .map((notifier) => Notifier.fromJson(notifier.cast()))
+                .map((notifier) => BugsnagNotifier.fromJson(notifier.cast()))
                 .toList(growable: true) ??
-            <Notifier>[];
+            <BugsnagNotifier>[];
 
   dynamic toJson() => {
         'name': name,

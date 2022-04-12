@@ -1,26 +1,26 @@
 import '_model_extensions.dart';
 import 'metadata.dart';
 
-class Breadcrumb {
+class BugsnagBreadcrumb {
   String message;
   BreadcrumbType type;
   MetadataSection? metadata;
 
   final DateTime timestamp;
 
-  Breadcrumb(
+  BugsnagBreadcrumb(
     this.message, {
     this.type = BreadcrumbType.manual,
     this.metadata,
   }) : timestamp = DateTime.now().toUtc();
 
-  Breadcrumb.fromJson(Map<String, dynamic> json)
+  BugsnagBreadcrumb.fromJson(Map<String, dynamic> json)
       : message = json.safeGet('name'),
         timestamp = DateTime.parse(json['timestamp'] as String),
         type = BreadcrumbType.values.byName(json['type'] as String),
         metadata = json
             .safeGet<Map>('metaData')
-            ?.let((map) => Metadata.sanitizedMap(map.cast()));
+            ?.let((map) => BugsnagMetadata.sanitizedMap(map.cast()));
 
   dynamic toJson() => {
         'name': message,

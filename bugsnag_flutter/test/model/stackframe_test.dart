@@ -11,7 +11,7 @@ void main() {
         'lineNumber': 158
       };
 
-      final stackframe = Stackframe.fromJson(json);
+      final stackframe = BugsnagStackframe.fromJson(json);
       expect(stackframe.method, 'android.os.Looper.loop');
       expect(stackframe.file, 'Looper.java');
       expect(stackframe.lineNumber, 158);
@@ -30,14 +30,14 @@ void main() {
         'type': 'c'
       };
 
-      final stackframe = Stackframe.fromJson(json);
+      final stackframe = BugsnagStackframe.fromJson(json);
       expect(stackframe.method, 'syscall');
       expect(stackframe.file, '/system/lib64/libc.so');
       expect(stackframe.lineNumber, 114912);
       expect(stackframe.frameAddress, '0x7fb4f670e0');
       expect(stackframe.symbolAddress, '0x7fb4f670c0');
       expect(stackframe.loadAddress, '0x7fb4f4b000');
-      expect(stackframe.type, ErrorType.c);
+      expect(stackframe.type, BugsnagErrorType.c);
 
       expect(stackframe.toJson(), json);
     });
@@ -55,7 +55,7 @@ void main() {
         'frameAddress': '0x1087cab00'
       };
 
-      final stackframe = Stackframe.fromJson(json);
+      final stackframe = BugsnagStackframe.fromJson(json);
       expect(stackframe.method,
           '\$s12macOSTestApp27BareboneTestHandledScenarioC3runyyF');
       expect(stackframe.machoVMAddress, '0x100000000');
@@ -74,7 +74,7 @@ void main() {
     test('from Dart', () {
       final currentFrames = StackFrame.fromStackTrace(StackTrace.current);
       for (StackFrame f in currentFrames) {
-        final stackframe = Stackframe.fromStackFrame(f);
+        final stackframe = BugsnagStackframe.fromStackFrame(f);
         expect(stackframe.file, endsWith(f.packagePath));
         expect(stackframe.lineNumber, f.line);
         expect(stackframe.columnNumber, f.column);

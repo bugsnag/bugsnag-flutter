@@ -9,7 +9,7 @@ void main() {
       final error =
           ErrorFactory.instance.createError(Exception('this is a message'));
 
-      expect(error.type, equals(ErrorType.dart));
+      expect(error.type, equals(BugsnagErrorType.dart));
       // a surprise _ appears!
       expect(error.errorClass, equals('_Exception'));
       expect(error.message, equals('this is a message'));
@@ -19,7 +19,7 @@ void main() {
     test('Exception with an object message', () {
       final error = ErrorFactory.instance.createError(Exception(main));
 
-      expect(error.type, equals(ErrorType.dart));
+      expect(error.type, equals(BugsnagErrorType.dart));
       // a surprise _ appears!
       expect(error.errorClass, equals('_Exception'));
       expect(error.message,
@@ -32,7 +32,7 @@ void main() {
           FormatException('could not parse input', 'invalid input', 0);
       final error = ErrorFactory.instance.createError(exception);
 
-      expect(error.type, equals(ErrorType.dart));
+      expect(error.type, equals(BugsnagErrorType.dart));
       expect(error.errorClass, equals('FormatException'));
       expect(
         error.message,
@@ -47,7 +47,7 @@ void main() {
       final flutterError = FlutterError('This is a FlutterError');
       final error = ErrorFactory.instance.createError(flutterError);
 
-      expect(error.type, equals(ErrorType.dart));
+      expect(error.type, equals(BugsnagErrorType.dart));
       expect(error.errorClass, equals('FlutterError'));
       expect(error.message, equals('This is a FlutterError'));
       expect(error.stacktrace.length, greaterThan(3));
@@ -68,7 +68,7 @@ void main() {
 
       final error = ErrorFactory.instance.createError(flutterError);
 
-      expect(error.type, equals(ErrorType.dart));
+      expect(error.type, equals(BugsnagErrorType.dart));
       expect(error.errorClass, equals('FlutterError'));
       expect(
         error.message,
@@ -84,7 +84,7 @@ void main() {
     test('BadlyBehavedError', () {
       final error = ErrorFactory.instance.createError(BadlyBehavedError());
 
-      expect(error.type, equals(ErrorType.dart));
+      expect(error.type, equals(BugsnagErrorType.dart));
       expect(error.errorClass, equals('BadlyBehavedError'));
       expect(error.message, equals('[exception]: error in toString'));
       expect(error.stacktrace.length, greaterThan(3));
@@ -93,7 +93,7 @@ void main() {
     test('Thrown number', () {
       final error = ErrorFactory.instance.createError(123);
 
-      expect(error.type, equals(ErrorType.dart));
+      expect(error.type, equals(BugsnagErrorType.dart));
       expect(error.errorClass, equals('int'));
       expect(error.message, equals('123'));
       expect(error.stacktrace.length, greaterThan(3));

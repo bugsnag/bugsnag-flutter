@@ -5,12 +5,12 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('Metadata', () {
     test('is empty by default', () {
-      final metadata = Metadata();
+      final metadata = BugsnagMetadata();
       expect(metadata.getMetadata('test'), null);
     });
 
     test('addMetadata merges with existing content', () {
-      final metadata = Metadata({
+      final metadata = BugsnagMetadata({
         'test': {'a': 'b'}
       });
       metadata.addMetadata('test', {'x': 'y'});
@@ -18,7 +18,7 @@ void main() {
     });
 
     test('clearMetadata with no key removes entire section', () {
-      final metadata = Metadata({
+      final metadata = BugsnagMetadata({
         'test': {'a': 'b'}
       });
       metadata.clearMetadata('test');
@@ -26,7 +26,7 @@ void main() {
     });
 
     test('clearMetadata with key removes a single element', () {
-      final metadata = Metadata({
+      final metadata = BugsnagMetadata({
         'test': {'a': 'b', 'x': 'y'}
       });
       metadata.clearMetadata('test', 'a');
@@ -35,7 +35,7 @@ void main() {
 
     test('sanitizedMap replaces invalid types with strings', () {
       expect(
-        Metadata.sanitizedMap({
+        BugsnagMetadata.sanitizedMap({
           'array': [1, 2, 3, 4, 'foo'],
           'set': <dynamic>{},
           'number': 666,
@@ -63,8 +63,8 @@ void main() {
     });
 
     test('Metadata equality', () {
-      final m1 = Metadata();
-      final m2 = Metadata();
+      final m1 = BugsnagMetadata();
+      final m2 = BugsnagMetadata();
 
       m1.addMetadata('some new data', const {
         'number': 12345,

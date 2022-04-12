@@ -39,7 +39,7 @@ abstract class Client {
     BreadcrumbType type = BreadcrumbType.manual,
   });
 
-  Future<List<Breadcrumb>> getBreadcrumbs();
+  Future<List<BugsnagBreadcrumb>> getBreadcrumbs();
 
   Future<void> addFeatureFlag(String name, [String? variant]);
 
@@ -113,7 +113,7 @@ class DelegateClient implements Client {
       client.leaveBreadcrumb(message, metadata: metadata, type: type);
 
   @override
-  Future<List<Breadcrumb>> getBreadcrumbs() => client.getBreadcrumbs();
+  Future<List<BugsnagBreadcrumb>> getBreadcrumbs() => client.getBreadcrumbs();
 
   @override
   Future<void> addFeatureFlag(String name, [String? variant]) =>
@@ -174,7 +174,7 @@ class ChannelClient implements Client {
   static const MethodChannel _channel =
       MethodChannel('com.bugsnag/client', JSONMethodCodec());
 
-  final CallbackCollection<Event> _onErrorCallbacks = {};
+  final CallbackCollection<BugsnagEvent> _onErrorCallbacks = {};
 
   @override
   void Function(dynamic error, StackTrace? stack) get errorHandler =>
@@ -204,14 +204,14 @@ class ChannelClient implements Client {
     MetadataSection? metadata,
     BreadcrumbType type = BreadcrumbType.manual,
   }) async {
-    final crumb = Breadcrumb(message, type: type, metadata: metadata);
+    final crumb = BugsnagBreadcrumb(message, type: type, metadata: metadata);
     await _channel.invokeMethod('leaveBreadcrumb', crumb);
   }
 
   @override
-  Future<List<Breadcrumb>> getBreadcrumbs() async =>
+  Future<List<BugsnagBreadcrumb>> getBreadcrumbs() async =>
       List.from((await _channel.invokeMethod('getBreadcrumbs') as List)
-          .map((e) => Breadcrumb.fromJson(e)));
+          .map((e) => BugsnagBreadcrumb.fromJson(e)));
 
   @override
   Future<void> addFeatureFlag(String name, [String? variant]) =>
@@ -313,8 +313,8 @@ class ChannelClient implements Client {
   /// if [deliver] is `true` return `null` and schedule the `Event` for immediate
   /// delivery. If [deliver] is `false` then the `Event` is only constructed
   /// and returned to be processed by the Flutter notifier.
-  Future<Event?> _createEvent(
-    Error error, {
+  Future<BugsnagEvent?> _createEvent(
+    BugsnagError error, {
     FlutterErrorDetails? details,
     required bool unhandled,
     required bool deliver,
@@ -347,13 +347,13 @@ class ChannelClient implements Client {
     );
 
     if (eventJson != null) {
-      return Event.fromJson(eventJson);
+      return BugsnagEvent.fromJson(eventJson);
     }
 
     return null;
   }
 
-  Future<void> _deliverEvent(Event event) =>
+  Future<void> _deliverEvent(BugsnagEvent event) =>
       _channel.invokeMethod('deliverEvent', event);
 }
 
@@ -505,7 +505,7 @@ class Bugsnag extends Client with DelegateClient {
               .toList(),
       if (projectPackages != null)
         'projectPackages': List<String>.from(projectPackages),
-      if (metadata != null) 'metadata': Metadata(metadata),
+      if (metadata != null) 'metadata': BugsnagMetadata(metadata),
       'featureFlags': featureFlags,
       'notifier': _notifier,
       if (persistenceDirectory != null)

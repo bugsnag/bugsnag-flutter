@@ -39,7 +39,7 @@ class DiscardClassesScenario extends Scenario {
   ) async {
     await bugsnag.notify(
       error,
-      stackTrace: stack,
+      stack,
       callback: withCallback
           ? (error) {
               error.addMetadata('origin', const {'callback': true});

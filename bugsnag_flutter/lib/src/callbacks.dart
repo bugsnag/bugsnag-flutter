@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'model.dart';
 
-typedef OnErrorCallback = FutureOr<bool> Function(Event event);
+typedef OnErrorCallback = FutureOr<bool> Function(BugsnagEvent event);
 
 typedef _Callback<E> = FutureOr<bool> Function(E);
 

@@ -10,30 +10,30 @@ import '_json_equals.dart';
 void main() {
   group('Event', () {
     test('Android deserialization / serialization', () async {
-      final expectedEvent = Event.fromJson(androidEventJson);
+      final expectedEvent = BugsnagEvent.fromJson(androidEventJson);
 
       final eventJsonFile =
           File('test/fixtures/android_event_serialization.json');
       final json = jsonDecode(await eventJsonFile.readAsString());
 
-      final event = Event.fromJson(json);
+      final event = BugsnagEvent.fromJson(json);
 
       expect(event, jsonEquals(expectedEvent));
     });
 
     test('iOS deserialization / serialization', () async {
-      final expectedEvent = Event.fromJson(iosEventJson);
+      final expectedEvent = BugsnagEvent.fromJson(iosEventJson);
 
       final eventJsonFile = File('test/fixtures/ios_event_serialization.json');
       final json = jsonDecode(await eventJsonFile.readAsString());
 
-      final event = Event.fromJson(json);
+      final event = BugsnagEvent.fromJson(json);
 
       expect(event, jsonEquals(expectedEvent));
     });
 
     test('Event is mutable', () async {
-      final event = Event.fromJson(iosEventJson);
+      final event = BugsnagEvent.fromJson(iosEventJson);
 
       event.apiKey = 'replacement-api-key';
       event.unhandled = false;

@@ -128,7 +128,7 @@ void main() {
   });
 }
 
-Event _mockCreateEvent(arguments) => Event.fromJson({
+BugsnagEvent _mockCreateEvent(arguments) => BugsnagEvent.fromJson({
       'metaData': <String, dynamic>{},
       'severity': 'warning',
       'unhandled': arguments['unhandled'],

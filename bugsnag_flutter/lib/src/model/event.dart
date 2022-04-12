@@ -10,11 +10,11 @@ import 'stackframe.dart';
 import 'thread.dart';
 import 'user.dart';
 
-class Event {
+class BugsnagEvent {
   String? apiKey;
-  List<Error> errors;
-  List<Thread> threads;
-  List<Breadcrumb> breadcrumbs;
+  List<BugsnagError> errors;
+  List<BugsnagThread> threads;
+  List<BugsnagBreadcrumb> breadcrumbs;
   String? context;
   String? groupingHash;
   bool _unhandled;
@@ -29,7 +29,7 @@ class Event {
   AppWithState app;
 
   final FeatureFlags _featureFlags;
-  final Metadata _metadata;
+  final BugsnagMetadata _metadata;
 
   bool get unhandled => _unhandled;
 
@@ -61,21 +61,21 @@ class Event {
     _user = User(id: id, email: email, name: name);
   }
 
-  Event.fromJson(Map<String, dynamic> json)
+  BugsnagEvent.fromJson(Map<String, dynamic> json)
       : apiKey = json['apiKey'] as String?,
         errors = (json['exceptions'] as List?)
                 ?.cast<Map>()
-                .map((m) => Error.fromJson(m.cast()))
+                .map((m) => BugsnagError.fromJson(m.cast()))
                 .toList(growable: true) ??
             [],
         threads = (json['threads'] as List?)
                 ?.cast<Map>()
-                .map((m) => Thread.fromJson(m.cast()))
+                .map((m) => BugsnagThread.fromJson(m.cast()))
                 .toList(growable: true) ??
             [],
         breadcrumbs = (json['breadcrumbs'] as List?)
                 ?.cast<Map>()
-                .map((m) => Breadcrumb.fromJson(m.cast()))
+                .map((m) => BugsnagBreadcrumb.fromJson(m.cast()))
                 .toList(growable: true) ??
             [],
         context = json['context'] as String?,
@@ -97,8 +97,8 @@ class Event {
             json['featureFlags'].cast<Map<String, dynamic>>()),
         _metadata = json
                 .safeGet<Map>('metaData')
-                ?.let((m) => Metadata.fromJson(m.cast())) ??
-            Metadata();
+                ?.let((m) => BugsnagMetadata.fromJson(m.cast())) ??
+            BugsnagMetadata();
 
   dynamic toJson() {
     return {
@@ -169,22 +169,25 @@ enum Severity {
   info,
 }
 
-class Error {
+class BugsnagError {
   String errorClass;
   String? message;
-  ErrorType type;
+  BugsnagErrorType type;
 
-  Stacktrace stacktrace;
+  BugsnagStacktrace stacktrace;
 
-  Error(this.errorClass, this.message, this.stacktrace) : type = ErrorType.dart;
+  BugsnagError(this.errorClass, this.message, this.stacktrace)
+      : type = BugsnagErrorType.dart;
 
-  Error.fromJson(Map<String, dynamic> json)
+  BugsnagError.fromJson(Map<String, dynamic> json)
       : errorClass = json.safeGet('errorClass'),
         message = json.safeGet('message'),
-        type = json.safeGet<String>('type')?.let(ErrorType.forName) ??
-            (Platform.isAndroid ? ErrorType.android : ErrorType.cocoa),
-        stacktrace =
-            Stackframe.stacktraceFromJson((json['stacktrace'] as List).cast());
+        type = json.safeGet<String>('type')?.let(BugsnagErrorType.forName) ??
+            (Platform.isAndroid
+                ? BugsnagErrorType.android
+                : BugsnagErrorType.cocoa),
+        stacktrace = BugsnagStackframe.stacktraceFromJson(
+            (json['stacktrace'] as List).cast());
 
   dynamic toJson() => {
         'errorClass': errorClass,
@@ -194,20 +197,20 @@ class Error {
       };
 }
 
-class ErrorType {
-  static const android = ErrorType._create('android');
-  static const cocoa = ErrorType._create('cocoa');
-  static const c = ErrorType._create('c');
-  static const dart = ErrorType._create('dart');
+class BugsnagErrorType {
+  static const android = BugsnagErrorType._create('android');
+  static const cocoa = BugsnagErrorType._create('cocoa');
+  static const c = BugsnagErrorType._create('c');
+  static const dart = BugsnagErrorType._create('dart');
 
   final String name;
 
-  const ErrorType._create(this.name);
+  const BugsnagErrorType._create(this.name);
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is ErrorType &&
+      other is BugsnagErrorType &&
           runtimeType == other.runtimeType &&
           name == other.name;
 
@@ -217,12 +220,12 @@ class ErrorType {
   @override
   String toString() => name;
 
-  factory ErrorType.forName(String name) {
+  factory BugsnagErrorType.forName(String name) {
     if (name == android.name) return android;
     if (name == cocoa.name) return cocoa;
     if (name == c.name) return c;
     if (name == dart.name) return dart;
 
-    return ErrorType._create(name);
+    return BugsnagErrorType._create(name);
   }
 }
