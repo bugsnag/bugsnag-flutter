@@ -447,6 +447,7 @@ class Bugsnag extends Client with DelegateClient {
     bool autoTrackSessions = true,
     ThreadSendPolicy sendThreads = ThreadSendPolicy.always,
     int launchDurationMillis = 5000,
+    int appHangThresholdMillis = appHangThresholdFatalOnly,
     Set<String> redactedKeys = const {'password'},
     Set<String>? enabledReleaseStages,
     Set<BreadcrumbType> enabledBreadcrumbTypes = const {
@@ -489,6 +490,7 @@ class Bugsnag extends Client with DelegateClient {
       'autoTrackSessions': autoTrackSessions,
       'sendThreads': sendThreads._toName(),
       'launchDurationMillis': launchDurationMillis,
+      'appHangThresholdMillis': appHangThresholdMillis,
       'redactedKeys': List<String>.from(redactedKeys),
       if (enabledReleaseStages != null)
         'enabledReleaseStages': List<String>.from(enabledReleaseStages),
@@ -513,6 +515,8 @@ class Bugsnag extends Client with DelegateClient {
       await runApp?.call();
     }, _reportZonedError);
   }
+
+  static const int appHangThresholdFatalOnly = 2147483647;
 
   /// Safely report an error that occurred within a guardedZone - if attached
   /// to a [Client] then use its [Client.errorHandler], otherwise push the error

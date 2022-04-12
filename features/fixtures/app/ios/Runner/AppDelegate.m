@@ -70,6 +70,11 @@
             }
         }
         result(nil);
+    } else if ([@"appHang" isEqualToString:call.method]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            sleep(3);
+            result(nil);
+        });
     }
 }
 
