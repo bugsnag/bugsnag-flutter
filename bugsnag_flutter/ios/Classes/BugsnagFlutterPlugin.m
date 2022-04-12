@@ -198,6 +198,7 @@ static NSString *NSStringOrNil(id value) {
     BugsnagConfiguration *configuration = [BugsnagConfiguration loadConfig];
     
     for (NSString *key in @[@"apiKey",
+                            @"appHangThresholdMillis",
                             @"appType",
                             @"appVersion",
                             @"autoTrackSessions",
