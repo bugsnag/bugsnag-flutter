@@ -459,14 +459,13 @@ class Bugsnag extends Client with DelegateClient {
     int appHangThresholdMillis = appHangThresholdFatalOnly,
     Set<String> redactedKeys = const {'password'},
     Set<String>? enabledReleaseStages,
-    Set<BreadcrumbType> enabledBreadcrumbTypes = const {
-      BreadcrumbType.navigation,
-      BreadcrumbType.request,
-      BreadcrumbType.log,
-      BreadcrumbType.user,
-      BreadcrumbType.state,
-      BreadcrumbType.error,
-      BreadcrumbType.manual
+    Set<EnabledBreadcrumbType> enabledBreadcrumbTypes = const {
+      EnabledBreadcrumbType.navigation,
+      EnabledBreadcrumbType.request,
+      EnabledBreadcrumbType.log,
+      EnabledBreadcrumbType.user,
+      EnabledBreadcrumbType.state,
+      EnabledBreadcrumbType.error,
     },
     Set<String>? projectPackages,
     Map<String, Map<String, Object>>? metadata,
@@ -504,10 +503,9 @@ class Bugsnag extends Client with DelegateClient {
       'appHangThresholdMillis': appHangThresholdMillis,
       'redactedKeys': List<String>.from(redactedKeys),
       if (enabledReleaseStages != null)
-        'enabledReleaseStages': List<String>.from(enabledReleaseStages),
-      'enabledBreadcrumbTypes': List<String>.from(
-        enabledBreadcrumbTypes.map((e) => e._toName()),
-      ),
+        'enabledReleaseStages': enabledReleaseStages.toList(),
+      'enabledBreadcrumbTypes':
+          enabledBreadcrumbTypes.map((e) => e._toName()).toList(),
       if (projectPackages != null)
         'projectPackages': List<String>.from(projectPackages),
       if (metadata != null) 'metadata': Metadata(metadata),
