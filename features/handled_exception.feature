@@ -10,7 +10,7 @@ Feature: bugsnag.notify
     * the error payload field "events.0.threads" is a non-empty array
     * the "file" of stack frame 5 equals "package:MazeRunner/scenarios/handled_exception_scenario.dart"
     * the "method" of stack frame 5 equals "HandledExceptionScenario.run"
-    * the "lineNumber" of stack frame 5 equals 20
+    * the "lineNumber" of stack frame 5 equals 25
     * on iOS, the "codeIdentifier" of stack frame 5 is not null
     * on iOS, the "type" of stack frame 5 equals "dart"
     * the event "metaData.flutter.defaultRouteName" equals "/"
@@ -36,3 +36,6 @@ Feature: bugsnag.notify
     * the event "metaData.flutter.defaultRouteName" equals "/"
     * the event "metaData.flutter.initialLifecycleState" is not null
     * the event "metaData.flutter.lifecycleState" is not null
+    * the event "user.id" equals "3"
+    * the event "user.email" equals "bugs.nag@bugsnag.com"
+    * the event "user.name" equals "Bugs Nag"

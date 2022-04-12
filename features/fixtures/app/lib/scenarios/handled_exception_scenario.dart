@@ -13,6 +13,11 @@ class HandledExceptionScenario extends Scenario {
         await bugsnag.notify(e, callback: (event) {
           event.breadcrumbs = [Breadcrumb('Crumbs!')];
           event.addMetadata('callback', {'message': 'Hello, World!'});
+          event.setUser(
+            id: '3',
+            email: 'bugs.nag@bugsnag.com',
+            name: 'Bugs Nag',
+          );
           event.unhandled = true;
           return true;
         });
