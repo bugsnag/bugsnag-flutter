@@ -458,6 +458,7 @@ class Bugsnag extends Client with DelegateClient {
     bool sendLaunchCrashesSynchronously = true,
     int appHangThresholdMillis = appHangThresholdFatalOnly,
     Set<String> redactedKeys = const {'password'},
+    Set<String> discardClasses = const {},
     Set<String>? enabledReleaseStages,
     Set<BreadcrumbType> enabledBreadcrumbTypes = const {
       BreadcrumbType.navigation,
@@ -503,6 +504,7 @@ class Bugsnag extends Client with DelegateClient {
       'sendLaunchCrashesSynchronously': sendLaunchCrashesSynchronously,
       'appHangThresholdMillis': appHangThresholdMillis,
       'redactedKeys': List<String>.from(redactedKeys),
+      'discardClasses': List<String>.from(discardClasses),
       if (enabledReleaseStages != null)
         'enabledReleaseStages': List<String>.from(enabledReleaseStages),
       'enabledBreadcrumbTypes': List<String>.from(

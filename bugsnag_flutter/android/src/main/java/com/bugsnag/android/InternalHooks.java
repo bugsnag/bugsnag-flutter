@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import com.bugsnag.android.internal.ImmutableConfig;
 import com.bugsnag.flutter.JsonHelper;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.List;
@@ -79,6 +80,46 @@ public class InternalHooks {
         if (event.getImpl().getOriginalUnhandled()) {
             client.getEventStore().flushAsync();
         }
+    }
+
+    /**
+     * Check if an Event should be discarded while it's still in it's JSON form. This allows us
+     * to avoid unmapping JSON events that will just be discarded.
+     *
+     * @see #shouldDiscardError(JSONObject)
+     */
+    public boolean shouldDiscardEvent(JSONObject event) {
+        JSONArray errors = event.optJSONArray("exceptions");
+        if (errors == null) {
+            // there are no exceptions - which is weird, but not strictly
+            return false;
+        }
+
+        int errorCount = errors.length();
+
+        for (int i = 0; i < errorCount; i++) {
+            JSONObject error = errors.optJSONObject(i);
+            if (shouldDiscardError(error)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if an Error should be discarded while it's still in it's JSON form. This allows us
+     * to avoid unmapping JSON errors that will just be discarded.
+     */
+    public boolean shouldDiscardError(JSONObject error) {
+        if (error != null) {
+            String errorClass = error.optString("errorClass");
+            if (config.shouldDiscardError(errorClass)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public JSONObject mapError(Error error) {

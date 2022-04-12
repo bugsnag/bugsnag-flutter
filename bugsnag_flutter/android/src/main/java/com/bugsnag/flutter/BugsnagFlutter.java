@@ -129,6 +129,10 @@ class BugsnagFlutter {
             configuration.setRedactedKeys(unwrap(args.optJSONArray("redactedKeys"), new HashSet<>()));
         }
 
+        if (args.has("discardClasses")) {
+            configuration.setDiscardClasses(unwrap(args.optJSONArray("discardClasses"), new HashSet<>()));
+        }
+
         if (args.has("enabledReleaseStages")) {
             configuration.setEnabledReleaseStages(unwrap(args.optJSONArray("enabledReleaseStages"), new HashSet<>()));
         }
@@ -301,8 +305,17 @@ class BugsnagFlutter {
                 .put("crashedDuringLaunch", lastRunInfo.getCrashedDuringLaunch());
     }
 
-    JSONObject createEvent(@Nullable JSONObject args) {
+    JSONObject createEvent(@Nullable JSONObject args) throws JSONException {
         if (args == null) {
+            return null;
+        }
+
+        JSONObject error = args.getJSONObject("error");
+        boolean deliver = args.optBoolean("deliver");
+
+        // early exit if we are going to discard this Error, but *only* if we would also deliver
+        // immediately - otherwise the Dart layer could modify it and avoid discard
+        if (deliver && client.shouldDiscardError(error)) {
             return null;
         }
 
@@ -314,7 +327,6 @@ class BugsnagFlutter {
                 )
         );
 
-        JSONObject error = args.optJSONObject("error");
         event.getErrors().add(client.unmapError(unwrap(error)));
 
         Object flutterMetadata = JsonHelper.unwrap(args.optJSONObject("flutterMetadata"));
@@ -322,7 +334,7 @@ class BugsnagFlutter {
             event.addMetadata("flutter", (Map<String, Object>) flutterMetadata);
         }
 
-        if (args.optBoolean("deliver")) {
+        if (deliver) {
             // Flutter layer has asked us to deliver the Event immediately
             client.deliverEvent(event);
             return null;
@@ -333,6 +345,10 @@ class BugsnagFlutter {
 
     JSONObject deliverEvent(@Nullable JSONObject eventJson) {
         if (eventJson == null) {
+            return null;
+        }
+
+        if (client.shouldDiscardEvent(eventJson)) {
             return null;
         }
 
