@@ -12,7 +12,7 @@ void main() {
   group('ChannelClient', () {
     late ChannelClient client;
     setUp(() {
-      client = ChannelClient();
+      client = ChannelClient(true);
       channel.reset({
         'attach': true,
         'createEvent': _mockCreateEvent,

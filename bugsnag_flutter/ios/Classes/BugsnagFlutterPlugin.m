@@ -201,6 +201,7 @@ static NSString *NSStringOrNil(id value) {
                             @"appHangThresholdMillis",
                             @"appType",
                             @"appVersion",
+                            @"autoDetectErrors",
                             @"autoTrackSessions",
                             @"bundleVersion",
                             @"context",

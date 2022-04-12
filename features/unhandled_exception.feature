@@ -13,3 +13,13 @@ Feature: Unhandled Flutter Exceptions
     And the event "metaData.flutter.errorLibrary" equals "scheduler library"
     And the event "metaData.flutter.initialLifecycleState" is not null
     And the event "metaData.flutter.lifecycleState" is not null
+
+  Scenario: Unhandled Flutter Exception with autoDetectErrors=false
+    Given I configure the app to run in the "noDetectErrors" state
+    When I run "UnhandledExceptionScenario"
+    Then I should receive no error
+
+  Scenario: Unhandled Native Exception with autoDetectErrors=false
+    Given I configure the app to run in the "noDetectErrors" state
+    When I run "NativeCrashScenario"
+    Then I should receive no error
