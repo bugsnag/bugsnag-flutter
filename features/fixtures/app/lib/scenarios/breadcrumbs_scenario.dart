@@ -9,7 +9,7 @@ class BreadcrumbsScenario extends Scenario {
       endpoints: endpoints,
     );
 
-    await bugsnag.leaveBreadcrumb('Manual breadcrumb', metadata: {
+    await bugsnag.leaveBreadcrumb('Manual breadcrumb', metadata: const {
       'foo': 'bar',
       'object': {'test': 'hello'}
     });

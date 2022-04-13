@@ -66,19 +66,6 @@ class BugsnagFlutter {
             throw new IllegalStateException("bugsnag.attach() can only be called once the native layer has already been started, have you called Bugsnag.start() from your Android code?");
         }
 
-        if (args != null) {
-            JSONObject user = args.optJSONObject("user");
-            if (user != null) {
-                setUser(user);
-            }
-
-            if (args.has("context")) {
-                setContext(args);
-            }
-        }
-
-        addFeatureFlags(args.optJSONArray("featureFlags"));
-
         client = new InternalHooks(nativeClient);
 
         Notifier notifier = client.getNotifier();
