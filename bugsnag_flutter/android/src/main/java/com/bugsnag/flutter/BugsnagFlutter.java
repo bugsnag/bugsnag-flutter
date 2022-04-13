@@ -278,6 +278,40 @@ class BugsnagFlutter {
         return null;
     }
 
+    Void addMetadata(@Nullable JSONObject args) throws JSONException {
+        if (args == null) {
+            return null;
+        }
+
+        String section = args.getString("section");
+        Map<String, ? extends Object> metadata = JsonHelper.unwrap(args.getJSONObject("metadata"));
+
+        Bugsnag.addMetadata(section, metadata);
+        return null;
+    }
+
+    Void clearMetadata(@Nullable JSONObject args) throws JSONException {
+        if (args == null) {
+            return null;
+        }
+
+        if (args.has("key")) {
+            Bugsnag.clearMetadata(args.getString("section"), args.getString("key"));
+        } else {
+            Bugsnag.clearMetadata(args.getString("section"));
+        }
+
+        return null;
+    }
+
+    JSONObject getMetadata(@Nullable JSONObject args) throws JSONException {
+        if (args == null) {
+            return null;
+        }
+
+        return JsonHelper.wrap(Bugsnag.getMetadata(args.getString("section")));
+    }
+
     Void startSession(@Nullable Void args) {
         Bugsnag.startSession();
         return null;

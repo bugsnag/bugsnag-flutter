@@ -9,6 +9,7 @@ import 'ffi_crash_scenario.dart';
 import 'handled_exception_scenario.dart';
 import 'last_run_info_scenario.dart';
 import 'manual_sessions_scenario.dart';
+import 'metadata_scenario.dart';
 import 'native_crash_scenario.dart';
 import 'project_packages_scenario.dart';
 import 'scenario.dart';
@@ -36,6 +37,7 @@ const List<ScenarioInfo<Scenario>> scenarios = [
   ScenarioInfo('HandledExceptionScenario', HandledExceptionScenario.new),
   ScenarioInfo('LastRunInfoScenario', LastRunInfoScenario.new),
   ScenarioInfo('ManualSessionsScenario', ManualSessionsScenario.new),
+  ScenarioInfo('MetadataScenario', MetadataScenario.new),
   ScenarioInfo('NativeCrashScenario', NativeCrashScenario.new),
   ScenarioInfo('ProjectPackagesScenario', ProjectPackagesScenario.new),
   ScenarioInfo('StartBugsnagScenario', StartBugsnagScenario.new),

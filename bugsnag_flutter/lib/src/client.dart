@@ -49,6 +49,12 @@ abstract class Client {
 
   Future<void> clearFeatureFlags();
 
+  Future<void> addMetadata(String section, Map<String, Object> metadata);
+
+  Future<void> clearMetadata(String section, [String? key]);
+
+  Future<Map<String, Object>?> getMetadata(String section);
+
   Future<void> startSession();
 
   Future<void> pauseSession();
@@ -128,6 +134,18 @@ class DelegateClient implements Client {
 
   @override
   Future<void> clearFeatureFlags() => client.clearFeatureFlags();
+
+  @override
+  Future<void> addMetadata(String section, Map<String, Object> metadata) =>
+      client.addMetadata(section, metadata);
+
+  @override
+  Future<void> clearMetadata(String section, [String? key]) =>
+      client.clearMetadata(section, key);
+
+  @override
+  Future<MetadataSection?> getMetadata(String section) =>
+      client.getMetadata(section);
 
   @override
   Future<void> startSession() => client.startSession();
@@ -228,6 +246,30 @@ class ChannelClient implements Client {
   @override
   Future<void> clearFeatureFlags() =>
       _channel.invokeMethod('clearFeatureFlags');
+
+  @override
+  Future<void> addMetadata(String section, Map<String, Object> metadata) =>
+      _channel.invokeMethod('addMetadata', {
+        'section': section,
+        'metadata': BugsnagMetadata.sanitizedMap(metadata),
+      });
+
+  @override
+  Future<void> clearMetadata(String section, [String? key]) =>
+      _channel.invokeMethod('clearMetadata', {
+        'section': section,
+        if (key != null) 'key': key,
+      });
+
+  @override
+  Future<Map<String, Object>?> getMetadata(String section) async {
+    final metadata = await _channel.invokeMethod(
+      'getMetadata',
+      {'section': section},
+    );
+
+    return (metadata != null) ? Map.from(metadata).cast() : null;
+  }
 
   @override
   Future<void> startSession() => _channel.invokeMethod('startSession');
