@@ -31,13 +31,13 @@ class FeatureFlagsScenario extends Scenario {
       throw Exception('Feature flags');
     } catch (e, stack) {
       if (extraConfig?.contains('callback') == true) {
-        await bugsnag.notify(e, stackTrace: stack, callback: (event) {
+        await bugsnag.notify(e, stack, callback: (event) {
           event.clearFeatureFlag('three');
           event.addFeatureFlag('callback', 'yes');
           return true;
         });
       } else {
-        await bugsnag.notify(e, stackTrace: stack);
+        await bugsnag.notify(e, stack);
       }
     }
   }

@@ -8,11 +8,11 @@ Feature: bugsnag.notify
     * the exception "message" equals "test error message"
     * the event "unhandled" is false
     * the error payload field "events.0.threads" is a non-empty array
-    * the "file" of stack frame 5 equals "package:MazeRunner/scenarios/handled_exception_scenario.dart"
-    * the "method" of stack frame 5 equals "HandledExceptionScenario.run"
-    * the "lineNumber" of stack frame 5 equals 25
-    * on iOS, the "codeIdentifier" of stack frame 5 is not null
-    * on iOS, the "type" of stack frame 5 equals "dart"
+    * the "file" of stack frame 0 equals "package:MazeRunner/scenarios/handled_exception_scenario.dart"
+    * the "method" of stack frame 0 equals "HandledExceptionScenario.run"
+    * the "lineNumber" of stack frame 0 equals 10
+    * on iOS, the "codeIdentifier" of stack frame 0 is not null
+    * on iOS, the "type" of stack frame 0 equals "dart"
     * the event "metaData.flutter.defaultRouteName" equals "/"
     * the event "metaData.flutter.initialLifecycleState" is not null
     * the event "metaData.flutter.lifecycleState" is not null
@@ -28,11 +28,11 @@ Feature: bugsnag.notify
     * the error payload field "events.0.metaData.callback.message" equals "Hello, World!"
     * the error payload field "events.0.breadcrumbs.0.name" equals "Crumbs!"
     * the error payload field "events.0.threads" is a non-empty array
-    * the "file" of stack frame 5 equals "package:MazeRunner/scenarios/handled_exception_scenario.dart"
-    * the "method" of stack frame 5 equals "HandledExceptionScenario.run"
-    * the "lineNumber" of stack frame 5 equals 13
-    * on iOS, the "codeIdentifier" of stack frame 5 is not null
-    * on iOS, the "type" of stack frame 5 equals "dart"
+    * the "file" of stack frame 0 equals "package:MazeRunner/scenarios/handled_exception_scenario.dart"
+    * the "method" of stack frame 0 equals "HandledExceptionScenario.run"
+    * the "lineNumber" of stack frame 0 equals 10
+    * on iOS, the "codeIdentifier" of stack frame 0 is not null
+    * on iOS, the "type" of stack frame 0 equals "dart"
     * on iOS, the event "app.dsymUUIDs.0" is not null
     * the event "metaData.flutter.defaultRouteName" equals "/"
     * the event "metaData.flutter.initialLifecycleState" is not null

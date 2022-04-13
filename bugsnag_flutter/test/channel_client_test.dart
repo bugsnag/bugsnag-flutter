@@ -32,7 +32,7 @@ void main() {
           return true;
         });
 
-        await client.notify('no error', stackTrace: StackTrace.current);
+        await client.notify('no error', StackTrace.current);
 
         expect(secondCallbackInvoked, isTrue);
       });
@@ -40,7 +40,7 @@ void main() {
       test('can block sending', () async {
         client.addOnError((event) => false);
 
-        await client.notify('no error', stackTrace: StackTrace.current);
+        await client.notify('no error', StackTrace.current);
 
         expect(channel['deliverEvent'], hasLength(0));
       });
@@ -52,7 +52,7 @@ void main() {
           return true;
         });
 
-        await client.notify('no error', stackTrace: StackTrace.current);
+        await client.notify('no error', StackTrace.current);
 
         expect(channel['deliverEvent'], hasLength(1));
         expect(channel['deliverEvent'][0]['threads'], hasLength(0));
@@ -67,7 +67,7 @@ void main() {
     group('Client.notify', () {
       test('delivers events in createEvent if possible', () async {
         channel.results['createEvent'] = null;
-        await client.notify('no error', stackTrace: StackTrace.current);
+        await client.notify('no error', StackTrace.current);
 
         expect(channel['createEvent'], hasLength(1));
         expect(channel['createEvent'][0]['deliver'], isTrue);
@@ -79,7 +79,7 @@ void main() {
         channel.results['createEvent'] = null;
         await client.notify(
           'no error',
-          stackTrace: StackTrace.fromString(obfuscatedStackTrace),
+          StackTrace.fromString(obfuscatedStackTrace),
         );
 
         expect(channel['createEvent'], hasLength(1));
