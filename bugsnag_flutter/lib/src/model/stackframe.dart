@@ -3,8 +3,8 @@ import 'package:flutter/foundation.dart';
 import '_model_extensions.dart';
 import 'event.dart';
 
-class Stackframe {
-  ErrorType? type;
+class BugsnagStackframe {
+  BugsnagErrorType? type;
   String? file;
   int? lineNumber;
   int? columnNumber;
@@ -21,7 +21,7 @@ class Stackframe {
   String? machoVMAddress;
   String? codeIdentifier;
 
-  Stackframe({
+  BugsnagStackframe({
     this.type,
     this.file,
     this.lineNumber,
@@ -40,8 +40,8 @@ class Stackframe {
     this.codeIdentifier,
   });
 
-  Stackframe.fromJson(Map<String, Object?> json)
-      : type = json.safeGet<String>('type')?.let(ErrorType.forName),
+  BugsnagStackframe.fromJson(Map<String, Object?> json)
+      : type = json.safeGet<String>('type')?.let(BugsnagErrorType.forName),
         file = json.safeGet('file'),
         lineNumber = json.safeGet<num>('lineNumber')?.toInt(),
         columnNumber = json.safeGet<num>('columnNumber')?.toInt(),
@@ -58,8 +58,8 @@ class Stackframe {
         machoVMAddress = json.safeGet('machoVMAddress'),
         codeIdentifier = json.safeGet('codeIdentifier');
 
-  Stackframe.fromStackFrame(StackFrame frame)
-      : type = ErrorType.dart,
+  BugsnagStackframe.fromStackFrame(StackFrame frame)
+      : type = BugsnagErrorType.dart,
         file = "${frame.packageScheme}:${frame.package}/${frame.packagePath}",
         lineNumber = frame.line,
         columnNumber = frame.column,
@@ -90,8 +90,8 @@ class Stackframe {
   dynamic _addressValue(String? address) {
     if (address == null) {
       return null;
-    } else if (type == ErrorType.android ||
-        type == ErrorType.c && address.startsWith('0x')) {
+    } else if (type == BugsnagErrorType.android ||
+        type == BugsnagErrorType.c && address.startsWith('0x')) {
       return int.parse(address.substring(2), radix: 16);
     } else {
       return address;
@@ -106,8 +106,9 @@ class Stackframe {
     return null;
   }
 
-  static Stacktrace stacktraceFromJson(List<Map<String, dynamic>> json) =>
-      json.map(Stackframe.fromJson).toList();
+  static BugsnagStacktrace stacktraceFromJson(
+          List<Map<String, dynamic>> json) =>
+      json.map(BugsnagStackframe.fromJson).toList();
 }
 
-typedef Stacktrace = List<Stackframe>;
+typedef BugsnagStacktrace = List<BugsnagStackframe>;

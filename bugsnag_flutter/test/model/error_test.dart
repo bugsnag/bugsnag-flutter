@@ -4,24 +4,25 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('Error', () {
     test('ErrorType identical', () {
-      expect(ErrorType.dart, same(ErrorType.forName('dart')));
-      expect(ErrorType.android, same(ErrorType.forName(('android'))));
-      expect(ErrorType.cocoa, same(ErrorType.forName(('cocoa'))));
+      expect(BugsnagErrorType.dart, same(BugsnagErrorType.forName('dart')));
+      expect(BugsnagErrorType.android,
+          same(BugsnagErrorType.forName(('android'))));
+      expect(BugsnagErrorType.cocoa, same(BugsnagErrorType.forName(('cocoa'))));
     });
 
     test('ErrorType equals', () {
       expect(
-        ErrorType.forName('testing'),
-        equals(ErrorType.forName('testing')),
+        BugsnagErrorType.forName('testing'),
+        equals(BugsnagErrorType.forName('testing')),
       );
     });
 
     test('toString', () {
-      expect(ErrorType.dart.toString(), equals('dart'));
-      expect(ErrorType.android.toString(), equals('android'));
-      expect(ErrorType.cocoa.toString(), equals('cocoa'));
-      expect(ErrorType.c.toString(), equals('c'));
-      expect(ErrorType.forName('testing').toString(), equals('testing'));
+      expect(BugsnagErrorType.dart.toString(), equals('dart'));
+      expect(BugsnagErrorType.android.toString(), equals('android'));
+      expect(BugsnagErrorType.cocoa.toString(), equals('cocoa'));
+      expect(BugsnagErrorType.c.toString(), equals('c'));
+      expect(BugsnagErrorType.forName('testing').toString(), equals('testing'));
     });
 
     test('from Android', () {
@@ -40,10 +41,10 @@ void main() {
         ]
       };
 
-      final error = Error.fromJson(androidError);
+      final error = BugsnagError.fromJson(androidError);
       expect(error.errorClass, equals('java.lang.NullPointerException'));
       expect(error.message, equals('user'));
-      expect(error.type, equals(ErrorType.android));
+      expect(error.type, equals(BugsnagErrorType.android));
 
       expect(error.stacktrace, hasLength(1));
       expect(error.stacktrace[0].file, equals('BaseCrashyActivity.kt'));
@@ -75,10 +76,10 @@ void main() {
         ],
       };
 
-      final error = Error.fromJson(iosError);
+      final error = BugsnagError.fromJson(iosError);
       expect(error.errorClass, equals('NSInvalidArgumentException'));
       expect(error.message, equals('my error message'));
-      expect(error.type, equals(ErrorType.cocoa));
+      expect(error.type, equals(BugsnagErrorType.cocoa));
 
       expect(error.stacktrace, hasLength(1));
       expect(error.stacktrace[0].method,

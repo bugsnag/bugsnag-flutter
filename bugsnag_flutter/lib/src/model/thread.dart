@@ -4,36 +4,38 @@ import '_model_extensions.dart';
 import 'event.dart';
 import 'stackframe.dart';
 
-class Thread {
+class BugsnagThread {
   String? id;
   String? name;
   String? state;
   bool isErrorReportingThread;
-  ErrorType type;
+  BugsnagErrorType type;
 
-  final Stacktrace _stacktrace;
+  final BugsnagStacktrace _stacktrace;
 
-  Stacktrace get stacktrace => _stacktrace;
+  BugsnagStacktrace get stacktrace => _stacktrace;
 
-  Thread({
+  BugsnagThread({
     this.id,
     this.name,
     this.state,
     bool? isErrorReportingThread,
-    this.type = ErrorType.dart,
-    required Stacktrace stacktrace,
+    this.type = BugsnagErrorType.dart,
+    required BugsnagStacktrace stacktrace,
   })  : _stacktrace = stacktrace,
         isErrorReportingThread = isErrorReportingThread == true;
 
-  Thread.fromJson(Map<String, dynamic> json)
+  BugsnagThread.fromJson(Map<String, dynamic> json)
       : id = json['id']?.toString(),
         name = json.safeGet('name'),
         state = json.safeGet('state'),
         isErrorReportingThread = json.safeGet('errorReportingThread') == true,
-        type = json.safeGet<String>('type')?.let(ErrorType.forName) ??
-            (Platform.isAndroid ? ErrorType.android : ErrorType.cocoa),
-        _stacktrace = json.safeGet<List>('stacktrace')?.let(
-                (frames) => Stackframe.stacktraceFromJson(frames.cast())) ??
+        type = json.safeGet<String>('type')?.let(BugsnagErrorType.forName) ??
+            (Platform.isAndroid
+                ? BugsnagErrorType.android
+                : BugsnagErrorType.cocoa),
+        _stacktrace = json.safeGet<List>('stacktrace')?.let((frames) =>
+                BugsnagStackframe.stacktraceFromJson(frames.cast())) ??
             [];
 
   dynamic toJson() => {

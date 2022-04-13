@@ -18,11 +18,11 @@ void main() {
         ]
       };
 
-      final thread = Thread.fromJson(json);
+      final thread = BugsnagThread.fromJson(json);
 
       expect(thread.id, equals('24'));
       expect(thread.name, equals('main-one'));
-      expect(thread.type, equals(ErrorType.android));
+      expect(thread.type, equals(BugsnagErrorType.android));
       expect(thread.state, equals('RUNNABLE'));
       expect(thread.isErrorReportingThread, isFalse);
 
@@ -69,10 +69,10 @@ void main() {
         'state': 'sleeping',
       };
 
-      final thread = Thread.fromJson(json);
+      final thread = BugsnagThread.fromJson(json);
       expect(thread.id, equals('2345'));
       expect(thread.name, equals('Jit Worker'));
-      expect(thread.type, equals(ErrorType.c));
+      expect(thread.type, equals(BugsnagErrorType.c));
       expect(thread.state, equals('sleeping'));
       expect(thread.stacktrace, isEmpty);
       expect(thread.isErrorReportingThread, isFalse);
@@ -119,11 +119,11 @@ void main() {
         'type': 'cocoa'
       };
 
-      final thread = Thread.fromJson(json);
+      final thread = BugsnagThread.fromJson(json);
 
       expect(thread.id, equals('0'));
       expect(thread.isErrorReportingThread, isTrue);
-      expect(thread.type, ErrorType.cocoa);
+      expect(thread.type, BugsnagErrorType.cocoa);
 
       final stacktrace = thread.stacktrace;
       expect(stacktrace, hasLength(2));

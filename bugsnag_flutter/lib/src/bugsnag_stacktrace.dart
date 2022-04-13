@@ -64,10 +64,10 @@ int? _parseBaseAddress(String line) {
   return null;
 }
 
-Stacktrace? _parseStackTrace(String stackTraceString) {
+BugsnagStacktrace? _parseStackTrace(String stackTraceString) {
   try {
     return StackFrame.fromStackTrace(StackTrace.fromString(stackTraceString))
-        .map(Stackframe.fromStackFrame)
+        .map(BugsnagStackframe.fromStackFrame)
         .toList();
   } catch (e) {
     return null;
@@ -76,18 +76,18 @@ Stacktrace? _parseStackTrace(String stackTraceString) {
 
 /// If possible parse the given [stackTrace] as an obfuscated native stackTrace.
 /// If the given `stackTrace` is not a valid native stack trace return `null`.
-Stacktrace? parseNativeStackTrace(String stackTrace) {
+BugsnagStacktrace? parseNativeStackTrace(String stackTrace) {
   final stackTraceLines = stackTrace.split('\n');
 
   String? buildId;
   int? baseOffset;
 
-  List<Stackframe> stacktrace = [];
+  List<BugsnagStackframe> stacktrace = [];
 
   for (final line in stackTraceLines) {
     if (line.contains('<asynchronous suspension>')) {
       stacktrace.add(
-        Stackframe.fromStackFrame(StackFrame.asynchronousSuspension),
+        BugsnagStackframe.fromStackFrame(StackFrame.asynchronousSuspension),
       );
     } else {
       buildId ??= _parseBuildId(line);
@@ -95,7 +95,7 @@ Stacktrace? parseNativeStackTrace(String stackTrace) {
       final frame = _Frame.parse(line);
 
       if (frame != null && baseOffset != null) {
-        stacktrace.add(Stackframe(
+        stacktrace.add(BugsnagStackframe(
           frameAddress: '0x' + frame.absoluteAddress.toRadixString(16),
           loadAddress: '0x' + baseOffset.toRadixString(16),
           codeIdentifier: buildId,
@@ -108,6 +108,6 @@ Stacktrace? parseNativeStackTrace(String stackTrace) {
   return (stacktrace.isNotEmpty && baseOffset != null) ? stacktrace : null;
 }
 
-Stacktrace? parseStackTraceString(String stackTrace) {
+BugsnagStacktrace? parseStackTraceString(String stackTrace) {
   return parseNativeStackTrace(stackTrace) ?? _parseStackTrace(stackTrace);
 }

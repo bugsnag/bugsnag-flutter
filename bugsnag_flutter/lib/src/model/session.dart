@@ -1,11 +1,11 @@
 import 'user.dart';
 
-class Session {
+class BugsnagSession {
   String id;
   DateTime startedAt;
   User user;
 
-  Session.fromJson(Map<String, dynamic> json)
+  BugsnagSession.fromJson(Map<String, dynamic> json)
       : id = json['id'] as String,
         startedAt = DateTime.parse(json['startedAt']),
         user = User.fromJson(json['user'] as Map<String, dynamic>);

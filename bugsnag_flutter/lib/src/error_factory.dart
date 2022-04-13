@@ -8,7 +8,7 @@ class ErrorFactory {
 
   const ErrorFactory._internal();
 
-  Error createError(dynamic error, [StackTrace? stackTrace]) {
+  BugsnagError createError(dynamic error, [StackTrace? stackTrace]) {
     // we favour the stackTrace on the `error` object, if one exists as this is
     // where the error was first thrown
     final errorStackTraceString = _getErrorStackTraceString(error);
@@ -19,7 +19,7 @@ class ErrorFactory {
         ? parseStackTraceString(stackTraceString)
         : null;
 
-    return Error(
+    return BugsnagError(
       error.runtimeType.toString(),
       _safeMessageForError(error),
       bugsnagStacktrace ?? _fallbackStacktrace(),
@@ -81,7 +81,7 @@ class ErrorFactory {
     return null;
   }
 
-  Stacktrace _fallbackStacktrace() =>
+  BugsnagStacktrace _fallbackStacktrace() =>
       parseStackTraceString(StackTrace.current.toString())!;
 
   /// Extract the probable "Display name" for an error based on it's type.

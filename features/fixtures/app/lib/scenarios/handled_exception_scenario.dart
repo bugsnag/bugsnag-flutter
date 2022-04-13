@@ -11,7 +11,7 @@ class HandledExceptionScenario extends Scenario {
     } catch (e, stack) {
       if (extraConfig?.contains('callback') == true) {
         await bugsnag.notify(e, stack, callback: (event) {
-          event.breadcrumbs = [Breadcrumb('Crumbs!')];
+          event.breadcrumbs = [BugsnagBreadcrumb('Crumbs!')];
           event.addMetadata('callback', {'message': 'Hello, World!'});
           event.setUser(
             id: '3',

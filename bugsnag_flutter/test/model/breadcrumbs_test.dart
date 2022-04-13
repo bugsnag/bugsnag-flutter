@@ -4,7 +4,8 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('Breadcrumbs', () {
     test('user breadcrumb toJson', () {
-      final breadcrumb = Breadcrumb('starting out on a journey', metadata: {});
+      final breadcrumb =
+          BugsnagBreadcrumb('starting out on a journey', metadata: {});
       final json = breadcrumb.toJson();
 
       expect(json['name'], equals('starting out on a journey'));
@@ -14,7 +15,7 @@ void main() {
     });
 
     test('breadcrumb with no metadata toJson', () {
-      final breadcrumb = Breadcrumb('oak', type: BreadcrumbType.log);
+      final breadcrumb = BugsnagBreadcrumb('oak', type: BreadcrumbType.log);
       final json = breadcrumb.toJson();
 
       expect(json['name'], equals('oak'));
@@ -30,7 +31,7 @@ void main() {
         'timestamp': '2022-03-03T02:15:50.405Z',
       };
 
-      final breadcrumb = Breadcrumb.fromJson(json);
+      final breadcrumb = BugsnagBreadcrumb.fromJson(json);
       expect(breadcrumb.message, equals('from all the way over the network'));
       expect(breadcrumb.type, equals(BreadcrumbType.request));
       expect(breadcrumb.metadata, isNull);
@@ -46,7 +47,7 @@ void main() {
         'metaData': {'some string': 'value goes here'},
       };
 
-      final breadcrumb = Breadcrumb.fromJson(json);
+      final breadcrumb = BugsnagBreadcrumb.fromJson(json);
       expect(breadcrumb.message, equals('from all the way over the network'));
       expect(breadcrumb.type, equals(BreadcrumbType.request));
       expect(breadcrumb.metadata, equals({'some string': 'value goes here'}));
