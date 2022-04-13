@@ -39,3 +39,13 @@ enum ThreadSendPolicy {
   unhandledOnly,
   never,
 }
+
+enum EnabledBreadcrumbType {
+  navigation,
+  request,
+  process,
+  log,
+  user,
+  state,
+  error,
+}

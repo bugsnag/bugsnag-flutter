@@ -460,15 +460,7 @@ class Bugsnag extends Client with DelegateClient {
     Set<String> redactedKeys = const {'password'},
     Set<String> discardClasses = const {},
     Set<String>? enabledReleaseStages,
-    Set<BreadcrumbType> enabledBreadcrumbTypes = const {
-      BreadcrumbType.navigation,
-      BreadcrumbType.request,
-      BreadcrumbType.log,
-      BreadcrumbType.user,
-      BreadcrumbType.state,
-      BreadcrumbType.error,
-      BreadcrumbType.manual
-    },
+    Set<EnabledBreadcrumbType>? enabledBreadcrumbTypes,
     Set<String>? projectPackages,
     Map<String, Map<String, Object>>? metadata,
     List<FeatureFlag>? featureFlags,
@@ -506,10 +498,11 @@ class Bugsnag extends Client with DelegateClient {
       'redactedKeys': List<String>.from(redactedKeys),
       'discardClasses': List<String>.from(discardClasses),
       if (enabledReleaseStages != null)
-        'enabledReleaseStages': List<String>.from(enabledReleaseStages),
-      'enabledBreadcrumbTypes': List<String>.from(
-        enabledBreadcrumbTypes.map((e) => e._toName()),
-      ),
+        'enabledReleaseStages': enabledReleaseStages.toList(),
+      'enabledBreadcrumbTypes':
+          (enabledBreadcrumbTypes ?? EnabledBreadcrumbType.values)
+              .map((e) => e._toName())
+              .toList(),
       if (projectPackages != null)
         'projectPackages': List<String>.from(projectPackages),
       if (metadata != null) 'metadata': Metadata(metadata),

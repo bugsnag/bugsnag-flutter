@@ -18,7 +18,7 @@ class StartBugsnagScenario extends Scenario {
       redactedKeys: {'secret'},
       releaseStage: 'testing',
       enabledReleaseStages: {'testing'},
-      enabledBreadcrumbTypes: {BreadcrumbType.error},
+      enabledBreadcrumbTypes: {EnabledBreadcrumbType.error},
       endpoints: endpoints,
       featureFlags: const [
         FeatureFlag('demo-mode'),

@@ -5,7 +5,7 @@ class BreadcrumbsScenario extends Scenario {
   @override
   Future<void> run() async {
     await bugsnag.start(
-      enabledBreadcrumbTypes: {BreadcrumbType.state},
+      enabledBreadcrumbTypes: {EnabledBreadcrumbType.state},
       endpoints: endpoints,
     );
 
