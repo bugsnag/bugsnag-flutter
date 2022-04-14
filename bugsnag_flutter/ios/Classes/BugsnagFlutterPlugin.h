@@ -16,6 +16,10 @@
 - (void)clearFeatureFlag:(NSDictionary *)arguments;
 - (void)clearFeatureFlags:(NSDictionary *)arguments;
 
+- (void)addMetadata:(NSDictionary *)arguments;
+- (void)clearMetadata:(NSDictionary *)arguments;
+- (NSDictionary *)getMetadata:(NSDictionary *)arguments;
+
 - (void)attach:(NSDictionary *)json;
 
 - (void)start:(NSDictionary *)arguments;
