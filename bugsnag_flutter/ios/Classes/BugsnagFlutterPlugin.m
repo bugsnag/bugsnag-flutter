@@ -20,16 +20,25 @@ static NSString *NSStringOrNil(id value) {
     return [value isKindOfClass:[NSString class]] ? value : nil;
 }
 
+@interface BugsnagEvent (BugsnagFlutterPlugin)
+
+@property (nullable, nonatomic) NSArray *projectPackages;
+
+@end
+
+// MARK: -
+
 @interface BugsnagFlutterPlugin ()
 
 @property (nonatomic, getter=isAttached) BOOL attached;
 @property (nonatomic, getter=isStarted) BOOL started;
+@property (nullable, nonatomic) NSArray *projectPackages;
 
 @end
 
-@implementation BugsnagFlutterPlugin
+// MARK: -
 
-// MARK: - @protocol FlutterPlugin
+@implementation BugsnagFlutterPlugin
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
   FlutterMethodChannel *channel = [FlutterMethodChannel
@@ -304,6 +313,12 @@ static NSString *NSStringOrNil(id value) {
                                                                url:notifier[@"url"]
                                                       dependencies:@[[[BugsnagNotifier alloc] init]]];
     
+    NSString *defaultProjectPackage = arguments[@"defaultProjectPackage"];
+    self.projectPackages = arguments[@"projectPackages"];
+    if (!self.projectPackages && defaultProjectPackage) {
+        self.projectPackages = @[defaultProjectPackage];
+    }
+    
     [Bugsnag startWithConfiguration:configuration];
     
     self.started = YES;
@@ -351,6 +366,7 @@ static NSString *NSStringOrNil(id value) {
                                                     session:client.sessionTracker.runningSession];
     event.apiKey = client.configuration.apiKey;
     event.context = client.context;
+    event.projectPackages = self.projectPackages;
 
     // TODO: Expose BugsnagClient's featureFlagStore or provide a better way to create an event
     id featureFlagStore = [client valueForKey:@"featureFlagStore"];
@@ -384,6 +400,44 @@ static NSString *NSStringOrNil(id value) {
 - (void)deliverEvent:(NSDictionary *)json {
     BugsnagEvent *event = [[BugsnagEvent alloc] initWithJson:json];
     [Bugsnag.client notifyInternal:event block:nil];
+}
+
+@end
+
+// MARK: -
+
+@implementation BugsnagEvent (BugsnagFlutterPlugin)
+
+@dynamic projectPackages;
+
++ (void)initialize {
+    SEL selector = @selector(initWithJson:);
+    __block BugsnagEvent * (*initWithJson)(id, SEL, NSDictionary *) = (void *)
+    method_setImplementation(class_getInstanceMethod([BugsnagEvent class], selector),
+                             imp_implementationWithBlock(^(BugsnagEvent *event, NSDictionary *json) {
+        event = initWithJson(event, selector, json);
+        event.projectPackages = json[@"projectPackages"];
+        return event;
+    }));
+    
+    selector = @selector(toJsonWithRedactedKeys:);
+    __block NSDictionary * (*toJsonWithRedactedKeys)(id, SEL, NSSet *) = (void *)
+    method_setImplementation(class_getInstanceMethod([BugsnagEvent class], selector),
+                             imp_implementationWithBlock(^(BugsnagEvent *event, NSSet *redactedKeys) {
+        NSMutableDictionary *json = [toJsonWithRedactedKeys(event, selector, redactedKeys) mutableCopy];
+        json[@"projectPackages"] = event.projectPackages;
+        return json;
+    }));
+}
+
+const void *ProjectPackagesKey = &ProjectPackagesKey;
+
+- (NSArray *)projectPackages {
+    return objc_getAssociatedObject(self, ProjectPackagesKey);
+}
+
+- (void)setProjectPackages:(NSArray *)projectPackages {
+    objc_setAssociatedObject(self, ProjectPackagesKey, projectPackages, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 @end
