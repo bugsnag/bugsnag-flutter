@@ -16,7 +16,7 @@ class BugsnagBreadcrumb {
 
   BugsnagBreadcrumb.fromJson(Map<String, dynamic> json)
       : message = json.safeGet('name'),
-        timestamp = DateTime.parse(json['timestamp'] as String),
+        timestamp = DateTime.parse(json['timestamp'] as String).toUtc(),
         type = BreadcrumbType.values.byName(json['type'] as String),
         metadata = json
             .safeGet<Map>('metaData')

@@ -54,7 +54,9 @@ class DeviceWithState extends Device {
       : freeDisk = json.safeGet<num>('freeDisk')?.toInt(),
         freeMemory = json.safeGet<num>('freeMemory')?.toInt(),
         orientation = json.safeGet('orientation'),
-        time = json.safeGet<String>('time')?.let(DateTime.parse),
+        time = json
+            .safeGet<String>('time')
+            ?.let((time) => DateTime.parse(time).toUtc()),
         super.fromJson(json);
 
   @override
@@ -64,6 +66,6 @@ class DeviceWithState extends Device {
         if (freeDisk != null) 'freeDisk': freeDisk,
         if (freeMemory != null) 'freeMemory': freeMemory,
         if (orientation != null) 'orientation': orientation,
-        if (time != null) 'time': time!.toIso8601String(),
+        if (time != null) 'time': time!.toUtc().toIso8601String(),
       };
 }
