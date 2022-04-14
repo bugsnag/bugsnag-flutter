@@ -19,3 +19,7 @@ Feature: Start Bugsnag from Flutter
       | demo-mode    |         |
       | sample-group | 123     |
     And on Android, the event "app.versionCode" equals 4321
+
+    And on Android, the error payload field "events.0.projectPackages" is an array with 2 elements
+    And on Android, the event "projectPackages.0" equals "MazeRunner"
+    And on Android, the event "projectPackages.1" equals "com.bugsnag.flutter.test.app"
