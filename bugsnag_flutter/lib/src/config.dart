@@ -6,8 +6,14 @@ class EnabledErrorTypes {
   final bool appHangs;
   final bool anrs;
 
-  const EnabledErrorTypes(this.unhandledExceptions, this.crashes, this.ooms,
-      this.thermalKills, this.appHangs, this.anrs);
+  const EnabledErrorTypes({
+    this.unhandledExceptions = true,
+    this.crashes = true,
+    this.ooms = true,
+    this.thermalKills = true,
+    this.appHangs = true,
+    this.anrs = true,
+  });
 
   dynamic toJson() => {
         'unhandledExceptions': unhandledExceptions,
@@ -18,8 +24,7 @@ class EnabledErrorTypes {
         'anrs': anrs
       };
 
-  static const EnabledErrorTypes all =
-      EnabledErrorTypes(true, true, true, true, true, true);
+  static const EnabledErrorTypes all = EnabledErrorTypes();
 }
 
 class EndpointConfiguration {
