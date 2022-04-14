@@ -33,6 +33,9 @@ public class BugsnagFlutterPlugin implements FlutterPlugin, MethodCallHandler {
         addFunction("addFeatureFlags",      bugsnag::addFeatureFlags);
         addFunction("clearFeatureFlag",     bugsnag::clearFeatureFlag);
         addFunction("clearFeatureFlags",    bugsnag::clearFeatureFlags);
+        addFunction("addMetadata",          bugsnag::addMetadata);
+        addFunction("clearMetadata",        bugsnag::clearMetadata);
+        addFunction("getMetadata",          bugsnag::getMetadata);
         addFunction("startSession",         bugsnag::startSession);
         addFunction("pauseSession",         bugsnag::pauseSession);
         addFunction("resumeSession",        bugsnag::resumeSession);

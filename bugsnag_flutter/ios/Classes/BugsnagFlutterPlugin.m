@@ -140,6 +140,22 @@ static NSString *NSStringOrNil(id value) {
     [Bugsnag clearFeatureFlags];
 }
 
+- (void)addMetadata:(NSDictionary *)arguments {
+    [Bugsnag addMetadata:arguments[@"metadata"] toSection:arguments[@"section"]];
+}
+
+- (void)clearMetadata:(NSDictionary *)arguments {
+    if ([arguments[@"key"] isKindOfClass:[NSString class]]) {
+        [Bugsnag clearMetadataFromSection:arguments[@"section"] withKey:arguments[@"key"]];
+    } else {
+        [Bugsnag clearMetadataFromSection:arguments[@"section"]];
+    }
+}
+
+- (NSDictionary *)getMetadata:(NSDictionary *)arguments {
+    return [Bugsnag getMetadataFromSection:arguments[@"section"]];
+}
+
 - (void)attach:(NSDictionary *)arguments {
     if (self.isAttached) {
         [NSException raise:NSInternalInconsistencyException format:@"bugsnag.attach() may not be called more than once"];
