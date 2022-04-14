@@ -14,29 +14,9 @@ void main() {
     test('attach', () async {
       channel.results['attach'] = true;
 
-      await bugsnag.attach(
-        context: 'flutter-context',
-        user: User(id: 'user-id-123', name: 'Bobby Tables'),
-        featureFlags: const [
-          FeatureFlag('demo-mode'),
-          FeatureFlag('sample-group', 'a'),
-        ],
-      );
+      await bugsnag.attach();
 
       expect(channel['attach'], hasLength(1));
-
-      dynamic attach = channel['attach'][0];
-      expect(attach['user']['id'], equals('user-id-123'));
-      expect(attach['user']['name'], equals('Bobby Tables'));
-
-      expect(attach['featureFlags'], hasLength(2));
-      expect(
-        attach['featureFlags'],
-        equals(const [
-          {'featureFlag': 'demo-mode'},
-          {'featureFlag': 'sample-group', 'variant': 'a'},
-        ]),
-      );
     });
 
     test('runApp catches async exceptions', () async {

@@ -428,10 +428,7 @@ class Bugsnag extends Client with DelegateClient {
   /// * [addOnError]
   Future<void> attach({
     FutureOr<void> Function()? runApp,
-    User? user,
-    String? context,
     bool autoDetectErrors = true,
-    List<FeatureFlag>? featureFlags,
     List<OnErrorCallback> onError = const [],
   }) async {
     // make sure we can use Channels before calling runApp
@@ -441,9 +438,6 @@ class Bugsnag extends Client with DelegateClient {
     );
 
     await ChannelClient._channel.invokeMethod('attach', {
-      if (user != null) 'user': user,
-      if (context != null) 'context': context,
-      if (featureFlags != null) 'featureFlags': featureFlags,
       'notifier': _notifier,
     });
 

@@ -6,16 +6,16 @@ class AttachBugsnagScenario extends Scenario {
   Future<void> run() async {
     await startNativeNotifier();
     await bugsnag.attach(
-      context: 'flutter-test-context',
-      user: User(
-        id: 'test-user-id',
-        name: 'Old Man Tables',
-      ),
-      featureFlags: const [
-        FeatureFlag('demo-mode'),
-        FeatureFlag('sample-group', '123'),
-      ],
       runApp: () async {
+        await Future.wait([
+          bugsnag.setContext('flutter-test-context'),
+          bugsnag.setUser(id: 'test-user-id', name: 'Old Man Tables'),
+          bugsnag.addFeatureFlags(const [
+            FeatureFlag('demo-mode'),
+            FeatureFlag('sample-group', '123'),
+          ]),
+        ]);
+
         if (extraConfig?.contains("handled") == true) {
           await bugsnag.notify(
             Exception('Exception with attached info'),

@@ -172,19 +172,6 @@ static NSString *NSStringOrNil(id value) {
          @"bugsnag.attach() can only be called once the native layer has already been started, have you called [Bugsnag start] from your iOS code?"];
     }
 
-    if ([arguments[@"user"] isKindOfClass:[NSDictionary class]]) {
-        [self setUser:arguments[@"user"]];
-    }
-    
-    if ([arguments[@"context"] isKindOfClass:[NSString class]]) {
-        [self setContext:arguments];
-    }
-    
-    NSArray *featureFlags = arguments[@"featureFlags"];
-    if ([featureFlags isKindOfClass:[NSArray class]]) {
-        [self addFeatureFlags:featureFlags];
-    }
-    
     NSDictionary *notifier = arguments[@"notifier"];
     Bugsnag.client.notifier.name = notifier[@"name"];
     Bugsnag.client.notifier.version = notifier[@"version"];
