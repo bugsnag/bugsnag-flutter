@@ -511,6 +511,10 @@ class Bugsnag extends Client with DelegateClient {
       () => WidgetsFlutterBinding.ensureInitialized(),
     );
 
+    // if required, we try to find the projectPackage here
+    final defaultProjectPackage =
+        (projectPackages == null) ? _findProjectPackage() : null;
+
     await ChannelClient._channel.invokeMethod('start', <String, dynamic>{
       if (apiKey != null) 'apiKey': apiKey,
       if (user != null) 'user': user,
@@ -541,6 +545,8 @@ class Bugsnag extends Client with DelegateClient {
               .toList(),
       if (projectPackages != null)
         'projectPackages': List<String>.from(projectPackages),
+      if (projectPackages == null && defaultProjectPackage != null)
+        'defaultProjectPackage': defaultProjectPackage,
       if (metadata != null) 'metadata': BugsnagMetadata(metadata),
       'featureFlags': featureFlags,
       'notifier': _notifier,
@@ -580,6 +586,23 @@ class Bugsnag extends Client with DelegateClient {
     } else {
       Zone.current.handleUncaughtError(error, stackTrace);
     }
+  }
+
+  String? _findProjectPackage() {
+    try {
+      final frames = StackFrame.fromStackTrace(StackTrace.current);
+      final lastBugsnag =
+          frames.lastIndexWhere((f) => f.package.contains('bugsnag'));
+
+      if (lastBugsnag != -1 && lastBugsnag < frames.length) {
+        final package = frames[lastBugsnag + 1].package;
+        return (package.isNotEmpty && package != 'null') ? package : null;
+      }
+    } catch (e) {
+      // deliberately ignored, we return null
+    }
+
+    return null;
   }
 }
 

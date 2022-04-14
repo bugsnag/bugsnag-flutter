@@ -193,6 +193,15 @@ class BugsnagFlutter {
             configuration.setProjectPackages(packagesSet);
         }
 
+        if (args.has("defaultProjectPackage")) {
+            // default to the Flutter app packge + the default Android package
+            Set<String> projectPackages = new HashSet<>();
+            projectPackages.add(args.getString("defaultProjectPackage"));
+            projectPackages.add(context.getPackageName());
+
+            configuration.setProjectPackages(projectPackages);
+        }
+
         if (args.has("versionCode")) {
             configuration.setVersionCode(args.getInt("versionCode"));
         }
