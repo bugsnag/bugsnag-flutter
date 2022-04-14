@@ -10,6 +10,7 @@ Feature: Start Bugsnag from Flutter
     And the event "app.type" equals "test"
     And the event "app.version" equals "1.2.3"
     And the event "context" equals "awesome"
+    And the event "session.id" matches "^.+$"
     And the event "metaData.custom.foo" equals "bar"
     And the event "metaData.custom.password" equals "not redacted"
     And the event "metaData.custom.secret" equals "[REDACTED]"

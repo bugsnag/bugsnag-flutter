@@ -559,6 +559,10 @@ class Bugsnag extends Client with DelegateClient {
     client._onErrorCallbacks.addAll(onError);
     this.client = client;
 
+    if (autoTrackSessions) {
+      await resumeSession().onError((error, stackTrace) => true);
+    }
+
     _runWithErrorDetection(autoDetectErrors, () => runApp?.call());
   }
 
