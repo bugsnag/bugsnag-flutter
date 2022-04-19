@@ -147,7 +147,7 @@ class _Session {
 
   _Session.fromJson(Map<String, dynamic> json)
       : id = json['id'] as String,
-        startedAt = DateTime.parse(json['startedAt'] as String),
+        startedAt = DateTime.parse(json['startedAt'] as String).toUtc(),
         handledCount =
             (json['events'] as Map?)?.safeGet<num>('handled')?.toInt() ?? 0,
         unhandledCount =
@@ -155,7 +155,7 @@ class _Session {
 
   dynamic toJson() => {
         'id': id,
-        'startedAt': startedAt.toIso8601String(),
+        'startedAt': startedAt.toUtc().toIso8601String(),
         'events': {
           'handled': handledCount,
           'unhandled': unhandledCount,
