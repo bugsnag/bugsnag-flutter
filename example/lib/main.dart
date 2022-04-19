@@ -29,7 +29,7 @@ void main() async => bugsnag.start(
 class ExampleApp extends StatelessWidget {
   const ExampleApp({Key? key}) : super(key: key);
 
-  final _methodChannel = const MethodChannel('com.bugsnag.example/channel');
+  static const _methodChannel = MethodChannel('com.bugsnag.example/channel');
 
   // Unhandled exceptions will automatically be detected and reported.
   // They are displayed with an 'Error' severity on the dashboard.
@@ -65,11 +65,11 @@ class ExampleApp extends StatelessWidget {
     strlen(0);
   }
 
-  void _anr() => _methodChannel.invokeMethod('anr');
+  Future<void> _anr() => _methodChannel.invokeMethod('anr');
 
-  void _fatalAppHang() => _methodChannel.invokeMethod('fatalAppHang');
+  Future<void> _fatalAppHang() => _methodChannel.invokeMethod('fatalAppHang');
 
-  void _oom() => _methodChannel.invokeMethod('oom');
+  Future<void> _oom() => _methodChannel.invokeMethod('oom');
 
   // Use leaveBreadcrumb() to log potentially useful events in order to
   // understand what happened in your app before each error.
