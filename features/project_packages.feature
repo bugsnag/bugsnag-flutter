@@ -1,6 +1,5 @@
 Feature: projectPackages
 
-  @skip_ios
   Scenario: Sends projectPackages with events
     When I run "ProjectPackagesScenario"
     Then I wait to receive an error
