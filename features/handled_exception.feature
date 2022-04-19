@@ -13,6 +13,7 @@ Feature: bugsnag.notify
     * the "lineNumber" of stack frame 0 equals 10
     * on iOS, the "codeIdentifier" of stack frame 0 is not null
     * on iOS, the "type" of stack frame 0 equals "dart"
+    * on iOS, the event "metaData.flutter.buildID" is not null
     * the event "metaData.flutter.defaultRouteName" equals "/"
     * the event "metaData.flutter.initialLifecycleState" is not null
     * the event "metaData.flutter.lifecycleState" is not null
@@ -34,6 +35,7 @@ Feature: bugsnag.notify
     * on iOS, the "codeIdentifier" of stack frame 0 is not null
     * on iOS, the "type" of stack frame 0 equals "dart"
     * on iOS, the event "app.dsymUUIDs.0" is not null
+    * on iOS, the event "metaData.flutter.buildID" is not null
     * the event "metaData.flutter.defaultRouteName" equals "/"
     * the event "metaData.flutter.initialLifecycleState" is not null
     * the event "metaData.flutter.lifecycleState" is not null

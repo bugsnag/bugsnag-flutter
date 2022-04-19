@@ -373,10 +373,12 @@ static NSString *NSStringOrNil(id value) {
     @synchronized (featureFlagStore) {
         event.featureFlagStore = [featureFlagStore copy];
     }
+
+    NSString *buildID = event.app.dsymUuid;
     
     for (BugsnagStackframe *frame in error.stacktrace) {
         if ([frame.type isEqualToString:@"dart"] && !frame.codeIdentifier) {
-            frame.codeIdentifier = event.app.dsymUuid;
+            frame.codeIdentifier = buildID;
         }
     }
     
@@ -387,6 +389,9 @@ static NSString *NSStringOrNil(id value) {
     NSDictionary *metadata = json[@"flutterMetadata"];
     if (metadata != nil) {
         [event addMetadata:metadata toSection:@"flutter"];
+        if (!metadata[@"buildID"]) {
+            [event addMetadata:buildID withKey:@"buildID" toSection:@"flutter"];
+        }
     }
     
     if ([json[@"deliver"] boolValue]) {
