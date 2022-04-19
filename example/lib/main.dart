@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:bugsnag_flutter/bugsnag.dart';
 import 'package:bugsnag_flutter/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'bad_widget.dart';
 
@@ -27,6 +28,8 @@ void main() async => bugsnag.start(
 
 class ExampleApp extends StatelessWidget {
   const ExampleApp({Key? key}) : super(key: key);
+
+  final _methodChannel = const MethodChannel('com.bugsnag.example/channel');
 
   // Unhandled exceptions will automatically be detected and reported.
   // They are displayed with an 'Error' severity on the dashboard.
@@ -61,6 +64,12 @@ class ExampleApp extends StatelessWidget {
         .asFunction();
     strlen(0);
   }
+
+  void _anr() => _methodChannel.invokeMethod('anr');
+
+  void _fatalAppHang() => _methodChannel.invokeMethod('fatalAppHang');
+
+  void _oom() => _methodChannel.invokeMethod('oom');
 
   // Use leaveBreadcrumb() to log potentially useful events in order to
   // understand what happened in your app before each error.
@@ -115,6 +124,21 @@ class ExampleApp extends StatelessWidget {
                 onPressed: _nativeCrash,
                 child: const Text('Native crash'),
               ),
+              if (Platform.isAndroid)
+                ElevatedButton(
+                  onPressed: _anr,
+                  child: const Text('Application Not Responding (ANR)'),
+                ),
+              if (Platform.isIOS)
+                ElevatedButton(
+                  onPressed: _fatalAppHang,
+                  child: const Text('Fatal App Hang'),
+                ),
+              if (Platform.isIOS)
+                ElevatedButton(
+                  onPressed: _oom,
+                  child: const Text('Out Of Memory'),
+                ),
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Text(
