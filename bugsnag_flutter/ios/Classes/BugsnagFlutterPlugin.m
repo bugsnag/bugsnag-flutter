@@ -1,18 +1,18 @@
 #import "BugsnagFlutterPlugin.h"
 
-#import <Bugsnag/BSG_KSSystemInfo.h>
-#import <Bugsnag/Bugsnag+Private.h>
-#import <Bugsnag/BugsnagBreadcrumb+Private.h>
-#import <Bugsnag/BugsnagBreadcrumbs.h>
-#import <Bugsnag/BugsnagClient+Private.h>
-#import <Bugsnag/BugsnagConfiguration+Private.h>
-#import <Bugsnag/BugsnagError+Private.h>
-#import <Bugsnag/BugsnagEvent+Private.h>
-#import <Bugsnag/BugsnagHandledState.h>
-#import <Bugsnag/BugsnagNotifier.h>
-#import <Bugsnag/BugsnagSessionTracker.h>
-#import <Bugsnag/BugsnagStackframe+Private.h>
-#import <Bugsnag/BugsnagThread+Private.h>
+#import "BSG_KSSystemInfo.h"
+#import "Bugsnag+Private.h"
+#import "BugsnagBreadcrumb+Private.h"
+#import "BugsnagBreadcrumbs.h"
+#import "BugsnagClient+Private.h"
+#import "BugsnagConfiguration+Private.h"
+#import "BugsnagError+Private.h"
+#import "BugsnagEvent+Private.h"
+#import "BugsnagHandledState.h"
+#import "BugsnagNotifier.h"
+#import "BugsnagSessionTracker.h"
+#import "BugsnagStackframe+Private.h"
+#import "BugsnagThread+Private.h"
 
 #import <objc/runtime.h>
 
