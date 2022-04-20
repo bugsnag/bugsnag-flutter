@@ -239,6 +239,11 @@ static NSString *NSStringOrNil(id value) {
         configuration.discardClasses = [NSSet setWithArray:discardClasses];
     }
 
+    NSArray *enabledReleaseStages = arguments[@"enabledReleaseStages"];
+    if ([enabledReleaseStages isKindOfClass:[NSArray class]]) {
+        configuration.enabledReleaseStages = [NSSet setWithArray:enabledReleaseStages];
+    }
+
     NSDictionary *user = arguments[@"user"];
     if ([user isKindOfClass:[NSDictionary class]]) {
         [configuration setUser:user[@"id"]
