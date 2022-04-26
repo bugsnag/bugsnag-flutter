@@ -39,7 +39,7 @@ public class BugsnagFlutterPlugin implements FlutterPlugin, MethodCallHandler {
         addFunction("startSession",         bugsnag::startSession);
         addFunction("pauseSession",         bugsnag::pauseSession);
         addFunction("resumeSession",        bugsnag::resumeSession);
-        addFunction("markLaunchComplete",   bugsnag::markLaunchComplete);
+        addFunction("markLaunchCompleted",  bugsnag::markLaunchCompleted);
         addFunction("getLastRunInfo",       bugsnag::getLastRunInfo);
         addFunction("attach",               bugsnag::attach);
         addFunction("start",                bugsnag::start);

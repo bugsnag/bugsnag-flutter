@@ -342,7 +342,7 @@ static NSString *NSStringOrNil(id value) {
     return @([Bugsnag resumeSession]);
 }
 
-- (void)markLaunchComplete:(NSDictionary *)arguments {
+- (void)markLaunchCompleted:(NSDictionary *)arguments {
     [Bugsnag markLaunchCompleted];
 }
 

@@ -11,7 +11,7 @@ class LastRunInfoScenario extends Scenario {
   Future<void> run() async {
     await startBugsnag();
 
-    await bugsnag.markLaunchComplete();
+    await bugsnag.markLaunchCompleted();
 
     await bugsnag.notify(
       Exception('After launch'),
