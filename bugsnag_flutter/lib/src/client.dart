@@ -61,7 +61,7 @@ abstract class Client {
 
   Future<bool> resumeSession();
 
-  Future<void> markLaunchComplete();
+  Future<void> markLaunchCompleted();
 
   Future<LastRunInfo?> getLastRunInfo();
 
@@ -157,7 +157,7 @@ class DelegateClient implements Client {
   Future<bool> resumeSession() => client.resumeSession();
 
   @override
-  Future<void> markLaunchComplete() => client.markLaunchComplete();
+  Future<void> markLaunchCompleted() => client.markLaunchCompleted();
 
   @override
   Future<LastRunInfo?> getLastRunInfo() => client.getLastRunInfo();
@@ -282,8 +282,8 @@ class ChannelClient implements Client {
       await _channel.invokeMethod('resumeSession') as bool;
 
   @override
-  Future<void> markLaunchComplete() =>
-      _channel.invokeMethod('markLaunchComplete');
+  Future<void> markLaunchCompleted() =>
+      _channel.invokeMethod('markLaunchCompleted');
 
   @override
   Future<LastRunInfo?> getLastRunInfo() async {

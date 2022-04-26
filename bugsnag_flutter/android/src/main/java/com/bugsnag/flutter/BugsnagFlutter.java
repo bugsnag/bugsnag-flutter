@@ -322,7 +322,7 @@ class BugsnagFlutter {
         return Bugsnag.resumeSession();
     }
 
-    Void markLaunchComplete(@Nullable Void args) {
+    Void markLaunchCompleted(@Nullable Void args) {
         Bugsnag.markLaunchCompleted();
         return null;
     }

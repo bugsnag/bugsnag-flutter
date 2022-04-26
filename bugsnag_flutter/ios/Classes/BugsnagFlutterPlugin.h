@@ -28,7 +28,7 @@
 - (void)pauseSession:(NSDictionary *)arguments;
 - (NSNumber *)resumeSession:(NSDictionary *)arguments;
 
-- (void)markLaunchComplete:(NSDictionary *)arguments;
+- (void)markLaunchCompleted:(NSDictionary *)arguments;
 - (NSDictionary *)getLastRunInfo:(NSDictionary *)arguments;
 
 - (NSDictionary *)createEvent:(NSDictionary *)json;
