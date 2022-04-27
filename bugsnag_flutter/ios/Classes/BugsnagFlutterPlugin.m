@@ -26,6 +26,12 @@ static NSString *NSStringOrNil(id value) {
 
 @end
 
+@interface BugsnagStackframe (BugsnagFlutterPlugin)
+
+@property (nullable, nonatomic) NSString *loadAddress;
+
+@end
+
 // MARK: -
 
 @interface BugsnagFlutterPlugin ()
@@ -448,6 +454,42 @@ const void *ProjectPackagesKey = &ProjectPackagesKey;
 
 - (void)setProjectPackages:(NSArray *)projectPackages {
     objc_setAssociatedObject(self, ProjectPackagesKey, projectPackages, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+@end
+
+@implementation BugsnagStackframe (BugsnagFlutterPlugin)
+
+@dynamic loadAddress;
+
++ (void)initialize {
+    SEL selector = @selector(frameFromJson:);
+    __block BugsnagStackframe * (*frameFromJson)(id, SEL, NSDictionary *) = (void *)
+    method_setImplementation(class_getClassMethod([BugsnagStackframe class], selector),
+                             imp_implementationWithBlock(^(BugsnagStackframe *frame, NSDictionary *json) {
+        frame = frameFromJson(frame, selector, json);
+        frame.loadAddress = json[@"loadAddress"];
+        return frame;
+    }));
+    
+    selector = @selector(toDictionary);
+    __block NSDictionary * (*toDictionary)(id, SEL) = (void *)
+    method_setImplementation(class_getInstanceMethod([BugsnagStackframe class], selector),
+                             imp_implementationWithBlock(^(BugsnagStackframe *frame) {
+        NSMutableDictionary *json = [toDictionary(frame, selector) mutableCopy];
+        json[@"loadAddress"] = frame.loadAddress;
+        return json;
+    }));
+}
+
+const void *LoadAddressKey = &LoadAddressKey;
+
+- (NSString *)loadAddress {
+    return objc_getAssociatedObject(self, LoadAddressKey);
+}
+
+- (void)setLoadAddress:(NSString *)loadAddress {
+    objc_setAssociatedObject(self, LoadAddressKey, loadAddress, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 @end
