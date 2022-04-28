@@ -63,7 +63,7 @@ public class JsonHelper {
     }
 
     @SuppressWarnings("unchecked")
-    public static JSONObject wrap(Map<String, Object> wrappedJson) {
+    public static JSONObject wrap(Map<? super String, Object> wrappedJson) {
         return (JSONObject) io.flutter.plugin.common.JSONUtil.wrap(wrappedJson);
     }
 

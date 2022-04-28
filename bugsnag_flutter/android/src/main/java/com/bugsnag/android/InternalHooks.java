@@ -2,13 +2,13 @@ package com.bugsnag.android;
 
 import androidx.annotation.NonNull;
 
+import com.bugsnag.android.internal.BugsnagMapper;
 import com.bugsnag.android.internal.ImmutableConfig;
 import com.bugsnag.flutter.JsonHelper;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -19,13 +19,13 @@ public class InternalHooks {
     private final Logger logger;
     private final ImmutableConfig config;
 
-    private final BugsnagEventMapper eventMapper;
+    private final BugsnagMapper modelMapper;
 
     public InternalHooks(Client client) {
         this.client = client;
         this.logger = client.getLogger();
         this.config = client.getConfig();
-        this.eventMapper = new BugsnagEventMapper(logger);
+        this.modelMapper = new BugsnagMapper(logger);
     }
 
     public static Client getClient() {
@@ -114,55 +114,27 @@ public class InternalHooks {
     public boolean shouldDiscardError(JSONObject error) {
         if (error != null) {
             String errorClass = error.optString("errorClass");
-            if (config.shouldDiscardError(errorClass)) {
-                return true;
-            }
+            return config.shouldDiscardError(errorClass);
         }
 
         return false;
     }
 
-    public JSONObject mapError(Error error) {
-        return JsonHelper.toJson(error);
-    }
-
     public Error unmapError(Map<String, Object> mappedError) {
-        fixErrorType(mappedError);
-
-        return new Error(
-                eventMapper.convertErrorInternal$bugsnag_android_core_release(mappedError),
-                logger
-        );
+        return modelMapper.convertToError(mappedError);
     }
 
     public JSONObject mapEvent(Event event) {
-        return JsonHelper.toJson(event);
+        return JsonHelper.wrap(modelMapper.convertToMap(event));
     }
 
-    @SuppressWarnings("unchecked")
     public Event unmapEvent(Map<String, Object> mappedEvent) {
-        // Remove this once bugsnag-android supports Flutter ErrorTypes
-        List<Map<String, Object>> errors = (List<Map<String, Object>>) mappedEvent.get("exceptions");
-        for (Map<String, Object> error : errors) {
-            fixErrorType(error);
-        }
-
         String apiKey = (String) mappedEvent.get("apiKey");
         if (apiKey == null) {
             apiKey = config.getApiKey();
         }
 
-        return new Event(
-                eventMapper.convertToEventImpl$bugsnag_android_core_release(mappedEvent, apiKey),
-                logger
-        );
-    }
-
-    private void fixErrorType(Map<String, Object> mappedError) {
-        // Remove this once bugsnag-android supports Flutter ErrorTypes
-        if ("dart".equals(mappedError.get("type"))) {
-            mappedError.put("type", "android");
-        }
+        return modelMapper.convertToEvent(mappedEvent, apiKey);
     }
 
 }

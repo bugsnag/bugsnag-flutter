@@ -51,7 +51,3 @@ android {
 flutter {
     source '../..'
 }
-
-dependencies {
-    implementation "com.bugsnag:bugsnag-android:5.20.0"
-}
