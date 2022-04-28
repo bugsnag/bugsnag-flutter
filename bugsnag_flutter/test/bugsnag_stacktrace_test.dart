@@ -1,3 +1,4 @@
+import 'package:bugsnag_flutter/bugsnag.dart';
 import 'package:bugsnag_flutter/src/bugsnag_stacktrace.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -22,6 +23,11 @@ void main() {
       expect(
         stacktrace.map((f) => f.method),
         everyElement('_kDartIsolateSnapshotInstructions'),
+      );
+
+      expect(
+        stacktrace.map((f) => f.type),
+        everyElement(BugsnagErrorType.dart),
       );
 
       expect(

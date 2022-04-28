@@ -100,6 +100,7 @@ BugsnagStacktrace? parseNativeStackTrace(String stackTrace) {
           loadAddress: '0x' + baseOffset.toRadixString(16),
           codeIdentifier: buildId,
           method: frame.method,
+          type: BugsnagErrorType.dart,
         ));
       }
     }
