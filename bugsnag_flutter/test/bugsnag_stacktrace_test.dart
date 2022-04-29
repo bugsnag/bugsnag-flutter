@@ -17,7 +17,7 @@ void main() {
 
       expect(
         stacktrace.map((f) => f.loadAddress),
-        everyElement('0x7c9f10447000'),
+        everyElement('0x7c9f10502c30'),
       );
 
       expect(
@@ -59,7 +59,7 @@ void main() {
         stacktrace
             .map((f) => f.loadAddress)
             .where((element) => element != null),
-        everyElement('0x10bfbc000'),
+        everyElement('0x10bfc7840'),
       );
 
       expect(

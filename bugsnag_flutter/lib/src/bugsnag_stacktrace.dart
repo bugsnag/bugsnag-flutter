@@ -9,7 +9,7 @@ final _traceLineRE = RegExp(
     r'\s*#(\d+) abs (?<absolute>[\da-f]+)(?: virt (?<virtual>[\da-f]+))? (?<rest>.*)$');
 
 final _buildIdRegExp = RegExp(r"build_id: \'([a-f0-9]+)\'");
-final _baseAddressRegExp = RegExp(r"isolate_dso_base: ([a-f0-9]+),");
+final _baseAddressRegExp = RegExp(r'isolate_instructions: ([a-f0-9]+),');
 
 class _Frame {
   final int absoluteAddress;
