@@ -1,7 +1,6 @@
 # Bugsnag error monitoring & reporting for Flutter apps
 
 [![Documentation](https://img.shields.io/badge/documentation-latest-blue.svg)](https://docs.bugsnag.com/platforms/flutter/)
-[![Documentation](https://img.shields.io/badge/documentation-latest-blue.svg)](https://docs.bugsnag.com/platforms/flutter/)
 
 Get comprehensive [Flutter error reports](https://www.bugsnag.com/platforms/flutter/) to quickly
 debug errors.
