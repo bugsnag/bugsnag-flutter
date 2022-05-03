@@ -14,7 +14,41 @@
 #import "BugsnagStackframe+Private.h"
 #import "BugsnagThread+Private.h"
 
+#import <dlfcn.h>
+#import <mach-o/dyld.h>
 #import <objc/runtime.h>
+
+// Will be nil in debug builds because they not contain any Dart code (App.framework)
+static NSString *DartCodeBuildId;
+
+static void DyldImageAdded(const struct mach_header *mh, intptr_t slide) {
+    Dl_info dli = {0};
+    if (!dladdr(mh, &dli)) {
+        return;
+    }
+    if (!strstr(dli.dli_fname, "/App.framework/App")) {
+        return;
+    }
+    const struct load_command *lc = NULL;
+    switch (mh->magic) {
+        case MH_MAGIC:
+            lc = (void *)((uintptr_t)mh + sizeof(struct mach_header));
+            break;
+        case MH_MAGIC_64:
+            lc = (void *)((uintptr_t)mh + sizeof(struct mach_header_64));
+            break;
+        default:
+            return;
+    }
+    for (uint32_t lci = 0; lci < mh->ncmds; lci++) {
+        if (lc->cmd == LC_UUID) {
+            const struct uuid_command *cmd = (void *)lc;
+            DartCodeBuildId = [[[NSUUID alloc] initWithUUIDBytes:cmd->uuid] UUIDString];
+            break;
+        }
+        lc = (void *)((uintptr_t)lc + lc->cmdsize);
+    }
+}
 
 static NSString *NSStringOrNil(id value) {
     return [value isKindOfClass:[NSString class]] ? value : nil;
@@ -45,6 +79,10 @@ static NSString *NSStringOrNil(id value) {
 // MARK: -
 
 @implementation BugsnagFlutterPlugin
+
++ (void)initialize {
+    _dyld_register_func_for_add_image(DyldImageAdded);
+}
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
   FlutterMethodChannel *channel = [FlutterMethodChannel
@@ -385,11 +423,9 @@ static NSString *NSStringOrNil(id value) {
         event.featureFlagStore = [featureFlagStore copy];
     }
 
-    NSString *buildID = event.app.dsymUuid;
-    
     for (BugsnagStackframe *frame in error.stacktrace) {
         if ([frame.type isEqualToString:@"dart"] && !frame.codeIdentifier) {
-            frame.codeIdentifier = buildID;
+            frame.codeIdentifier = DartCodeBuildId;
         }
     }
     
@@ -401,7 +437,7 @@ static NSString *NSStringOrNil(id value) {
     if (metadata != nil) {
         [event addMetadata:metadata toSection:@"flutter"];
         if (!metadata[@"buildID"]) {
-            [event addMetadata:buildID withKey:@"buildID" toSection:@"flutter"];
+            [event addMetadata:DartCodeBuildId withKey:@"buildID" toSection:@"flutter"];
         }
     }
     
