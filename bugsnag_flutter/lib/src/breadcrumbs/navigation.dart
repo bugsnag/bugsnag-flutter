@@ -34,8 +34,8 @@ class BugsnagNavigatorObserver extends NavigatorObserver {
   @override
   void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) {
     _leaveBreadcrumb('didReplace()', {
-      'oldRoute': _routeToString(oldRoute),
-      'newRoute': _routeToString(newRoute),
+      if (oldRoute != null) 'oldRoute': _routeToString(oldRoute),
+      if (newRoute != null) 'newRoute': _routeToString(newRoute),
     });
 
     _updateContext(newRoute);
@@ -45,7 +45,7 @@ class BugsnagNavigatorObserver extends NavigatorObserver {
   void didRemove(Route<dynamic> route, Route<dynamic>? previousRoute) {
     _leaveBreadcrumb('didRemove()', {
       'route': _routeToString(route),
-      'previousRoute': _routeToString(previousRoute),
+      if (previousRoute != null) 'previousRoute': _routeToString(previousRoute),
     });
 
     _updateContext(previousRoute);
@@ -55,7 +55,7 @@ class BugsnagNavigatorObserver extends NavigatorObserver {
   void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
     _leaveBreadcrumb('didPop()', {
       'route': _routeToString(route),
-      'previousRoute': _routeToString(previousRoute),
+      if (previousRoute != null) 'previousRoute': _routeToString(previousRoute),
     });
 
     _updateContext(previousRoute);
@@ -65,7 +65,7 @@ class BugsnagNavigatorObserver extends NavigatorObserver {
   void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
     _leaveBreadcrumb('didPush()', {
       'route': _routeToString(route),
-      'previousRoute': _routeToString(previousRoute),
+      if (previousRoute != null) 'previousRoute': _routeToString(previousRoute),
     });
 
     _updateContext(route);
@@ -83,13 +83,11 @@ class BugsnagNavigatorObserver extends NavigatorObserver {
 
   void _updateContext(Route<dynamic>? newRoute) {
     if (setContext) {
-      bugsnag.setContext(_routeToString(newRoute));
+      bugsnag.setContext(newRoute != null ? _routeToString(newRoute) : null);
     }
   }
 
-  String _routeToString(Route<dynamic>? route) {
-    if (route == null) return 'null';
-
+  String _routeToString(Route<dynamic> route) {
     final name = route.settings.name;
     if (name != null) return name;
 
