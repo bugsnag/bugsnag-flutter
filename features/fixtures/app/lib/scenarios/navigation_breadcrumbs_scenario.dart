@@ -9,7 +9,7 @@ class NavigatorBreadcrumbScenario extends Scenario {
   Future<void> run() async {
     await startBugsnag();
 
-    final observer = BugsnagNavigatorObserver();
+    final observer = BugsnagNavigatorObserver(setContext: true);
     observer.didPush(
       MaterialPageRoute(
         builder: _testBuilder,

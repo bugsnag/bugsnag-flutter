@@ -7,6 +7,7 @@ Feature: navigation breadcrumbs
     And the exception "errorClass" equals "_Exception"
     And the event "severity" equals "warning"
     And the error payload field "events" is an array with 1 elements
+    And the error payload field "events.0.context" equals "Cupertino Route"
     And the error payload field "events.0.breadcrumbs" is an array with 3 elements
     And the error payload field "events.0.breadcrumbs.1.name" equals "Navigator.didPush()"
     And the error payload field "events.0.breadcrumbs.1.type" equals "navigation"
