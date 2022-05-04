@@ -79,7 +79,7 @@ steps:
         command:
           - "--app=/app/features/fixtures/app/build/app/outputs/flutter-apk/app-release.apk"
           - "--farm=bs"
-          - "--device=ANDROID_12_0"
+          - "--device=ANDROID_11_0"
           - "--fail-fast"
     concurrency: 9
     concurrency_group: 'browserstack-app'
