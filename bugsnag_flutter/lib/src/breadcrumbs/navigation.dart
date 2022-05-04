@@ -34,8 +34,8 @@ class BugsnagNavigatorObserver extends NavigatorObserver {
   @override
   void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) {
     _leaveBreadcrumb('didReplace()', {
-      if (oldRoute != null) 'oldRoute': _routeToString(oldRoute),
-      if (newRoute != null) 'newRoute': _routeToString(newRoute),
+      if (oldRoute != null) 'oldRoute': _routeMetadata(oldRoute),
+      if (newRoute != null) 'newRoute': _routeMetadata(newRoute),
     });
 
     _updateContext(newRoute);
@@ -44,8 +44,8 @@ class BugsnagNavigatorObserver extends NavigatorObserver {
   @override
   void didRemove(Route<dynamic> route, Route<dynamic>? previousRoute) {
     _leaveBreadcrumb('didRemove()', {
-      'route': _routeToString(route),
-      if (previousRoute != null) 'previousRoute': _routeToString(previousRoute),
+      'route': _routeMetadata(route),
+      if (previousRoute != null) 'previousRoute': _routeMetadata(previousRoute),
     });
 
     _updateContext(previousRoute);
@@ -54,8 +54,8 @@ class BugsnagNavigatorObserver extends NavigatorObserver {
   @override
   void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
     _leaveBreadcrumb('didPop()', {
-      'route': _routeToString(route),
-      if (previousRoute != null) 'previousRoute': _routeToString(previousRoute),
+      'route': _routeMetadata(route),
+      if (previousRoute != null) 'previousRoute': _routeMetadata(previousRoute),
     });
 
     _updateContext(previousRoute);
@@ -64,14 +64,14 @@ class BugsnagNavigatorObserver extends NavigatorObserver {
   @override
   void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
     _leaveBreadcrumb('didPush()', {
-      'route': _routeToString(route),
-      if (previousRoute != null) 'previousRoute': _routeToString(previousRoute),
+      'route': _routeMetadata(route),
+      if (previousRoute != null) 'previousRoute': _routeMetadata(previousRoute),
     });
 
     _updateContext(route);
   }
 
-  void _leaveBreadcrumb(String function, Map<String, String> metadata) {
+  void _leaveBreadcrumb(String function, Map<String, Object> metadata) {
     if (leaveBreadcrumbs) {
       bugsnag.leaveBreadcrumb(
         _operationDescription(function),
@@ -83,11 +83,23 @@ class BugsnagNavigatorObserver extends NavigatorObserver {
 
   void _updateContext(Route<dynamic>? newRoute) {
     if (setContext) {
-      bugsnag.setContext(newRoute != null ? _routeToString(newRoute) : null);
+      bugsnag.setContext(newRoute != null ? _routeDescription(newRoute) : null);
     }
   }
 
-  String _routeToString(Route<dynamic> route) {
+  String _operationDescription(String operation) {
+    return '$_navigatorPrefix$operation';
+  }
+
+  static Map<String, Object> _routeMetadata(Route<dynamic> route) {
+    return {
+      'name': _routeDescription(route),
+      if (route.settings.arguments != null)
+        'arguments': route.settings.arguments ?? const <String, dynamic>{}
+    };
+  }
+
+  static String _routeDescription(Route<dynamic> route) {
     final name = route.settings.name;
     if (name != null) return name;
 
@@ -102,9 +114,5 @@ class BugsnagNavigatorObserver extends NavigatorObserver {
     } catch (_) {}
 
     return route.toString();
-  }
-
-  String _operationDescription(String operation) {
-    return '$_navigatorPrefix$operation';
   }
 }

@@ -13,7 +13,10 @@ class NavigatorBreadcrumbScenario extends Scenario {
     observer.didPush(
       MaterialPageRoute(
         builder: _testBuilder,
-        settings: const RouteSettings(name: '/test-route'),
+        settings: const RouteSettings(
+          name: '/test-route',
+          arguments: {'search': 'bugsnag'},
+        ),
       ),
       null,
     );

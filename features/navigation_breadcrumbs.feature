@@ -10,8 +10,9 @@ Feature: navigation breadcrumbs
     And the error payload field "events.0.breadcrumbs" is an array with 3 elements
     And the error payload field "events.0.breadcrumbs.1.name" equals "Navigator.didPush()"
     And the error payload field "events.0.breadcrumbs.1.type" equals "navigation"
-    And the error payload field "events.0.breadcrumbs.1.metaData.route" equals "/test-route"
+    And the error payload field "events.0.breadcrumbs.1.metaData.route.name" equals "/test-route"
+    And the error payload field "events.0.breadcrumbs.1.metaData.route.arguments.search" equals "bugsnag"
     And the error payload field "events.0.breadcrumbs.2.name" equals "Navigator.didReplace()"
     And the error payload field "events.0.breadcrumbs.2.type" equals "navigation"
-    And the error payload field "events.0.breadcrumbs.2.metaData.oldRoute" equals "/test-route"
-    And the error payload field "events.0.breadcrumbs.2.metaData.newRoute" equals "Cupertino Route"
+    And the error payload field "events.0.breadcrumbs.2.metaData.oldRoute.name" equals "/test-route"
+    And the error payload field "events.0.breadcrumbs.2.metaData.newRoute.name" equals "Cupertino Route"
