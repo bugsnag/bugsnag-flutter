@@ -10,6 +10,11 @@ library automatically detects crashes in your Flutter apps, collecting diagnosti
 immediately notifying your development team, helping you to understand and resolve issues as fast as
 possible.
 
+## Important
+
+**Our Flutter package is currently in the pre-release stage and is not yet intended for production use.**
+
+
 ## Features
 
 * Automatically report unhandled errors and crashes
