@@ -48,7 +48,7 @@ class BugsnagNavigatorObserver extends NavigatorObserver {
       'previousRoute': _routeToString(previousRoute),
     });
 
-    _updateContext(route);
+    _updateContext(previousRoute);
   }
 
   @override
@@ -58,7 +58,7 @@ class BugsnagNavigatorObserver extends NavigatorObserver {
       'previousRoute': _routeToString(previousRoute),
     });
 
-    _updateContext(route);
+    _updateContext(previousRoute);
   }
 
   @override
