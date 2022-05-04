@@ -1,3 +1,9 @@
-## TBD
+# Changelog
 
-* TODO: Describe initial release.
+## 2.0.0
+
+First official Bugsnag release. Completely rewritten to have tight integration with `bugsnag-cocoa`(https://github.com/bugsnag/bugsnag-cocoa) and `bugsnag-android`(https://github.com/bugsnag/bugsnag-android) and consistency of naming and behaviour with our other client libraries.
+
+## 1.X 
+
+[Community-created package](https://github.com/GetDutchie/bugsnag_flutter).
