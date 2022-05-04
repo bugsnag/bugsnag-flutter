@@ -92,13 +92,13 @@ class BugsnagNavigatorObserver extends NavigatorObserver {
     if (name != null) return name;
 
     try {
-      String? debugLabel = (route as dynamic).debugLabel;
-      if (debugLabel != null) return debugLabel;
+      String? title = (route as dynamic).title;
+      if (title != null) return title;
     } catch (_) {}
 
     try {
-      String? title = (route as dynamic).title;
-      if (title != null) return title;
+      String? debugLabel = (route as dynamic).debugLabel;
+      if (debugLabel != null) return debugLabel;
     } catch (_) {}
 
     return route.toString();
