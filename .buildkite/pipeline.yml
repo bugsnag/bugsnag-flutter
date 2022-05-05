@@ -64,7 +64,7 @@ steps:
       artifacts#v1.5.0:
         upload: "features/fixtures/app/build/app/outputs/flutter-apk/app-release.apk"
 
-  - label: 'Android 11 end-to-end tests'
+  - label: 'Android 12 end-to-end tests'
     depends_on: "android-fixture"
     timeout_in_minutes: 10
     agents:
@@ -79,7 +79,7 @@ steps:
         command:
           - "--app=/app/features/fixtures/app/build/app/outputs/flutter-apk/app-release.apk"
           - "--farm=bs"
-          - "--device=ANDROID_11_0"
+          - "--device=ANDROID_12_0"
           - "--fail-fast"
     concurrency: 9
     concurrency_group: 'browserstack-app'

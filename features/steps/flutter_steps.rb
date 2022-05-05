@@ -23,7 +23,7 @@ def execute_command(action, scenario_name)
   Maze::Server.commands.add command
 
   touch_action = Appium::TouchAction.new
-  touch_action.tap({:x => 100, :y => 100})
+  touch_action.tap({:x => 200, :y => 200})
   touch_action.perform
 
   $extra_config = ''
