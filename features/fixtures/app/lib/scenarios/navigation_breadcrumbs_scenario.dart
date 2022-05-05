@@ -32,6 +32,28 @@ class NavigatorBreadcrumbScenario extends Scenario {
       ),
     );
 
+    observer.didRemove(
+      MaterialPageRoute(
+        builder: _testBuilder,
+        settings: const RouteSettings(name: '/removed-route'),
+      ),
+      MaterialPageRoute(
+        builder: _testBuilder,
+        settings: const RouteSettings(name: '/previous-route'),
+      ),
+    );
+
+    observer.didPop(
+      MaterialPageRoute(
+        builder: _testBuilder,
+        settings: const RouteSettings(name: '/popped-route'),
+      ),
+      MaterialPageRoute(
+        builder: _testBuilder,
+        settings: const RouteSettings(name: '/'),
+      ),
+    );
+
     try {
       throw Exception('test exception');
     } catch (error, stackTrace) {

@@ -6,14 +6,14 @@ import '../model.dart';
 class BugsnagNavigatorObserver extends NavigatorObserver {
   final bool leaveBreadcrumbs;
   final bool setContext;
-  final String _navigatorPrefix;
+  final String _navigatorName;
 
   /// Create and configure a `BugsnagNavigatorObserver` to listen for navigation
   /// events and leave breadcrumbs and/or set the context.
   ///
-  /// If the [navigatorName] is `null` then the breadcrumbs will be prefixed
-  /// with `Navigator` resulting in breadcrumbs such as `Navigator.didPush()`,
-  /// `Navigator.didPop` and `Navigator.didRemove`.
+  /// If the [navigatorName] is `null` then the breadcrumbs will be suffixed
+  /// with `"navigator"` resulting in breadcrumbs such as `Route pushed on navigator`,
+  /// `Route replaced on navigator` and `Route removed from navigator`.
   ///
   /// Typically you will configure this in you `MaterialApp`, `CupertinoApp`
   /// or `Navigator`:
@@ -28,12 +28,11 @@ class BugsnagNavigatorObserver extends NavigatorObserver {
     this.leaveBreadcrumbs = true,
     this.setContext = false,
     String? navigatorName,
-  }) : _navigatorPrefix =
-            (navigatorName != null) ? navigatorName + '.' : 'Navigator.';
+  }) : _navigatorName = (navigatorName != null) ? navigatorName : 'navigator';
 
   @override
   void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) {
-    _leaveBreadcrumb('didReplace()', {
+    _leaveBreadcrumb('Route replaced on', {
       if (oldRoute != null) 'oldRoute': _routeMetadata(oldRoute),
       if (newRoute != null) 'newRoute': _routeMetadata(newRoute),
     });
@@ -43,7 +42,7 @@ class BugsnagNavigatorObserver extends NavigatorObserver {
 
   @override
   void didRemove(Route<dynamic> route, Route<dynamic>? previousRoute) {
-    _leaveBreadcrumb('didRemove()', {
+    _leaveBreadcrumb('Route removed from', {
       'route': _routeMetadata(route),
       if (previousRoute != null) 'previousRoute': _routeMetadata(previousRoute),
     });
@@ -53,7 +52,7 @@ class BugsnagNavigatorObserver extends NavigatorObserver {
 
   @override
   void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
-    _leaveBreadcrumb('didPop()', {
+    _leaveBreadcrumb('Route popped off', {
       'route': _routeMetadata(route),
       if (previousRoute != null) 'previousRoute': _routeMetadata(previousRoute),
     });
@@ -63,7 +62,7 @@ class BugsnagNavigatorObserver extends NavigatorObserver {
 
   @override
   void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
-    _leaveBreadcrumb('didPush()', {
+    _leaveBreadcrumb('Route pushed on', {
       'route': _routeMetadata(route),
       if (previousRoute != null) 'previousRoute': _routeMetadata(previousRoute),
     });
@@ -88,7 +87,7 @@ class BugsnagNavigatorObserver extends NavigatorObserver {
   }
 
   String _operationDescription(String operation) {
-    return '$_navigatorPrefix$operation';
+    return '$operation $_navigatorName';
   }
 
   static Map<String, Object> _routeMetadata(Route<dynamic> route) {
