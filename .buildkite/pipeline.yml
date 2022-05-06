@@ -16,6 +16,7 @@ steps:
   - label: Build Example App
     timeout_in_minutes: 10
     commands:
+      - pod repo update
       - make example
 
   #
