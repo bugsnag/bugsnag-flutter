@@ -47,3 +47,6 @@ app.*.map.json
 
 # Xcode will place build artifacts here
 /ios/Build
+
+# Don't lock dependencies for our example
+pubspec.lock
