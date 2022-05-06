@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:bugsnag_flutter/bugsnag.dart';
 import 'package:bugsnag_flutter/widgets.dart';
-import 'package:examples/native_crashes.dart';
+import 'package:bugsnag_example/native_crashes.dart';
 import 'package:flutter/material.dart';
 
 import 'bad_widget.dart';

@@ -1,6 +1,6 @@
 # Example Flutter application with Bugsnag
 
-Demonstrates how to use the bugsnag_flutter plugin.
+Demonstrates how to use the bugsnag_flutter package.
 
 ## Getting Started
 

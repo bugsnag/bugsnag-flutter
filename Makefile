@@ -5,6 +5,7 @@ all: format build lint test
 clean:
 	cd packages/bugsnag_flutter && flutter clean --suppress-analytics
 	cd example && flutter clean --suppress-analytics
+	rm -rf staging
 
 build: aar example
 
@@ -14,6 +15,16 @@ ifeq ($(VERSION),)
 endif
 	sed -i '' "s/^version: .*/version: $(VERSION)/" packages/bugsnag_flutter/pubspec.yaml
 	sed -i '' "s/^  'version': .*/  'version': '$(VERSION)'/" packages/bugsnag_flutter/lib/src/client.dart
+
+publish: clean
+	mkdir staging
+	cd packages/bugsnag_flutter && cp -a . ../../staging/
+	rm -f staging/pubspec.lock
+	cp -r example staging/example
+	cp README.md staging/.
+	cp LICENSE staging/.
+	cp CHANGELOG.md staging/.
+	sed -i '' -e '1,2d' staging/CHANGELOG.md
 
 aar:
 	cd packages/bugsnag_flutter && flutter build aar --suppress-analytics

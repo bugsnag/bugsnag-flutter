@@ -1,5 +1,6 @@
-name: examples
-description: Demonstrates how to use the flutter plugin.
+name: bugsnag_example
+version: 1.0.0
+description: Demonstrates how to use the bugsnag_flutter package.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
