@@ -4,7 +4,11 @@ all: format build lint test
 
 clean:
 	cd packages/bugsnag_flutter && flutter clean --suppress-analytics
-	cd example && flutter clean --suppress-analytics
+	cd example && flutter clean --suppress-analytics && \
+			rm -rf .idea bugsnag_flutter_example.iml \
+			       ios/{Pods,.symlinks,Podfile.lock} \
+				   ios/{Runner.xcworkspace,Runner.xcodeproj,Runner.xcodeproj/project.xcworkspace}/xcuserdata \
+				   android/{.idea,.gradle,gradlew,gradlew.bat,local.properties,bugsnag_flutter_example_android.iml}
 	rm -rf staging
 
 build: aar example
