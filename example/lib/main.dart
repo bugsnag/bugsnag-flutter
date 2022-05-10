@@ -13,7 +13,7 @@ void main() async => bugsnag.start(
       // Find your API key in the settings menu of your Bugsnag dashboard
       apiKey: 'add_your_api_key_here',
       // Specify in-project packages if you have multiple or are splitting debug info in your build (--split-debug-info)
-      projectPackages: const{'bugsnag_example'},
+      projectPackages: const {'bugsnag_example'},
       // onError callbacks can be used to modify or reject certain events
       onError: [
         (event) {
