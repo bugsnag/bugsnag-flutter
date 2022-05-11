@@ -3,22 +3,56 @@ import 'package:flutter/foundation.dart';
 import '_model_extensions.dart';
 import 'event.dart';
 
+/// Represents a single stackframe from a [StackTrace]
 class BugsnagStackframe {
+  /// The type of the error
   BugsnagErrorType? type;
+
+  /// The location of the source file
   String? file;
+
+  /// The line number within the source file this stackframe refers to
   int? lineNumber;
+
+  /// The column number of the frame
   int? columnNumber;
+
+  /// The name of the method that was being executed
   String? method;
+
+  /// Whether the package is considered to be in your project for the purposes
+  /// of grouping and readability on the Bugsnag dashboard. Project package
+  /// names can be set as `projectPackages` in [Bugsnag.start].
   bool? inProject;
+
+  /// The address of the instruction where the event occurred.
   String? frameAddress;
+
+  /// The address of the library where the event occurred.
   String? loadAddress;
+
+  /// iOS only: Whether the frame was within the link register
   bool? isLR;
+
+  /// Whether the frame was within the program counter
   bool? isPC;
+
+  /// The address of the function where the event occurred.
   String? symbolAddress;
+
+  /// iOS only: The Mach-O file used by the stackframe
   String? machoFile;
+
+  /// iOS only: The load address of the Mach-O file
   String? machoLoadAddress;
+
+  /// iOS only: A UUID identifying the Mach-O file used by the stackframe
   String? machoUUID;
+
+  /// iOS only: The VM address of the Mach-O file
   String? machoVMAddress;
+
+  /// Identifies the exact build this frame originates from.
   String? codeIdentifier;
 
   BugsnagStackframe({

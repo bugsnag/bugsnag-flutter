@@ -25,54 +25,213 @@ abstract class Client {
   /// common Dart error callbacks such as [runZonedGuarded] or [Future.onError].
   void Function(dynamic error, StackTrace? stack) get errorHandler;
 
+  /// Sets the user information to be associated with events
   Future<void> setUser({String? id, String? email, String? name});
 
+  /// Returns the currently set User information.
   Future<User> getUser();
 
+  /// Bugsnag uses the concept of “contexts” to help display and group your
+  /// errors. The context represents what was happening in your application
+  /// at the time an error occurs and is given high visual prominence in
+  /// the dashboard.
+  ///
+  /// The "context" can be made to follow your app navigation by using the
+  /// [BugsnagNavigatorObserver] in your application of `Navigator`:
+  /// ```dart
+  /// return MaterialApp(
+  ///   navigatorObservers: [BugsnagNavigatorObserver(setContext: true)],
+  /// ```
+  ///
+  /// See also:
+  /// - [getContext]
+  /// - [BugsnagNavigatorObserver]
   Future<void> setContext(String? context);
 
+  /// Bugsnag uses the concept of “contexts” to help display and group your
+  /// errors. The context represents what was happening in your application
+  /// at the time an error occurs and is given high visual prominence in
+  /// the dashboard.
+  ///
+  /// See also:
+  /// - [setContext]
+  /// - [BugsnagNavigatorObserver]
   Future<String?> getContext();
 
+  /// Leave a "breadcrumb" log message, representing an action that occurred
+  /// in your app, to aid with debugging.
+  ///
+  /// [message] is a short label to identify the action that occurred, while
+  /// [metadata] can contain useful information associated with the action.
+  ///
+  /// See also:
+  /// - [getBreadcrumbs]
+  /// - [BugsnagMetadata.sanitizedMap]
   Future<void> leaveBreadcrumb(
     String message, {
-    MetadataSection? metadata,
+    Map<String, Object>? metadata,
     BreadcrumbType type = BreadcrumbType.manual,
   });
 
+  /// Returns the current buffer of breadcrumbs that will be sent with captured
+  /// events. This ordered list represents the most recent breadcrumbs to be
+  /// captured up to the limit set in [start].
   Future<List<BugsnagBreadcrumb>> getBreadcrumbs();
 
+  /// Add a single feature flag with an optional variant. If there is an
+  /// existing feature flag with the same name, it will be overwritten with the
+  /// new variant.
+  ///
+  /// See also:
+  /// - [addFeatureFlags]
+  /// - [clearFeatureFlag]
+  /// - [clearFeatureFlags]
   Future<void> addFeatureFlag(String name, [String? variant]);
 
+  /// Add a collection of feature flags. This has the same effect as calling
+  /// [addFeatureFlag] for each value passed, but it typically faster when there
+  /// are more than one `FeatureFlag`.
+  ///
+  /// See also:
+  /// - [addFeatureFlag]
+  /// - [clearFeatureFlag]
+  /// - [clearFeatureFlags]
   Future<void> addFeatureFlags(List<FeatureFlag> featureFlags);
 
+  /// Remove a single feature flag regardless of its current status. This will
+  /// stop the specified feature flag from being reported. If the named feature
+  /// flag does not exist this will have no effect.
+  ///
+  /// See also:
+  /// - [addFeatureFlag]
+  /// - [addFeatureFlags]
+  /// - [clearFeatureFlags]
   Future<void> clearFeatureFlag(String name);
 
+  /// Clear all of the feature flags. This will stop all feature flags from
+  /// being reported.
+  ///
+  /// See also:
+  /// - [addFeatureFlag]
+  /// - [addFeatureFlags]
+  /// - [clearFeatureFlag]
   Future<void> clearFeatureFlags();
 
+  /// Adds a map of multiple metadata key-value pairs to the specified section.
+  /// ```dart
+  /// bugsnag.addMetadata('account', const {'name': 'Acme. Co.'});
+  /// ```
+  ///
+  /// See also:
+  /// - [BugsnagMetadata.sanitizedMap]
+  /// - [getMetadata]
+  /// - [clearMetadata]
   Future<void> addMetadata(String section, Map<String, Object> metadata);
 
+  /// If [key] is not `null`: removes data with the specified key from the
+  /// specified section. Otherwise remove all the data from the specified
+  /// [section].
   Future<void> clearMetadata(String section, [String? key]);
 
+  /// Returns a map of data in the specified section.
   Future<Map<String, Object>?> getMetadata(String section);
 
+  /// Starts tracking a new session. You should disable automatic session
+  /// by setting `autoTrackSessions` to `false` in [start].
+  ///
+  /// You should call this at the appropriate time in your application when you
+  /// wish to start a session. Any subsequent errors which occur in your
+  /// application will still be reported to Bugsnag but will not count towards
+  /// your application's [stability score](https://docs.bugsnag.com/product/releases/releases-dashboard/#stability-score).
+  /// This will start a new session even if there is already an existing
+  /// session; you should call [resumeSession] if you only want to start a
+  /// session when one doesn't already exist.
+  ///
+  /// See also:
+  /// - [pauseSession]
+  /// - [resumeSession]
   Future<void> startSession();
 
+  /// Pauses tracking of a session. You should disable automatic session
+  /// by setting `autoTrackSessions` to `false` in [start].
+  ///
+  /// You should call this at the appropriate time in your application when you
+  /// wish to pause a session. Any subsequent errors which occur in your
+  /// application will still be reported to Bugsnag but will not count towards
+  /// your application's [stability score](https://docs.bugsnag.com/product/releases/releases-dashboard/#stability-score).
+  /// This can be advantageous if, for example, you do not wish the stability
+  /// score to include crashes in a background service.
+  ///
+  /// See also:
+  /// - [startSession]
+  /// - [resumeSession]
   Future<void> pauseSession();
 
+  /// Resumes a session which has previously been paused, or starts a new
+  /// session if none exists. If a session has already been resumed or started
+  /// and has not been paused, calling this method will have no effect.
+  /// You should disable automatic session by setting `autoTrackSessions`
+  /// to `false` in [start] if you call this method.
+  ///
+  /// It's important to note that sessions are stored in memory for the lifetime
+  /// of the application process and are not persisted on disk. Therefore
+  /// calling this method on app startup would start a new session, rather
+  /// than continuing any previous session.
+  ///
+  /// You should call this at the appropriate time in your application when you
+  /// wish to resume a previously started session. Any subsequent errors which
+  /// occur in your application will still be reported to Bugsnag but will not
+  /// count towards your application's [stability score](https://docs.bugsnag.com/product/releases/releases-dashboard/#stability-score).
+  ///
+  /// See also:
+  /// - [startSession]
+  /// - [pauseSession]
   Future<bool> resumeSession();
 
+  /// Informs Bugsnag that the application has finished launching. Once this
+  /// has resolved [AppWithState.isLaunching] will always be false in any new
+  /// error reports, and synchronous delivery will not be attempted on the next
+  /// launch for any fatal crashes.
   Future<void> markLaunchCompleted();
 
+  /// Retrieves information about the last launch of the application, if it
+  /// has been run before.
+  ///
+  /// For example, this allows checking whether the app crashed on its last
+  /// launch, which could be used to perform conditional behaviour to recover
+  /// from crashes, such as clearing the app data cache.
   Future<LastRunInfo?> getLastRunInfo();
 
+  /// Notify Bugsnag of a handled exception.
+  ///
+  /// The [callback] can be specified to modify the generated event before it
+  /// is delivered to Bugsnag.
   Future<void> notify(
     dynamic error,
     StackTrace? stackTrace, {
     OnErrorCallback? callback,
   });
 
+  /// Add a "on error" callback, to execute code at the point where an error
+  /// report is captured in Bugsnag.
+  ///
+  /// You can use this to add or modify information attached to an [event](BugsnagEvent)
+  /// before it is sent to your dashboard. You can also return `false` from any
+  /// callback to prevent delivery.
+  ///
+  /// ```dart
+  /// bugsnag.addOnError((event) {
+  ///   event.severity = Severity.info;
+  ///   return true;
+  /// });
+  /// ```
+  ///
+  /// "on error" callbacks added here are only triggered for events originating
+  /// in Dart and will always be triggered before "on error" callbacks added
+  /// in the native layer (on Android and iOS).
   void addOnError(OnErrorCallback onError);
 
+  /// Removes a previously added "on error" callback.
   void removeOnError(OnErrorCallback onError);
 }
 
@@ -113,7 +272,7 @@ class DelegateClient implements Client {
   @override
   Future<void> leaveBreadcrumb(
     String message, {
-    MetadataSection? metadata,
+    Map<String, Object>? metadata,
     BreadcrumbType type = BreadcrumbType.manual,
   }) =>
       client.leaveBreadcrumb(message, metadata: metadata, type: type);
@@ -144,7 +303,7 @@ class DelegateClient implements Client {
       client.clearMetadata(section, key);
 
   @override
-  Future<MetadataSection?> getMetadata(String section) =>
+  Future<Map<String, Object>?> getMetadata(String section) =>
       client.getMetadata(section);
 
   @override
@@ -219,7 +378,7 @@ class ChannelClient implements Client {
   @override
   Future<void> leaveBreadcrumb(
     String message, {
-    MetadataSection? metadata,
+    Map<String, Object>? metadata,
     BreadcrumbType type = BreadcrumbType.manual,
   }) async {
     final crumb = BugsnagBreadcrumb(message, type: type, metadata: metadata);
@@ -399,14 +558,28 @@ class ChannelClient implements Client {
       _channel.invokeMethod('deliverEvent', event);
 }
 
+/// The primary `Client`. Typically this class is not accessed directly, and
+/// is instead accessed using the [bugsnag] global:
+///
+/// ```dart
+/// Future<void> main() => bugsnag.start(
+///   apiKey: 'your-api-key',
+///   runApp: () => runApp(MyApplication()),
+/// );
+/// ```
+///
+/// See also:
+/// - [start]
 class Bugsnag extends Client with DelegateClient {
+  Bugsnag._internal();
+
   /// Attach Bugsnag to an already initialised native notifier, optionally
   /// adding to its existing configuration. Use [start] if your application
   /// is entirely built in Flutter.
   ///
   /// Typical hybrid Flutter applications with Bugsnag will start with
   /// ```dart
-  /// Future<void> main() => Bugsnag.attach(
+  /// Future<void> main() => bugsnag.attach(
   ///   runApp: () => runApp(MyApplication()),
   ///   // other configuration here
   /// );
@@ -416,16 +589,16 @@ class Bugsnag extends Client with DelegateClient {
   /// where Bugsnag is being started by the native part of the app. For more
   /// information on starting Bugsnag natively, see our platform guides for:
   ///
-  /// * Android: <https://docs.bugsnag.com/platforms/android/>
-  /// * iOS: <https://docs.bugsnag.com/platforms/ios/>
+  /// - Android: <https://docs.bugsnag.com/platforms/android/>
+  /// - iOS: <https://docs.bugsnag.com/platforms/ios/>
   ///
   /// See also:
   ///
-  /// * [start]
-  /// * [setUser]
-  /// * [setContext]
-  /// * [addFeatureFlags]
-  /// * [addOnError]
+  /// - [start]
+  /// - [setUser]
+  /// - [setContext]
+  /// - [addFeatureFlags]
+  /// - [addOnError]
   Future<void> attach({
     FutureOr<void> Function()? runApp,
     bool autoDetectErrors = true,
@@ -459,7 +632,7 @@ class Bugsnag extends Client with DelegateClient {
   ///
   /// Typical Flutter-only applications with Bugsnag will start with:
   /// ```dart
-  /// Future<void> main() => Bugsnag.start(
+  /// Future<void> main() => bugsnag.start(
   ///   apiKey: 'your-api-key',
   ///   runApp: () => runApp(MyApplication()),
   /// );
@@ -467,11 +640,11 @@ class Bugsnag extends Client with DelegateClient {
   ///
   /// See also:
   ///
-  /// * [attach]
-  /// * [setUser]
-  /// * [setContext]
-  /// * [addFeatureFlags]
-  /// * [addOnError]
+  /// - [attach]
+  /// - [setUser]
+  /// - [setContext]
+  /// - [addFeatureFlags]
+  /// - [addOnError]
   Future<void> start({
     String? apiKey,
     FutureOr<void> Function()? runApp,
@@ -610,7 +783,8 @@ class Bugsnag extends Client with DelegateClient {
   }
 }
 
-final Bugsnag bugsnag = Bugsnag();
+/// Primary access to the Bugsnag API, most calls to Bugsnag will start here
+final Bugsnag bugsnag = Bugsnag._internal();
 
 // The official EnumName extension was only added in 2.15
 extension _EnumName on Enum {

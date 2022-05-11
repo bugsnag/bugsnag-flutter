@@ -1,5 +1,6 @@
 import '_model_extensions.dart';
 
+/// Information about this library, including name and version.
 class BugsnagNotifier {
   String name;
   String version;

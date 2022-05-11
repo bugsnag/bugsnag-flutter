@@ -10,29 +10,70 @@ import 'stackframe.dart';
 import 'thread.dart';
 import 'user.dart';
 
+/// An Event object represents an error captured by Bugsnag and is available
+/// as a parameter on [OnErrorCallback], where individual properties can be
+/// mutated before an error report is sent to Bugsnag's API.
 class BugsnagEvent {
-  String? apiKey;
-  List<BugsnagError> errors;
-  List<BugsnagThread> threads;
-  List<BugsnagBreadcrumb> breadcrumbs;
-  String? context;
-  String? groupingHash;
+  User _user;
   bool _unhandled;
   final bool _originalUnhandled;
-  Severity severity;
   final _SeverityReason _severityReason;
   final List<String> _projectPackages;
   final _Session? _session;
-  User _user;
-
-  DeviceWithState device;
-  AppWithState app;
-
   final FeatureFlags _featureFlags;
   final BugsnagMetadata _metadata;
 
+  String? apiKey;
+
+  /// Information extracted from the errors that caused the event can be found
+  /// in this field. The list contains at least one `BugsnagError` that
+  /// represents the thrown object.
+  List<BugsnagError> errors;
+
+  /// If thread state is being captured along with the event, this field will
+  /// contain a list of [BugsnagThread] objects representing the native threads
+  /// that were active when the error was captured.
+  List<BugsnagThread> threads;
+
+  /// A list of breadcrumbs leading up to the event. These values can be
+  /// accessed and amended if necessary.
+  List<BugsnagBreadcrumb> breadcrumbs;
+
+  /// The context of the error. The context is a summary of what was occurring
+  /// in the application at the time of the crash, if available, such as the
+  /// visible page or screen.
+  String? context;
+
+  /// The grouping hash of the event to override the default grouping on the
+  /// dashboard. All events with the same grouping hash will be grouped together
+  /// into one error. This is an advanced usage of the library and mis-using it
+  /// will cause your events not to group properly in your dashboard.
+  ///
+  /// As the name implies, this option accepts a hash of sorts.
+  String? groupingHash;
+
+  /// The severity of the event. By default, unhandled exceptions will be
+  /// [Severity.error] and handled exceptions sent with [Client.notify]
+  /// [Severity.warning].
+  Severity severity;
+
+  /// Information set by the notifier about your device can be found in this
+  /// field. These values can be accessed and amended if necessary.
+  DeviceWithState device;
+
+  /// Information set by the notifier about your app can be found in this field.
+  /// These values can be accessed and amended if necessary.
+  AppWithState app;
+
+  /// Whether the event was a crash (i.e. unhandled) or handled error in which
+  /// the system continued running.
+  ///
+  /// Unhandled errors count towards your stability score. If you don't want
+  /// certain errors to count towards your stability score, you can alter this
+  /// property through an [OnErrorCallback]
   bool get unhandled => _unhandled;
 
+  /// The User information associated with this event
   User get user => _user;
 
   set unhandled(bool unhandled) {
@@ -41,22 +82,51 @@ class BugsnagEvent {
         (_unhandled != _originalUnhandled) ? true : null;
   }
 
-  void addMetadata(String section, MetadataSection metadata) =>
+  /// Adds a map of multiple metadata key-value pairs to the specified section.
+  void addMetadata(String section, Map<String, Object> metadata) =>
       _metadata.addMetadata(section, metadata);
 
+  /// If [key] is not `null`: removes data with the specified key from the
+  /// specified section. Otherwise remove all the data from the specified
+  /// [section].
   void clearMetadata(String section, [String? key]) =>
       _metadata.clearMetadata(section, key);
 
-  MetadataSection? getMetadata(String section) =>
+  /// Returns a map of data in the specified section.
+  Map<String, Object>? getMetadata(String section) =>
       _metadata.getMetadata(section);
 
+  /// Add a single feature flag with an optional variant. If there is an
+  /// existing feature flag with the same name, it will be overwritten with the
+  /// new variant.
+  ///
+  /// See also:
+  /// - [addFeatureFlags]
+  /// - [clearFeatureFlag]
+  /// - [clearFeatureFlags]
   void addFeatureFlag(String name, [String? variant]) =>
       _featureFlags.addFeatureFlag(name, variant);
 
+  /// Remove a single feature flag regardless of its current status. This will
+  /// stop the specified feature flag from being reported. If the named feature
+  /// flag does not exist this will have no effect.
+  ///
+  /// See also:
+  /// - [addFeatureFlag]
+  /// - [addFeatureFlags]
+  /// - [clearFeatureFlags]
   void clearFeatureFlag(String name) => _featureFlags.clearFeatureFlag(name);
 
+  /// Clear all of the feature flags. This will stop all feature flags from
+  /// being reported.
+  ///
+  /// See also:
+  /// - [addFeatureFlag]
+  /// - [addFeatureFlags]
+  /// - [clearFeatureFlag]
   void clearFeatureFlags() => _featureFlags.clearFeatureFlags();
 
+  /// Sets the user associated with the event.
   void setUser({String? id, String? email, String? name}) {
     _user = User(id: id, email: email, name: name);
   }
@@ -163,17 +233,25 @@ class _Session {
       };
 }
 
+/// The severity of a [BugsnagEvent], one of [error], [warning] or [info].
 enum Severity {
   error,
   warning,
   info,
 }
 
+/// A [BugsnagError] represents information extracted from an error.
 class BugsnagError {
+  /// The class name of the object thrown.
   String errorClass;
+
+  /// The message string extracted from the thrown error.
   String? message;
+
+  /// The type of error based on the originating platform (intended for internal use only)
   BugsnagErrorType type;
 
+  /// A representation of the stacktrace
   BugsnagStacktrace stacktrace;
 
   BugsnagError(this.errorClass, this.message, this.stacktrace)
@@ -197,10 +275,18 @@ class BugsnagError {
       };
 }
 
+/// Represents the type of error captured (intended for internal use only)
 class BugsnagErrorType {
+  /// An error captured from Android's JVM layer
   static const android = BugsnagErrorType._create('android');
+
+  /// An error captured from iOS
   static const cocoa = BugsnagErrorType._create('cocoa');
+
+  /// An error captured from Android's C layer
   static const c = BugsnagErrorType._create('c');
+
+  /// An error captured from Dart
   static const dart = BugsnagErrorType._create('dart');
 
   final String name;

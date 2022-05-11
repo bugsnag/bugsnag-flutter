@@ -1,5 +1,6 @@
 export 'src/breadcrumbs/navigation.dart';
-export 'src/client.dart' show bugsnag, Client;
+export 'src/callbacks.dart' show OnErrorCallback;
+export 'src/client.dart' show bugsnag, Client, Bugsnag;
 export 'src/config.dart';
 export 'src/helpers.dart';
 export 'src/last_run_info.dart';
