@@ -22,7 +22,7 @@ A clear and concise description of what the bug is.
 * Bugsnag version:
 * Dart version:
 * Flutter version:
-* Flutter app or native app with flutter module:
+* Flutter-first app or native app with Flutter component(s):
 * iOS/Android version:
 * Simulator/emulator or physical device:
 
