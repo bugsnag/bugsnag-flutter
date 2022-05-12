@@ -48,5 +48,13 @@ void main() {
       expect(channel['createEvent'], hasLength(1));
       expect(channel['createEvent'][0]['deliver'], isTrue);
     });
+
+    test('default projectPackages', () async {
+      channel.results['start'] = true;
+      await bugsnag.start();
+
+      // file "packages" are <unknown>
+      expect(channel['start'][0]['defaultProjectPackage'], equals('<unknown>'));
+    });
   });
 }
