@@ -595,8 +595,8 @@ class Bugsnag extends Client with DelegateClient {
   String? _findProjectPackage() {
     try {
       final frames = StackFrame.fromStackTrace(StackTrace.current);
-      final lastBugsnag =
-          frames.lastIndexWhere((f) => f.package.contains('bugsnag'));
+      final lastBugsnag = frames.lastIndexWhere((f) =>
+          f.packageScheme == 'package' && f.package == 'bugsnag_flutter');
 
       if (lastBugsnag != -1 && lastBugsnag < frames.length) {
         final package = frames[lastBugsnag + 1].package;
