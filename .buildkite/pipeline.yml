@@ -18,6 +18,12 @@ steps:
     commands:
       - pod repo update
       - make example
+      # Verify that App.framework's UUID (and therefore our `codeIdentifier`) changes when Dart code is touched
+      - dwarfdump --arch=arm64 --uuid example/build/ios/iphoneos/Runner.app/Frameworks/App.framework/App | tee uuid_before
+      - sed -i '' -e 's/add_your_api_key_here/my_api_key/' example/lib/main.dart
+      - make example
+      - dwarfdump --arch=arm64 --uuid example/build/ios/iphoneos/Runner.app/Frameworks/App.framework/App | tee uuid_after
+      - test "$(cat uuid_before)" != "$(cat uuid_after)"
 
   #
   # iOS
