@@ -17,10 +17,11 @@ bump: ## Bump the version numbers to $VERSION
 ifeq ($(VERSION),)
 	@$(error VERSION is not defined. Run with `make VERSION=number bump`)
 endif
+	sed -i '' "s/## TBD/## $(VERSION) ($(shell date '+%Y-%m-%d'))/" CHANGELOG.md
 	sed -i '' "s/^version: .*/version: $(VERSION)/" packages/bugsnag_flutter/pubspec.yaml
 	sed -i '' "s/^  'version': .*/  'version': '$(VERSION)'/" packages/bugsnag_flutter/lib/src/client.dart
 
-publish: clean
+stage: clean
 	mkdir staging
 	cd packages/bugsnag_flutter && cp -a . ../../staging/
 	rm -f staging/pubspec.lock
