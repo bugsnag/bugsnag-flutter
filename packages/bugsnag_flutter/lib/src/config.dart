@@ -1,5 +1,6 @@
 class EnabledErrorTypes {
-  final bool unhandledExceptions;
+  final bool unhandledJvmExceptions;
+  final bool unhandledDartExceptions;
   final bool crashes;
   final bool ooms;
   final bool thermalKills;
@@ -7,7 +8,8 @@ class EnabledErrorTypes {
   final bool anrs;
 
   const EnabledErrorTypes({
-    this.unhandledExceptions = true,
+    this.unhandledJvmExceptions = true,
+    this.unhandledDartExceptions = true,
     this.crashes = true,
     this.ooms = true,
     this.thermalKills = true,
@@ -16,7 +18,7 @@ class EnabledErrorTypes {
   });
 
   dynamic toJson() => {
-        'unhandledExceptions': unhandledExceptions,
+        'unhandledExceptions': unhandledJvmExceptions,
         'crashes': crashes,
         'ooms': ooms,
         'thermalKills': thermalKills,

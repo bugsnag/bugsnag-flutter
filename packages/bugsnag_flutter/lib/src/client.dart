@@ -504,10 +504,13 @@ class Bugsnag extends Client with DelegateClient {
     Directory? persistenceDirectory,
     int? versionCode,
   }) async {
+    final detectDartErrors =
+        autoDetectErrors && enabledErrorTypes.unhandledDartExceptions;
+
     // guarding WidgetsFlutterBinding.ensureInitialized() catches
     // async errors within the Flutter app
     _runWithErrorDetection(
-      autoDetectErrors,
+      detectDartErrors,
       () => WidgetsFlutterBinding.ensureInitialized(),
     );
 
@@ -555,7 +558,7 @@ class Bugsnag extends Client with DelegateClient {
       if (versionCode != null) 'versionCode': versionCode,
     });
 
-    final client = ChannelClient(autoDetectErrors);
+    final client = ChannelClient(detectDartErrors);
     client._onErrorCallbacks.addAll(onError);
     this.client = client;
 
@@ -563,7 +566,7 @@ class Bugsnag extends Client with DelegateClient {
       await resumeSession().onError((error, stackTrace) => true);
     }
 
-    _runWithErrorDetection(autoDetectErrors, () => runApp?.call());
+    _runWithErrorDetection(detectDartErrors, () => runApp?.call());
   }
 
   void _runWithErrorDetection(
