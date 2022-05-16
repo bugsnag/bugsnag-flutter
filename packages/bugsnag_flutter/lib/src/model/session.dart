@@ -1,5 +1,6 @@
 import 'user.dart';
 
+/// Represents a contiguous session in an application.
 class BugsnagSession {
   String id;
   DateTime startedAt;

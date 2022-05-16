@@ -2,6 +2,15 @@ import 'dart:async';
 
 import 'model.dart';
 
+/// A callback to be run before error reports are sent to Bugsnag.
+///
+/// You can use this to add or modify information attached to an error
+/// before it is sent to your dashboard. You can also return `false` from any
+/// callback to halt execution.
+///
+/// "on error" callbacks added in Dart are only triggered for events originating
+/// in Dart and will always be triggered before "on error" callbacks added
+/// in the native layer (on Android and iOS).
 typedef OnErrorCallback = FutureOr<bool> Function(BugsnagEvent event);
 
 typedef _Callback<E> = FutureOr<bool> Function(E);

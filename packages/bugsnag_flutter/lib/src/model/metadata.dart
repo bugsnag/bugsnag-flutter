@@ -42,6 +42,10 @@ class BugsnagMetadata {
   @override
   String toString() => _map.toString();
 
+  /// Create a sanitized deep-copy of [map] where all of the values are
+  /// [BugsnagMetadata] compatible. `String`, `num`, and `bool` values
+  /// remain as-is, while nested `Map` and `Iterable` values are also
+  /// sanitized. All other values are converted using `toString()`.
   static MetadataSection sanitizedMap(Map<String, dynamic> map) {
     return map.map((key, val) => MapEntry(key, _sanitizedValue(val)));
   }

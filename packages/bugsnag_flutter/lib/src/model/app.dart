@@ -1,15 +1,43 @@
 import '_model_extensions.dart';
 
+/// Stateless information set by the notifier about your app can be found on
+/// this class. These values can be accessed and amended if necessary.
+///
+/// See also:
+/// - [AppWithState]
+/// - [BugsnagEvent]
+/// - [Device]
 class App {
+  /// The architecture of the running application binary
   String? binaryArch;
+
+  /// The unique identifier for the build of the application
   String? buildUUID;
+
+  /// iOS only: The app's bundleVersion, set from the CFBundleVersion.
+  /// Equivalent to `versionCode` on Android.
   String? bundleVersion;
+
   String? codeBundleId;
+
+  /// iOS only: Unique identifier for the debug symbols file corresponding to
+  /// the application
   List<String>? dsymUuids;
+
+  /// The app identifier used by the application
   String? id;
+
+  /// The release stage set in [Bugsnag.start]
   String? releaseStage;
+
+  /// The application type set in [Bugsnag.start]
   String? type;
+
+  /// The version of the application which can be set in [Bugsnag.start]
   String? version;
+
+  /// Android only: the version code of the application from the
+  /// `AndroidManifest.xml` or [Bugsnag.start]
   int? versionCode;
 
   App.fromJson(Map<String, Object?> json)
@@ -41,10 +69,28 @@ class App {
       };
 }
 
+/// Stateful information set by the notifier about your app can be found on this
+/// class. These values can be accessed and amended if necessary.
+///
+/// See also:
+/// - [App]
+/// - [BugsnagEvent]
+/// - [Device]
 class AppWithState extends App {
+  /// The number of milliseconds the application was running before the
+  /// event occurred
   int? duration;
+
+  /// The number of milliseconds the application was running in the foreground
+  /// before the event occurred
   int? durationInForeground;
+
+  /// Whether the application was in the foreground when the event occurred
   bool? inForeground;
+
+  /// Whether the application was launching when the event occurred
+  /// See also:
+  /// - [Client.markLaunchCompleted]
   bool? isLaunching;
 
   AppWithState.fromJson(Map<String, Object?> json)

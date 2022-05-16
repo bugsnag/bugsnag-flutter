@@ -4,15 +4,28 @@ import '_model_extensions.dart';
 import 'event.dart';
 import 'stackframe.dart';
 
+/// A representation of a native thread recorded in an [BugsnagEvent]. These
+/// typically map to native iOS and Android threads.
 class BugsnagThread {
+  /// The unique ID of the thread
   String? id;
+
+  /// The name of the thread
   String? name;
+
+  /// The status of the thread
   String? state;
+
+  /// Whether the thread was the thread that caused the event
   bool isErrorReportingThread;
+
+  /// The type of thread based on the originating platform (intended for
+  /// internal use only)
   BugsnagErrorType type;
 
   final BugsnagStacktrace _stacktrace;
 
+  /// A representation of the thread's stacktrace
   BugsnagStacktrace get stacktrace => _stacktrace;
 
   BugsnagThread({
