@@ -18,8 +18,6 @@ class App {
   /// Equivalent to `versionCode` on Android.
   String? bundleVersion;
 
-  String? codeBundleId;
-
   /// iOS only: Unique identifier for the debug symbols file corresponding to
   /// the application
   List<String>? dsymUuids;
@@ -44,7 +42,6 @@ class App {
       : binaryArch = json.safeGet('binaryArch'),
         buildUUID = json.safeGet('buildUUID'),
         bundleVersion = json.safeGet('bundleVersion'),
-        codeBundleId = json.safeGet('codeBundleId'),
         dsymUuids = json
             .safeGet<List>('dsymUUIDs')
             ?.cast<String>()
@@ -59,7 +56,6 @@ class App {
         if (binaryArch != null) 'binaryArch': binaryArch,
         if (buildUUID != null) 'buildUUID': buildUUID,
         if (bundleVersion != null) 'bundleVersion': bundleVersion,
-        if (codeBundleId != null) 'codeBundleId': codeBundleId,
         if (dsymUuids != null) 'dsymUUIDs': dsymUuids,
         if (id != null) 'id': id,
         if (releaseStage != null) 'releaseStage': releaseStage,
