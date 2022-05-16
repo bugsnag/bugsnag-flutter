@@ -88,7 +88,7 @@ class DeviceWithState extends Device {
   /// The number of free bytes of memory available on the device
   int? freeMemory;
 
-  /// The orientation of the device when the event occurred: i.e.
+  /// The orientation of the device when the event occurred: e.g.
   /// portrait or landscape
   String? orientation;
 
