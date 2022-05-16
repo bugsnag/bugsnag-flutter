@@ -54,7 +54,13 @@ void main() {
       await bugsnag.start();
 
       // file "packages" are <unknown>
-      expect(channel['start'][0]['defaultProjectPackage'], equals('<unknown>'));
+      expect(
+        channel['start'][0]['projectPackages']['packageNames'][0],
+        equals('<unknown>'),
+      );
+
+      // we should request platform default-packages by default
+      expect(channel['start'][0]['projectPackages']['includeDefaults'], isTrue);
     });
   });
 }
