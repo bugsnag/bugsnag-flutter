@@ -85,7 +85,7 @@ class ProjectPackages {
   /// See also:
   /// - [detected]
   /// - [Android Configuration.projectPackages](https://docs.bugsnag.com/platforms/android/configuration-options/#projectpackages)
-  ProjectPackages.withPlatformDefaults(Set<String> packageNames)
+  const ProjectPackages.withPlatformDefaults(Set<String> packageNames)
       : this._internal(packageNames, true);
 
   /// Attempt to automatically detect all of the packages used by this
