@@ -55,8 +55,8 @@ void main() {
 
       // file "packages" are <unknown>
       expect(
-        channel['start'][0]['projectPackages']['packageNames'][0],
-        equals('<unknown>'),
+        channel['start'][0]['projectPackages']['packageNames'],
+        equals(const ['<unknown>']),
       );
 
       // we should request platform default-packages by default

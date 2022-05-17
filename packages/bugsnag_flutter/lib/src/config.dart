@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-
 class EnabledErrorTypes {
   final bool unhandledJvmExceptions;
   final bool unhandledDartExceptions;
@@ -49,76 +47,6 @@ class EndpointConfiguration {
   /// Default Bugsnag `EndpointConfiguration`
   static const EndpointConfiguration bugsnag = EndpointConfiguration(
       'https://notify.bugsnag.com', 'https://sessions.bugsnag.com');
-}
-
-/// In order to determine where a crash happens Bugsnag needs to know which
-/// packages you consider to be part of your app (as opposed to a library).
-///
-/// [By default](ProjectPackages.detected) this is set according to the
-/// underlying platform (iOS or Android) and an attempt is made to discover
-/// the Dart package your application uses. This detection *will not work* if
-/// you build using `--split-debug-info`.
-///
-/// See also:
-/// - [Bugsnag.start]
-/// - [ProjectPackages.detected]
-class ProjectPackages {
-  final bool _includeDefaults;
-  final Set<String> _packageNames;
-
-  const ProjectPackages._internal(this._packageNames, this._includeDefaults);
-
-  /// Specify the exact list of packages to consider as part of the project.
-  /// This should include packages from both Dart and any Java packages
-  /// your application uses on Android.
-  ///
-  /// See also:
-  /// - [withPlatformDefaults]
-  const ProjectPackages.only(Set<String> packageNames)
-      : this._internal(packageNames, false);
-
-  /// Combine the given set of `packageNames` with whatever package names are
-  /// appropriate on the current platform. This is useful when you are using
-  /// `--split-debug-info` and only want to specify your Dart packages in
-  /// [Bugsnag.start].
-  ///
-  /// See also:
-  /// - [detected]
-  /// - [Android Configuration.projectPackages](https://docs.bugsnag.com/platforms/android/configuration-options/#projectpackages)
-  const ProjectPackages.withPlatformDefaults(Set<String> packageNames)
-      : this._internal(packageNames, true);
-
-  /// Attempt to automatically detect all of the packages used by this
-  /// application. This detection *will not work* if
-  /// you build using `--split-debug-info`.
-  ///
-  /// When using `--split-debug-info` you should use [withPlatformDefaults] or
-  /// [only] to specify your `projectPackages` manually.
-  ProjectPackages.detected() : this._internal(_findProjectPackages(), true);
-
-  dynamic toJson() => <String, dynamic>{
-        'includeDefaults': _includeDefaults,
-        'packageNames': List.from(_packageNames),
-      };
-
-  static Set<String> _findProjectPackages() {
-    try {
-      final frames = StackFrame.fromStackTrace(StackTrace.current);
-      final lastBugsnag = frames.lastIndexWhere((f) =>
-          f.packageScheme == 'package' && f.package == 'bugsnag_flutter');
-
-      if (lastBugsnag != -1 && lastBugsnag < frames.length) {
-        final package = frames[lastBugsnag + 1].package;
-        if (package.isNotEmpty && package != 'null') {
-          return {package};
-        }
-      }
-    } catch (e) {
-      // deliberately ignored, we return null
-    }
-
-    return const <String>{};
-  }
 }
 
 /// Controls whether we should capture and serialize the state of all threads

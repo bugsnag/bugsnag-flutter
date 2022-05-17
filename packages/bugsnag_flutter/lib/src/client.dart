@@ -670,7 +670,7 @@ class Bugsnag extends Client with DelegateClient {
     Set<String> discardClasses = const {},
     Set<String>? enabledReleaseStages,
     Set<EnabledBreadcrumbType>? enabledBreadcrumbTypes,
-    ProjectPackages? projectPackages,
+    ProjectPackages projectPackages = const ProjectPackages.withDefaults({}),
     Map<String, Map<String, Object>>? metadata,
     List<FeatureFlag>? featureFlags,
     List<OnErrorCallback> onError = const [],
@@ -686,6 +686,10 @@ class Bugsnag extends Client with DelegateClient {
       detectDartErrors,
       () => WidgetsFlutterBinding.ensureInitialized(),
     );
+
+    if (projectPackages._includeDefaults) {
+      projectPackages += ProjectPackages.only(_findProjectPackages());
+    }
 
     await ChannelClient._channel.invokeMethod('start', <String, dynamic>{
       if (apiKey != null) 'apiKey': apiKey,
@@ -715,7 +719,7 @@ class Bugsnag extends Client with DelegateClient {
           (enabledBreadcrumbTypes ?? EnabledBreadcrumbType.values)
               .map((e) => e._toName())
               .toList(),
-      'projectPackages': projectPackages ?? ProjectPackages.detected(),
+      'projectPackages': projectPackages,
       if (metadata != null) 'metadata': BugsnagMetadata(metadata),
       'featureFlags': featureFlags,
       'notifier': _notifier,
@@ -760,6 +764,71 @@ class Bugsnag extends Client with DelegateClient {
       Zone.current.handleUncaughtError(error, stackTrace);
     }
   }
+
+  static Set<String> _findProjectPackages() {
+    try {
+      final frames = StackFrame.fromStackTrace(StackTrace.current);
+      final lastBugsnag = frames.lastIndexWhere((f) =>
+          f.packageScheme == 'package' && f.package == 'bugsnag_flutter');
+
+      if (lastBugsnag != -1 && lastBugsnag < frames.length) {
+        final package = frames[lastBugsnag + 1].package;
+        if (package.isNotEmpty && package != 'null') {
+          return {package};
+        }
+      }
+    } catch (e) {
+      // deliberately ignored, we return null
+    }
+
+    return const <String>{};
+  }
+}
+
+/// In order to determine where a crash happens Bugsnag needs to know which
+/// packages you consider to be part of your app (as opposed to a library).
+///
+/// By default this is set according to the  underlying platform (e.g. Android)
+/// and an attempt is made to discover the Dart package your app uses.
+/// This detection *will not work* if you build using `--split-debug-info`.
+///
+/// See also:
+/// - [Bugsnag.start]
+/// - [ProjectPackages.defaults]
+class ProjectPackages {
+  final bool _includeDefaults;
+  final Set<String> _packageNames;
+
+  const ProjectPackages._internal(
+    this._packageNames,
+    this._includeDefaults,
+  );
+
+  /// Specify the exact list of package names to consider as part of the
+  /// project. This should include packages from both Dart and any Java packages
+  /// your application uses on Android.
+  ///
+  /// This does not include any [defaults](ProjectPackages.withDefaults).
+  const ProjectPackages.only(Set<String> packageNames)
+      : this._internal(packageNames, false);
+
+  /// Combine the given set of `packageNames` with the default packages.
+  /// This is useful when you are using `--split-debug-info` and so need to
+  /// specify your Dart packages in [Bugsnag.start].
+  ///
+  /// See also:
+  /// - [Android Configuration.projectPackages](https://docs.bugsnag.com/platforms/android/configuration-options/#projectpackages)
+  const ProjectPackages.withDefaults(Set<String> additionalPackageNames)
+      : this._internal(additionalPackageNames, true);
+
+  operator +(ProjectPackages other) => ProjectPackages._internal(
+      _packageNames.union(other._packageNames),
+      _includeDefaults || other._includeDefaults);
+
+  dynamic toJson() => <String, dynamic>{
+        'includeDefaults': _includeDefaults,
+        'packageNames': List.from(_packageNames),
+      };
 }
 
 /// Primary access to the Bugsnag API, most calls to Bugsnag will start here
