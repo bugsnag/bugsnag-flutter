@@ -362,10 +362,9 @@ static NSString *NSStringOrNil(id value) {
                                                                url:notifier[@"url"]
                                                       dependencies:@[[[BugsnagNotifier alloc] init]]];
     
-    NSString *defaultProjectPackage = arguments[@"defaultProjectPackage"];
-    self.projectPackages = arguments[@"projectPackages"];
-    if (!self.projectPackages && defaultProjectPackage) {
-        self.projectPackages = @[defaultProjectPackage];
+    NSDictionary *projectPackages = arguments[@"projectPackages"];
+    if ([projectPackages isKindOfClass:[NSDictionary class]]) {
+        self.projectPackages = projectPackages[@"packageNames"];
     }
     
     [Bugsnag startWithConfiguration:configuration];

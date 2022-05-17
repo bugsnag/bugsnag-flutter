@@ -28,6 +28,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -182,24 +183,21 @@ class BugsnagFlutter {
         }
 
         if (args.has("projectPackages")) {
-            JSONArray projectPackages = args.optJSONArray("projectPackages");
-            final int packageCount = projectPackages.length();
-            Set<String> packagesSet = new HashSet<>(packageCount);
+            JSONObject projectPackages = args.optJSONObject("projectPackages");
+
+            JSONArray packageNames = projectPackages.getJSONArray("packageNames");
+            final int packageCount = packageNames.length();
+            Set<String> packagesSet = new LinkedHashSet<>(packageCount);
 
             for (int index = 0; index < packageCount; index++) {
-                packagesSet.add(projectPackages.getString(index));
+                packagesSet.add(packageNames.getString(index));
+            }
+
+            if (projectPackages.optBoolean("includeDefaults")) {
+                packagesSet.add(context.getPackageName());
             }
 
             configuration.setProjectPackages(packagesSet);
-        }
-
-        if (args.has("defaultProjectPackage")) {
-            // default to the Flutter app package + the default Android package
-            Set<String> projectPackages = new HashSet<>();
-            projectPackages.add(args.getString("defaultProjectPackage"));
-            projectPackages.add(context.getPackageName());
-
-            configuration.setProjectPackages(projectPackages);
         }
 
         if (args.has("versionCode")) {
