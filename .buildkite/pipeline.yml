@@ -55,7 +55,7 @@ steps:
           - "--farm=bs"
           - "--device=IOS_14"
           - "--fail-fast"
-    concurrency: 9
+    concurrency: 24
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
 
@@ -88,6 +88,6 @@ steps:
           - "--farm=bs"
           - "--device=ANDROID_12_0"
           - "--fail-fast"
-    concurrency: 9
+    concurrency: 24
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
