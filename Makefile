@@ -4,6 +4,7 @@ all: format build lint test
 
 clean:
 	cd packages/bugsnag_flutter && flutter clean --suppress-analytics
+	cd packages/bugsnag_flutter_http && flutter clean --suppress-analytics
 	cd example && flutter clean --suppress-analytics && \
 			rm -rf .idea bugsnag_flutter_example.iml \
 			       ios/{Pods,.symlinks,Podfile.lock} \
@@ -19,6 +20,7 @@ ifeq ($(VERSION),)
 endif
 	sed -i '' "s/## TBD/## $(VERSION) ($(shell date '+%Y-%m-%d'))/" CHANGELOG.md
 	sed -i '' "s/^version: .*/version: $(VERSION)/" packages/bugsnag_flutter/pubspec.yaml
+	sed -i '' "s/^version: .*/version: $(VERSION)/" packages/bugsnag_flutter_http/pubspec.yaml
 	sed -i '' "s/^  'version': .*/  'version': '$(VERSION)'/" packages/bugsnag_flutter/lib/src/client.dart
 
 stage: clean
@@ -39,6 +41,7 @@ example:
 
 test:
 	cd packages/bugsnag_flutter && flutter test -r expanded --suppress-analytics
+	cd packages/bugsnag_flutter_http && flutter test -r expanded --suppress-analytics
 
 test-fixtures: ## Build the end-to-end test fixtures
 	@./features/scripts/build_ios_app.sh
@@ -49,6 +52,7 @@ format:
 
 lint:
 	cd packages/bugsnag_flutter && flutter analyze --suppress-analytics
+	cd packages/bugsnag_flutter_http && flutter analyze --suppress-analytics
 
 e2e_android_local: features/fixtures/app/build/app/outputs/flutter-apk/app-release.apk
 	$(HOME)/Library/Android/sdk/platform-tools/adb uninstall com.bugsnag.flutter.test.app || true
