@@ -444,6 +444,8 @@ static NSString *NSStringOrNil(id value) {
         [client notifyInternal:event block:nil];
         return nil;
     } else {
+        // A BugsnagStackframe initialized from JSON won't symbolicate, so do it now.
+        [event symbolicateIfNeeded];
         return [event toJsonWithRedactedKeys:nil];
     }
 }
