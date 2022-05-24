@@ -3,7 +3,6 @@ import 'attach_bugsnag_scenario.dart';
 import 'breadcrumbs_scenario.dart';
 import 'detect_enabled_errors.dart';
 import 'discard_classes_scenario.dart';
-import 'error_boundary_scenario.dart';
 import 'error_handler_scenario.dart';
 import 'feature_flags_scenario.dart';
 import 'ffi_crash_scenario.dart';
@@ -35,7 +34,6 @@ const List<ScenarioInfo<Scenario>> scenarios = [
   ScenarioInfo('BreadcrumbsScenario', BreadcrumbsScenario.new),
   ScenarioInfo('DetectEnabledErrorsScenario', DetectEnabledErrorsScenario.new),
   ScenarioInfo('DiscardClassesScenario', DiscardClassesScenario.new),
-  ScenarioInfo('ErrorBoundaryWidgetScenario', ErrorBoundaryWidgetScenario.new),
   ScenarioInfo('ErrorHandlerScenario', ErrorHandlerScenario.new),
   ScenarioInfo('FeatureFlagsScenario', FeatureFlagsScenario.new),
   ScenarioInfo('FFICrashScenario', FFICrashScenario.new),
