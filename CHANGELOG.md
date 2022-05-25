@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.0.1 (2022-05-25)
+
+- Fixed documentation links in README.md
+
 ## 2.0.0 (2022-05-25)
 
 First official Bugsnag release.
