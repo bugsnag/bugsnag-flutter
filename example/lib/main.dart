@@ -2,10 +2,7 @@ import 'dart:async';
 
 import 'package:bugsnag_example/native_crashes.dart';
 import 'package:bugsnag_flutter/bugsnag.dart';
-import 'package:bugsnag_flutter/widgets.dart';
 import 'package:flutter/material.dart';
-
-import 'bad_widget.dart';
 
 void main() async => bugsnag.start(
       // Wrap your application start to capture unhandled errors
@@ -102,12 +99,6 @@ class ExampleHomeScreen extends StatelessWidget {
             ElevatedButton(
               onPressed: _handledException,
               child: const Text('Notify Handled Error'),
-            ),
-            ErrorBoundary(
-              child: const BadWidget(),
-              fallback: (context) => const Text(
-                'A build() error has occurred and been reported',
-              ),
             ),
             ElevatedButton(
               child: const Text('Native Errors'),
