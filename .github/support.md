@@ -10,11 +10,11 @@ When contacting support, please include as much information as necessary, includ
 - steps to reproduce
 - expected/actual behaviour
 
-* Bugsnag version:
-* Flutter version:
-* Flutter app or native app with flutter module:
-* iOS/Android version:
-* Simulator/emulator or physical device:
+- Bugsnag version:
+- Flutter version:
+- Flutter-first app or native app with Flutter component(s):
+- iOS/Android version:
+- Simulator/emulator or physical device:
 
 ## Bug or Feature Requests
 
