@@ -1,4 +1,4 @@
-import 'package:bugsnag_flutter/bugsnag.dart';
+import 'package:bugsnag_flutter/bugsnag_flutter.dart';
 import 'package:bugsnag_flutter/src/error_factory.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';

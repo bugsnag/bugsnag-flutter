@@ -1,4 +1,4 @@
-import 'package:bugsnag_flutter/bugsnag.dart';
+import 'package:bugsnag_flutter/bugsnag_flutter.dart';
 import 'package:flutter/foundation.dart';
 
 // This file is heavily based on:
