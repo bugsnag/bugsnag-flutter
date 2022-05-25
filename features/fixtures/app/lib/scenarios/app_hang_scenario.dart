@@ -1,6 +1,6 @@
 import 'package:MazeRunner/channels.dart';
 import 'package:MazeRunner/scenarios/scenario.dart';
-import 'package:bugsnag_flutter/bugsnag.dart';
+import 'package:bugsnag_flutter/bugsnag_flutter.dart';
 
 class AppHangScenario extends Scenario {
   @override
