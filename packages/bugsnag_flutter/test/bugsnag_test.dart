@@ -1,4 +1,4 @@
-import 'package:bugsnag_flutter/bugsnag.dart';
+import 'package:bugsnag_flutter/bugsnag_flutter.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'test_channel.dart';
@@ -55,8 +55,8 @@ void main() {
 
       // file "packages" are <unknown>
       expect(
-        channel['start'][0]['projectPackages']['packageNames'][0],
-        equals('<unknown>'),
+        channel['start'][0]['projectPackages']['packageNames'],
+        equals(const ['<unknown>']),
       );
 
       // we should request platform default-packages by default
