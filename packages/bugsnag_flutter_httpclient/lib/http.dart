@@ -54,7 +54,7 @@ class BugsnagHttpClient implements HttpClient {
           Future<ConnectionTask<Socket>> Function(
                   Uri url, String? proxyHost, int? proxyPort)?
               f) =>
-      _inner.connectionFactory = f;
+      (_inner as dynamic).connectionFactory = f;
 
   @override
   Duration? get connectionTimeout => _inner.connectionTimeout;
@@ -66,7 +66,8 @@ class BugsnagHttpClient implements HttpClient {
   set findProxy(String Function(Uri url)? f) => _inner.findProxy = f;
 
   @override
-  set keyLog(Function(String line)? callback) => _inner.keyLog = callback;
+  set keyLog(Function(String line)? callback) =>
+      (_inner as dynamic).keyLog = callback;
 
   @override
   Duration get idleTimeout => _inner.idleTimeout;
