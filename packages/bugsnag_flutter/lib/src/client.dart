@@ -524,6 +524,8 @@ class ChannelClient implements Client {
     final errorInfo = details?.informationCollector?.call() ?? [];
     final errorContext = details?.context?.toDescription();
     final errorLibrary = details?.library;
+    // SchedulerBinding.instance is nullable in Flutter <3.0.0
+    // ignore: invalid_null_aware_operator
     final lifecycleState = SchedulerBinding.instance?.lifecycleState.toString();
     final metadata = {
       if (buildID != null) 'buildID': buildID,
