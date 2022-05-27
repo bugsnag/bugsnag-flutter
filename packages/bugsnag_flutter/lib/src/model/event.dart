@@ -14,7 +14,7 @@ import 'user.dart';
 /// as a parameter on [OnErrorCallback], where individual properties can be
 /// mutated before an error report is sent to Bugsnag's API.
 class BugsnagEvent {
-  User _user;
+  BugsnagUser _user;
   bool _unhandled;
   final bool _originalUnhandled;
   final _SeverityReason _severityReason;
@@ -74,7 +74,7 @@ class BugsnagEvent {
   bool get unhandled => _unhandled;
 
   /// The User information associated with this event
-  User get user => _user;
+  BugsnagUser get user => _user;
 
   set unhandled(bool unhandled) {
     _unhandled = unhandled;
@@ -128,7 +128,7 @@ class BugsnagEvent {
 
   /// Sets the user associated with the event.
   void setUser({String? id, String? email, String? name}) {
-    _user = User(id: id, email: email, name: name);
+    _user = BugsnagUser(id: id, email: email, name: name);
   }
 
   BugsnagEvent.fromJson(Map<String, dynamic> json)
@@ -160,7 +160,7 @@ class BugsnagEvent {
         _session = json
             .safeGet<Map>('session')
             ?.let((session) => _Session.fromJson(session.cast())),
-        _user = User.fromJson(json['user']),
+        _user = BugsnagUser.fromJson(json['user']),
         device = DeviceWithState.fromJson(json['device']),
         app = AppWithState.fromJson(json['app']),
         _featureFlags = FeatureFlags.fromJson(

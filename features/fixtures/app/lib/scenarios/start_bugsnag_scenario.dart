@@ -11,7 +11,7 @@ class StartBugsnagScenario extends Scenario {
       appVersion: '1.2.3',
       versionCode: 4321,
       context: 'awesome',
-      user: User(
+      user: BugsnagUser(
         id: '123',
         name: 'From Config',
       ),

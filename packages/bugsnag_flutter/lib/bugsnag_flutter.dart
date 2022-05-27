@@ -5,3 +5,4 @@ export 'src/config.dart';
 export 'src/helpers.dart';
 export 'src/model/breadcrumbs.dart';
 export 'src/model/feature_flags.dart';
+export 'src/model/user.dart';
