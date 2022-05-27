@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:bugsnag_flutter/bugsnag_flutter.dart';
+import 'package:bugsnag_flutter/src/model.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
