@@ -9,7 +9,7 @@ class DetectEnabledErrorsScenario extends Scenario {
   @override
   Future<void> run() async {
     await bugsnag.start(
-      enabledErrorTypes: EnabledErrorTypes(
+      enabledErrorTypes: BugsnagEnabledErrorTypes(
         unhandledDartExceptions:
             extraConfig?.contains('detectDartExceptions') == true,
         unhandledJvmExceptions:

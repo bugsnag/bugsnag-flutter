@@ -14,7 +14,7 @@ void main() {
         'versionCode': 34
       };
 
-      final app = App.fromJson(json);
+      final app = BugsnagApp.fromJson(json);
       expect(app.binaryArch, 'arm64');
       expect(app.buildUUID, 'test-7.5.3');
       expect(app.id, 'com.bugsnag.android.mazerunner');
@@ -37,7 +37,7 @@ void main() {
         'version': '12.3'
       };
 
-      final app = App.fromJson(json);
+      final app = BugsnagApp.fromJson(json);
       expect(app.binaryArch, 'x86_64');
       expect(app.bundleVersion, '12301');
       expect(app.dsymUuids, ['AC9210F7-55B6-3C88-8BA5-3004AA1A1D4E']);
@@ -66,7 +66,7 @@ void main() {
         'versionCode': 34,
       };
 
-      final app = AppWithState.fromJson(json);
+      final app = BugsnagAppWithState.fromJson(json);
       expect(app.binaryArch, 'arm64');
       expect(app.buildUUID, 'test-7.5.3');
       expect(app.duration, 45);
@@ -97,7 +97,7 @@ void main() {
         'version': '12.3'
       };
 
-      final app = AppWithState.fromJson(json);
+      final app = BugsnagAppWithState.fromJson(json);
       expect(app.binaryArch, 'x86_64');
       expect(app.bundleVersion, '12301');
       expect(app.dsymUuids, ['AC9210F7-55B6-3C88-8BA5-3004AA1A1D4E']);

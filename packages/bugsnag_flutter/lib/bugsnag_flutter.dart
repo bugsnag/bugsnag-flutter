@@ -1,8 +1,8 @@
 export 'src/breadcrumbs/navigation.dart';
-export 'src/callbacks.dart' show OnErrorCallback;
-export 'src/client.dart' show bugsnag, Client, Bugsnag, ProjectPackages;
+export 'src/callbacks.dart' show BugsnagOnErrorCallback;
+export 'src/client.dart'
+    show bugsnag, BugsnagClient, Bugsnag, BugsnagProjectPackages;
 export 'src/config.dart';
 export 'src/helpers.dart';
-export 'src/model/breadcrumbs.dart';
-export 'src/model/feature_flags.dart';
-export 'src/model/user.dart';
+export 'src/last_run_info.dart';
+export 'src/model.dart';

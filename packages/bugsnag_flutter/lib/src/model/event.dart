@@ -20,7 +20,7 @@ class BugsnagEvent {
   final _SeverityReason _severityReason;
   final List<String> _projectPackages;
   final _Session? _session;
-  final FeatureFlags _featureFlags;
+  final BugsnagFeatureFlags _featureFlags;
   final BugsnagMetadata _metadata;
 
   String? apiKey;
@@ -53,24 +53,24 @@ class BugsnagEvent {
   String? groupingHash;
 
   /// The severity of the event. By default, unhandled exceptions will be
-  /// [Severity.error] and handled exceptions sent with [Client.notify]
-  /// [Severity.warning].
-  Severity severity;
+  /// [BugsnagSeverity.error] and handled exceptions sent with [Client.notify]
+  /// [BugsnagSeverity.warning].
+  BugsnagSeverity severity;
 
   /// Information set by the notifier about your device can be found in this
   /// field. These values can be accessed and amended if necessary.
-  DeviceWithState device;
+  BugsnagDeviceWithState device;
 
   /// Information set by the notifier about your app can be found in this field.
   /// These values can be accessed and amended if necessary.
-  AppWithState app;
+  BugsnagAppWithState app;
 
   /// Whether the event was a crash (i.e. unhandled) or handled error in which
   /// the system continued running.
   ///
   /// Unhandled errors count towards your stability score. If you don't want
   /// certain errors to count towards your stability score, you can alter this
-  /// property through an [OnErrorCallback]
+  /// property through a [BugsnagOnErrorCallback]
   bool get unhandled => _unhandled;
 
   /// The User information associated with this event
@@ -152,7 +152,7 @@ class BugsnagEvent {
         groupingHash = json['groupingHash'] as String?,
         _unhandled = json['unhandled'] == true,
         _originalUnhandled = json['unhandled'] == true,
-        severity = Severity.values.byName(json['severity']),
+        severity = BugsnagSeverity.values.byName(json['severity']),
         _severityReason = _SeverityReason.fromJson(json['severityReason']),
         _projectPackages =
             (json['projectPackages'] as List?)?.toList(growable: true).cast() ??
@@ -161,9 +161,9 @@ class BugsnagEvent {
             .safeGet<Map>('session')
             ?.let((session) => _Session.fromJson(session.cast())),
         _user = BugsnagUser.fromJson(json['user']),
-        device = DeviceWithState.fromJson(json['device']),
-        app = AppWithState.fromJson(json['app']),
-        _featureFlags = FeatureFlags.fromJson(
+        device = BugsnagDeviceWithState.fromJson(json['device']),
+        app = BugsnagAppWithState.fromJson(json['app']),
+        _featureFlags = BugsnagFeatureFlags.fromJson(
             json['featureFlags'].cast<Map<String, dynamic>>()),
         _metadata = json
                 .safeGet<Map>('metaData')
@@ -234,7 +234,7 @@ class _Session {
 }
 
 /// The severity of a [BugsnagEvent], one of [error], [warning] or [info].
-enum Severity {
+enum BugsnagSeverity {
   error,
   warning,
   info,

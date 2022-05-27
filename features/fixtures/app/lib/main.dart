@@ -191,7 +191,7 @@ class _HomePageState extends State<MazeRunnerHomePage> {
     return scenarios[scenarioIndex].init();
   }
 
-  EndpointConfiguration _endpoints() => EndpointConfiguration(
+  BugsnagEndpointConfiguration _endpoints() => BugsnagEndpointConfiguration(
         _notifyEndpointController.value.text,
         _sessionEndpointController.value.text,
       );

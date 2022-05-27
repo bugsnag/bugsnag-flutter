@@ -18,11 +18,11 @@ class StartBugsnagScenario extends Scenario {
       redactedKeys: {'secret'},
       releaseStage: 'testing',
       enabledReleaseStages: {'testing'},
-      enabledBreadcrumbTypes: {EnabledBreadcrumbType.error},
+      enabledBreadcrumbTypes: {BugsnagEnabledBreadcrumbType.error},
       endpoints: endpoints,
       featureFlags: const [
-        FeatureFlag('demo-mode'),
-        FeatureFlag('sample-group', '123'),
+        BugsnagFeatureFlag('demo-mode'),
+        BugsnagFeatureFlag('sample-group', '123'),
       ],
       metadata: const {
         'custom': {
@@ -31,7 +31,7 @@ class StartBugsnagScenario extends Scenario {
           'password': 'not redacted'
         }
       },
-      sendThreads: ThreadSendPolicy.never,
+      sendThreads: BugsnagThreadSendPolicy.never,
       runApp: () async {
         await bugsnag.notify(
           Exception('Exception with attached info'),

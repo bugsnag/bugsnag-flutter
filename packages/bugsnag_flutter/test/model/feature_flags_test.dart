@@ -11,18 +11,18 @@ void main() {
         {'featureFlag': 'sample-group', 'variant': 'groupA'},
       ];
 
-      final expectedFlags = FeatureFlags();
+      final expectedFlags = BugsnagFeatureFlags();
       expectedFlags.addFeatureFlag('demo-mode');
       expectedFlags['sample-group'] = 'groupA';
 
-      final flags = FeatureFlags.fromJson(featureFlagJson);
+      final flags = BugsnagFeatureFlags.fromJson(featureFlagJson);
 
       expect(flags, equals(expectedFlags));
       expect(flags, jsonEquals(expectedFlags));
     });
 
     test('can clear existing feature flags', () {
-      final flags = FeatureFlags();
+      final flags = BugsnagFeatureFlags();
       flags.addFeatureFlag('my-feature-flag');
       flags.addFeatureFlag('flag-with-variant', 'some variant');
       flags.clearFeatureFlags();
@@ -31,7 +31,7 @@ void main() {
     });
 
     test('can clear single feature flags', () {
-      final flags = FeatureFlags();
+      final flags = BugsnagFeatureFlags();
       flags.addFeatureFlag('my-feature-flag');
       flags.addFeatureFlag('flag-with-variant', 'some variant');
 
@@ -46,7 +46,7 @@ void main() {
     });
 
     test('produces expected JSON payloads', () {
-      final flags = FeatureFlags();
+      final flags = BugsnagFeatureFlags();
       flags.addFeatureFlag('my-feature-flag');
       flags.addFeatureFlag('flag-with-variant', 'some variant');
 
@@ -60,12 +60,12 @@ void main() {
     });
 
     test('serializes & deserializes', () {
-      final flags = FeatureFlags();
+      final flags = BugsnagFeatureFlags();
       flags.addFeatureFlag('flag-1');
       flags.addFeatureFlag('flag-2', 'a variant for flag-2');
       flags.addFeatureFlag('flag-3', 'a variant for flag-3');
 
-      final deserializedFlags = FeatureFlags.fromJson(flags.toJson());
+      final deserializedFlags = BugsnagFeatureFlags.fromJson(flags.toJson());
       expect(deserializedFlags, equals(flags));
     });
   });
