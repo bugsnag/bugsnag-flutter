@@ -60,5 +60,5 @@ Here’s a bit about our process designing and building the Bugsnag libraries:
 ## Further development docs
 
 For information on how to build the library and develop changes you should start by
-reading [the docs](docs/README.md).
+reading [the docs](docs/RELEASING.md).
 
