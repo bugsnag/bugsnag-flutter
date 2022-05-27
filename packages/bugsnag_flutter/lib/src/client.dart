@@ -29,7 +29,7 @@ abstract class Client {
   Future<void> setUser({String? id, String? email, String? name});
 
   /// Returns the currently set User information.
-  Future<User> getUser();
+  Future<BugsnagUser> getUser();
 
   /// Bugsnag uses the concept of “contexts” to help display and group your
   /// errors. The context represents what was happening in your application
@@ -257,7 +257,7 @@ class DelegateClient implements Client {
       client.errorHandler;
 
   @override
-  Future<User> getUser() => client.getUser();
+  Future<BugsnagUser> getUser() => client.getUser();
 
   @override
   Future<void> setUser({String? id, String? email, String? name}) =>
@@ -358,14 +358,14 @@ class ChannelClient implements Client {
       _notifyUnhandled;
 
   @override
-  Future<User> getUser() async =>
-      User.fromJson(await _channel.invokeMethod('getUser'));
+  Future<BugsnagUser> getUser() async =>
+      BugsnagUser.fromJson(await _channel.invokeMethod('getUser'));
 
   @override
   Future<void> setUser({String? id, String? email, String? name}) =>
       _channel.invokeMethod(
         'setUser',
-        User(id: id, email: email, name: name),
+        BugsnagUser(id: id, email: email, name: name),
       );
 
   @override
@@ -648,7 +648,7 @@ class Bugsnag extends Client with DelegateClient {
   Future<void> start({
     String? apiKey,
     FutureOr<void> Function()? runApp,
-    User? user,
+    BugsnagUser? user,
     bool persistUser = true,
     String? context,
     String? appType,

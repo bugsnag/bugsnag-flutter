@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bugsnag_flutter/bugsnag_flutter.dart';
 import 'package:bugsnag_flutter/src/client.dart';
+import 'package:bugsnag_flutter/src/model.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'test_channel.dart';

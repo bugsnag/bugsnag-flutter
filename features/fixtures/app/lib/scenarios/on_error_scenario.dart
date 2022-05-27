@@ -9,6 +9,8 @@ class OnErrorScenario extends Scenario {
         onError: [
           (event) => event.errors.first.message != 'Ignored',
           (event) {
+            event.app.id = 'app_id';
+            event.device.id = 'device_id';
             event.errors.first.message = 'Not ignored';
             return true;
           },
