@@ -11,6 +11,7 @@ class OnErrorScenario extends Scenario {
           (event) {
             event.app.id = 'app_id';
             event.device.id = 'device_id';
+            event.severity = BugsnagSeverity.info;
             event.errors.first.message = 'Not ignored';
             return true;
           },

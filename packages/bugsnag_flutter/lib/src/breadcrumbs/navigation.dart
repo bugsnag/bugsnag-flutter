@@ -74,7 +74,7 @@ class BugsnagNavigatorObserver extends NavigatorObserver {
     if (leaveBreadcrumbs) {
       bugsnag.leaveBreadcrumb(
         _operationDescription(function),
-        type: BreadcrumbType.navigation,
+        type: BugsnagBreadcrumbType.navigation,
         metadata: metadata,
       );
     }

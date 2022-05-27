@@ -4,10 +4,10 @@ import '_model_extensions.dart';
 /// this class. These values can be accessed and amended if necessary.
 ///
 /// See also:
-/// - [AppWithState]
+/// - [BugsnagAppWithState]
 /// - [BugsnagEvent]
-/// - [Device]
-class App {
+/// - [BugsnagDevice]
+class BugsnagApp {
   /// The architecture of the running application binary
   String? binaryArch;
 
@@ -38,7 +38,7 @@ class App {
   /// `AndroidManifest.xml` or [Bugsnag.start]
   int? versionCode;
 
-  App.fromJson(Map<String, Object?> json)
+  BugsnagApp.fromJson(Map<String, Object?> json)
       : binaryArch = json.safeGet('binaryArch'),
         buildUUID = json.safeGet('buildUUID'),
         bundleVersion = json.safeGet('bundleVersion'),
@@ -69,10 +69,10 @@ class App {
 /// class. These values can be accessed and amended if necessary.
 ///
 /// See also:
-/// - [App]
+/// - [BugsnagApp]
 /// - [BugsnagEvent]
-/// - [Device]
-class AppWithState extends App {
+/// - [BugsnagDevice]
+class BugsnagAppWithState extends BugsnagApp {
   /// The number of milliseconds the application was running before the
   /// event occurred
   int? duration;
@@ -89,7 +89,7 @@ class AppWithState extends App {
   /// - [Client.markLaunchCompleted]
   bool? isLaunching;
 
-  AppWithState.fromJson(Map<String, Object?> json)
+  BugsnagAppWithState.fromJson(Map<String, Object?> json)
       : duration = json.safeGet<num>('duration')?.toInt(),
         durationInForeground =
             json.safeGet<num>('durationInForeground')?.toInt(),

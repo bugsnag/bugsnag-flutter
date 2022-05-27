@@ -7,7 +7,8 @@ class ProjectPackagesScenario extends Scenario {
   Future<void> run() async {
     await bugsnag.start(
       endpoints: endpoints,
-      projectPackages: const ProjectPackages.withDefaults({'test_package'}),
+      projectPackages:
+          const BugsnagProjectPackages.withDefaults({'test_package'}),
     );
     await bugsnag.notify(Exception(), null);
   }

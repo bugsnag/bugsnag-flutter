@@ -21,7 +21,7 @@ class MazeRunnerChannels {
     });
   }
 
-  static Future<void> startBugsnag(EndpointConfiguration endpoints) {
+  static Future<void> startBugsnag(BugsnagEndpointConfiguration endpoints) {
     return platform.invokeMethod("startBugsnag", {
       'notifyEndpoint': endpoints.notify,
       'sessionEndpoint': endpoints.sessions,

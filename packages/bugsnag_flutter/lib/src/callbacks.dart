@@ -11,7 +11,7 @@ import 'model.dart';
 /// "on error" callbacks added in Dart are only triggered for events originating
 /// in Dart and will always be triggered before "on error" callbacks added
 /// in the native layer (on Android and iOS).
-typedef OnErrorCallback = FutureOr<bool> Function(BugsnagEvent event);
+typedef BugsnagOnErrorCallback = FutureOr<bool> Function(BugsnagEvent event);
 
 typedef _Callback<E> = FutureOr<bool> Function(E);
 

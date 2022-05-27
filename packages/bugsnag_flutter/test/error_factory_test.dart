@@ -6,8 +6,8 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('ErrorFactory', () {
     test('Exception with String message', () {
-      final error =
-          ErrorFactory.instance.createError(Exception('this is a message'));
+      final error = BugsnagErrorFactory.instance
+          .createError(Exception('this is a message'));
 
       expect(error.type, equals(BugsnagErrorType.dart));
       // a surprise _ appears!
@@ -17,7 +17,7 @@ void main() {
     });
 
     test('Exception with an object message', () {
-      final error = ErrorFactory.instance.createError(Exception(main));
+      final error = BugsnagErrorFactory.instance.createError(Exception(main));
 
       expect(error.type, equals(BugsnagErrorType.dart));
       // a surprise _ appears!
@@ -30,7 +30,7 @@ void main() {
     test('Complex Exception with message', () {
       const exception =
           FormatException('could not parse input', 'invalid input', 0);
-      final error = ErrorFactory.instance.createError(exception);
+      final error = BugsnagErrorFactory.instance.createError(exception);
 
       expect(error.type, equals(BugsnagErrorType.dart));
       expect(error.errorClass, equals('FormatException'));
@@ -45,7 +45,7 @@ void main() {
 
     test('Simple FlutterError', () {
       final flutterError = FlutterError('This is a FlutterError');
-      final error = ErrorFactory.instance.createError(flutterError);
+      final error = BugsnagErrorFactory.instance.createError(flutterError);
 
       expect(error.type, equals(BugsnagErrorType.dart));
       expect(error.errorClass, equals('FlutterError'));
@@ -66,7 +66,7 @@ void main() {
         ),
       ]);
 
-      final error = ErrorFactory.instance.createError(flutterError);
+      final error = BugsnagErrorFactory.instance.createError(flutterError);
 
       expect(error.type, equals(BugsnagErrorType.dart));
       expect(error.errorClass, equals('FlutterError'));
@@ -82,7 +82,8 @@ void main() {
     });
 
     test('BadlyBehavedError', () {
-      final error = ErrorFactory.instance.createError(BadlyBehavedError());
+      final error =
+          BugsnagErrorFactory.instance.createError(BadlyBehavedError());
 
       expect(error.type, equals(BugsnagErrorType.dart));
       expect(error.errorClass, equals('BadlyBehavedError'));
@@ -91,7 +92,7 @@ void main() {
     });
 
     test('Thrown number', () {
-      final error = ErrorFactory.instance.createError(123);
+      final error = BugsnagErrorFactory.instance.createError(123);
 
       expect(error.type, equals(BugsnagErrorType.dart));
       expect(error.errorClass, equals('int'));
@@ -108,7 +109,7 @@ void main() {
         thrownError = e;
       }
 
-      final error = ErrorFactory.instance.createError(thrownError);
+      final error = BugsnagErrorFactory.instance.createError(thrownError);
       expect(error.errorClass, equals('FlutterError'));
       expect(error.stacktrace.length, greaterThan(1));
 
