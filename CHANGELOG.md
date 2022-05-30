@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.0.2 (2022-05-30)
+
+- Prefixed all class named with 'Bugsnag' to avoid clashing with application code.
+
 ## 2.0.1 (2022-05-25)
 
 - Fixed documentation links in README.md
