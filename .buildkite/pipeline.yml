@@ -72,7 +72,9 @@ steps:
       - features/scripts/build_ios_app.sh
     plugins:
       artifacts#v1.5.0:
-        upload: "features/fixtures/app/build/ios/ipa/app-2.8.1.ipa"
+        upload:
+          from: "features/fixtures/app/build/ios/ipa/app.ipa"
+          to: "features/fixtures/app/build/ios/ipa/app-2.8.1.ipa"
 
   - label: Build iOS Test Fixture 3.0.1
     key: "ios-fixture-3-0-1"
@@ -84,7 +86,9 @@ steps:
       - features/scripts/build_ios_app.sh
     plugins:
       artifacts#v1.5.0:
-        upload: "features/fixtures/app/build/ios/ipa/app-3.0.1.ipa"
+        upload:
+          from: "features/fixtures/app/build/ios/ipa/app.ipa"
+          to: "features/fixtures/app/build/ios/ipa/app-3.0.1.ipa"
 
   - label: 'iOS 14 end-to-end tests 2.8.1'
     depends_on: "ios-fixture-2-0-0"
@@ -144,7 +148,9 @@ steps:
       - features/scripts/build_android_app.sh
     plugins:
       artifacts#v1.5.0:
-        upload: "features/fixtures/app/build/app/outputs/flutter-apk/app-release-2.8.1.apk"
+        upload:
+          from: "features/fixtures/app/build/app/outputs/flutter-apk/app-release.apk"
+          to: "features/fixtures/app/build/app/outputs/flutter-apk/app-release-2.8.1.apk"
 
   - label: Build Android Test Fixture 3.0.1
     key: "android-fixture-3-0-1"
@@ -155,7 +161,9 @@ steps:
       - features/scripts/build_android_app.sh
     plugins:
       artifacts#v1.5.0:
-        upload: "features/fixtures/app/build/app/outputs/flutter-apk/app-release-3.0.1.apk"
+        upload:
+          from: "features/fixtures/app/build/app/outputs/flutter-apk/app-release.apk"
+          to: "features/fixtures/app/build/app/outputs/flutter-apk/app-release-3.0.1.apk"
 
   - label: 'Android 12 end-to-end tests 2.8.1'
     depends_on: "android-fixture-2-0-0"
