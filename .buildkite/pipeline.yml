@@ -6,35 +6,35 @@ steps:
   - label: ":test_tube: 2.8.1"
     timeout_in_minutes: 10
     env:
-      FLUTTER_VERSION: 2.8.1
+      FLUTTER_DIR: "/usr/local/bin/flutter-2.8.1"
     commands:
       - make test
 
   - label: ":test_tube: 3.0.1"
     timeout_in_minutes: 10
     env:
-      FLUTTER_VERSION: 3.0.1
+      FLUTTER_DIR: "/usr/local/bin/flutter-3.0.1"
     commands:
       - make test
 
   - label: ":lint-roller: 2.8.1"
     timeout_in_minutes: 10
     env:
-      FLUTTER_VERSION: 2.8.1
+      FLUTTER_DIR: "/usr/local/bin/flutter-2.8.1"
     commands:
       - make lint
 
   - label: ":lint-roller: 3.0.1"
     timeout_in_minutes: 10
     env:
-      FLUTTER_VERSION: 3.0.1
+      FLUTTER_DIR: "/usr/local/bin/flutter-3.0.1"
     commands:
       - make lint
 
   - label: Build Example App 2.8.1
     timeout_in_minutes: 10
     env:
-      FLUTTER_VERSION: 2.8.1
+      FLUTTER_DIR: "/usr/local/bin/flutter-2.8.1"
     commands:
       - pod repo update
       - make example
@@ -48,7 +48,7 @@ steps:
   - label: Build Example App 3.0.1
     timeout_in_minutes: 10
     env:
-      FLUTTER_VERSION: 3.0.1
+      FLUTTER_DIR: "/usr/local/bin/flutter-3.0.1"
     commands:
       - pod repo update
       - make example
@@ -66,7 +66,7 @@ steps:
     key: "ios-fixture-2-0-0"
     timeout_in_minutes: 20
     env:
-      FLUTTER_VERSION: 2.8.1
+      FLUTTER_DIR: "/usr/local/bin/flutter-2.8.1"
     commands:
       - pod repo update trunk
       - features/scripts/build_ios_app.sh
@@ -78,7 +78,7 @@ steps:
     key: "ios-fixture-3-0-1"
     timeout_in_minutes: 20
     env:
-      FLUTTER_VERSION: 3.0.1
+      FLUTTER_DIR: "/usr/local/bin/flutter-3.0.1"
     commands:
       - pod repo update trunk
       - features/scripts/build_ios_app.sh
@@ -90,7 +90,7 @@ steps:
     depends_on: "ios-fixture-2-0-0"
     timeout_in_minutes: 10
     env:
-      FLUTTER_VERSION: 2.8.1
+      FLUTTER_DIR: "/usr/local/bin/flutter-2.8.1"
     agents:
       queue: opensource
     plugins:
@@ -113,7 +113,7 @@ steps:
     depends_on: "ios-fixture-3-0-1"
     timeout_in_minutes: 10
     env:
-      FLUTTER_VERSION: 3.0.1
+      FLUTTER_DIR: "/usr/local/bin/flutter-3.0.1"
     agents:
       queue: opensource
     plugins:
@@ -139,7 +139,7 @@ steps:
     key: "android-fixture-2-0-0"
     timeout_in_minutes: 20
     env:
-      FLUTTER_VERSION: 2.8.1
+      FLUTTER_DIR: "/usr/local/bin/flutter-2.8.1"
     commands:
       - features/scripts/build_android_app.sh
     plugins:
@@ -150,7 +150,7 @@ steps:
     key: "android-fixture-3-0-1"
     timeout_in_minutes: 20
     env:
-      FLUTTER_VERSION: 3.0.1
+      FLUTTER_DIR: "/usr/local/bin/flutter-3.0.1"
     commands:
       - features/scripts/build_android_app.sh
     plugins:
@@ -161,7 +161,7 @@ steps:
     depends_on: "android-fixture-2-0-0"
     timeout_in_minutes: 10
     env:
-      FLUTTER_VERSION: 2.8.1
+      FLUTTER_DIR: "/usr/local/bin/flutter-2.8.1"
     agents:
       queue: opensource
     plugins:
@@ -184,7 +184,7 @@ steps:
     depends_on: "android-fixture-3-0-1"
     timeout_in_minutes: 10
     env:
-      FLUTTER_VERSION: 3.0.1
+      FLUTTER_DIR: "/usr/local/bin/flutter-3.0.1"
     agents:
       queue: opensource
     plugins:
