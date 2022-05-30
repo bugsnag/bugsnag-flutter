@@ -1,4 +1,4 @@
-import 'package:bugsnag_flutter/bugsnag_flutter.dart';
+import 'package:bugsnag_flutter/src/model.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -20,7 +20,7 @@ void main() {
         'totalMemory': 7823929344
       };
 
-      final device = Device.fromJson(json);
+      final device = BugsnagDevice.fromJson(json);
       expect(device.cpuAbi, ['arm64-v8a', 'armeabi-v7a', 'armeabi']);
       expect(device.id, 'b97e2a6b-65d6-4e9d-a010-aa737eae3d33');
       expect(device.jailbroken, false);
@@ -54,7 +54,7 @@ void main() {
         'totalMemory': 68714848256
       };
 
-      final device = Device.fromJson(json);
+      final device = BugsnagDevice.fromJson(json);
       expect(device.cpuAbi, null);
       expect(device.id, '48decb8cf9f410c4c20e6f597070ee60b131a5c4');
       expect(device.jailbroken, false);
@@ -94,7 +94,7 @@ void main() {
         'totalMemory': 7823929344,
       };
 
-      final device = DeviceWithState.fromJson(json);
+      final device = BugsnagDeviceWithState.fromJson(json);
       expect(device.cpuAbi, ['arm64-v8a', 'armeabi-v7a', 'armeabi']);
       expect(device.freeDisk, 112632418304);
       expect(device.freeMemory, 3759054848);
@@ -139,7 +139,7 @@ void main() {
         'totalMemory': 68717121536,
       };
 
-      final device = DeviceWithState.fromJson(json);
+      final device = BugsnagDeviceWithState.fromJson(json);
       expect(device.cpuAbi, null);
       expect(device.freeDisk, 225370066944);
       expect(device.freeMemory, 34524872704);

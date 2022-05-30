@@ -3,10 +3,10 @@ import 'package:bugsnag_flutter/src/bugsnag_stacktrace.dart';
 import 'model/event.dart';
 import 'model/stackframe.dart';
 
-class ErrorFactory {
-  static const instance = ErrorFactory._internal();
+class BugsnagErrorFactory {
+  static const instance = BugsnagErrorFactory._internal();
 
-  const ErrorFactory._internal();
+  const BugsnagErrorFactory._internal();
 
   BugsnagError createError(dynamic error, [StackTrace? stackTrace]) {
     // we favour the stackTrace on the `error` object, if one exists as this is

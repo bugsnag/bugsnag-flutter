@@ -16,10 +16,10 @@ import 'model.dart';
 final _notifier = {
   'name': 'Flutter Bugsnag Notifier',
   'url': 'https://github.com/bugsnag/bugsnag-flutter',
-  'version': '2.0.1'
+  'version': '2.0.2'
 };
 
-abstract class Client {
+abstract class BugsnagClient {
   /// An utility error handling function that will send reported errors to
   /// Bugsnag as unhandled. The [errorHandler] is suitable for use with
   /// common Dart error callbacks such as [runZonedGuarded] or [Future.onError].
@@ -29,7 +29,7 @@ abstract class Client {
   Future<void> setUser({String? id, String? email, String? name});
 
   /// Returns the currently set User information.
-  Future<User> getUser();
+  Future<BugsnagUser> getUser();
 
   /// Bugsnag uses the concept of “contexts” to help display and group your
   /// errors. The context represents what was happening in your application
@@ -70,7 +70,7 @@ abstract class Client {
   Future<void> leaveBreadcrumb(
     String message, {
     Map<String, Object>? metadata,
-    BreadcrumbType type = BreadcrumbType.manual,
+    BugsnagBreadcrumbType type = BugsnagBreadcrumbType.manual,
   });
 
   /// Returns the current buffer of breadcrumbs that will be sent with captured
@@ -96,7 +96,7 @@ abstract class Client {
   /// - [addFeatureFlag]
   /// - [clearFeatureFlag]
   /// - [clearFeatureFlags]
-  Future<void> addFeatureFlags(List<FeatureFlag> featureFlags);
+  Future<void> addFeatureFlags(List<BugsnagFeatureFlag> featureFlags);
 
   /// Remove a single feature flag regardless of its current status. This will
   /// stop the specified feature flag from being reported. If the named feature
@@ -189,7 +189,7 @@ abstract class Client {
   Future<bool> resumeSession();
 
   /// Informs Bugsnag that the application has finished launching. Once this
-  /// has resolved [AppWithState.isLaunching] will always be false in any new
+  /// has resolved [BugsnagAppWithState.isLaunching] will always be false in any new
   /// error reports, and synchronous delivery will not be attempted on the next
   /// launch for any fatal crashes.
   Future<void> markLaunchCompleted();
@@ -200,7 +200,7 @@ abstract class Client {
   /// For example, this allows checking whether the app crashed on its last
   /// launch, which could be used to perform conditional behaviour to recover
   /// from crashes, such as clearing the app data cache.
-  Future<LastRunInfo?> getLastRunInfo();
+  Future<BugsnagLastRunInfo?> getLastRunInfo();
 
   /// Notify Bugsnag of a handled exception.
   ///
@@ -209,7 +209,7 @@ abstract class Client {
   Future<void> notify(
     dynamic error,
     StackTrace? stackTrace, {
-    OnErrorCallback? callback,
+    BugsnagOnErrorCallback? callback,
   });
 
   /// Add a "on error" callback, to execute code at the point where an error
@@ -229,16 +229,16 @@ abstract class Client {
   /// "on error" callbacks added here are only triggered for events originating
   /// in Dart and will always be triggered before "on error" callbacks added
   /// in the native layer (on Android and iOS).
-  void addOnError(OnErrorCallback onError);
+  void addOnError(BugsnagOnErrorCallback onError);
 
   /// Removes a previously added "on error" callback.
-  void removeOnError(OnErrorCallback onError);
+  void removeOnError(BugsnagOnErrorCallback onError);
 }
 
-class DelegateClient implements Client {
-  Client? _client;
+class DelegateClient implements BugsnagClient {
+  BugsnagClient? _client;
 
-  Client get client {
+  BugsnagClient get client {
     final localClient = _client;
     if (localClient == null) {
       throw Exception(
@@ -248,7 +248,7 @@ class DelegateClient implements Client {
     return localClient;
   }
 
-  set client(Client client) {
+  set client(BugsnagClient client) {
     _client = client;
   }
 
@@ -257,7 +257,7 @@ class DelegateClient implements Client {
       client.errorHandler;
 
   @override
-  Future<User> getUser() => client.getUser();
+  Future<BugsnagUser> getUser() => client.getUser();
 
   @override
   Future<void> setUser({String? id, String? email, String? name}) =>
@@ -273,7 +273,7 @@ class DelegateClient implements Client {
   Future<void> leaveBreadcrumb(
     String message, {
     Map<String, Object>? metadata,
-    BreadcrumbType type = BreadcrumbType.manual,
+    BugsnagBreadcrumbType type = BugsnagBreadcrumbType.manual,
   }) =>
       client.leaveBreadcrumb(message, metadata: metadata, type: type);
 
@@ -285,7 +285,7 @@ class DelegateClient implements Client {
       client.addFeatureFlag(name, variant);
 
   @override
-  Future<void> addFeatureFlags(List<FeatureFlag> featureFlags) =>
+  Future<void> addFeatureFlags(List<BugsnagFeatureFlag> featureFlags) =>
       client.addFeatureFlags(featureFlags);
 
   @override
@@ -319,24 +319,25 @@ class DelegateClient implements Client {
   Future<void> markLaunchCompleted() => client.markLaunchCompleted();
 
   @override
-  Future<LastRunInfo?> getLastRunInfo() => client.getLastRunInfo();
+  Future<BugsnagLastRunInfo?> getLastRunInfo() => client.getLastRunInfo();
 
   @override
   Future<void> notify(
     dynamic error,
     StackTrace? stackTrace, {
-    OnErrorCallback? callback,
+    BugsnagOnErrorCallback? callback,
   }) =>
       client.notify(error, stackTrace, callback: callback);
 
   @override
-  void addOnError(OnErrorCallback onError) => client.addOnError(onError);
+  void addOnError(BugsnagOnErrorCallback onError) => client.addOnError(onError);
 
   @override
-  void removeOnError(OnErrorCallback onError) => client.removeOnError(onError);
+  void removeOnError(BugsnagOnErrorCallback onError) =>
+      client.removeOnError(onError);
 }
 
-class ChannelClient implements Client {
+class ChannelClient implements BugsnagClient {
   FlutterExceptionHandler? _previousFlutterOnError;
 
   ChannelClient(bool autoDetectErrors) {
@@ -358,14 +359,14 @@ class ChannelClient implements Client {
       _notifyUnhandled;
 
   @override
-  Future<User> getUser() async =>
-      User.fromJson(await _channel.invokeMethod('getUser'));
+  Future<BugsnagUser> getUser() async =>
+      BugsnagUser.fromJson(await _channel.invokeMethod('getUser'));
 
   @override
   Future<void> setUser({String? id, String? email, String? name}) =>
       _channel.invokeMethod(
         'setUser',
-        User(id: id, email: email, name: name),
+        BugsnagUser(id: id, email: email, name: name),
       );
 
   @override
@@ -379,7 +380,7 @@ class ChannelClient implements Client {
   Future<void> leaveBreadcrumb(
     String message, {
     Map<String, Object>? metadata,
-    BreadcrumbType type = BreadcrumbType.manual,
+    BugsnagBreadcrumbType type = BugsnagBreadcrumbType.manual,
   }) async {
     final crumb = BugsnagBreadcrumb(message, type: type, metadata: metadata);
     await _channel.invokeMethod('leaveBreadcrumb', crumb);
@@ -391,11 +392,11 @@ class ChannelClient implements Client {
           .map((e) => BugsnagBreadcrumb.fromJson(e)));
 
   @override
-  Future<void> addFeatureFlag(String name, [String? variant]) =>
-      _channel.invokeMethod('addFeatureFlags', [FeatureFlag(name, variant)]);
+  Future<void> addFeatureFlag(String name, [String? variant]) => _channel
+      .invokeMethod('addFeatureFlags', [BugsnagFeatureFlag(name, variant)]);
 
   @override
-  Future<void> addFeatureFlags(List<FeatureFlag> featureFlags) =>
+  Future<void> addFeatureFlags(List<BugsnagFeatureFlag> featureFlags) =>
       _channel.invokeMethod('addFeatureFlags', featureFlags);
 
   @override
@@ -445,18 +446,18 @@ class ChannelClient implements Client {
       _channel.invokeMethod('markLaunchCompleted');
 
   @override
-  Future<LastRunInfo?> getLastRunInfo() async {
+  Future<BugsnagLastRunInfo?> getLastRunInfo() async {
     final json = await _channel.invokeMethod('getLastRunInfo');
-    return (json == null) ? null : LastRunInfo.fromJson(json);
+    return (json == null) ? null : BugsnagLastRunInfo.fromJson(json);
   }
 
   @override
-  void addOnError(OnErrorCallback onError) {
+  void addOnError(BugsnagOnErrorCallback onError) {
     _onErrorCallbacks.add(onError);
   }
 
   @override
-  void removeOnError(OnErrorCallback onError) {
+  void removeOnError(BugsnagOnErrorCallback onError) {
     _onErrorCallbacks.remove(onError);
   }
 
@@ -470,9 +471,10 @@ class ChannelClient implements Client {
     bool unhandled,
     FlutterErrorDetails? details,
     StackTrace? stackTrace,
-    OnErrorCallback? callback,
+    BugsnagOnErrorCallback? callback,
   ) async {
-    final errorPayload = ErrorFactory.instance.createError(error, stackTrace);
+    final errorPayload =
+        BugsnagErrorFactory.instance.createError(error, stackTrace);
     final event = await _createEvent(
       errorPayload,
       details: details,
@@ -501,7 +503,7 @@ class ChannelClient implements Client {
   Future<void> notify(
     dynamic error,
     StackTrace? stackTrace, {
-    OnErrorCallback? callback,
+    BugsnagOnErrorCallback? callback,
   }) {
     return _notifyInternal(error, false, null, stackTrace, callback);
   }
@@ -524,7 +526,10 @@ class ChannelClient implements Client {
     final errorInfo = details?.informationCollector?.call() ?? [];
     final errorContext = details?.context?.toDescription();
     final errorLibrary = details?.library;
-    final lifecycleState = SchedulerBinding.instance?.lifecycleState.toString();
+    // SchedulerBinding.instance is nullable in Flutter <3.0.0
+    // ignore: unnecessary_cast
+    final schedulerBinding = SchedulerBinding.instance as SchedulerBinding?;
+    final lifecycleState = schedulerBinding?.lifecycleState.toString();
     final metadata = {
       if (buildID != null) 'buildID': buildID,
       if (errorContext != null) 'errorContext': errorContext,
@@ -570,7 +575,7 @@ class ChannelClient implements Client {
 ///
 /// See also:
 /// - [start]
-class Bugsnag extends Client with DelegateClient {
+class Bugsnag extends BugsnagClient with DelegateClient {
   Bugsnag._internal();
 
   /// Attach Bugsnag to an already initialised native notifier, optionally
@@ -602,7 +607,7 @@ class Bugsnag extends Client with DelegateClient {
   Future<void> attach({
     FutureOr<void> Function()? runApp,
     bool autoDetectErrors = true,
-    List<OnErrorCallback> onError = const [],
+    List<BugsnagOnErrorCallback> onError = const [],
   }) async {
     // make sure we can use Channels before calling runApp
     _runWithErrorDetection(
@@ -648,32 +653,34 @@ class Bugsnag extends Client with DelegateClient {
   Future<void> start({
     String? apiKey,
     FutureOr<void> Function()? runApp,
-    User? user,
+    BugsnagUser? user,
     bool persistUser = true,
     String? context,
     String? appType,
     String? appVersion,
     String? bundleVersion,
     String? releaseStage,
-    EnabledErrorTypes enabledErrorTypes = EnabledErrorTypes.all,
-    EndpointConfiguration endpoints = EndpointConfiguration.bugsnag,
+    BugsnagEnabledErrorTypes enabledErrorTypes = BugsnagEnabledErrorTypes.all,
+    BugsnagEndpointConfiguration endpoints =
+        BugsnagEndpointConfiguration.bugsnag,
     int maxBreadcrumbs = 50,
     int maxPersistedSessions = 128,
     int maxPersistedEvents = 32,
     bool autoTrackSessions = true,
     bool autoDetectErrors = true,
-    ThreadSendPolicy sendThreads = ThreadSendPolicy.always,
+    BugsnagThreadSendPolicy sendThreads = BugsnagThreadSendPolicy.always,
     int launchDurationMillis = 5000,
     bool sendLaunchCrashesSynchronously = true,
     int appHangThresholdMillis = appHangThresholdFatalOnly,
     Set<String> redactedKeys = const {'password'},
     Set<String> discardClasses = const {},
     Set<String>? enabledReleaseStages,
-    Set<EnabledBreadcrumbType>? enabledBreadcrumbTypes,
-    ProjectPackages projectPackages = const ProjectPackages.withDefaults({}),
+    Set<BugsnagEnabledBreadcrumbType>? enabledBreadcrumbTypes,
+    BugsnagProjectPackages projectPackages =
+        const BugsnagProjectPackages.withDefaults({}),
     Map<String, Map<String, Object>>? metadata,
-    List<FeatureFlag>? featureFlags,
-    List<OnErrorCallback> onError = const [],
+    List<BugsnagFeatureFlag>? featureFlags,
+    List<BugsnagOnErrorCallback> onError = const [],
     Directory? persistenceDirectory,
     int? versionCode,
   }) async {
@@ -688,7 +695,7 @@ class Bugsnag extends Client with DelegateClient {
     );
 
     if (projectPackages._includeDefaults) {
-      projectPackages += ProjectPackages.only(_findProjectPackages());
+      projectPackages += BugsnagProjectPackages.only(_findProjectPackages());
     }
 
     await ChannelClient._channel.invokeMethod('start', <String, dynamic>{
@@ -716,7 +723,7 @@ class Bugsnag extends Client with DelegateClient {
       if (enabledReleaseStages != null)
         'enabledReleaseStages': enabledReleaseStages.toList(),
       'enabledBreadcrumbTypes':
-          (enabledBreadcrumbTypes ?? EnabledBreadcrumbType.values)
+          (enabledBreadcrumbTypes ?? BugsnagEnabledBreadcrumbType.values)
               .map((e) => e._toName())
               .toList(),
       'projectPackages': projectPackages,
@@ -755,7 +762,7 @@ class Bugsnag extends Client with DelegateClient {
   static const int appHangThresholdFatalOnly = 2147483647;
 
   /// Safely report an error that occurred within a guardedZone - if attached
-  /// to a [Client] then use its [Client.errorHandler], otherwise push the error
+  /// to a [BugsnagClient] then use its [BugsnagClient.errorHandler], otherwise push the error
   /// upwards using [Zone.handleUncaughtError]
   void _reportZonedError(dynamic error, StackTrace stackTrace) {
     if (_client != null) {
@@ -794,12 +801,12 @@ class Bugsnag extends Client with DelegateClient {
 ///
 /// See also:
 /// - [Bugsnag.start]
-/// - [ProjectPackages.defaults]
-class ProjectPackages {
+/// - [BugsnagProjectPackages.defaults]
+class BugsnagProjectPackages {
   final bool _includeDefaults;
   final Set<String> _packageNames;
 
-  const ProjectPackages._internal(
+  const BugsnagProjectPackages._internal(
     this._packageNames,
     this._includeDefaults,
   );
@@ -809,7 +816,7 @@ class ProjectPackages {
   /// your application uses on Android.
   ///
   /// This does not include any [defaults](ProjectPackages.withDefaults).
-  const ProjectPackages.only(Set<String> packageNames)
+  const BugsnagProjectPackages.only(Set<String> packageNames)
       : this._internal(packageNames, false);
 
   /// Combine the given set of `packageNames` with the default packages.
@@ -818,10 +825,10 @@ class ProjectPackages {
   ///
   /// See also:
   /// - [Android Configuration.projectPackages](https://docs.bugsnag.com/platforms/android/configuration-options/#projectpackages)
-  const ProjectPackages.withDefaults(Set<String> additionalPackageNames)
+  const BugsnagProjectPackages.withDefaults(Set<String> additionalPackageNames)
       : this._internal(additionalPackageNames, true);
 
-  operator +(ProjectPackages other) => ProjectPackages._internal(
+  operator +(BugsnagProjectPackages other) => BugsnagProjectPackages._internal(
       _packageNames.union(other._packageNames),
       _includeDefaults || other._includeDefaults);
 

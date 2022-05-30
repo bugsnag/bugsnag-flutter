@@ -5,7 +5,7 @@ class BreadcrumbsScenario extends Scenario {
   @override
   Future<void> run() async {
     await bugsnag.start(
-      enabledBreadcrumbTypes: {EnabledBreadcrumbType.state},
+      enabledBreadcrumbTypes: {BugsnagEnabledBreadcrumbType.state},
       endpoints: endpoints,
     );
 
@@ -16,9 +16,9 @@ class BreadcrumbsScenario extends Scenario {
 
     final breadcrumbs = await bugsnag.getBreadcrumbs();
     expect(breadcrumbs[0].message, 'Bugsnag loaded');
-    expect(breadcrumbs[0].type, BreadcrumbType.state);
+    expect(breadcrumbs[0].type, BugsnagBreadcrumbType.state);
     expect(breadcrumbs[1].message, 'Manual breadcrumb');
-    expect(breadcrumbs[1].type, BreadcrumbType.manual);
+    expect(breadcrumbs[1].type, BugsnagBreadcrumbType.manual);
 
     await bugsnag.notify(Exception('BreadcrumbsScenarioException'), null);
   }

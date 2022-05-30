@@ -4,7 +4,8 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('ProjectPackages', () {
     test('withDefaults', () {
-      const testPackages = ProjectPackages.withDefaults({'my_package_name'});
+      const testPackages =
+          BugsnagProjectPackages.withDefaults({'my_package_name'});
 
       expect(
         testPackages.toJson(),
@@ -16,7 +17,7 @@ void main() {
     });
 
     test('only', () {
-      const testPackages = ProjectPackages.only({'my_package_name'});
+      const testPackages = BugsnagProjectPackages.only({'my_package_name'});
 
       expect(
         testPackages.toJson(),

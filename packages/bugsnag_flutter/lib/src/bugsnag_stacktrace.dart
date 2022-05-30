@@ -1,5 +1,6 @@
-import 'package:bugsnag_flutter/bugsnag_flutter.dart';
 import 'package:flutter/foundation.dart';
+
+import 'model.dart';
 
 // This file is heavily based on:
 // https://github.com/dart-lang/sdk/blob/main/pkg/native_stack_traces/lib/src/convert.dart

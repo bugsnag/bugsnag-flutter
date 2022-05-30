@@ -5,10 +5,10 @@ import '_model_extensions.dart';
 /// amended if necessary.
 ///
 /// See also:
-/// - [DeviceWithState]
+/// - [BugsnagDeviceWithState]
 /// - [BugsnagEvent]
-/// - [App]
-class Device {
+/// - [BugsnagApp]
+class BugsnagDevice {
   /// Android only: The Application Binary Interface used
   List<String>? cpuAbi;
 
@@ -43,7 +43,7 @@ class Device {
   /// The total number of bytes of memory on the device
   int? totalMemory;
 
-  Device.fromJson(Map<String, Object?> json)
+  BugsnagDevice.fromJson(Map<String, Object?> json)
       : cpuAbi = json.safeGet('cpuAbi'),
         id = json.safeGet('id'),
         jailbroken = json.safeGet('jailbroken'),
@@ -78,10 +78,10 @@ class Device {
 /// amended if necessary.
 ///
 /// See also:
-/// - [Device]
+/// - [BugsnagDevice]
 /// - [BugsnagEvent]
-/// - [App]
-class DeviceWithState extends Device {
+/// - [BugsnagApp]
+class BugsnagDeviceWithState extends BugsnagDevice {
   /// The number of free bytes of storage available on the device
   int? freeDisk;
 
@@ -95,7 +95,7 @@ class DeviceWithState extends Device {
   /// The timestamp on the device when the event occurred
   DateTime? time;
 
-  DeviceWithState.fromJson(Map<String, Object?> json)
+  BugsnagDeviceWithState.fromJson(Map<String, Object?> json)
       : freeDisk = json.safeGet<num>('freeDisk')?.toInt(),
         freeMemory = json.safeGet<num>('freeMemory')?.toInt(),
         orientation = json.safeGet('orientation'),

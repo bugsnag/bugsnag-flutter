@@ -6,7 +6,7 @@ import 'package:flutter/widgets.dart';
 import '../channels.dart';
 
 abstract class Scenario {
-  late EndpointConfiguration endpoints;
+  late BugsnagEndpointConfiguration endpoints;
 
   String? extraConfig;
 
