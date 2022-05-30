@@ -2,4 +2,6 @@
 set -o errexit
 
 cd features/fixtures/app
-flutter build apk
+flutter-$FLUTTER_VERSION build apk
+
+mv ../../../features/fixtures/app/build/app/outputs/flutter-apk/app-release.apk ../../../features/fixtures/app/build/app/outputs/flutter-apk/app-release-$FLUTTER_VERSION.apk
