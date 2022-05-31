@@ -91,7 +91,7 @@ steps:
           to: "features/fixtures/app/build/ios/ipa/app-3.0.1.ipa"
 
   - label: 'iOS 14 end-to-end tests 2.8.1'
-    depends_on: "ios-fixture-2-0-0"
+    depends_on: "ios-fixture-2-8-1"
     timeout_in_minutes: 10
     env:
       FLUTTER_DIR: "/opt/flutter/2.8.1/bin/flutter"
