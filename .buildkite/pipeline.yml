@@ -1,5 +1,5 @@
 agents:
-  queue: ms-arm-12-8
+  queue: macos-12-arm
 
 steps:
 
