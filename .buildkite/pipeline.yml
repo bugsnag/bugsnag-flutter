@@ -63,7 +63,7 @@ steps:
   # iOS
   #
   - label: Build iOS Test Fixture 2.8.1
-    key: "ios-fixture-2-0-0"
+    key: "ios-fixture-2-8-1"
     timeout_in_minutes: 20
     env:
       FLUTTER_DIR: "/opt/flutter/2.8.1/bin/flutter"
