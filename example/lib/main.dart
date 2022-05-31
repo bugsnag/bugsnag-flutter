@@ -2,11 +2,8 @@ import 'dart:async';
 
 import 'package:bugsnag_example/native_crashes.dart';
 import 'package:bugsnag_flutter_http/http.dart' as http;
-import 'package:bugsnag_flutter/bugsnag.dart';
-import 'package:bugsnag_flutter/widgets.dart';
+import 'package:bugsnag_flutter/bugsnag_flutter.dart';
 import 'package:flutter/material.dart';
-
-import 'bad_widget.dart';
 
 void main() async => bugsnag.start(
       // Wrap your application start to capture unhandled errors
@@ -14,7 +11,7 @@ void main() async => bugsnag.start(
       // Find your API key in the settings menu of your Bugsnag dashboard
       apiKey: 'add_your_api_key_here',
       // Specify in-project packages if you have multiple or are splitting debug info in your build (--split-debug-info)
-      projectPackages: const ProjectPackages.only({'bugsnag_example'}),
+      projectPackages: const BugsnagProjectPackages.only({'bugsnag_example'}),
       // onError callbacks can be used to modify or reject certain events
       onError: [
         (event) {
@@ -115,12 +112,6 @@ class ExampleHomeScreen extends StatelessWidget {
             ElevatedButton(
               onPressed: _handledException,
               child: const Text('Notify Handled Error'),
-            ),
-            ErrorBoundary(
-              child: const BadWidget(),
-              fallback: (context) => const Text(
-                'A build() error has occurred and been reported',
-              ),
             ),
             ElevatedButton(
               child: const Text('Native Errors'),

@@ -1,4 +1,4 @@
-import 'package:bugsnag_flutter/bugsnag.dart';
+import 'package:bugsnag_flutter/bugsnag_flutter.dart';
 import 'package:bugsnag_flutter_http/src/breadcrumb.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
@@ -12,7 +12,7 @@ void main() {
           http.Request('POST', Uri.parse('https://example.com/'))..body = body,
           Stopwatch()..start(),
           DummyResponse(200, contentLength: 123));
-      expect(breadcrumb.type, BreadcrumbType.request);
+      expect(breadcrumb.type, BugsnagBreadcrumbType.request);
       expect(breadcrumb.message, 'IOClient request succeeded');
       expect(breadcrumb.metadata?['duration'], isNotNull);
       expect(breadcrumb.metadata?['method'], 'POST');

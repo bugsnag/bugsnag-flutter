@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:bugsnag_flutter/bugsnag.dart';
+import 'package:bugsnag_flutter/bugsnag_flutter.dart';
 import 'package:bugsnag_flutter/src/client.dart';
 import 'package:flutter_test/flutter_test.dart';
 

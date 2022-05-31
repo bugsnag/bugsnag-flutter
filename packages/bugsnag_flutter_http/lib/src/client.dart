@@ -1,4 +1,4 @@
-import 'package:bugsnag_flutter/bugsnag.dart';
+import 'package:bugsnag_flutter/bugsnag_flutter.dart';
 import 'package:http/http.dart' as http;
 
 import 'breadcrumb.dart';

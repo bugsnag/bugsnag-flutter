@@ -4,7 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:MazeRunner/channels.dart';
-import 'package:bugsnag_flutter/bugsnag.dart';
+import 'package:bugsnag_flutter/bugsnag_flutter.dart';
 import 'package:flutter/material.dart';
 
 import 'scenarios/scenario.dart';
@@ -191,7 +191,7 @@ class _HomePageState extends State<MazeRunnerHomePage> {
     return scenarios[scenarioIndex].init();
   }
 
-  EndpointConfiguration _endpoints() => EndpointConfiguration(
+  BugsnagEndpointConfiguration _endpoints() => BugsnagEndpointConfiguration(
         _notifyEndpointController.value.text,
         _sessionEndpointController.value.text,
       );

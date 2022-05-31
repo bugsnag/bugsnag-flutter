@@ -1,4 +1,4 @@
-import 'package:bugsnag_flutter/bugsnag.dart';
+import 'package:bugsnag_flutter/bugsnag_flutter.dart';
 
 import 'scenario.dart';
 
@@ -11,18 +11,18 @@ class StartBugsnagScenario extends Scenario {
       appVersion: '1.2.3',
       versionCode: 4321,
       context: 'awesome',
-      user: User(
+      user: BugsnagUser(
         id: '123',
         name: 'From Config',
       ),
       redactedKeys: {'secret'},
       releaseStage: 'testing',
       enabledReleaseStages: {'testing'},
-      enabledBreadcrumbTypes: {EnabledBreadcrumbType.error},
+      enabledBreadcrumbTypes: {BugsnagEnabledBreadcrumbType.error},
       endpoints: endpoints,
       featureFlags: const [
-        FeatureFlag('demo-mode'),
-        FeatureFlag('sample-group', '123'),
+        BugsnagFeatureFlag('demo-mode'),
+        BugsnagFeatureFlag('sample-group', '123'),
       ],
       metadata: const {
         'custom': {
@@ -31,7 +31,7 @@ class StartBugsnagScenario extends Scenario {
           'password': 'not redacted'
         }
       },
-      sendThreads: ThreadSendPolicy.never,
+      sendThreads: BugsnagThreadSendPolicy.never,
       runApp: () async {
         await bugsnag.notify(
           Exception('Exception with attached info'),

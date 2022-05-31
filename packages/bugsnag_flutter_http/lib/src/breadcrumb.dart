@@ -1,4 +1,4 @@
-import 'package:bugsnag_flutter/bugsnag.dart';
+import 'package:bugsnag_flutter/bugsnag_flutter.dart';
 import 'package:http/http.dart' as http;
 
 class Breadcrumb {
@@ -29,6 +29,6 @@ class Breadcrumb {
           if (responseContentLength != null)
             'responseContentLength': responseContentLength,
         },
-        type: BreadcrumbType.request);
+        type: BugsnagBreadcrumbType.request);
   }
 }

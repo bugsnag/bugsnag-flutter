@@ -1,4 +1,4 @@
-import 'package:bugsnag_flutter/bugsnag.dart';
+import 'package:bugsnag_flutter/src/model.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -15,7 +15,8 @@ void main() {
     });
 
     test('breadcrumb with no metadata toJson', () {
-      final breadcrumb = BugsnagBreadcrumb('oak', type: BreadcrumbType.log);
+      final breadcrumb =
+          BugsnagBreadcrumb('oak', type: BugsnagBreadcrumbType.log);
       final json = breadcrumb.toJson();
 
       expect(json['name'], equals('oak'));
@@ -33,7 +34,7 @@ void main() {
 
       final breadcrumb = BugsnagBreadcrumb.fromJson(json);
       expect(breadcrumb.message, equals('from all the way over the network'));
-      expect(breadcrumb.type, equals(BreadcrumbType.request));
+      expect(breadcrumb.type, equals(BugsnagBreadcrumbType.request));
       expect(breadcrumb.metadata, isNull);
       expect(breadcrumb.timestamp,
           equals(DateTime.utc(2022, 3, 3, 2, 15, 50, 405)));
@@ -49,7 +50,7 @@ void main() {
 
       final breadcrumb = BugsnagBreadcrumb.fromJson(json);
       expect(breadcrumb.message, equals('from all the way over the network'));
-      expect(breadcrumb.type, equals(BreadcrumbType.request));
+      expect(breadcrumb.type, equals(BugsnagBreadcrumbType.request));
       expect(breadcrumb.metadata, equals({'some string': 'value goes here'}));
       expect(breadcrumb.timestamp,
           equals(DateTime.utc(2022, 3, 3, 2, 15, 50, 405)));

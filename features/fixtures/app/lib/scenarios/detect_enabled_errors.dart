@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:bugsnag_flutter/bugsnag.dart';
+import 'package:bugsnag_flutter/bugsnag_flutter.dart';
 
 import '../channels.dart';
 import 'scenario.dart';
@@ -9,7 +9,7 @@ class DetectEnabledErrorsScenario extends Scenario {
   @override
   Future<void> run() async {
     await bugsnag.start(
-      enabledErrorTypes: EnabledErrorTypes(
+      enabledErrorTypes: BugsnagEnabledErrorTypes(
         unhandledDartExceptions:
             extraConfig?.contains('detectDartExceptions') == true,
         unhandledJvmExceptions:

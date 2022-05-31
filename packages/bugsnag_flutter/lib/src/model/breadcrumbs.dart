@@ -3,21 +3,21 @@ import 'metadata.dart';
 
 class BugsnagBreadcrumb {
   String message;
-  BreadcrumbType type;
+  BugsnagBreadcrumbType type;
   MetadataSection? metadata;
 
   final DateTime timestamp;
 
   BugsnagBreadcrumb(
     this.message, {
-    this.type = BreadcrumbType.manual,
+    this.type = BugsnagBreadcrumbType.manual,
     this.metadata,
   }) : timestamp = DateTime.now().toUtc();
 
   BugsnagBreadcrumb.fromJson(Map<String, dynamic> json)
       : message = json.safeGet('name'),
         timestamp = DateTime.parse(json['timestamp'] as String).toUtc(),
-        type = BreadcrumbType.values.byName(json['type'] as String),
+        type = BugsnagBreadcrumbType.values.byName(json['type'] as String),
         metadata = json
             .safeGet<Map>('metaData')
             ?.let((map) => BugsnagMetadata.sanitizedMap(map.cast()));
@@ -30,7 +30,7 @@ class BugsnagBreadcrumb {
       };
 }
 
-enum BreadcrumbType {
+enum BugsnagBreadcrumbType {
   navigation,
   request,
   process,

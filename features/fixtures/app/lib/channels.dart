@@ -1,4 +1,4 @@
-import 'package:bugsnag_flutter/bugsnag.dart';
+import 'package:bugsnag_flutter/bugsnag_flutter.dart';
 import 'package:flutter/services.dart';
 
 class MazeRunnerChannels {
@@ -21,7 +21,7 @@ class MazeRunnerChannels {
     });
   }
 
-  static Future<void> startBugsnag(EndpointConfiguration endpoints) {
+  static Future<void> startBugsnag(BugsnagEndpointConfiguration endpoints) {
     return platform.invokeMethod("startBugsnag", {
       'notifyEndpoint': endpoints.notify,
       'sessionEndpoint': endpoints.sessions,

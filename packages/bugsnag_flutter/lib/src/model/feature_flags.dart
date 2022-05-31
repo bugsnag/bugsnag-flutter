@@ -5,14 +5,14 @@ import '_model_extensions.dart';
 /// be used to identify runtime experiments and groups when reporting errors.
 ///
 /// See also:
-/// - [FeatureFlags]
-class FeatureFlag {
+/// - [BugsnagFeatureFlags]
+class BugsnagFeatureFlag {
   final String name;
   final String? variant;
 
-  const FeatureFlag(this.name, [this.variant]);
+  const BugsnagFeatureFlag(this.name, [this.variant]);
 
-  FeatureFlag.fromJson(Map<String, Object?> json)
+  BugsnagFeatureFlag.fromJson(Map<String, Object?> json)
       : name = json.safeGet('featureFlag'),
         variant = json.safeGet('variant');
 
@@ -22,12 +22,12 @@ class FeatureFlag {
       };
 }
 
-class FeatureFlags {
+class BugsnagFeatureFlags {
   final Map<String, String?> _content;
 
-  FeatureFlags() : _content = {};
+  BugsnagFeatureFlags() : _content = {};
 
-  FeatureFlags.fromJson(List<Map<String, Object?>> json)
+  BugsnagFeatureFlags.fromJson(List<Map<String, Object?>> json)
       : _content = {
           for (final flagJson in json)
             flagJson['featureFlag'] as String: flagJson['variant'] as String?,
@@ -60,7 +60,7 @@ class FeatureFlags {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is FeatureFlags &&
+      other is BugsnagFeatureFlags &&
           runtimeType == other.runtimeType &&
           _content.deepEquals(other._content);
 

@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:MazeRunner/scenarios/scenario.dart';
-import 'package:bugsnag_flutter/bugsnag.dart';
+import 'package:bugsnag_flutter/bugsnag_flutter.dart';
 
 class FeatureFlagsScenario extends Scenario {
   @override
@@ -9,18 +9,18 @@ class FeatureFlagsScenario extends Scenario {
     await bugsnag.start(
       endpoints: endpoints,
       featureFlags: const [
-        FeatureFlag('1'),
-        FeatureFlag('2', 'foo'),
-        FeatureFlag('3'),
+        BugsnagFeatureFlag('1'),
+        BugsnagFeatureFlag('2', 'foo'),
+        BugsnagFeatureFlag('3'),
       ],
     );
 
     await bugsnag.clearFeatureFlags();
 
     await bugsnag.addFeatureFlags(const [
-      FeatureFlag('one'),
-      FeatureFlag('two', 'foo'),
-      FeatureFlag('three'),
+      BugsnagFeatureFlag('one'),
+      BugsnagFeatureFlag('two', 'foo'),
+      BugsnagFeatureFlag('three'),
     ]);
     await bugsnag.addFeatureFlag('four');
     await bugsnag.addFeatureFlag('five', 'six');

@@ -3,23 +3,16 @@
 [![Documentation](https://img.shields.io/badge/documentation-latest-blue.svg)](https://docs.bugsnag.com/platforms/flutter/)
 [![Build status](https://badge.buildkite.com/e5d6c82f7202bbfe7114be8b8cb245b447a29470cd9320658b.svg)](https://buildkite.com/bugsnag/bugsnag-flutter)
 
-Get comprehensive [Flutter error reports](https://www.bugsnag.com/platforms/flutter/) to quickly
-debug errors.
-
-Bugsnag's [Flutter error reporting](https://www.bugsnag.com/platforms/flutter/)
-library automatically detects crashes in your Flutter apps, collecting diagnostic information and
+The [Bugsnag](https://www.bugsnag.com) error reporting library automatically detects Dart errors and
+native crashes in Flutter apps running on iOS and Android, collecting diagnostic information and
 immediately notifying your development team, helping you to understand and resolve issues as fast as
-possible.
-
-## Important
-
-**Our Flutter package is currently in the pre-release stage and is not yet intended for production use.**
-
+possible. Learn more about
+[Flutter error monitoring with Bugsnag](https://docs.bugsnag.com/platforms/flutter/).
 
 ## Features
 
 * Automatically report unhandled errors and crashes
-* Report [handled errors](https://docs.bugsnag.com/platforms/flutter/#reporting-handled-exceptions)
+* Report [handled errors](https://docs.bugsnag.com/platforms/flutter/#reporting-handled-errors)
 * [Log breadcrumbs](https://docs.bugsnag.com/platforms/flutter/#logging-breadcrumbs) which are
   attached to crash reports and add insight to users' actions
 * [Attach user information](https://docs.bugsnag.com/platforms/flutter/#identifying-users) to
@@ -31,7 +24,7 @@ possible.
 1. Complete the instructions in the [integration guide](https://docs.bugsnag.com/platforms/flutter/)
    to report unhandled errors thrown from your app
 1. Report handled errors
-   using [`bugsnag.notify`](https://docs.bugsnag.com/platforms/flutter/reporting-handled-exceptions/)
+   using [`bugsnag.notify`](https://docs.bugsnag.com/platforms/flutter/reporting-handled-errors/)
 1. Customize your integration using
    the [configuration options](https://docs.bugsnag.com/platforms/flutter/configuration-options/)
 

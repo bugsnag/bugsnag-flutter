@@ -1,14 +1,14 @@
 import '_model_extensions.dart';
 
 /// Information about the current user of your application.
-class User {
+class BugsnagUser {
   String? id;
   String? email;
   String? name;
 
-  User({this.id, this.email, this.name});
+  BugsnagUser({this.id, this.email, this.name});
 
-  User.fromJson(Map<String, dynamic> json)
+  BugsnagUser.fromJson(Map<String, dynamic> json)
       : id = json.safeGet('id'),
         email = json.safeGet('email'),
         name = json.safeGet('name');
@@ -22,7 +22,7 @@ class User {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is User &&
+      other is BugsnagUser &&
           runtimeType == other.runtimeType &&
           id == other.id &&
           email == other.email &&
