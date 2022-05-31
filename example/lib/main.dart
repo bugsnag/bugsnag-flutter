@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:bugsnag_example/native_crashes.dart';
-import 'package:bugsnag_flutter_http/http.dart' as http;
+import 'package:bugsnag_flutter_http/bugsnag_flutter_http.dart' as http;
 import 'package:bugsnag_flutter/bugsnag_flutter.dart';
 import 'package:flutter/material.dart';
 
@@ -75,7 +75,7 @@ class ExampleHomeScreen extends StatelessWidget {
 
   // Use the bugsnag_flutter_http package to automatically capture breadcrumbs
   // for network requests:
-  //   import 'package:bugsnag_flutter_http/http.dart' as http;
+  //   import 'package:bugsnag_flutter_http/bugsnag_flutter_http.dart' as http;
   void _networkSuccess() async => http.get(Uri.parse('https://example.com'));
 
   void _networkFailure() async =>
