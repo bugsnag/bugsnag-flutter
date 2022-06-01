@@ -47,7 +47,7 @@ test-fixtures: ## Build the end-to-end test fixtures
 	@./features/scripts/build_android_app.sh
 
 format:
-	flutter format packages/bugsnag_flutter example features/fixtures/app
+	$(FLUTTER_BIN) format packages/bugsnag_flutter example features/fixtures/app
 
 lint:
 	cd packages/bugsnag_flutter && $(FLUTTER_BIN) analyze --suppress-analytics
