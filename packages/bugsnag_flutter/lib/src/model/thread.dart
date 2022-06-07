@@ -43,7 +43,9 @@ class BugsnagThread {
         name = json.safeGet('name'),
         state = json.safeGet('state'),
         isErrorReportingThread = json.safeGet('errorReportingThread') == true,
-        type = json.safeGet<String>('type')?.let(BugsnagErrorType.forName) ??
+        type = json
+                .safeGet<String>('type')
+                ?.let((name) => BugsnagErrorType.forName(name)) ??
             (Platform.isAndroid
                 ? BugsnagErrorType.android
                 : BugsnagErrorType.cocoa),
