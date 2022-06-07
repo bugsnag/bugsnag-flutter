@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:bugsnag_flutter/bugsnag.dart';
+import 'package:bugsnag_flutter/bugsnag_flutter.dart';
 
 class Breadcrumb {
   static BugsnagBreadcrumb build(
@@ -28,6 +28,6 @@ class Breadcrumb {
           if (responseContentLength != null)
             'responseContentLength': responseContentLength,
         },
-        type: BreadcrumbType.request);
+        type: BugsnagBreadcrumbType.request);
   }
 }
