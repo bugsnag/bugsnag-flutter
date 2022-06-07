@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bugsnag_example/native_crashes.dart';
+import 'package:bugsnag_flutter_http/bugsnag_flutter_http.dart' as http;
 import 'package:bugsnag_flutter/bugsnag_flutter.dart';
 import 'package:flutter/material.dart';
 
@@ -72,6 +73,17 @@ class ExampleHomeScreen extends StatelessWidget {
           // Additional data can be attached to breadcrumbs as metadata
           metadata: {'from': 'a', 'to': 'z'});
 
+  // Use the bugsnag_flutter_http package to automatically capture breadcrumbs
+  // for network requests:
+  //   import 'package:bugsnag_flutter_http/bugsnag_flutter_http.dart' as http;
+  void _networkSuccess() async => http.get(Uri.parse('https://example.com'));
+
+  void _networkFailure() async =>
+      http.post(Uri.parse('https://example.com/invalid'));
+
+  void _networkError() async =>
+      http.get(Uri.parse('https://example.invalid')).ignore();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,10 +91,11 @@ class ExampleHomeScreen extends StatelessWidget {
         title: const Text('Bugsnag example app'),
       ),
       body: Center(
-        child: Column(
+        child: ListView(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           children: [
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.symmetric(vertical: 16),
               child: Text(
                 'Unhandled Errors',
                 style: Theme.of(context).textTheme.headline6,
@@ -110,7 +123,7 @@ class ExampleHomeScreen extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.symmetric(vertical: 16),
               child: Text(
                 'Breadcrumbs',
                 style: Theme.of(context).textTheme.headline6,
@@ -119,6 +132,25 @@ class ExampleHomeScreen extends StatelessWidget {
             ElevatedButton(
               onPressed: _leaveBreadcrumb,
               child: const Text('Leave a breadcrumb'),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              child: Text(
+                'Network Breadcrumbs',
+                style: Theme.of(context).textTheme.headline6,
+              ),
+            ),
+            ElevatedButton(
+              onPressed: _networkSuccess,
+              child: const Text('Success'),
+            ),
+            ElevatedButton(
+              onPressed: _networkFailure,
+              child: const Text('Failure'),
+            ),
+            ElevatedButton(
+              onPressed: _networkError,
+              child: const Text('Error'),
             ),
           ],
         ),
