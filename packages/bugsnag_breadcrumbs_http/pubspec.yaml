@@ -1,6 +1,6 @@
-name: bugsnag_flutter_http
+name: bugsnag_breadcrumbs_http
 description: Bugsnag network breadcrumbs for https://pub.dev/packages/http
-version: 2.0.0-rc6
+version: 2.0.0
 homepage: https://www.bugsnag.com/
 documentation: https://docs.bugsnag.com/platforms/flutter/
 repository: https://github.com/bugsnag/bugsnag-flutter
