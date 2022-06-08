@@ -16,18 +16,20 @@ class Breadcrumb {
         : response.statusCode < 400
             ? 'succeeded'
             : 'failed';
-    return BugsnagBreadcrumb('HttpClient request $status',
-        metadata: {
-          'duration': stopwatch.elapsed.inMilliseconds,
-          'method': method,
-          'url': url.toString().split('?').first,
-          if (url.queryParameters.isNotEmpty) 'urlParams': url.queryParameters,
-          if (requestContentLength > 0)
-            'requestContentLength': requestContentLength,
-          if (response != null) 'status': response.statusCode,
-          if (responseContentLength != null)
-            'responseContentLength': responseContentLength,
-        },
-        type: BugsnagBreadcrumbType.request);
+    return BugsnagBreadcrumb(
+      'HttpClient request $status',
+      metadata: {
+        'duration': stopwatch.elapsed.inMilliseconds,
+        'method': method,
+        'url': url.toString().split('?').first,
+        if (url.queryParameters.isNotEmpty) 'urlParams': url.queryParameters,
+        if (requestContentLength > 0)
+          'requestContentLength': requestContentLength,
+        if (response != null) 'status': response.statusCode,
+        if (responseContentLength != null)
+          'responseContentLength': responseContentLength,
+      },
+      type: BugsnagBreadcrumbType.request,
+    );
   }
 }
