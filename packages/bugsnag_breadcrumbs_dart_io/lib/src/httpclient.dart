@@ -136,7 +136,7 @@ Future<HttpClientRequest> _instrument(
   try {
     final request = await connect();
     runZoned(() async {
-      _leaveBreadcrumb(Breadcrumb.build(
+      await _leaveBreadcrumb(Breadcrumb.build(
         request.method,
         request.uri,
         request.contentLength,
@@ -146,12 +146,12 @@ Future<HttpClientRequest> _instrument(
     });
     return request;
   } catch (e) {
-    _leaveBreadcrumb(Breadcrumb.build(method, uri, -1, stopwatch, null));
+    await _leaveBreadcrumb(Breadcrumb.build(method, uri, -1, stopwatch, null));
     rethrow;
   }
 }
 
-Future _leaveBreadcrumb(BugsnagBreadcrumb breadcrumb) async {
+Future<void> _leaveBreadcrumb(BugsnagBreadcrumb breadcrumb) async {
   await bugsnag.leaveBreadcrumb(
     breadcrumb.message,
     metadata: breadcrumb.metadata,
