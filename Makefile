@@ -6,7 +6,8 @@ all: format build lint test
 
 clean:
 	cd packages/bugsnag_flutter && $(FLUTTER_BIN) clean --suppress-analytics
-	cd packages/bugsnag_flutter_http && $(FLUTTER_BIN) clean --suppress-analytics
+	cd packages/bugsnag_breadcrumbs_dart_io && $(FLUTTER_BIN) clean --suppress-analytics
+	cd packages/bugsnag_breadcrumbs_http && $(FLUTTER_BIN) clean --suppress-analytics
 	cd example && $(FLUTTER_BIN) clean --suppress-analytics && \
 			rm -rf .idea bugsnag_flutter_example.iml \
 			       ios/{Pods,.symlinks,Podfile.lock} \
@@ -22,7 +23,8 @@ ifeq ($(VERSION),)
 endif
 	sed -i '' "s/## TBD/## $(VERSION) ($(shell date '+%Y-%m-%d'))/" CHANGELOG.md
 	sed -i '' "s/^version: .*/version: $(VERSION)/" packages/bugsnag_flutter/pubspec.yaml
-	sed -i '' "s/^version: .*/version: $(VERSION)/" packages/bugsnag_flutter_http/pubspec.yaml
+	sed -i '' "s/^version: .*/version: $(VERSION)/" packages/bugsnag_breadcrumbs_dart_io/pubspec.yaml
+	sed -i '' "s/^version: .*/version: $(VERSION)/" packages/bugsnag_breadcrumbs_http/pubspec.yaml
 	sed -i '' "s/^  'version': .*/  'version': '$(VERSION)'/" packages/bugsnag_flutter/lib/src/client.dart
 
 stage: clean
@@ -43,7 +45,7 @@ example:
 
 test:
 	cd packages/bugsnag_flutter && $(FLUTTER_BIN) test -r expanded --suppress-analytics
-	cd packages/bugsnag_flutter_http && $(FLUTTER_BIN) test -r expanded --suppress-analytics
+	cd packages/bugsnag_breadcrumbs_http && $(FLUTTER_BIN) test -r expanded --suppress-analytics
 
 test-fixtures: ## Build the end-to-end test fixtures
 	@./features/scripts/build_ios_app.sh
@@ -54,7 +56,8 @@ format:
 
 lint:
 	cd packages/bugsnag_flutter && $(FLUTTER_BIN) analyze --suppress-analytics
-	cd packages/bugsnag_flutter_http && $(FLUTTER_BIN) analyze --suppress-analytics
+	cd packages/bugsnag_breadcrumbs_dart_io && $(FLUTTER_BIN) analyze --suppress-analytics
+	cd packages/bugsnag_breadcrumbs_http && $(FLUTTER_BIN) analyze --suppress-analytics
 
 e2e_android_local: features/fixtures/app/build/app/outputs/flutter-apk/app-release.apk
 	$(HOME)/Library/Android/sdk/platform-tools/adb uninstall com.bugsnag.flutter.test.app || true
