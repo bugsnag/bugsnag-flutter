@@ -30,8 +30,8 @@ dependencies:
   bugsnag_flutter_http:
     path: ../packages/bugsnag_flutter_http
 
-  bugsnag_flutter_httpclient:
-    path: ../packages/bugsnag_flutter_httpclient
+  bugsnag_breadcrumbs_dart_io:
+    path: ../packages/bugsnag_breadcrumbs_dart_io
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

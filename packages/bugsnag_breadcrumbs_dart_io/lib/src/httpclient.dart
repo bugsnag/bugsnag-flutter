@@ -1,3 +1,5 @@
+// ignore_for_file: annotate_overrides
+
 import 'dart:async';
 import 'dart:io';
 

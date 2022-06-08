@@ -1,8 +1,8 @@
 import 'dart:async';
 
+import 'package:bugsnag_breadcrumbs_dart_io/bugsnag_breadcrumbs_dart_io.dart';
 import 'package:bugsnag_example/native_crashes.dart';
 import 'package:bugsnag_flutter_http/bugsnag_flutter_http.dart' as http;
-import 'package:bugsnag_flutter_httpclient/http.dart';
 import 'package:bugsnag_flutter/bugsnag_flutter.dart';
 import 'package:flutter/material.dart';
 
