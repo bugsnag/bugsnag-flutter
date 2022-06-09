@@ -1,5 +1,5 @@
 import 'package:bugsnag_flutter/bugsnag_flutter.dart';
-import 'package:bugsnag_flutter_http/src/breadcrumb.dart';
+import 'package:bugsnag_breadcrumbs_http/src/breadcrumb.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 

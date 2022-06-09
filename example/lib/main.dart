@@ -1,7 +1,8 @@
 import 'dart:async';
 
+import 'package:bugsnag_breadcrumbs_dart_io/bugsnag_breadcrumbs_dart_io.dart';
+import 'package:bugsnag_breadcrumbs_http/bugsnag_breadcrumbs_http.dart' as http;
 import 'package:bugsnag_example/native_crashes.dart';
-import 'package:bugsnag_flutter_http/bugsnag_flutter_http.dart' as http;
 import 'package:bugsnag_flutter/bugsnag_flutter.dart';
 import 'package:flutter/material.dart';
 
@@ -84,6 +85,16 @@ class ExampleHomeScreen extends StatelessWidget {
   void _networkError() async =>
       http.get(Uri.parse('https://example.invalid')).ignore();
 
+  void _networkHttpClient() async {
+    var client = BugsnagHttpClient();
+    try {
+      final request = await client.getUrl(Uri.parse('https://example.com'));
+      await request.close();
+    } finally {
+      client.close();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -151,6 +162,10 @@ class ExampleHomeScreen extends StatelessWidget {
             ElevatedButton(
               onPressed: _networkError,
               child: const Text('Error'),
+            ),
+            ElevatedButton(
+              onPressed: _networkHttpClient,
+              child: const Text('HttpClient'),
             ),
           ],
         ),

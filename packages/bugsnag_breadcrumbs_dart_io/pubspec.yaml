@@ -1,6 +1,6 @@
-name: bugsnag_flutter_http
-description: Bugsnag network breadcrumbs for https://pub.dev/packages/http
-version: 2.0.0-rc6
+name: bugsnag_breadcrumbs_dart_io
+description: Bugsnag network breadcrumbs for dart:io's HttpClient
+version: 2.0.0
 homepage: https://www.bugsnag.com/
 documentation: https://docs.bugsnag.com/platforms/flutter/
 repository: https://github.com/bugsnag/bugsnag-flutter
@@ -17,9 +17,6 @@ dependencies:
     sdk: flutter
   bugsnag_flutter:
     path: ../bugsnag_flutter
-  http: ^0.13.4
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
   flutter_lints: ^1.0.0
