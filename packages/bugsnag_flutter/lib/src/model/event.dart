@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import '../enum_utils.dart';
 import '_model_extensions.dart';
 import 'app.dart';
 import 'breadcrumbs.dart';
@@ -152,7 +153,7 @@ class BugsnagEvent {
         groupingHash = json['groupingHash'] as String?,
         _unhandled = json['unhandled'] == true,
         _originalUnhandled = json['unhandled'] == true,
-        severity = BugsnagSeverity.values.byName(json['severity']),
+        severity = BugsnagSeverity.values.findByName(json['severity']),
         _severityReason = _SeverityReason.fromJson(json['severityReason']),
         _projectPackages =
             (json['projectPackages'] as List?)?.toList(growable: true).cast() ??
@@ -179,7 +180,7 @@ class BugsnagEvent {
       if (context != null) 'context': context,
       if (groupingHash != null) 'groupingHash': groupingHash,
       'unhandled': unhandled,
-      'severity': severity.name,
+      'severity': severity.toName(),
       'severityReason': _severityReason,
       'projectPackages': _projectPackages,
       'user': user,
@@ -260,7 +261,9 @@ class BugsnagError {
   BugsnagError.fromJson(Map<String, dynamic> json)
       : errorClass = json.safeGet('errorClass'),
         message = json.safeGet('message'),
-        type = json.safeGet<String>('type')?.let(BugsnagErrorType.forName) ??
+        type = json
+                .safeGet<String>('type')
+                ?.let((type) => BugsnagErrorType.forName(type)) ??
             (Platform.isAndroid
                 ? BugsnagErrorType.android
                 : BugsnagErrorType.cocoa),

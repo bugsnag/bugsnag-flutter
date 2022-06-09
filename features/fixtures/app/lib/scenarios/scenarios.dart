@@ -28,25 +28,28 @@ class ScenarioInfo<T extends Scenario> {
 }
 
 // Flutter obfuscation *requires* that we specify the name as a raw String in order to match the runtime class
-const List<ScenarioInfo<Scenario>> scenarios = [
-  ScenarioInfo('AppHangScenario', AppHangScenario.new),
-  ScenarioInfo('AttachBugsnagScenario', AttachBugsnagScenario.new),
-  ScenarioInfo('BreadcrumbsScenario', BreadcrumbsScenario.new),
-  ScenarioInfo('DetectEnabledErrorsScenario', DetectEnabledErrorsScenario.new),
-  ScenarioInfo('DiscardClassesScenario', DiscardClassesScenario.new),
-  ScenarioInfo('ErrorHandlerScenario', ErrorHandlerScenario.new),
-  ScenarioInfo('FeatureFlagsScenario', FeatureFlagsScenario.new),
-  ScenarioInfo('FFICrashScenario', FFICrashScenario.new),
-  ScenarioInfo('HandledExceptionScenario', HandledExceptionScenario.new),
-  ScenarioInfo('LastRunInfoScenario', LastRunInfoScenario.new),
-  ScenarioInfo('ManualSessionsScenario', ManualSessionsScenario.new),
-  ScenarioInfo('MetadataScenario', MetadataScenario.new),
-  ScenarioInfo('NativeCrashScenario', NativeCrashScenario.new),
-  ScenarioInfo('NavigatorBreadcrumbScenario', NavigatorBreadcrumbScenario.new),
-  ScenarioInfo('OnErrorScenario', OnErrorScenario.new),
-  ScenarioInfo('ProjectPackagesScenario', ProjectPackagesScenario.new),
-  ScenarioInfo('ReleaseStageScenario', ReleaseStageScenario.new),
-  ScenarioInfo('StartBugsnagScenario', StartBugsnagScenario.new),
-  ScenarioInfo('ThrowExceptionScenario', ThrowExceptionScenario.new),
-  ScenarioInfo('UnhandledExceptionScenario', UnhandledExceptionScenario.new),
+final List<ScenarioInfo<Scenario>> scenarios = [
+  ScenarioInfo('AppHangScenario', () => AppHangScenario()),
+  ScenarioInfo('AttachBugsnagScenario', () => AttachBugsnagScenario()),
+  ScenarioInfo('BreadcrumbsScenario', () => BreadcrumbsScenario()),
+  ScenarioInfo(
+      'DetectEnabledErrorsScenario', () => DetectEnabledErrorsScenario()),
+  ScenarioInfo('DiscardClassesScenario', () => DiscardClassesScenario()),
+  ScenarioInfo('ErrorHandlerScenario', () => ErrorHandlerScenario()),
+  ScenarioInfo('FeatureFlagsScenario', () => FeatureFlagsScenario()),
+  ScenarioInfo('FFICrashScenario', () => FFICrashScenario()),
+  ScenarioInfo('HandledExceptionScenario', () => HandledExceptionScenario()),
+  ScenarioInfo('LastRunInfoScenario', () => LastRunInfoScenario()),
+  ScenarioInfo('ManualSessionsScenario', () => ManualSessionsScenario()),
+  ScenarioInfo('MetadataScenario', () => MetadataScenario()),
+  ScenarioInfo('NativeCrashScenario', () => NativeCrashScenario()),
+  ScenarioInfo(
+      'NavigatorBreadcrumbScenario', () => NavigatorBreadcrumbScenario()),
+  ScenarioInfo('OnErrorScenario', () => OnErrorScenario()),
+  ScenarioInfo('ProjectPackagesScenario', () => ProjectPackagesScenario()),
+  ScenarioInfo('ReleaseStageScenario', () => ReleaseStageScenario()),
+  ScenarioInfo('StartBugsnagScenario', () => StartBugsnagScenario()),
+  ScenarioInfo('ThrowExceptionScenario', () => ThrowExceptionScenario()),
+  ScenarioInfo(
+      'UnhandledExceptionScenario', () => UnhandledExceptionScenario()),
 ];

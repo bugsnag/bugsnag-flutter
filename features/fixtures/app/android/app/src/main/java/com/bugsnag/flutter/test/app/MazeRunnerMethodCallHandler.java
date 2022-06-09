@@ -26,7 +26,7 @@ import io.flutter.plugin.common.MethodChannel;
 
 public class MazeRunnerMethodCallHandler implements MethodChannel.MethodCallHandler {
     public static final String TAG = "MazeRunner";
-    private final Handler scenarioRunner = new Handler(Looper.getMainLooper());
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
     private final Context context;
 
     MazeRunnerMethodCallHandler(@NonNull Context context) {
@@ -103,9 +103,13 @@ public class MazeRunnerMethodCallHandler implements MethodChannel.MethodCallHand
             for (String line; (line = reader.readLine()) != null; ) {
                 sb.append(line);
             }
-            result.success(sb.toString());
+            mainHandler.post(() -> {
+                result.success(sb.toString());
+            });
         } catch (Exception e) {
-            result.error(e.getClass().getSimpleName(), e.getMessage(), commandUrl);
+            mainHandler.post(() -> {
+                result.error(e.getClass().getSimpleName(), e.getMessage(), commandUrl);
+            });
         }
     }
 
@@ -122,7 +126,7 @@ public class MazeRunnerMethodCallHandler implements MethodChannel.MethodCallHand
 
         if (scenario != null) {
             // we push all scenarios to the main thread to stop Flutter catching the exceptions
-            scenarioRunner.post(() -> {
+            mainHandler.post(() -> {
                 scenario.run(call.argument("extraConfig"));
                 result.success(null);
             });
