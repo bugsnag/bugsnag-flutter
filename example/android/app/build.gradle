@@ -25,7 +25,7 @@ apply plugin: 'com.android.application'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
-    compileSdkVersion flutter.compileSdkVersion
+    compileSdkVersion flutter.hasProperty('compileSdkVersion') ? flutter.compileSdkVersion : 30
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -34,8 +34,8 @@ android {
 
     defaultConfig {
         applicationId "com.bugsnag.examples.flutter"
-        minSdkVersion flutter.minSdkVersion
-        targetSdkVersion flutter.targetSdkVersion
+        minSdkVersion flutter.hasProperty('minSdkVersion') ? flutter.minSdkVersion : 16
+        targetSdkVersion flutter.hasProperty('targetSdkVersion') ? flutter.targetSdkVersion : 30
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
