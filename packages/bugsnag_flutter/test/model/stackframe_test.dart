@@ -77,12 +77,34 @@ void main() {
         final stackframe = BugsnagStackframe.fromStackFrame(f);
         expect(stackframe.file, endsWith(f.packagePath));
         expect(stackframe.lineNumber, f.line);
-        expect(stackframe.columnNumber, f.column);
+        expect(
+          stackframe.columnNumber,
+          f.column >= 0 ? equals(f.column) : isNull,
+        );
         expect(
           stackframe.method,
           f.className.isNotEmpty ? '${f.className}.${f.method}' : f.method,
         );
       }
+    });
+
+    test('null columnNumber when not available', () {
+      final stack = BugsnagStackframe.fromStackFrame(const StackFrame(
+        number: 0,
+        column: -1,
+        line: 51,
+        packageScheme: 'dart',
+        package: 'core_patch',
+        packagePath: 'object_patch.dart',
+        className: 'Object',
+        method: 'noSuchMethod',
+        source:
+            '#0   Object.noSuchMethod(dart:core_patch/object_patch.dart:51)',
+      ));
+
+      expect(stack.lineNumber, equals(51));
+      expect(stack.columnNumber, isNull);
+      expect(stack.file, equals('dart:core_patch/object_patch.dart'));
     });
   });
 }
