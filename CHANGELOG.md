@@ -1,5 +1,10 @@
 # Changelog
 
+## TBD
+
+- Column numbers will be captured as `null` instead of `-1` when they're not available
+  []()
+
 ## 2.0.2 (2022-05-30)
 
 - Prefixed all class named with 'Bugsnag' to avoid clashing with application code.

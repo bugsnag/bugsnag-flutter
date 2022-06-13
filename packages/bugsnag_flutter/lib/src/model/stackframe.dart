@@ -98,7 +98,7 @@ class BugsnagStackframe {
       : type = BugsnagErrorType.dart,
         file = "${frame.packageScheme}:${frame.package}/${frame.packagePath}",
         lineNumber = frame.line,
-        columnNumber = frame.column,
+        columnNumber = frame.column >= 0 ? frame.column : null,
         method = (frame.className.isNotEmpty)
             ? '${frame.className}.${frame.method}'
             : frame.method;
