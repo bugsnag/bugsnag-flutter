@@ -1,11 +1,11 @@
 # Network Breadcrumbs for Bugsnag Flutter
 
-HTTP networking breadcrumbs for [bugsnag-flutter](https://pub.dev/packages/bugsnag_flutter) when using the `dart:io` [HttpClient](https://api.flutter.dev/flutter/dart-io/HttpClient-class.html).
+HTTP networking breadcrumbs for [bugsnag_flutter](https://pub.dev/packages/bugsnag_flutter) when using the `dart:io` [HttpClient](https://api.flutter.dev/flutter/dart-io/HttpClient-class.html).
 If you are using the [http](https://pub.dev/packages/http) package then [bugsnag_breadcrumbs_http](https://pub.dev/packages/bugsnag_breadcrumbs_http) should be used for networking breadcrumbs.
 
 ## Getting Started
 
-1. Install [bugsnag-flutter](https://pub.dev/packages/bugsnag_flutter)
+1. Install [bugsnag_flutter](https://pub.dev/packages/bugsnag_flutter)
 2. Add [bugsnag_breadcrumbs_dart_io](https://pub.dev/packages/bugsnag_breadcrumbs_dart_io) to your project:
 ```shell
 flutter pub add bugsnag_breadcrumbs_dart_io
