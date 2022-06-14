@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.1.0 (2022-06-14)
+
+- Networking breadcrumbs can now be easily captured by using the `bugsnag_breadcrumbs_http` or `bugsnag_breadcrumbs_dart_io` packages
+  [#116](https://github.com/bugsnag/bugsnag-flutter/pull/116) 
+  [#115](https://github.com/bugsnag/bugsnag-flutter/pull/115)
+- Added `BugsnagNavigatorObserver` to automatically log navigation breadcrumbs and context
+- Column numbers will be captured as `null` instead of `-1` when they're not available
+  [#139](https://github.com/bugsnag/bugsnag-flutter/pull/139)
+
 ## 2.0.2 (2022-05-30)
 
 - Prefixed all class named with 'Bugsnag' to avoid clashing with application code.

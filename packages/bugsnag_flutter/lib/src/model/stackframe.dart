@@ -75,7 +75,9 @@ class BugsnagStackframe {
   });
 
   BugsnagStackframe.fromJson(Map<String, Object?> json)
-      : type = json.safeGet<String>('type')?.let(BugsnagErrorType.forName),
+      : type = json
+            .safeGet<String>('type')
+            ?.let((name) => BugsnagErrorType.forName(name)),
         file = json.safeGet('file'),
         lineNumber = json.safeGet<num>('lineNumber')?.toInt(),
         columnNumber = json.safeGet<num>('columnNumber')?.toInt(),
@@ -96,7 +98,7 @@ class BugsnagStackframe {
       : type = BugsnagErrorType.dart,
         file = "${frame.packageScheme}:${frame.package}/${frame.packagePath}",
         lineNumber = frame.line,
-        columnNumber = frame.column,
+        columnNumber = frame.column >= 0 ? frame.column : null,
         method = (frame.className.isNotEmpty)
             ? '${frame.className}.${frame.method}'
             : frame.method;
@@ -142,7 +144,7 @@ class BugsnagStackframe {
 
   static BugsnagStacktrace stacktraceFromJson(
           List<Map<String, dynamic>> json) =>
-      json.map(BugsnagStackframe.fromJson).toList();
+      json.map((element) => BugsnagStackframe.fromJson(element)).toList();
 }
 
 typedef BugsnagStacktrace = List<BugsnagStackframe>;

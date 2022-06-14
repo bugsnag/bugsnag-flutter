@@ -26,7 +26,7 @@ class BugsnagNavigatorObserver extends NavigatorObserver {
   /// ```
   BugsnagNavigatorObserver({
     this.leaveBreadcrumbs = true,
-    this.setContext = false,
+    this.setContext = true,
     String? navigatorName,
   }) : _navigatorName = (navigatorName != null) ? navigatorName : 'navigator';
 

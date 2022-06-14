@@ -7,7 +7,7 @@ description: Demonstrates how to use the bugsnag_flutter package.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 environment:
-  sdk: ">=2.15.1 <3.0.0"
+  sdk: ">=2.12.0 <3.0.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -26,10 +26,18 @@ dependencies:
     # The example app is bundled with the plugin so we use a path dependency on
     # the parent directory to use the current plugin's version.
     path: ../packages/bugsnag_flutter
+  
+  bugsnag_breadcrumbs_dart_io:
+    path: ../packages/bugsnag_breadcrumbs_dart_io
+
+  bugsnag_breadcrumbs_http:
+    path: ../packages/bugsnag_breadcrumbs_http
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
+
+  http: ^0.13.4
 
 dev_dependencies:
   flutter_test:

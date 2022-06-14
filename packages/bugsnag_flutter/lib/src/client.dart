@@ -10,13 +10,14 @@ import 'package:flutter/widgets.dart' show WidgetsFlutterBinding;
 
 import 'callbacks.dart';
 import 'config.dart';
+import 'enum_utils.dart';
 import 'last_run_info.dart';
 import 'model.dart';
 
 final _notifier = {
   'name': 'Flutter Bugsnag Notifier',
   'url': 'https://github.com/bugsnag/bugsnag-flutter',
-  'version': '2.0.2'
+  'version': '2.1.0'
 };
 
 abstract class BugsnagClient {
@@ -714,7 +715,7 @@ class Bugsnag extends BugsnagClient with DelegateClient {
       'maxPersistedEvents': maxPersistedEvents,
       'autoTrackSessions': autoTrackSessions,
       'autoDetectErrors': autoDetectErrors,
-      'sendThreads': sendThreads._toName(),
+      'sendThreads': sendThreads.toName(),
       'launchDurationMillis': launchDurationMillis,
       'sendLaunchCrashesSynchronously': sendLaunchCrashesSynchronously,
       'appHangThresholdMillis': appHangThresholdMillis,
@@ -724,7 +725,7 @@ class Bugsnag extends BugsnagClient with DelegateClient {
         'enabledReleaseStages': enabledReleaseStages.toList(),
       'enabledBreadcrumbTypes':
           (enabledBreadcrumbTypes ?? BugsnagEnabledBreadcrumbType.values)
-              .map((e) => e._toName())
+              .map((e) => e.toName())
               .toList(),
       'projectPackages': projectPackages,
       if (metadata != null) 'metadata': BugsnagMetadata(metadata),
@@ -840,8 +841,3 @@ class BugsnagProjectPackages {
 
 /// Primary access to the Bugsnag API, most calls to Bugsnag will start here
 final Bugsnag bugsnag = Bugsnag._internal();
-
-// The official EnumName extension was only added in 2.15
-extension _EnumName on Enum {
-  String _toName() => toString().split('.').last;
-}
