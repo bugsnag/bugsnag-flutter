@@ -1,5 +1,9 @@
 # Changelog
 
+## TBD
+
+- Update bugsnag-android from v5.22.1 to [v5.23.0](https://github.com/bugsnag/bugsnag-android/blob/master/CHANGELOG.md#5230-2022-06-20)
+
 ## 2.1.0 (2022-06-14)
 
 - Networking breadcrumbs can now be easily captured by using the `bugsnag_breadcrumbs_http` or `bugsnag_breadcrumbs_dart_io` packages
