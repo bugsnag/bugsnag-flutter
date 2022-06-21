@@ -2,20 +2,20 @@ FLUTTER_BIN?=flutter
 
 all: format build lint test
 
-.PHONY: clean build bump aar example test format lint e2e_android_local e2e_ios_local
+.PHONY: clean build bump aar examples/flutter test format lint e2e_android_local e2e_ios_local
 
 clean:
 	cd packages/bugsnag_flutter && $(FLUTTER_BIN) clean --suppress-analytics
 	cd packages/bugsnag_breadcrumbs_dart_io && $(FLUTTER_BIN) clean --suppress-analytics
 	cd packages/bugsnag_breadcrumbs_http && $(FLUTTER_BIN) clean --suppress-analytics
-	cd example && $(FLUTTER_BIN) clean --suppress-analytics && \
+	cd examples/flutter && $(FLUTTER_BIN) clean --suppress-analytics && \
 			rm -rf .idea bugsnag_flutter_example.iml \
 			       ios/{Pods,.symlinks,Podfile.lock} \
 				   ios/{Runner.xcworkspace,Runner.xcodeproj,Runner.xcodeproj/project.xcworkspace}/xcuserdata \
 				   android/{.idea,.gradle,gradlew,gradlew.bat,local.properties,bugsnag_flutter_example_android.iml}
 	rm -rf staging
 
-build: aar example
+build: aar examples/flutter
 
 bump: ## Bump the version numbers to $VERSION
 ifeq ($(VERSION),)
@@ -31,7 +31,7 @@ staging/bugsnag_flutter:
 	mkdir -p staging/bugsnag_flutter
 	cd packages/bugsnag_flutter && cp -a . ../../staging/bugsnag_flutter
 	rm -f staging/bugsnag_flutter/pubspec.lock
-	cp -r example staging/bugsnag_flutter/example
+	cp -r examples staging/bugsnag_flutter/examples
 	cp README.md staging/bugsnag_flutter/.
 	cp LICENSE staging/bugsnag_flutter/.
 	cp CHANGELOG.md staging/bugsnag_flutter/.
@@ -54,8 +54,10 @@ stage: clean staging/bugsnag_flutter staging/bugsnag_breadcrumbs_dart_io staging
 aar:
 	cd packages/bugsnag_flutter && $(FLUTTER_BIN) build aar --suppress-analytics
 
-example:
-	cd example &&  $(FLUTTER_BIN) build apk --suppress-analytics &&  $(FLUTTER_BIN) build ios --no-codesign --suppress-analytics
+examples/flutter:
+	cd $@ && $(FLUTTER_BIN) pub get
+	cd $@ && $(FLUTTER_BIN) build apk --suppress-analytics
+	cd $@ && $(FLUTTER_BIN) build ios --no-codesign --suppress-analytics
 
 test:
 	cd packages/bugsnag_flutter && $(FLUTTER_BIN) test -r expanded --suppress-analytics

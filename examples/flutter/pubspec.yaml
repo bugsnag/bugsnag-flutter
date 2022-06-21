@@ -25,13 +25,13 @@ dependencies:
     # See https://dart.dev/tools/pub/dependencies#version-constraints
     # The example app is bundled with the plugin so we use a path dependency on
     # the parent directory to use the current plugin's version.
-    path: ../packages/bugsnag_flutter
+    path: ../../packages/bugsnag_flutter
   
   bugsnag_breadcrumbs_dart_io:
-    path: ../packages/bugsnag_breadcrumbs_dart_io
+    path: ../../packages/bugsnag_breadcrumbs_dart_io
 
   bugsnag_breadcrumbs_http:
-    path: ../packages/bugsnag_breadcrumbs_http
+    path: ../../packages/bugsnag_breadcrumbs_http
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
