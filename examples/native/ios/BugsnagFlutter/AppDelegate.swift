@@ -17,6 +17,9 @@ class AppDelegate: FlutterAppDelegate {
         // Start Bugsnag iOS SDK
         Bugsnag.start()
         
+        // Uncomment to disable automatic detection of Dart errors:
+        // BugsnagFlutterConfiguration.enabledErrorTypes.dartErrors = false
+        
         // Runs the default Dart entrypoint with a default Flutter route.
         flutterEngine.run();
         

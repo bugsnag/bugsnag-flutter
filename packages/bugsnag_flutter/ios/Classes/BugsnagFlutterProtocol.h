@@ -19,7 +19,7 @@
 - (void)clearMetadata:(NSDictionary *)arguments;
 - (NSDictionary *)getMetadata:(NSDictionary *)arguments;
 
-- (void)attach:(NSDictionary *)json;
+- (NSDictionary *)attach:(NSDictionary *)json;
 
 - (void)start:(NSDictionary *)arguments;
 
