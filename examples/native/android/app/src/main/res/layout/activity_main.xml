@@ -23,8 +23,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".FirstFragment">
+        android:layout_height="match_parent">
 
         <Button
             android:id="@+id/button_first"
