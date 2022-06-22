@@ -1,4 +1,5 @@
 #import <Bugsnag/Bugsnag.h>
+#import <bugsnag_flutter/BugsnagFlutterConfiguration.h>
 
 #import "AppDelegate.h"
 #import "GeneratedPluginRegistrant.h"
@@ -51,6 +52,7 @@
         
         NSString *notifyEndpoint = call.arguments[@"notifyEndpoint"];
         NSString *sessionEndpoint = call.arguments[@"sessionEndpoint"];
+        NSString *extraConfig = call.arguments[@"extraConfig"];
         
         if(notifyEndpoint != nil && sessionEndpoint != nil) {
             config.endpoints = [[BugsnagEndpointConfiguration alloc] initWithNotify:notifyEndpoint
@@ -58,6 +60,11 @@
         }
         
         [Bugsnag startWithConfiguration:config];
+        
+        if ([extraConfig containsString:@"disableDartErrors"]) {
+            BugsnagFlutterConfiguration.enabledErrorTypes.dartErrors = NO;
+        }
+        
         result(nil);
     } else if ([@"clearPersistentData" isEqual:call.method]) {
         [NSUserDefaults.standardUserDefaults removePersistentDomainForName:NSBundle.mainBundle.bundleIdentifier];
