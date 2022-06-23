@@ -37,12 +37,12 @@ steps:
       FLUTTER_BIN: "/opt/flutter/2.5.0/bin/flutter"
     commands:
       - pod repo update
-      - make example
+      - make examples/flutter
       # Verify that App.framework's UUID (and therefore our `codeIdentifier`) changes when Dart code is touched
-      - dwarfdump --arch=arm64 --uuid example/build/ios/iphoneos/Runner.app/Frameworks/App.framework/App | tee uuid_before
-      - sed -i '' -e 's/add_your_api_key_here/my_api_key/' example/lib/main.dart
-      - make example
-      - dwarfdump --arch=arm64 --uuid example/build/ios/iphoneos/Runner.app/Frameworks/App.framework/App | tee uuid_after
+      - dwarfdump --arch=arm64 --uuid examples/flutter/build/ios/iphoneos/Runner.app/Frameworks/App.framework/App | tee uuid_before
+      - sed -i '' -e 's/add_your_api_key_here/my_api_key/' examples/flutter/lib/main.dart
+      - make examples/flutter
+      - dwarfdump --arch=arm64 --uuid examples/flutter/build/ios/iphoneos/Runner.app/Frameworks/App.framework/App | tee uuid_after
       - test "$(cat uuid_before)" != "$(cat uuid_after)"
 
   - label: Build Example App 3.0.1
@@ -51,12 +51,12 @@ steps:
       FLUTTER_BIN: "/opt/flutter/3.0.1/bin/flutter"
     commands:
       - pod repo update
-      - make example
+      - make examples/flutter
       # Verify that App.framework's UUID (and therefore our `codeIdentifier`) changes when Dart code is touched
-      - dwarfdump --arch=arm64 --uuid example/build/ios/iphoneos/Runner.app/Frameworks/App.framework/App | tee uuid_before
-      - sed -i '' -e 's/add_your_api_key_here/my_api_key/' example/lib/main.dart
-      - make example
-      - dwarfdump --arch=arm64 --uuid example/build/ios/iphoneos/Runner.app/Frameworks/App.framework/App | tee uuid_after
+      - dwarfdump --arch=arm64 --uuid examples/flutter/build/ios/iphoneos/Runner.app/Frameworks/App.framework/App | tee uuid_before
+      - sed -i '' -e 's/add_your_api_key_here/my_api_key/' examples/flutter/lib/main.dart
+      - make examples/flutter
+      - dwarfdump --arch=arm64 --uuid examples/flutter/build/ios/iphoneos/Runner.app/Frameworks/App.framework/App | tee uuid_after
       - test "$(cat uuid_before)" != "$(cat uuid_after)"
 
   #
