@@ -17,14 +17,16 @@ class MazeRunnerChannels {
   static Future<void> runScenario(String scenarioName, {String? extraConfig}) {
     return platform.invokeMethod("runScenario", {
       'scenarioName': scenarioName,
-      'extraConfig': extraConfig,
+      if (extraConfig != null) 'extraConfig': extraConfig,
     });
   }
 
-  static Future<void> startBugsnag(BugsnagEndpointConfiguration endpoints) {
+  static Future<void> startBugsnag(BugsnagEndpointConfiguration endpoints,
+      {String? extraConfig}) {
     return platform.invokeMethod("startBugsnag", {
       'notifyEndpoint': endpoints.notify,
       'sessionEndpoint': endpoints.sessions,
+      if (extraConfig != null) 'extraConfig': extraConfig,
     });
   }
 }

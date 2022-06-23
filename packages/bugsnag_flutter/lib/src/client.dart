@@ -607,18 +607,20 @@ class Bugsnag extends BugsnagClient with DelegateClient {
   /// - [addOnError]
   Future<void> attach({
     FutureOr<void> Function()? runApp,
-    bool autoDetectErrors = true,
     List<BugsnagOnErrorCallback> onError = const [],
   }) async {
     // make sure we can use Channels before calling runApp
     _runWithErrorDetection(
-      autoDetectErrors,
+      true,
       () => WidgetsFlutterBinding.ensureInitialized(),
     );
 
-    await ChannelClient._channel.invokeMethod('attach', {
+    final result = await ChannelClient._channel.invokeMethod('attach', {
       'notifier': _notifier,
     });
+
+    final autoDetectErrors =
+        result['config']['enabledErrorTypes']['dartErrors'] as bool;
 
     final client = ChannelClient(autoDetectErrors);
     client._onErrorCallbacks.addAll(onError);
