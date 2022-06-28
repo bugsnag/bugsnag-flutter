@@ -17,7 +17,7 @@ import 'model.dart';
 final _notifier = {
   'name': 'Flutter Bugsnag Notifier',
   'url': 'https://github.com/bugsnag/bugsnag-flutter',
-  'version': '2.1.0'
+  'version': '2.1.1'
 };
 
 abstract class BugsnagClient {
