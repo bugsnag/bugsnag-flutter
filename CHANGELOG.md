@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.1.1 (2022-06-28)
+
+- Added `BugsnagFlutterConfiguration` to allow `bugsnag.attach` behaviour to be configured from native code.
+  [#145](https://github.com/bugsnag/bugsnag-flutter/pull/145)
+- Update bugsnag-android from v5.22.1 to [v5.23.1](https://github.com/bugsnag/bugsnag-android/blob/master/CHANGELOG.md#5231-2022-06-23)
+- Update bugsnag-cocoa from v6.16.8 to [v6.18.1](https://github.com/bugsnag/bugsnag-cocoa/blob/master/CHANGELOG.md#6181-2022-06-22)
+
 ## 2.1.0 (2022-06-14)
 
 - Networking breadcrumbs can now be easily captured by using the `bugsnag_breadcrumbs_http` or `bugsnag_breadcrumbs_dart_io` packages

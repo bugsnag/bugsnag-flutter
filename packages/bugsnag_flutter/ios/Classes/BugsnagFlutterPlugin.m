@@ -8,6 +8,7 @@
 #import "BugsnagConfiguration+Private.h"
 #import "BugsnagError+Private.h"
 #import "BugsnagEvent+Private.h"
+#import "BugsnagFlutterConfiguration.h"
 #import "BugsnagHandledState.h"
 #import "BugsnagNotifier.h"
 #import "BugsnagSessionTracker.h"
@@ -209,15 +210,23 @@ static NSString *NSStringOrNil(id value) {
     return [Bugsnag getMetadataFromSection:arguments[@"section"]];
 }
 
-- (void)attach:(NSDictionary *)arguments {
+- (NSDictionary *)attach:(NSDictionary *)arguments {
     if (self.isAttached) {
         [NSException raise:NSInternalInconsistencyException format:@"bugsnag.attach() may not be called more than once"];
     }
     
+    NSDictionary *result = @{
+        @"config": @{
+            @"enabledErrorTypes": @{
+                @"dartErrors": BugsnagFlutterConfiguration.enabledErrorTypes.dartErrors ? @YES : @NO
+            }
+        }
+    };
+    
     static BOOL isAnyAttached;
     if (isAnyAttached) {
         NSLog(@"bugsnag.attach() was called from a previous Flutter context. Ignoring.");
-        return;
+        return result;
     }
     
     if (!Bugsnag.client) {
@@ -233,6 +242,7 @@ static NSString *NSStringOrNil(id value) {
     
     isAnyAttached = YES;
     self.attached = YES;
+    return result;
 }
 
 - (void)start:(NSDictionary *)arguments {

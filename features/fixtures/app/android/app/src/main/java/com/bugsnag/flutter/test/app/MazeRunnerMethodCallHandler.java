@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import com.bugsnag.android.Bugsnag;
 import com.bugsnag.android.Configuration;
 import com.bugsnag.android.EndpointConfiguration;
+import com.bugsnag.flutter.BugsnagFlutterConfiguration;
 import com.bugsnag.flutter.test.app.scenario.Scenario;
 
 import java.io.BufferedReader;
@@ -47,13 +48,21 @@ public class MazeRunnerMethodCallHandler implements MethodChannel.MethodCallHand
         } else if (call.method.equals("startBugsnag")) {
             Configuration config = Configuration.load(context);
             config.setApiKey("abc12312312312312312312312312312");
-            if (call.hasArgument("notifyEndpoint") && call.hasArgument("sessionEndpoint")) {
-                config.setEndpoints(new EndpointConfiguration(
-                        call.argument("notifyEndpoint"),
-                        call.argument("sessionEndpoint")
-                ));
+
+            String notifyEndpoint = call.argument("notifyEndpoint");
+            String sessionEndpoint = call.argument("sessionEndpoint");
+            String extraConfig = call.argument("extraConfig");
+
+            if (notifyEndpoint != null && sessionEndpoint != null) {
+                config.setEndpoints(new EndpointConfiguration(notifyEndpoint, sessionEndpoint));
             }
+
             Bugsnag.start(context, config);
+
+            if (extraConfig != null && extraConfig.contains("disableDartErrors")) {
+                BugsnagFlutterConfiguration.enabledErrorTypes.dartErrors = false;
+            }
+
             result.success(null);
         } else if (call.method.equals("clearPersistentData")) {
             clearPersistentData();

@@ -18,11 +18,11 @@ class AttachBugsnagScenario extends Scenario {
 
         if (extraConfig?.contains("handled") == true) {
           await bugsnag.notify(
-            Exception('Exception with attached info'),
+            Exception('Handled exception with attached info'),
             StackTrace.current,
           );
         } else {
-          throw Exception('Exception with attached info');
+          throw Exception('Unhandled exception with attached info');
         }
       },
     );

@@ -52,14 +52,21 @@ class BugsnagFlutter {
 
     Context context;
 
-    Void attach(@NonNull JSONObject args) throws Exception {
+    JSONObject attach(@NonNull JSONObject args) throws Exception {
         if (isAttached) {
             throw new IllegalStateException("bugsnag.attach() may not be called more than once");
         }
 
+        JSONObject result = new JSONObject()
+                .put("config", new JSONObject()
+                        .put("enabledErrorTypes", new JSONObject()
+                                .put("dartErrors", BugsnagFlutterConfiguration.enabledErrorTypes.dartErrors)
+                        )
+                );
+
         if (isAnyAttached) {
             Log.i("BugsnagFlutter", "bugsnag.attach() was called from a previous Flutter context. Ignoring.");
-            return null;
+            return result;
         }
 
         Client nativeClient = InternalHooks.getClient();
@@ -78,7 +85,7 @@ class BugsnagFlutter {
 
         isAnyAttached = true;
         isAttached = true;
-        return null;
+        return result;
     }
 
     Void start(@NonNull JSONObject args) throws Exception {

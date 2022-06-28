@@ -16,7 +16,7 @@ abstract class Scenario {
   }
 
   Future<void> startNativeNotifier() =>
-      MazeRunnerChannels.startBugsnag(endpoints);
+      MazeRunnerChannels.startBugsnag(endpoints, extraConfig: extraConfig);
 
   Future<void> startBugsnag() => bugsnag.start(endpoints: endpoints);
 

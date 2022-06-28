@@ -12,7 +12,11 @@ void main() {
     });
 
     test('attach', () async {
-      channel.results['attach'] = true;
+      channel.results['attach'] = {
+        'config': {
+          'enabledErrorTypes': {'dartErrors': true}
+        }
+      };
 
       await bugsnag.attach();
 
@@ -20,7 +24,11 @@ void main() {
     });
 
     test('runApp catches async exceptions', () async {
-      channel.results['attach'] = true;
+      channel.results['attach'] = {
+        'config': {
+          'enabledErrorTypes': {'dartErrors': true}
+        }
+      };
       channel.results['createEvent'] = null;
 
       await bugsnag.attach(runApp: () async {
