@@ -1,7 +1,9 @@
 # Changelog
 
-## TBD
+## 2.1.1 (2022-06-28)
 
+- Added `BugsnagFlutterConfiguration` to allow `bugsnag.attach` behaviour to be configured from native code.
+  [#145](https://github.com/bugsnag/bugsnag-flutter/pull/145)
 - Update bugsnag-android from v5.22.1 to [v5.23.1](https://github.com/bugsnag/bugsnag-android/blob/master/CHANGELOG.md#5231-2022-06-23)
 - Update bugsnag-cocoa from v6.16.8 to [v6.18.1](https://github.com/bugsnag/bugsnag-cocoa/blob/master/CHANGELOG.md#6181-2022-06-22)
 
