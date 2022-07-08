@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -30,6 +30,14 @@
                                     <action selector="showFlutter" destination="BYZ-38-t0r" eventType="touchUpInside" id="lc4-pn-mps"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uOG-q7-gNr">
+                                <rect key="frame" x="138" y="471.5" width="141" height="31"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="filled" title="Trigger Fatal Error"/>
+                                <connections>
+                                    <action selector="unhandledError" destination="BYZ-38-t0r" eventType="touchUpInside" id="0Rr-LM-yLl"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -37,6 +45,7 @@
                             <constraint firstItem="uQu-uc-Imx" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="1Ls-Rs-AB1"/>
                             <constraint firstItem="yfB-10-brY" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="16" id="4TH-EX-e1q"/>
                             <constraint firstItem="yfB-10-brY" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Crp-8Q-lNX"/>
+                            <constraint firstItem="uOG-q7-gNr" firstAttribute="top" secondItem="uQu-uc-Imx" secondAttribute="bottom" constant="8" id="cuh-Ib-eS8"/>
                             <constraint firstItem="uQu-uc-Imx" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="pez-pw-KGy"/>
                         </constraints>
                     </view>

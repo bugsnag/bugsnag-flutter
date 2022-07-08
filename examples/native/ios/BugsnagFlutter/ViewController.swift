@@ -12,4 +12,8 @@ class ViewController: UIViewController {
         let viewController = FlutterViewController(engine: flutterEngine, nibName: nil, bundle: nil) 
         present(viewController, animated: true, completion: nil)
     }
+    
+    @IBAction func unhandledError() {
+        fatalError("oops!")
+    }
 }
