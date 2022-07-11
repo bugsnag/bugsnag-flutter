@@ -9,9 +9,14 @@ class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => const MaterialApp(
+  Widget build(BuildContext context) => MaterialApp(
         title: 'Bugsnag Flutter Example',
-        home: ExampleHomeScreen(),
+        initialRoute: '/',
+        navigatorObservers: [BugsnagNavigatorObserver()],
+        routes: {
+          '/': (context) => const ExampleHomeScreen(),
+          '/login': (context) => LoginScreen(),
+        },
       );
 }
 
@@ -43,7 +48,7 @@ class ExampleHomeScreen extends StatelessWidget {
   // Use leaveBreadcrumb() to log potentially useful events in order to
   // understand what happened in your app before each error.
   void _leaveBreadcrumb() async =>
-      bugsnag.leaveBreadcrumb('This is a custom breadcrumb',
+      bugsnag.leaveBreadcrumb('This is a custom breadcrumb from Flutter',
           // Additional data can be attached to breadcrumbs as metadata
           metadata: {'from': 'a', 'to': 'z'});
 
@@ -76,15 +81,6 @@ class ExampleHomeScreen extends StatelessWidget {
               onPressed: _handledException,
               child: const Text('Notify Handled Error'),
             ),
-            ElevatedButton(
-              child: const Text('Native Errors'),
-              onPressed: () {
-                Navigator.pushNamed(context, '/native-crashes');
-              },
-              style: ElevatedButton.styleFrom(
-                primary: Colors.redAccent.shade200,
-              ),
-            ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16),
               child: Text(
@@ -96,7 +92,55 @@ class ExampleHomeScreen extends StatelessWidget {
               onPressed: _leaveBreadcrumb,
               child: const Text('Leave a breadcrumb'),
             ),
+            ElevatedButton(
+              onPressed: () async {
+                final email = await Navigator.of(context).pushNamed('/login');
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text('User logged in as $email'),
+                ));
+              },
+              child: const Text('Login (bugsnag.setUser)'),
+            ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class LoginScreen extends StatelessWidget {
+  final TextEditingController _email = TextEditingController();
+
+  LoginScreen({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Login'),
+      ),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
+            children: [
+              TextField(
+                controller: _email,
+                decoration: const InputDecoration(
+                  labelText: 'Email Address',
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  bugsnag.setUser(email: _email.value.text);
+                  bugsnag.leaveBreadcrumb('User has logged in');
+
+                  Navigator.of(context).pop(_email.value.text);
+                },
+                child: const Text('Login'),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -16,4 +16,8 @@ class MainActivity : AppCompatActivity() {
     fun showFlutterView(view: View) {
         startActivity(FlutterActivity.createDefaultIntent(applicationContext))
     }
+
+    fun unhandledException(view: View) {
+        throw RuntimeException("this is an unhandled crash")
+    }
 }

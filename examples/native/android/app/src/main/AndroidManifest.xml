@@ -11,9 +11,7 @@
         android:theme="@style/Theme.BugsnagFlutter"
         android:name=".ExampleApp"
         tools:targetApi="31">
-        <meta-data
-            android:name="com.bugsnag.android.API_KEY"
-            android:value="your-api-key-here" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -30,6 +28,10 @@
             android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustResize"
             />
+
+        <meta-data
+            android:name="com.bugsnag.android.API_KEY"
+            android:value="your-api-key-here" />
     </application>
 
 </manifest>
