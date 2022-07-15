@@ -28,8 +28,8 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.Collections;
-import java.util.LinkedHashSet;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -340,6 +340,7 @@ class BugsnagFlutter {
                 .put("crashedDuringLaunch", lastRunInfo.getCrashedDuringLaunch());
     }
 
+    @SuppressWarnings("unchecked")
     JSONObject createEvent(@Nullable JSONObject args) throws JSONException {
         if (args == null) {
             return null;
