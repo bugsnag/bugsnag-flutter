@@ -10,7 +10,8 @@ final _traceLineRE = RegExp(
     r'\s*#(\d+) abs (?<absolute>[\da-f]+)(?: virt (?<virtual>[\da-f]+))? (?<rest>.*)$');
 
 final _buildIdRegExp = RegExp(r"build_id: \'([a-f0-9]+)\'");
-final _baseAddressRegExp = RegExp(r'isolate_instructions: ([a-f0-9]+),');
+final _baseAddressHeaderRE = RegExp(
+    r'isolate_instructions(?:=|: )([\da-f]+),? vm_instructions(?:=|: )([\da-f]+)');
 
 class _Frame {
   final int absoluteAddress;
@@ -47,6 +48,26 @@ class _Frame {
   }
 }
 
+class _AddressSegments {
+  final int isolateBaseAddress;
+  final int vmBaseAddress;
+
+  final String _isolateBaseAddressString;
+  final String _vmBaseAddressString;
+
+  _AddressSegments(this.isolateBaseAddress, this.vmBaseAddress)
+      : _isolateBaseAddressString = '0x' + isolateBaseAddress.toRadixString(16),
+        _vmBaseAddressString = '0x' + vmBaseAddress.toRadixString(16);
+
+  String baseAddressFor(String? symbol) {
+    if (symbol == '_kDartVmSnapshotInstructions') {
+      return _vmBaseAddressString;
+    }
+
+    return _isolateBaseAddressString;
+  }
+}
+
 // Try to parse the build_id from the line, returning it's value if it existed
 String? _parseBuildId(String line) {
   final match = _buildIdRegExp.firstMatch(line);
@@ -54,12 +75,18 @@ String? _parseBuildId(String line) {
 }
 
 // Try to parse the Isolate base address from the line (isolate_dso_base)
-int? _parseBaseAddress(String line) {
-  final match = _baseAddressRegExp.firstMatch(line);
-  final matchedAddressString = match?.group(1);
+_AddressSegments? _parseBaseAddress(String line) {
+  final match = _baseAddressHeaderRE.firstMatch(line);
+  final isolateBaseAddressString = match?.group(1);
+  final vmBaseAddressString = match?.group(2);
 
-  if (matchedAddressString != null) {
-    return int.tryParse(matchedAddressString, radix: 16);
+  if (isolateBaseAddressString != null && vmBaseAddressString != null) {
+    final isolateBase = int.tryParse(isolateBaseAddressString, radix: 16);
+    final vmBase = int.tryParse(vmBaseAddressString, radix: 16);
+
+    if (isolateBase != null && vmBase != null) {
+      return _AddressSegments(isolateBase, vmBase);
+    }
   }
 
   return null;
@@ -81,7 +108,7 @@ BugsnagStacktrace? parseNativeStackTrace(String stackTrace) {
   final stackTraceLines = stackTrace.split('\n');
 
   String? buildId;
-  int? baseOffset;
+  _AddressSegments? addressSegments;
 
   List<BugsnagStackframe> stacktrace = [];
 
@@ -92,13 +119,13 @@ BugsnagStacktrace? parseNativeStackTrace(String stackTrace) {
       );
     } else {
       buildId ??= _parseBuildId(line);
-      baseOffset ??= _parseBaseAddress(line);
+      addressSegments ??= _parseBaseAddress(line);
       final frame = _Frame.parse(line);
 
-      if (frame != null && baseOffset != null) {
+      if (frame != null && addressSegments != null) {
         stacktrace.add(BugsnagStackframe(
           frameAddress: '0x' + frame.absoluteAddress.toRadixString(16),
-          loadAddress: '0x' + baseOffset.toRadixString(16),
+          loadAddress: addressSegments.baseAddressFor(frame.method),
           codeIdentifier: buildId,
           method: frame.method,
           type: BugsnagErrorType.dart,
@@ -107,7 +134,7 @@ BugsnagStacktrace? parseNativeStackTrace(String stackTrace) {
     }
   }
 
-  return (stacktrace.isNotEmpty && baseOffset != null) ? stacktrace : null;
+  return (stacktrace.isNotEmpty && addressSegments != null) ? stacktrace : null;
 }
 
 BugsnagStacktrace? parseStackTraceString(String stackTrace) {
