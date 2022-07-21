@@ -417,7 +417,7 @@ static NSString *NSStringOrNil(id value) {
                                                handledState:[BugsnagHandledState handledStateWithSeverityReason:
                                                              [json[@"unhandled"] boolValue] ? UnhandledException : HandledException]
                                                        user:client.user
-                                                   metadata:[client.metadata deepCopy]
+                                                   metadata:[client.metadata copy]
                                                 breadcrumbs:client.breadcrumbs.breadcrumbs ?: @[]
                                                      errors:@[error]
                                                     threads:@[]
