@@ -18,7 +18,7 @@
     return self;
 }
 
-- (void)runWithExtraConfig:(NSString *)extraConfig {
+- (void)runWithArguments:(NSString *)extraConfig {
     [self doesNotRecognizeSelector:_cmd];
 }
 

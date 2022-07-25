@@ -14,12 +14,10 @@ class MazeRunnerChannels {
     return platform.invokeMethod('clearPersistentData');
   }
 
-  static Future<void> runScenario(String scenarioName, {String? extraConfig}) {
-    return platform.invokeMethod("runScenario", {
-      'scenarioName': scenarioName,
-      if (extraConfig != null) 'extraConfig': extraConfig,
-    });
-  }
+  static Future<void> runScenario(String scenarioName,
+          {Map<String, dynamic>? arguments}) async =>
+      platform.invokeMethod('runScenario',
+          Map.of(arguments ?? {})..['scenarioName'] = scenarioName);
 
   static Future<void> startBugsnag(BugsnagEndpointConfiguration endpoints,
       {String? extraConfig}) {
