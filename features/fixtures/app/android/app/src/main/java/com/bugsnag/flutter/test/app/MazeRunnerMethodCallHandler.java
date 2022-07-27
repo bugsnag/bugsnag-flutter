@@ -14,6 +14,8 @@ import com.bugsnag.android.EndpointConfiguration;
 import com.bugsnag.flutter.BugsnagFlutterConfiguration;
 import com.bugsnag.flutter.test.app.scenario.Scenario;
 
+import org.json.JSONException;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
@@ -136,7 +138,7 @@ public class MazeRunnerMethodCallHandler implements MethodChannel.MethodCallHand
         if (scenario != null) {
             // we push all scenarios to the main thread to stop Flutter catching the exceptions
             mainHandler.post(() -> {
-                scenario.run(call.argument("extraConfig"));
+                scenario.run(context, call);
                 result.success(null);
             });
         }

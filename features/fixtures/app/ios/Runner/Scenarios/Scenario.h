@@ -13,7 +13,7 @@
 /**
  * Executes the test case
  */
-- (void)runWithExtraConfig:(NSString *)extraConfig;
+- (void)runWithArguments:(NSDictionary *)extraConfig;
 
 @end
 

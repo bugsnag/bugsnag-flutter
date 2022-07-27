@@ -240,6 +240,8 @@ static NSString *NSStringOrNil(id value) {
     Bugsnag.client.notifier.url = notifier[@"url"];
     Bugsnag.client.notifier.dependencies = @[[[BugsnagNotifier alloc] init]];
     
+    self.projectPackages = BugsnagFlutterConfiguration.projectPackages;
+
     isAnyAttached = YES;
     self.attached = YES;
     return result;

@@ -33,7 +33,6 @@
         result([self getCommand]);
     } else if([@"runScenario" isEqualToString:call.method]) {
         NSString *scenarioName = call.arguments[@"scenarioName"];
-        NSString *extraConfig = call.arguments[@"extraConfig"];
         Scenario *targetScenario = [Scenario createScenarioNamed:scenarioName];
         
         if(targetScenario == nil) {
@@ -42,7 +41,7 @@
                                        details:nil]);
         } else {
             dispatch_async(dispatch_get_main_queue(), ^{
-                [targetScenario runWithExtraConfig:extraConfig];
+                [targetScenario runWithArguments:call.arguments];
                 result(nil);
             });
         }

@@ -17,6 +17,9 @@ class AppDelegate: FlutterAppDelegate {
         // Start Bugsnag iOS SDK
         Bugsnag.start()
         
+        // Specify the names of Dart packages that should be displayed as "in-project" on your dashboard.
+        BugsnagFlutterConfiguration.projectPackages = ["example_flutter"];
+        
         // Uncomment to disable automatic detection of Dart errors:
         // BugsnagFlutterConfiguration.enabledErrorTypes.dartErrors = false
         

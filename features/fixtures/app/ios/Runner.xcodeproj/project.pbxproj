@@ -3,10 +3,11 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 50;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0150C66A288E8EB8001ED369 /* NativeProjectPackagesScenario.m in Sources */ = {isa = PBXBuildFile; fileRef = 0150C669288E8EB8001ED369 /* NativeProjectPackagesScenario.m */; };
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
 		7EA36DDE163929853C78D928 /* libPods-Runner.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F4CE844D4B90BCE91B622309 /* libPods-Runner.a */; };
@@ -34,6 +35,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0150C669288E8EB8001ED369 /* NativeProjectPackagesScenario.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NativeProjectPackagesScenario.m; sourceTree = "<group>"; };
 		089B1BCC2E63E4C0E847218F /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
@@ -84,6 +86,7 @@
 			children = (
 				96F00EF127AACC0100C218BB /* NativeCrashScenario.h */,
 				96F00EF227AACC0100C218BB /* NativeCrashScenario.m */,
+				0150C669288E8EB8001ED369 /* NativeProjectPackagesScenario.m */,
 				96E7620527A0785B00628D7B /* Scenario.h */,
 				96E7620927A18A4800628D7B /* Scenario.m */,
 			);
@@ -153,7 +156,6 @@
 				089B1BCC2E63E4C0E847218F /* Pods-Runner.release.xcconfig */,
 				30E485D6FAD8EF01A4953097 /* Pods-Runner.profile.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -288,6 +290,7 @@
 				96D8AA0B27AC3E7C0032F493 /* ffi_crashes.c in Sources */,
 				978B8F6F1D3862AE00F588F7 /* AppDelegate.m in Sources */,
 				96E7620A27A18A4800628D7B /* Scenario.m in Sources */,
+				0150C66A288E8EB8001ED369 /* NativeProjectPackagesScenario.m in Sources */,
 				97C146F31CF9000F007C117D /* main.m in Sources */,
 				1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */,
 				96F00EF327AACC0100C218BB /* NativeCrashScenario.m in Sources */,
