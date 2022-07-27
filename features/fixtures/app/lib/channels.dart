@@ -16,8 +16,10 @@ class MazeRunnerChannels {
 
   static Future<void> runScenario(String scenarioName,
           {Map<String, dynamic>? arguments}) async =>
-      platform.invokeMethod('runScenario',
-          Map.of(arguments ?? {})..['scenarioName'] = scenarioName);
+      platform.invokeMethod('runScenario', {
+        'scenarioName': scenarioName,
+        ...?arguments,
+      });
 
   static Future<void> startBugsnag(BugsnagEndpointConfiguration endpoints,
       {String? extraConfig}) {
