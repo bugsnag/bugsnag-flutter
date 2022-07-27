@@ -70,5 +70,25 @@ void main() {
       // we should request platform default-packages by default
       expect(channel['start'][0]['projectPackages']['includeDefaults'], isTrue);
     });
+
+    test('default telemetry', () async {
+      channel.results['start'] = true;
+      await bugsnag.start();
+
+      expect(
+        channel['start'][0]['telemetry'],
+        equals(const ['internalErrors']),
+      );
+    });
+
+    test('disabled telemetry', () async {
+      channel.results['start'] = true;
+      await bugsnag.start(telemetry: {});
+
+      expect(
+        channel['start'][0]['telemetry'],
+        equals(const []),
+      );
+    });
   });
 }
