@@ -379,6 +379,13 @@ static NSString *NSStringOrNil(id value) {
         self.projectPackages = projectPackages[@"packageNames"];
     }
     
+    NSArray *telemetry = arguments[@"telemetry"];
+    if ([telemetry isKindOfClass:[NSArray class]]) {
+        BSGTelemetryOptions value = 
+        ([telemetry containsObject:@"internalErrors"] ? BSGTelemetryInternalErrors : 0);
+        configuration.telemetry = value;
+    }
+    
     [Bugsnag startWithConfiguration:configuration];
     
     self.started = YES;

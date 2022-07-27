@@ -77,3 +77,10 @@ enum BugsnagEnabledBreadcrumbType {
   state,
   error,
 }
+
+/// Types of telemetry that may be sent to Bugsnag for product improvement
+/// purposes.
+enum BugsnagTelemetryType {
+  /// Errors within the Bugsnag SDK.
+  internalErrors,
+}

@@ -207,6 +207,10 @@ class BugsnagFlutter {
             configuration.setProjectPackages(packagesSet);
         }
 
+        if (args.has("telemetry")) {
+            configuration.setTelemetry(EnumHelper.unwrapTelemetry(args.optJSONArray("telemetry")));
+        }
+
         if (args.has("versionCode")) {
             configuration.setVersionCode(args.getInt("versionCode"));
         }
