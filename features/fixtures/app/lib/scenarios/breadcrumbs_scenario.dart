@@ -11,7 +11,16 @@ class BreadcrumbsScenario extends Scenario {
 
     await bugsnag.leaveBreadcrumb('Manual breadcrumb', metadata: const {
       'foo': 'bar',
-      'object': {'test': 'hello'}
+      'object': {
+        'test': 'hello',
+        'bool': true,
+        'number': 1234,
+        'list': [
+          'abc',
+          4321,
+          true,
+        ],
+      }
     });
 
     final breadcrumbs = await bugsnag.getBreadcrumbs();

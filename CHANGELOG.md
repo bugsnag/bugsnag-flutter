@@ -5,6 +5,8 @@
 - Added `telemetry` option to `bugsnag.start` to allow sending of internal errors to be disabled.
 - Update bugsnag-android from v5.23.1 to [v5.25.0](https://github.com/bugsnag/bugsnag-android/blob/master/CHANGELOG.md#5250-2022-07-19)
 - Update bugsnag-cocoa from v6.18.1 to [v6.21.0](https://github.com/bugsnag/bugsnag-cocoa/blob/master/CHANGELOG.md#6210-2022-07-20)
+- Fixed 'Unhandled Exception' in JSON encoding of metadata containing list objects
+  [#160](https://github.com/bugsnag/bugsnag-flutter/pull/160)
 
 ## 2.1.1 (2022-06-28)
 
