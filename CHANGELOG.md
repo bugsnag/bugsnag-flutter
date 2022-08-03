@@ -7,6 +7,8 @@
 - Update bugsnag-cocoa from v6.18.1 to [v6.21.0](https://github.com/bugsnag/bugsnag-cocoa/blob/master/CHANGELOG.md#6210-2022-07-20)
 - Fixed 'Unhandled Exception' in JSON encoding of metadata containing list objects
   [#160](https://github.com/bugsnag/bugsnag-flutter/pull/160)
+- Add specific handling for 'invalid Dart instruction address' native stack frames
+  [#161](https://github.com/bugsnag/bugsnag-flutter/pull/161)
 
 ## 2.1.1 (2022-06-28)
 
