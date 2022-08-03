@@ -240,6 +240,8 @@ static NSString *NSStringOrNil(id value) {
     Bugsnag.client.notifier.url = notifier[@"url"];
     Bugsnag.client.notifier.dependencies = @[[[BugsnagNotifier alloc] init]];
     
+    self.projectPackages = BugsnagFlutterConfiguration.projectPackages;
+
     isAnyAttached = YES;
     self.attached = YES;
     return result;
@@ -377,6 +379,13 @@ static NSString *NSStringOrNil(id value) {
         self.projectPackages = projectPackages[@"packageNames"];
     }
     
+    NSArray *telemetry = arguments[@"telemetry"];
+    if ([telemetry isKindOfClass:[NSArray class]]) {
+        BSGTelemetryOptions value = 
+        ([telemetry containsObject:@"internalErrors"] ? BSGTelemetryInternalErrors : 0);
+        configuration.telemetry = value;
+    }
+    
     [Bugsnag startWithConfiguration:configuration];
     
     self.started = YES;
@@ -417,7 +426,7 @@ static NSString *NSStringOrNil(id value) {
                                                handledState:[BugsnagHandledState handledStateWithSeverityReason:
                                                              [json[@"unhandled"] boolValue] ? UnhandledException : HandledException]
                                                        user:client.user
-                                                   metadata:[client.metadata deepCopy]
+                                                   metadata:[client.metadata copy]
                                                 breadcrumbs:client.breadcrumbs.breadcrumbs ?: @[]
                                                      errors:@[error]
                                                     threads:@[]

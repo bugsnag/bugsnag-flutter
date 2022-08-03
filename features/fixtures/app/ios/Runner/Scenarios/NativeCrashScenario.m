@@ -3,7 +3,7 @@
 
 @implementation NativeCrashScenario
 
-- (void)runWithExtraConfig:(NSString *)extraConfig {
+- (void)runWithArguments:(NSDictionary *)extraConfig {
   @throw [[NSException alloc] initWithName:@"NSException" reason:@"NativeCrashScenario" userInfo:nil];
 }
 

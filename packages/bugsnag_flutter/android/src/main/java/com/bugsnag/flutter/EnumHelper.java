@@ -3,6 +3,7 @@ package com.bugsnag.flutter;
 import androidx.annotation.Nullable;
 
 import com.bugsnag.android.BreadcrumbType;
+import com.bugsnag.android.Telemetry;
 
 import org.json.JSONArray;
 
@@ -17,6 +18,7 @@ import java.util.Set;
  */
 class EnumHelper {
     private static final Map<String, BreadcrumbType> dartBreadcrumbTypes = new HashMap<>();
+    private static final Map<String, Telemetry> dartTelemetry = new HashMap<>();
 
     static {
         dartBreadcrumbTypes.put("navigation", BreadcrumbType.NAVIGATION);
@@ -27,6 +29,8 @@ class EnumHelper {
         dartBreadcrumbTypes.put("state", BreadcrumbType.STATE);
         dartBreadcrumbTypes.put("error", BreadcrumbType.ERROR);
         dartBreadcrumbTypes.put("manual", BreadcrumbType.MANUAL);
+
+        dartTelemetry.put("internalErrors", Telemetry.INTERNAL_ERRORS);
     }
 
     private EnumHelper() {
@@ -41,13 +45,24 @@ class EnumHelper {
 
         int enabledTypeCount = breadcrumbTypes.length();
         for (int index = 0; index < enabledTypeCount; index++) {
-            set.add(getBreadcrumbType(breadcrumbTypes.optString(index)));
+            set.add(dartBreadcrumbTypes.get(breadcrumbTypes.optString(index)));
         }
 
         return set;
     }
 
-    static BreadcrumbType getBreadcrumbType(String breadcrumbTypeName) {
-        return dartBreadcrumbTypes.get(breadcrumbTypeName);
+    static Set<Telemetry> unwrapTelemetry(@Nullable JSONArray telemetry) {
+        if (telemetry == null) {
+            return Collections.emptySet();
+        }
+
+        Set<Telemetry> set = EnumSet.noneOf(Telemetry.class);
+
+        int count = telemetry.length();
+        for (int i = 0; i < count; i++) {
+            set.add(dartTelemetry.get(telemetry.optString(i)));
+        }
+
+        return set;
     }
 }

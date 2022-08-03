@@ -11,6 +11,7 @@ import 'last_run_info_scenario.dart';
 import 'manual_sessions_scenario.dart';
 import 'metadata_scenario.dart';
 import 'native_crash_scenario.dart';
+import 'native_project_packages_scenario.dart';
 import 'navigation_breadcrumbs_scenario.dart';
 import 'on_error_scenario.dart';
 import 'project_packages_scenario.dart';
@@ -43,6 +44,8 @@ final List<ScenarioInfo<Scenario>> scenarios = [
   ScenarioInfo('ManualSessionsScenario', () => ManualSessionsScenario()),
   ScenarioInfo('MetadataScenario', () => MetadataScenario()),
   ScenarioInfo('NativeCrashScenario', () => NativeCrashScenario()),
+  ScenarioInfo(
+      'NativeProjectPackagesScenario', () => NativeProjectPackagesScenario()),
   ScenarioInfo(
       'NavigatorBreadcrumbScenario', () => NavigatorBreadcrumbScenario()),
   ScenarioInfo('OnErrorScenario', () => OnErrorScenario()),

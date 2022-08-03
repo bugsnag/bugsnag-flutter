@@ -17,7 +17,7 @@ import 'model.dart';
 final _notifier = {
   'name': 'Flutter Bugsnag Notifier',
   'url': 'https://github.com/bugsnag/bugsnag-flutter',
-  'version': '2.1.1'
+  'version': '2.2.0'
 };
 
 abstract class BugsnagClient {
@@ -684,6 +684,7 @@ class Bugsnag extends BugsnagClient with DelegateClient {
     Map<String, Map<String, Object>>? metadata,
     List<BugsnagFeatureFlag>? featureFlags,
     List<BugsnagOnErrorCallback> onError = const [],
+    Set<BugsnagTelemetryType>? telemetry,
     Directory? persistenceDirectory,
     int? versionCode,
   }) async {
@@ -733,6 +734,9 @@ class Bugsnag extends BugsnagClient with DelegateClient {
       if (metadata != null) 'metadata': BugsnagMetadata(metadata),
       'featureFlags': featureFlags,
       'notifier': _notifier,
+      'telemetry': (telemetry ?? BugsnagTelemetryType.values)
+          .map((e) => e.toName())
+          .toList(),
       if (persistenceDirectory != null)
         'persistenceDirectory': persistenceDirectory.absolute.path,
       if (versionCode != null) 'versionCode': versionCode,

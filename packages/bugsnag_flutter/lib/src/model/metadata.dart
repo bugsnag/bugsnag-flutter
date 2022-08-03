@@ -55,7 +55,7 @@ class BugsnagMetadata {
     if (value is Map<String, dynamic>) return sanitizedMap(value);
     // Special case because empty Maps wil not be caught on previous line
     if (value is Map && value.isEmpty) return value;
-    if (value is Iterable) return value.map((e) => _sanitizedValue(e));
+    if (value is Iterable) return value.map((e) => _sanitizedValue(e)).toList();
     try {
       return '$value';
     } catch (e) {
