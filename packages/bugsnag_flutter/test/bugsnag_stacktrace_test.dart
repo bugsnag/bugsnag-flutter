@@ -83,6 +83,23 @@ void main() {
       );
     });
 
+    test('parses invalid instruction addresses', () {
+      final stacktrace = parseNativeStackTrace(invalidAddressStackTrace);
+
+      expect(stacktrace, isNotNull);
+      expect(stacktrace, hasLength(4));
+
+      expect(
+        stacktrace!.map((f) => f.method),
+        equals(const [
+          '_kDartIsolateSnapshotInstructions',
+          'asynchronous suspension',
+          'invalid Dart instruction address',
+          'asynchronous suspension',
+        ]),
+      );
+    });
+
     test('returns null for non-native StackTraces', () {
       final stacktrace = parseNativeStackTrace(StackTrace.current.toString());
       expect(stacktrace, isNull);
@@ -147,3 +164,15 @@ const obfuscatedStackTraceIOS =
     '    <asynchronous suspension>\n'
     '    #01 abs 000000010c1f53e3 _kDartIsolateSnapshotInstructions+0x22dba3\n'
     '    <asynchronous suspension>\n';
+
+const invalidAddressStackTrace =
+    'Warning: This VM has been configured to produce stack traces that violate the Dart standard.\n'
+    '*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***\n'
+    'pid: 4714, tid: 4750, name 1.ui\n'
+    'build_id: \'8deece9b6a5fc3491895d61fa03e8967\'\n'
+    'isolate_dso_base: 6db6697000, vm_dso_base: 6db6697000\n'
+    'isolate_instructions: 6db677b7f0, vm_instructions: 6db6777000\n'
+    '#00 abs 0000006db69c1503 virt 000000000032a503 _kDartIsolateSnapshotInstructions+0x245d13\n'
+    '<asynchronous suspension>\n'
+    '#01 abs 0000000000000000 <invalid Dart instruction address>\n'
+    '<asynchronous suspension>\n';

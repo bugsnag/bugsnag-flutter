@@ -90,6 +90,11 @@ BugsnagStacktrace? parseNativeStackTrace(String stackTrace) {
       stacktrace.add(
         BugsnagStackframe.fromStackFrame(StackFrame.asynchronousSuspension),
       );
+    } else if (line.contains('<invalid Dart instruction address>')) {
+      stacktrace.add(BugsnagStackframe(
+        type: BugsnagErrorType.dart,
+        method: 'invalid Dart instruction address',
+      ));
     } else {
       buildId ??= _parseBuildId(line);
       baseOffset ??= _parseBaseAddress(line);
