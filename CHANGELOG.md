@@ -1,6 +1,6 @@
 # Changelog
 
-## TBD
+## 2.2.0 (2022-08-03)
 
 - Added `telemetry` option to `bugsnag.start` to allow sending of internal errors to be disabled.
 - Update bugsnag-android from v5.23.1 to [v5.25.0](https://github.com/bugsnag/bugsnag-android/blob/master/CHANGELOG.md#5250-2022-07-19)
