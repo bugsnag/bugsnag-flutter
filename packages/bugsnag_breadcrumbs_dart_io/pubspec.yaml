@@ -1,6 +1,6 @@
 name: bugsnag_breadcrumbs_dart_io
 description: Bugsnag network breadcrumbs for dart:io's HttpClient
-version: 2.1.1
+version: 2.2.0
 homepage: https://www.bugsnag.com/
 documentation: https://docs.bugsnag.com/platforms/flutter/
 repository: https://github.com/bugsnag/bugsnag-flutter
