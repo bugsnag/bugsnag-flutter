@@ -1,5 +1,9 @@
 # Changelog
 
+## TBD
+
+- Update bugsnag-cocoa from v6.21.0 to [v6.22.1](https://github.com/bugsnag/bugsnag-cocoa/blob/master/CHANGELOG.md#6221-2022-08-10)
+
 ## 2.2.0 (2022-08-03)
 
 - Added `telemetry` option to `bugsnag.start` to allow sending of internal errors to be disabled.
