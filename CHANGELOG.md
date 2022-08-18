@@ -2,7 +2,7 @@
 
 ## TBD
 
-- Update bugsnag-cocoa from v6.21.0 to [v6.22.1](https://github.com/bugsnag/bugsnag-cocoa/blob/master/CHANGELOG.md#6221-2022-08-10)
+- Update bugsnag-cocoa from v6.21.0 to [v6.22.2](https://github.com/bugsnag/bugsnag-cocoa/blob/master/CHANGELOG.md#6222-2022-08-17)
 - Update bugsnag-android from v5.25.0 to [v5.26.0](https://github.com/bugsnag/bugsnag-android/blob/master/CHANGELOG.md#5260-2022-08-18)
 
 ## 2.2.0 (2022-08-03)
