@@ -1,5 +1,7 @@
 #import "BugsnagFlutterPlugin.h"
 
+@import Bugsnag;
+
 #import "BugsnagFlutterConfiguration.h"
 #import "BugsnagInternals.h"
 
@@ -70,6 +72,7 @@ static NSString *NSStringOrNil(id value) {
 @implementation BugsnagFlutterPlugin
 
 + (void)initialize {
+    [BugsnagSwift start];
     _dyld_register_func_for_add_image(DyldImageAdded);
 }
 
