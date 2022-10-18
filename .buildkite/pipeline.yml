@@ -44,4 +44,7 @@ steps:
       - make examples/flutter
       - dwarfdump --arch=arm64 --uuid examples/flutter/build/ios/iphoneos/Runner.app/Frameworks/App.framework/App | tee uuid_after
       - test "$(cat uuid_before)" != "$(cat uuid_after)"
-      -   zip -r FlutterExample.zip examples/flutter/
+      - zip -r FlutterExample.zip examples/flutter/
+    plugins:
+      artifacts#v1.5.0:
+        upload: "FlutterExample.zip"
