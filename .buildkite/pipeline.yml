@@ -44,6 +44,7 @@ steps:
       - make examples/flutter
       - dwarfdump --arch=arm64 --uuid examples/flutter/build/ios/iphoneos/Runner.app/Frameworks/App.framework/App | tee uuid_after
       - test "$(cat uuid_before)" != "$(cat uuid_after)"
+      -   zip -r FlutterExample.zip examples/flutter/
 
   - label: Build Example App 3.0.1
     timeout_in_minutes: 10
