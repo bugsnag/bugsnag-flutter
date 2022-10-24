@@ -31,6 +31,7 @@ class EnumHelper {
         dartBreadcrumbTypes.put("manual", BreadcrumbType.MANUAL);
 
         dartTelemetry.put("internalErrors", Telemetry.INTERNAL_ERRORS);
+        dartTelemetry.put("usage", Telemetry.USAGE);
     }
 
     private EnumHelper() {
