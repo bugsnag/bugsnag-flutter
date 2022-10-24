@@ -370,7 +370,8 @@ static NSString *NSStringOrNil(id value) {
     NSArray *telemetry = arguments[@"telemetry"];
     if ([telemetry isKindOfClass:[NSArray class]]) {
         BSGTelemetryOptions value = 
-        ([telemetry containsObject:@"internalErrors"] ? BSGTelemetryInternalErrors : 0);
+        ([telemetry containsObject:@"internalErrors"] ? BSGTelemetryInternalErrors : 0) |
+        ([telemetry containsObject:@"usage"]          ? BSGTelemetryUsage          : 0) ;
         configuration.telemetry = value;
     }
     

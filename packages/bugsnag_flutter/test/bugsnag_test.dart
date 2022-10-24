@@ -77,7 +77,7 @@ void main() {
 
       expect(
         channel['start'][0]['telemetry'],
-        equals(const ['internalErrors']),
+        equals(const ['internalErrors', 'usage']),
       );
     });
 
