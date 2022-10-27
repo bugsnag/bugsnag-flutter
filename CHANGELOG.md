@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.3.0 (2022-10-27)
+
+- Added `BugsnagTelemetryType.usage` to allow sending of usage telemetry to be disabled.
+  [#176](https://github.com/bugsnag/bugsnag-flutter/pull/176)
+- Update bugsnag-cocoa from v6.21.0 to [v6.25.0](https://github.com/bugsnag/bugsnag-cocoa/blob/master/CHANGELOG.md#6240-2022-10-05)
+- Update bugsnag-android from v5.25.0 to [v5.28.1](https://github.com/bugsnag/bugsnag-android/blob/master/CHANGELOG.md#5281-2022-10-19)
+
 ## 2.2.0 (2022-08-03)
 
 - Added `telemetry` option to `bugsnag.start` to allow sending of internal errors to be disabled.

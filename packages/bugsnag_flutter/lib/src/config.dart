@@ -83,4 +83,7 @@ enum BugsnagEnabledBreadcrumbType {
 enum BugsnagTelemetryType {
   /// Errors within the Bugsnag SDK.
   internalErrors,
+
+  /// Information about how Bugsnag has been configured.
+  usage,
 }

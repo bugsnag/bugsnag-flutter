@@ -1,19 +1,7 @@
 #import "BugsnagFlutterPlugin.h"
 
-#import "BSG_KSSystemInfo.h"
-#import "Bugsnag+Private.h"
-#import "BugsnagBreadcrumb+Private.h"
-#import "BugsnagBreadcrumbs.h"
-#import "BugsnagClient+Private.h"
-#import "BugsnagConfiguration+Private.h"
-#import "BugsnagError+Private.h"
-#import "BugsnagEvent+Private.h"
 #import "BugsnagFlutterConfiguration.h"
-#import "BugsnagHandledState.h"
-#import "BugsnagNotifier.h"
-#import "BugsnagSessionTracker.h"
-#import "BugsnagStackframe+Private.h"
-#import "BugsnagThread+Private.h"
+#import "BugsnagInternals.h"
 
 #import <dlfcn.h>
 #import <mach-o/dyld.h>
@@ -382,7 +370,8 @@ static NSString *NSStringOrNil(id value) {
     NSArray *telemetry = arguments[@"telemetry"];
     if ([telemetry isKindOfClass:[NSArray class]]) {
         BSGTelemetryOptions value = 
-        ([telemetry containsObject:@"internalErrors"] ? BSGTelemetryInternalErrors : 0);
+        ([telemetry containsObject:@"internalErrors"] ? BSGTelemetryInternalErrors : 0) |
+        ([telemetry containsObject:@"usage"]          ? BSGTelemetryUsage          : 0) ;
         configuration.telemetry = value;
     }
     
@@ -418,7 +407,7 @@ static NSString *NSStringOrNil(id value) {
 }
 
 - (NSDictionary *)createEvent:(NSDictionary *)json {
-    NSDictionary *systemInfo = [BSG_KSSystemInfo systemInfo];
+    NSDictionary *systemInfo = BSGGetSystemInfo();
     BugsnagClient *client = Bugsnag.client;
     BugsnagError *error = [BugsnagError errorFromJson:json[@"error"]];
     BugsnagEvent *event = [[BugsnagEvent alloc] initWithApp:[client generateAppWithState:systemInfo]
@@ -427,10 +416,10 @@ static NSString *NSStringOrNil(id value) {
                                                              [json[@"unhandled"] boolValue] ? UnhandledException : HandledException]
                                                        user:client.user
                                                    metadata:[client.metadata copy]
-                                                breadcrumbs:client.breadcrumbs.breadcrumbs ?: @[]
+                                                breadcrumbs:[client breadcrumbs]
                                                      errors:@[error]
                                                     threads:@[]
-                                                    session:client.sessionTracker.runningSession];
+                                                    session:nil /* set by -[BugsnagClient notifyInternal:block:] */];
     event.apiKey = client.configuration.apiKey;
     event.context = client.context;
     event.projectPackages = self.projectPackages;
