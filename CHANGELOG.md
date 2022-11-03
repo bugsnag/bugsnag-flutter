@@ -1,6 +1,6 @@
 # Changelog
 
-## TBD
+## 2.3.0 (2022-10-27)
 
 - Added `BugsnagTelemetryType.usage` to allow sending of usage telemetry to be disabled.
   [#176](https://github.com/bugsnag/bugsnag-flutter/pull/176)
