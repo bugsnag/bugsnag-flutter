@@ -117,6 +117,7 @@ class BugsnagFlutter {
         configuration.setMaxBreadcrumbs(args.optInt("maxBreadcrumbs", configuration.getMaxBreadcrumbs()));
         configuration.setMaxPersistedEvents(args.optInt("maxPersistedEvents", configuration.getMaxPersistedEvents()));
         configuration.setMaxPersistedSessions(args.optInt("maxPersistedSessions", configuration.getMaxPersistedSessions()));
+        configuration.setMaxStringValueLength(args.optInt("maxStringValueLength", configuration.getMaxStringValueLength()));
         configuration.setReleaseStage(args.optString("releaseStage", configuration.getReleaseStage()));
         configuration.setPersistUser(args.optBoolean("persistUser", configuration.getPersistUser()));
 

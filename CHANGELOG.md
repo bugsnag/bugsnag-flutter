@@ -1,5 +1,10 @@
 # Changelog
 
+## TBD
+
+- Added `maxStringValueLength` option to `bugsnag.start` to allow truncation behaviour to be configured.
+  [#179](https://github.com/bugsnag/bugsnag-flutter/pull/179)
+
 ## 2.3.0 (2022-10-27)
 
 - Added `BugsnagTelemetryType.usage` to allow sending of usage telemetry to be disabled.
