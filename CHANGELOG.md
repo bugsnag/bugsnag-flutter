@@ -4,6 +4,7 @@
 
 - Added `maxStringValueLength` option to `bugsnag.start` to allow truncation behaviour to be configured.
   [#179](https://github.com/bugsnag/bugsnag-flutter/pull/179)
+- Update bugsnag-android from v5.28.1 to [v5.28.2](https://github.com/bugsnag/bugsnag-android/blob/master/CHANGELOG.md#5282-2022-11-08)
 
 ## 2.3.0 (2022-10-27)
 
