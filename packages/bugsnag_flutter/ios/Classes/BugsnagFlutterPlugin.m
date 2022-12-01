@@ -67,7 +67,6 @@ static NSString *NSStringOrNil(id value) {
 
 @interface BugsnagFlutterPlugin ()
 
-@property (nonatomic, getter=isAttached) BOOL attached;
 @property (nonatomic, getter=isStarted) BOOL started;
 @property (nullable, nonatomic) NSArray *projectPackages;
 
@@ -207,10 +206,6 @@ static NSString *NSStringOrNil(id value) {
 }
 
 - (NSDictionary *)attach:(NSDictionary *)arguments {
-    if (self.isAttached) {
-        [NSException raise:NSInternalInconsistencyException format:@"bugsnag.attach() may not be called more than once"];
-    }
-    
     NSDictionary *result = @{
         @"config": @{
             @"enabledErrorTypes": @{
@@ -219,9 +214,9 @@ static NSString *NSStringOrNil(id value) {
         }
     };
     
-    static BOOL isAnyAttached;
-    if (isAnyAttached) {
-        NSLog(@"bugsnag.attach() was called from a previous Flutter context. Ignoring.");
+    static BOOL isAttached;
+    if (isAttached) {
+        NSLog(@"bugsnag.attach() has already been called. Ignoring.");
         return result;
     }
     
@@ -238,8 +233,7 @@ static NSString *NSStringOrNil(id value) {
     
     self.projectPackages = BugsnagFlutterConfiguration.projectPackages;
 
-    isAnyAttached = YES;
-    self.attached = YES;
+    isAttached = YES;
     return result;
 }
 

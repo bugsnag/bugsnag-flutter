@@ -5,6 +5,14 @@ class AttachBugsnagScenario extends Scenario {
   @override
   Future<void> run() async {
     await startNativeNotifier();
+
+    final attachFuture = await doAttach();
+    if (extraConfig?.contains("extra-attach") == true) {
+      await doAttach();
+    }
+  }
+
+  Future<void> doAttach() async {
     await bugsnag.attach(
       runApp: () async {
         await Future.wait([
