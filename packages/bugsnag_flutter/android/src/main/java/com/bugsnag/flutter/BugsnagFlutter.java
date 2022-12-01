@@ -37,8 +37,7 @@ class BugsnagFlutter {
 
     private InternalHooks client;
 
-    private static boolean isAnyAttached = false;
-    private boolean isAttached = false;
+    private static boolean isAttached = false;
 
     private static boolean isAnyStarted = false;
     private boolean isStarted = false;
@@ -53,10 +52,6 @@ class BugsnagFlutter {
     Context context;
 
     JSONObject attach(@NonNull JSONObject args) throws Exception {
-        if (isAttached) {
-            throw new IllegalStateException("bugsnag.attach() may not be called more than once");
-        }
-
         JSONObject result = new JSONObject()
                 .put("config", new JSONObject()
                         .put("enabledErrorTypes", new JSONObject()
@@ -64,8 +59,8 @@ class BugsnagFlutter {
                         )
                 );
 
-        if (isAnyAttached) {
-            Log.i("BugsnagFlutter", "bugsnag.attach() was called from a previous Flutter context. Ignoring.");
+        if (isAttached) {
+            Log.i("BugsnagFlutter", "bugsnag.attach() has already been called. Ignoring.");
             return result;
         }
 
@@ -83,7 +78,6 @@ class BugsnagFlutter {
         notifier.setUrl(notifierJson.getString("url"));
         notifier.setDependencies(Collections.singletonList(new Notifier()));
 
-        isAnyAttached = true;
         isAttached = true;
         return result;
     }
