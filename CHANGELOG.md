@@ -1,6 +1,6 @@
 # Changelog
 
-## TBD
+## 2.4.0 (2022-12-01)
 
 - Added `maxStringValueLength` option to `bugsnag.start` to allow truncation behaviour to be configured.
   [#179](https://github.com/bugsnag/bugsnag-flutter/pull/179)
