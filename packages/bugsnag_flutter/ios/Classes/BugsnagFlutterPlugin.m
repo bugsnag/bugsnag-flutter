@@ -7,6 +7,14 @@
 #import <mach-o/dyld.h>
 #import <objc/runtime.h>
 
+// Constructs a key path, with a compile-time check in DEBUG builds.
+// https://pspdfkit.com/blog/2017/even-swiftier-objective-c/#checked-keypaths
+#if defined(DEBUG) && DEBUG
+#define BSG_KEYPATH(object, property) ((void)(NO && ((void)object.property, NO)), @ #property)
+#else
+#define BSG_KEYPATH(object, property) @ #property
+#endif
+
 // Will be nil in debug builds because they not contain any Dart code (App.framework)
 static NSString *DartCodeBuildId;
 
@@ -59,7 +67,6 @@ static NSString *NSStringOrNil(id value) {
 
 @interface BugsnagFlutterPlugin ()
 
-@property (nonatomic, getter=isAttached) BOOL attached;
 @property (nonatomic, getter=isStarted) BOOL started;
 @property (nullable, nonatomic) NSArray *projectPackages;
 
@@ -199,10 +206,6 @@ static NSString *NSStringOrNil(id value) {
 }
 
 - (NSDictionary *)attach:(NSDictionary *)arguments {
-    if (self.isAttached) {
-        [NSException raise:NSInternalInconsistencyException format:@"bugsnag.attach() may not be called more than once"];
-    }
-    
     NSDictionary *result = @{
         @"config": @{
             @"enabledErrorTypes": @{
@@ -211,9 +214,9 @@ static NSString *NSStringOrNil(id value) {
         }
     };
     
-    static BOOL isAnyAttached;
-    if (isAnyAttached) {
-        NSLog(@"bugsnag.attach() was called from a previous Flutter context. Ignoring.");
+    static BOOL isAttached;
+    if (isAttached) {
+        NSLog(@"bugsnag.attach() has already been called. Ignoring.");
         return result;
     }
     
@@ -230,8 +233,7 @@ static NSString *NSStringOrNil(id value) {
     
     self.projectPackages = BugsnagFlutterConfiguration.projectPackages;
 
-    isAnyAttached = YES;
-    self.attached = YES;
+    isAttached = YES;
     return result;
 }
 
@@ -253,20 +255,21 @@ static NSString *NSStringOrNil(id value) {
     
     BugsnagConfiguration *configuration = [BugsnagConfiguration loadConfig];
     
-    for (NSString *key in @[@"apiKey",
-                            @"appHangThresholdMillis",
-                            @"appType",
-                            @"appVersion",
-                            @"autoDetectErrors",
-                            @"autoTrackSessions",
-                            @"bundleVersion",
-                            @"context",
-                            @"launchDurationMillis",
-                            @"maxBreadcrumbs",
-                            @"maxPersistedEvents",
-                            @"maxPersistedSessions",
-                            @"releaseStage",
-                            @"sendLaunchCrashesSynchronously"]) {
+    for (NSString *key in @[BSG_KEYPATH(configuration, apiKey),
+                            BSG_KEYPATH(configuration, appHangThresholdMillis),
+                            BSG_KEYPATH(configuration, appType),
+                            BSG_KEYPATH(configuration, appVersion),
+                            BSG_KEYPATH(configuration, autoDetectErrors),
+                            BSG_KEYPATH(configuration, autoTrackSessions),
+                            BSG_KEYPATH(configuration, bundleVersion),
+                            BSG_KEYPATH(configuration, context),
+                            BSG_KEYPATH(configuration, launchDurationMillis),
+                            BSG_KEYPATH(configuration, maxBreadcrumbs),
+                            BSG_KEYPATH(configuration, maxPersistedEvents),
+                            BSG_KEYPATH(configuration, maxPersistedSessions),
+                            BSG_KEYPATH(configuration, maxStringValueLength),
+                            BSG_KEYPATH(configuration, releaseStage),
+                            BSG_KEYPATH(configuration, sendLaunchCrashesSynchronously)]) {
         id value = arguments[key];
         if (value && value != [NSNull null]) {
             [configuration setValue:value forKey:key];

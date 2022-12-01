@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.4.0 (2022-12-01)
+
+- Added `maxStringValueLength` option to `bugsnag.start` to allow truncation behaviour to be configured.
+  [#179](https://github.com/bugsnag/bugsnag-flutter/pull/179)
+- Native-first hot-reloads (using `bugnag.attach`) will no longer cause errors, but will instead emit a warning
+  [#182](https://github.com/bugsnag/bugsnag-flutter/pull/182)
+- Update bugsnag-android from v5.28.1 to [v5.28.3](https://github.com/bugsnag/bugsnag-android/blob/master/CHANGELOG.md#5283-2022-11-16)
+
 ## 2.3.0 (2022-10-27)
 
 - Added `BugsnagTelemetryType.usage` to allow sending of usage telemetry to be disabled.

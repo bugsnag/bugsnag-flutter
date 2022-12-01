@@ -17,7 +17,7 @@ import 'model.dart';
 final _notifier = {
   'name': 'Flutter Bugsnag Notifier',
   'url': 'https://github.com/bugsnag/bugsnag-flutter',
-  'version': '2.3.0'
+  'version': '2.4.0'
 };
 
 abstract class BugsnagClient {
@@ -669,6 +669,7 @@ class Bugsnag extends BugsnagClient with DelegateClient {
     int maxBreadcrumbs = 50,
     int maxPersistedSessions = 128,
     int maxPersistedEvents = 32,
+    int maxStringValueLength = 10000,
     bool autoTrackSessions = true,
     bool autoDetectErrors = true,
     BugsnagThreadSendPolicy sendThreads = BugsnagThreadSendPolicy.always,
@@ -716,6 +717,7 @@ class Bugsnag extends BugsnagClient with DelegateClient {
       'maxBreadcrumbs': maxBreadcrumbs,
       'maxPersistedSessions': maxPersistedSessions,
       'maxPersistedEvents': maxPersistedEvents,
+      'maxStringValueLength': maxStringValueLength,
       'autoTrackSessions': autoTrackSessions,
       'autoDetectErrors': autoDetectErrors,
       'sendThreads': sendThreads.toName(),
