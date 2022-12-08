@@ -1,5 +1,9 @@
 # Changelog
 
+## TBD
+
+- Update bugsnag-cocoa from v6.25.0 to [v6.25.1](https://github.com/bugsnag/bugsnag-cocoa/blob/master/CHANGELOG.md#6251-2022-12-07)
+
 ## 2.4.0 (2022-12-01)
 
 - Added `maxStringValueLength` option to `bugsnag.start` to allow truncation behaviour to be configured.
