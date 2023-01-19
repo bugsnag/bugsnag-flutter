@@ -2,7 +2,7 @@
 
 ## TBD
 
-- Update bugsnag-cocoa from v6.25.0 to [v6.25.1](https://github.com/bugsnag/bugsnag-cocoa/blob/master/CHANGELOG.md#6251-2022-12-07)
+- Update bugsnag-cocoa from v6.25.0 to [v6.25.2](https://github.com/bugsnag/bugsnag-cocoa/blob/master/CHANGELOG.md#6252-2023-01-18)
 
 ## 2.4.0 (2022-12-01)
 
