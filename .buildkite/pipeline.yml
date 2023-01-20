@@ -1,5 +1,5 @@
 agents:
-  queue: ms-arm-12-5-1
+  queue: ms-arm-12-5
 
 steps:
   - label: Build Example App 2.5.0
