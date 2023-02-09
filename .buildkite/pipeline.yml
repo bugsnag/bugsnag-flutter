@@ -1,10 +1,8 @@
-agents:
-  queue: macos-12-arm
-
 steps:
   - label: Build Example App 2.5.0
     timeout_in_minutes: 10
-    queue: ms-arm-12-1
+    agents:
+      queue: ms-arm-12-1
     env:
       FLUTTER_BIN: "/opt/flutter/2.5.0/bin/flutter"
     commands:
@@ -19,7 +17,8 @@ steps:
 
   - label: Build Example App 3.0.1
     timeout_in_minutes: 10
-    queue: ms-arm-12-1
+    agents:
+      queue: ms-arm-12-1
     env:
       FLUTTER_BIN: "/opt/flutter/3.0.1/bin/flutter"
     commands:
@@ -34,7 +33,8 @@ steps:
 
   - label: Build Example App 2.5.0
     timeout_in_minutes: 10
-    queue: ms-arm-12-2
+    agents:
+      queue: ms-arm-12-2
     env:
       FLUTTER_BIN: "/opt/flutter/2.5.0/bin/flutter"
     commands:
@@ -49,7 +49,8 @@ steps:
 
   - label: Build Example App 3.0.1
     timeout_in_minutes: 10
-    queue: ms-arm-12-2
+    agents:
+      queue: ms-arm-12-2
     env:
       FLUTTER_BIN: "/opt/flutter/3.0.1/bin/flutter"
     commands:
@@ -64,7 +65,8 @@ steps:
 
   - label: Build Example App 2.5.0
     timeout_in_minutes: 10
-    queue: ms-arm-12-3
+    agents:
+      queue: ms-arm-12-3
     env:
       FLUTTER_BIN: "/opt/flutter/2.5.0/bin/flutter"
     commands:
@@ -79,7 +81,8 @@ steps:
 
   - label: Build Example App 3.0.1
     timeout_in_minutes: 10
-    queue: ms-arm-12-3
+    agents:
+      queue: ms-arm-12-3
     env:
       FLUTTER_BIN: "/opt/flutter/3.0.1/bin/flutter"
     commands:
@@ -94,7 +97,8 @@ steps:
 
   - label: Build Example App 2.5.0
     timeout_in_minutes: 10
-    queue: ms-arm-12-4
+    agents:
+      queue: ms-arm-12-4
     env:
       FLUTTER_BIN: "/opt/flutter/2.5.0/bin/flutter"
     commands:
@@ -109,7 +113,8 @@ steps:
 
   - label: Build Example App 3.0.1
     timeout_in_minutes: 10
-    queue: ms-arm-12-4
+    agents:
+      queue: ms-arm-12-4
     env:
       FLUTTER_BIN: "/opt/flutter/3.0.1/bin/flutter"
     commands:
@@ -124,7 +129,8 @@ steps:
 
   - label: Build Example App 2.5.0
     timeout_in_minutes: 10
-    queue: ms-arm-12-5
+    agents:
+      queue: ms-arm-12-5
     env:
       FLUTTER_BIN: "/opt/flutter/2.5.0/bin/flutter"
     commands:
@@ -139,7 +145,8 @@ steps:
 
   - label: Build Example App 3.0.1
     timeout_in_minutes: 10
-    queue: ms-arm-12-5
+    agents:
+      queue: ms-arm-12-5
     env:
       FLUTTER_BIN: "/opt/flutter/3.0.1/bin/flutter"
     commands:
@@ -154,7 +161,8 @@ steps:
 
   - label: Build Example App 2.5.0
     timeout_in_minutes: 10
-    queue: ms-arm-12-6
+    agents:
+      queue: ms-arm-12-6
     env:
       FLUTTER_BIN: "/opt/flutter/2.5.0/bin/flutter"
     commands:
@@ -169,7 +177,8 @@ steps:
 
   - label: Build Example App 3.0.1
     timeout_in_minutes: 10
-    queue: ms-arm-12-6
+    agents:
+      queue: ms-arm-12-6
     env:
       FLUTTER_BIN: "/opt/flutter/3.0.1/bin/flutter"
     commands:
@@ -184,7 +193,8 @@ steps:
 
   - label: Build Example App 2.5.0
     timeout_in_minutes: 10
-    queue: ms-arm-12-7
+    agents:
+      queue: ms-arm-12-7
     env:
       FLUTTER_BIN: "/opt/flutter/2.5.0/bin/flutter"
     commands:
@@ -199,7 +209,8 @@ steps:
 
   - label: Build Example App 3.0.1
     timeout_in_minutes: 10
-    queue: ms-arm-12-7
+    agents:
+      queue: ms-arm-12-7
     env:
       FLUTTER_BIN: "/opt/flutter/3.0.1/bin/flutter"
     commands:
@@ -214,7 +225,8 @@ steps:
 
   - label: Build Example App 2.5.0
     timeout_in_minutes: 10
-    queue: ms-arm-12-8
+    agents:
+      queue: ms-arm-12-8
     env:
       FLUTTER_BIN: "/opt/flutter/2.5.0/bin/flutter"
     commands:
@@ -229,7 +241,8 @@ steps:
 
   - label: Build Example App 3.0.1
     timeout_in_minutes: 10
-    queue: ms-arm-12-8
+    agents:
+      queue: ms-arm-12-8
     env:
       FLUTTER_BIN: "/opt/flutter/3.0.1/bin/flutter"
     commands:
@@ -247,7 +260,8 @@ steps:
   #
   - label: Build iOS Test Fixture 2.5.0
     timeout_in_minutes: 20
-    queue: ms-arm-12-1
+    agents:
+      queue: ms-arm-12-1
     env:
       FLUTTER_BIN: "/opt/flutter/2.5.0/bin/flutter"
     commands:
@@ -261,7 +275,8 @@ steps:
 
   - label: Build iOS Test Fixture 3.0.1
     timeout_in_minutes: 20
-    queue: ms-arm-12-1
+    agents:
+      queue: ms-arm-12-1
     env:
       FLUTTER_BIN: "/opt/flutter/3.0.1/bin/flutter"
     commands:
@@ -275,7 +290,8 @@ steps:
 
   - label: Build iOS Test Fixture 2.5.0
     timeout_in_minutes: 20
-    queue: ms-arm-12-2
+    agents:
+      queue: ms-arm-12-2
     env:
       FLUTTER_BIN: "/opt/flutter/2.5.0/bin/flutter"
     commands:
@@ -289,7 +305,8 @@ steps:
 
   - label: Build iOS Test Fixture 3.0.1
     timeout_in_minutes: 20
-    queue: ms-arm-12-2
+    agents:
+      queue: ms-arm-12-2
     env:
       FLUTTER_BIN: "/opt/flutter/3.0.1/bin/flutter"
     commands:
@@ -303,7 +320,8 @@ steps:
 
   - label: Build iOS Test Fixture 2.5.0
     timeout_in_minutes: 20
-    queue: ms-arm-12-3
+    agents:
+      queue: ms-arm-12-3
     env:
       FLUTTER_BIN: "/opt/flutter/2.5.0/bin/flutter"
     commands:
@@ -317,7 +335,8 @@ steps:
 
   - label: Build iOS Test Fixture 3.0.1
     timeout_in_minutes: 20
-    queue: ms-arm-12-3
+    agents:
+      queue: ms-arm-12-3
     env:
       FLUTTER_BIN: "/opt/flutter/3.0.1/bin/flutter"
     commands:
@@ -331,7 +350,8 @@ steps:
 
   - label: Build iOS Test Fixture 2.5.0
     timeout_in_minutes: 20
-    queue: ms-arm-12-4
+    agents:
+      queue: ms-arm-12-4
     env:
       FLUTTER_BIN: "/opt/flutter/2.5.0/bin/flutter"
     commands:
@@ -345,7 +365,8 @@ steps:
 
   - label: Build iOS Test Fixture 3.0.1
     timeout_in_minutes: 20
-    queue: ms-arm-12-4
+    agents:
+      queue: ms-arm-12-4
     env:
       FLUTTER_BIN: "/opt/flutter/3.0.1/bin/flutter"
     commands:
@@ -359,7 +380,8 @@ steps:
 
   - label: Build iOS Test Fixture 2.5.0
     timeout_in_minutes: 20
-    queue: ms-arm-12-5
+    agents:
+      queue: ms-arm-12-5
     env:
       FLUTTER_BIN: "/opt/flutter/2.5.0/bin/flutter"
     commands:
@@ -373,7 +395,8 @@ steps:
 
   - label: Build iOS Test Fixture 3.0.1
     timeout_in_minutes: 20
-    queue: ms-arm-12-5
+    agents:
+      queue: ms-arm-12-5
     env:
       FLUTTER_BIN: "/opt/flutter/3.0.1/bin/flutter"
     commands:
@@ -387,7 +410,8 @@ steps:
 
   - label: Build iOS Test Fixture 2.5.0
     timeout_in_minutes: 20
-    queue: ms-arm-12-6
+    agents:
+      queue: ms-arm-12-6
     env:
       FLUTTER_BIN: "/opt/flutter/2.5.0/bin/flutter"
     commands:
@@ -401,7 +425,8 @@ steps:
 
   - label: Build iOS Test Fixture 3.0.1
     timeout_in_minutes: 20
-    queue: ms-arm-12-6
+    agents:
+      queue: ms-arm-12-6
     env:
       FLUTTER_BIN: "/opt/flutter/3.0.1/bin/flutter"
     commands:
@@ -415,7 +440,8 @@ steps:
 
   - label: Build iOS Test Fixture 2.5.0
     timeout_in_minutes: 20
-    queue: ms-arm-12-7
+    agents:
+      queue: ms-arm-12-7
     env:
       FLUTTER_BIN: "/opt/flutter/2.5.0/bin/flutter"
     commands:
@@ -429,7 +455,8 @@ steps:
 
   - label: Build iOS Test Fixture 3.0.1
     timeout_in_minutes: 20
-    queue: ms-arm-12-7
+    agents:
+      queue: ms-arm-12-7
     env:
       FLUTTER_BIN: "/opt/flutter/3.0.1/bin/flutter"
     commands:
@@ -443,7 +470,8 @@ steps:
 
   - label: Build iOS Test Fixture 2.5.0
     timeout_in_minutes: 20
-    queue: ms-arm-12-8
+    agents:
+      queue: ms-arm-12-8
     env:
       FLUTTER_BIN: "/opt/flutter/2.5.0/bin/flutter"
     commands:
@@ -457,7 +485,8 @@ steps:
 
   - label: Build iOS Test Fixture 3.0.1
     timeout_in_minutes: 20
-    queue: ms-arm-12-8
+    agents:
+      queue: ms-arm-12-8
     env:
       FLUTTER_BIN: "/opt/flutter/3.0.1/bin/flutter"
     commands:
@@ -476,7 +505,8 @@ steps:
   #
   - label: Build Android Test Fixture 2.5.0
     timeout_in_minutes: 20
-    queue: ms-arm-12-1
+    agents:
+      queue: ms-arm-12-1
     env:
       FLUTTER_BIN: "/opt/flutter/2.5.0/bin/flutter"
     commands:
@@ -489,7 +519,8 @@ steps:
 
   - label: Build Android Test Fixture 3.0.1
     timeout_in_minutes: 20
-    queue: ms-arm-12-1
+    agents:
+      queue: ms-arm-12-1
     env:
       FLUTTER_BIN: "/opt/flutter/3.0.1/bin/flutter"
     commands:
@@ -502,7 +533,8 @@ steps:
 
   - label: Build Android Test Fixture 2.5.0
     timeout_in_minutes: 20
-    queue: ms-arm-12-2
+    agents:
+      queue: ms-arm-12-2
     env:
       FLUTTER_BIN: "/opt/flutter/2.5.0/bin/flutter"
     commands:
@@ -515,7 +547,8 @@ steps:
 
   - label: Build Android Test Fixture 3.0.1
     timeout_in_minutes: 20
-    queue: ms-arm-12-2
+    agents:
+      queue: ms-arm-12-2
     env:
       FLUTTER_BIN: "/opt/flutter/3.0.1/bin/flutter"
     commands:
@@ -528,7 +561,8 @@ steps:
 
   - label: Build Android Test Fixture 2.5.0
     timeout_in_minutes: 20
-    queue: ms-arm-12-3
+    agents:
+      queue: ms-arm-12-3
     env:
       FLUTTER_BIN: "/opt/flutter/2.5.0/bin/flutter"
     commands:
@@ -541,7 +575,8 @@ steps:
 
   - label: Build Android Test Fixture 3.0.1
     timeout_in_minutes: 20
-    queue: ms-arm-12-3
+    agents:
+      queue: ms-arm-12-3
     env:
       FLUTTER_BIN: "/opt/flutter/3.0.1/bin/flutter"
     commands:
@@ -554,7 +589,8 @@ steps:
 
   - label: Build Android Test Fixture 2.5.0
     timeout_in_minutes: 20
-    queue: ms-arm-12-4
+    agents:
+      queue: ms-arm-12-4
     env:
       FLUTTER_BIN: "/opt/flutter/2.5.0/bin/flutter"
     commands:
@@ -567,7 +603,8 @@ steps:
 
   - label: Build Android Test Fixture 3.0.1
     timeout_in_minutes: 20
-    queue: ms-arm-12-4
+    agents:
+      queue: ms-arm-12-4
     env:
       FLUTTER_BIN: "/opt/flutter/3.0.1/bin/flutter"
     commands:
@@ -580,7 +617,8 @@ steps:
 
   - label: Build Android Test Fixture 2.5.0
     timeout_in_minutes: 20
-    queue: ms-arm-12-5
+    agents:
+      queue: ms-arm-12-5
     env:
       FLUTTER_BIN: "/opt/flutter/2.5.0/bin/flutter"
     commands:
@@ -593,7 +631,8 @@ steps:
 
   - label: Build Android Test Fixture 3.0.1
     timeout_in_minutes: 20
-    queue: ms-arm-12-5
+    agents:
+      queue: ms-arm-12-5
     env:
       FLUTTER_BIN: "/opt/flutter/3.0.1/bin/flutter"
     commands:
@@ -606,7 +645,8 @@ steps:
 
   - label: Build Android Test Fixture 2.5.0
     timeout_in_minutes: 20
-    queue: ms-arm-12-6
+    agents:
+      queue: ms-arm-12-6
     env:
       FLUTTER_BIN: "/opt/flutter/2.5.0/bin/flutter"
     commands:
@@ -619,7 +659,8 @@ steps:
 
   - label: Build Android Test Fixture 3.0.1
     timeout_in_minutes: 20
-    queue: ms-arm-12-6
+    agents:
+      queue: ms-arm-12-6
     env:
       FLUTTER_BIN: "/opt/flutter/3.0.1/bin/flutter"
     commands:
@@ -632,7 +673,8 @@ steps:
 
   - label: Build Android Test Fixture 2.5.0
     timeout_in_minutes: 20
-    queue: ms-arm-12-7
+    agents:
+      queue: ms-arm-12-7
     env:
       FLUTTER_BIN: "/opt/flutter/2.5.0/bin/flutter"
     commands:
@@ -645,7 +687,8 @@ steps:
 
   - label: Build Android Test Fixture 3.0.1
     timeout_in_minutes: 20
-    queue: ms-arm-12-7
+    agents:
+      queue: ms-arm-12-7
     env:
       FLUTTER_BIN: "/opt/flutter/3.0.1/bin/flutter"
     commands:
@@ -658,7 +701,8 @@ steps:
 
   - label: Build Android Test Fixture 2.5.0
     timeout_in_minutes: 20
-    queue: ms-arm-12-8
+    agents:
+      queue: ms-arm-12-8
     env:
       FLUTTER_BIN: "/opt/flutter/2.5.0/bin/flutter"
     commands:
@@ -671,7 +715,8 @@ steps:
 
   - label: Build Android Test Fixture 3.0.1
     timeout_in_minutes: 20
-    queue: ms-arm-12-8
+    agents:
+      queue: ms-arm-12-8
     env:
       FLUTTER_BIN: "/opt/flutter/3.0.1/bin/flutter"
     commands:
