@@ -340,6 +340,7 @@ class DelegateClient implements BugsnagClient {
 
 class ChannelClient implements BugsnagClient {
   FlutterExceptionHandler? _previousFlutterOnError;
+  ErrorCallback? _previousPlatformDispatcherOnError;
 
   ChannelClient(bool autoDetectErrors) {
     if (autoDetectErrors) {
@@ -347,6 +348,8 @@ class ChannelClient implements BugsnagClient {
       // same Isolate as Flutter, we install the FlutterError handler here
       _previousFlutterOnError = FlutterError.onError;
       FlutterError.onError = _onFlutterError;
+      _previousPlatformDispatcherOnError = PlatformDispatcher.instance.onError;
+      PlatformDispatcher.instance.onError = _onDispatcherError;
     }
   }
 
@@ -467,6 +470,11 @@ class ChannelClient implements BugsnagClient {
     _previousFlutterOnError?.call(details);
   }
 
+  bool _onDispatcherError(Object exception, StackTrace stack) {
+    _notifyInternal(exception, true, null, stack, null);
+    return _previousPlatformDispatcherOnError?.call(exception, stack) ?? false;
+  }
+
   Future<void> _notifyInternal(
     dynamic error,
     bool unhandled,
@@ -568,10 +576,10 @@ class ChannelClient implements BugsnagClient {
 /// is instead accessed using the [bugsnag] global:
 ///
 /// ```dart
-/// Future<void> main() => bugsnag.start(
-///   apiKey: 'your-api-key',
-///   runApp: () => runApp(MyApplication()),
-/// );
+/// Future<void> main() async {
+///   await bugsnag.start(apiKey: 'your-api-key');
+///   runApp(MyApplication());
+/// }
 /// ```
 ///
 /// See also:
@@ -585,10 +593,12 @@ class Bugsnag extends BugsnagClient with DelegateClient {
   ///
   /// Typical hybrid Flutter applications with Bugsnag will start with
   /// ```dart
-  /// Future<void> main() => bugsnag.attach(
-  ///   runApp: () => runApp(MyApplication()),
-  ///   // other configuration here
-  /// );
+  /// Future<void> main() async {
+  ///  await bugsnag.attach(
+  ///   // configuration here
+  ///   );
+  ///   runApp(MyApplication());
+  /// }
   /// ```
   ///
   /// Use this method to initialize Flutter when developing a Hybrid app,
@@ -609,11 +619,8 @@ class Bugsnag extends BugsnagClient with DelegateClient {
     FutureOr<void> Function()? runApp,
     List<BugsnagOnErrorCallback> onError = const [],
   }) async {
-    // make sure we can use Channels before calling runApp
-    _runWithErrorDetection(
-      true,
-      () => WidgetsFlutterBinding.ensureInitialized(),
-    );
+    // make sure we can use Channels
+    WidgetsFlutterBinding.ensureInitialized();
 
     final result = await ChannelClient._channel.invokeMethod('attach', {
       'notifier': _notifier,
@@ -625,11 +632,6 @@ class Bugsnag extends BugsnagClient with DelegateClient {
     final client = ChannelClient(autoDetectErrors);
     client._onErrorCallbacks.addAll(onError);
     this.client = client;
-
-    _runWithErrorDetection(
-      autoDetectErrors,
-      () => runApp?.call(),
-    );
   }
 
   /// Initialize the Bugsnag notifier with the configuration options specified.
@@ -640,10 +642,10 @@ class Bugsnag extends BugsnagClient with DelegateClient {
   ///
   /// Typical Flutter-only applications with Bugsnag will start with:
   /// ```dart
-  /// Future<void> main() => bugsnag.start(
-  ///   apiKey: 'your-api-key',
-  ///   runApp: () => runApp(MyApplication()),
-  /// );
+  /// Future<void> main() async {
+  ///   await bugsnag.start(apiKey: 'your-api-key');
+  ///   runApp(MyApplication());
+  /// }
   /// ```
   ///
   /// See also:
@@ -655,7 +657,6 @@ class Bugsnag extends BugsnagClient with DelegateClient {
   /// - [addOnError]
   Future<void> start({
     String? apiKey,
-    FutureOr<void> Function()? runApp,
     BugsnagUser? user,
     bool persistUser = true,
     String? context,
@@ -692,16 +693,12 @@ class Bugsnag extends BugsnagClient with DelegateClient {
     final detectDartErrors =
         autoDetectErrors && enabledErrorTypes.unhandledDartExceptions;
 
-    // guarding WidgetsFlutterBinding.ensureInitialized() catches
-    // async errors within the Flutter app
-    _runWithErrorDetection(
-      detectDartErrors,
-      () => WidgetsFlutterBinding.ensureInitialized(),
-    );
-
     if (projectPackages._includeDefaults) {
       projectPackages += BugsnagProjectPackages.only(_findProjectPackages());
     }
+
+    // make sure we can use Channels
+    WidgetsFlutterBinding.ensureInitialized();
 
     await ChannelClient._channel.invokeMethod('start', <String, dynamic>{
       if (apiKey != null) 'apiKey': apiKey,
@@ -751,35 +748,9 @@ class Bugsnag extends BugsnagClient with DelegateClient {
     if (autoTrackSessions) {
       await resumeSession().onError((error, stackTrace) => true);
     }
-
-    _runWithErrorDetection(detectDartErrors, () => runApp?.call());
-  }
-
-  void _runWithErrorDetection(
-    bool errorDetectionEnabled,
-    FutureOr<void> Function() block,
-  ) async {
-    if (errorDetectionEnabled) {
-      await runZonedGuarded(() async {
-        await block();
-      }, _reportZonedError);
-    } else {
-      await block();
-    }
   }
 
   static const int appHangThresholdFatalOnly = 2147483647;
-
-  /// Safely report an error that occurred within a guardedZone - if attached
-  /// to a [BugsnagClient] then use its [BugsnagClient.errorHandler], otherwise push the error
-  /// upwards using [Zone.handleUncaughtError]
-  void _reportZonedError(dynamic error, StackTrace stackTrace) {
-    if (_client != null) {
-      errorHandler(error, stackTrace);
-    } else {
-      Zone.current.handleUncaughtError(error, stackTrace);
-    }
-  }
 
   static Set<String> _findProjectPackages() {
     try {

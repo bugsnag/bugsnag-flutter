@@ -12,8 +12,7 @@ class NativeProjectPackagesScenario extends Scenario {
           'sessionEndpoint': endpoints.sessions,
         });
 
-    await bugsnag.attach(
-      runApp: () => throw Exception('Keep calm and carry on'),
-    );
+    await bugsnag.attach();
+    throw Exception('Keep calm and carry on');
   }
 }

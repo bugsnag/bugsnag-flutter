@@ -6,16 +6,18 @@ class AttachBugsnagScenario extends Scenario {
   Future<void> run() async {
     await startNativeNotifier();
 
-    final attachFuture = await doAttach();
-    if (extraConfig?.contains("extra-attach") == true) {
+    try {
       await doAttach();
+    } finally {
+      if (extraConfig?.contains("extra-attach") == true) {
+        await doAttach();
+      }
     }
   }
 
   Future<void> doAttach() async {
-    await bugsnag.attach(
-      runApp: () async {
-        await Future.wait([
+    await bugsnag.attach();
+    await Future.wait([
           bugsnag.setContext('flutter-test-context'),
           bugsnag.setUser(id: 'test-user-id', name: 'Old Man Tables'),
           bugsnag.addFeatureFlags(const [
@@ -32,7 +34,5 @@ class AttachBugsnagScenario extends Scenario {
         } else {
           throw Exception('Unhandled exception with attached info');
         }
-      },
-    );
   }
 }

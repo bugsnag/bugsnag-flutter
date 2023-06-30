@@ -5,7 +5,7 @@ Feature: bugsnag.errorHandler
     And I run "ErrorHandlerScenario"
     Then I wait to receive an error
     And the error is valid for the error reporting API version "4.0" for the "Flutter Bugsnag Notifier" notifier
-    And the exception "errorClass" equals "_CastError"
+    And the exception "errorClass" equals "_TypeError"
     And the error payload field "events.0.unhandled" is true
     And the error payload field "events.0.exceptions.0.message" equals "Null check operator used on a null value"
     And the error payload field "events.0.threads" is a non-empty array
