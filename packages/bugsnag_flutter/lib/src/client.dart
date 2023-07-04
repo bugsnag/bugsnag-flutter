@@ -236,7 +236,7 @@ abstract class BugsnagClient {
   void removeOnError(BugsnagOnErrorCallback onError);
 }
 
-class DelegateClient implements BugsnagClient {
+mixin DelegateClient implements BugsnagClient {
   BugsnagClient? _client;
 
   BugsnagClient get client {
