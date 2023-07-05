@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:bugsnag_flutter/src/error_factory.dart';
 import 'package:flutter/foundation.dart';
