@@ -78,6 +78,7 @@ steps:
     key: "android-fixture-3-10-0"
     timeout_in_minutes: 20
     env:
+      JAVA_HOME: "/Users/administrator/azul_openjdk_17"
       FLUTTER_BIN: "/opt/flutter/3.10.0/bin/flutter"
     commands:
       - features/scripts/build_android_app.sh
