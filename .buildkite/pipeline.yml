@@ -59,6 +59,23 @@ steps:
       - dwarfdump --arch=arm64 --uuid examples/flutter/build/ios/iphoneos/Runner.app/Frameworks/App.framework/App | tee uuid_after
       - test "$(cat uuid_before)" != "$(cat uuid_after)"
 
+
+  - label: Build Example App 3.10.0
+    timeout_in_minutes: 10
+    agents:
+      queue: ms-arm-12-8
+    env:
+      FLUTTER_BIN: "/opt/flutter/3.10.0/bin/flutter"
+    commands:
+      - pod repo update
+      - make examples/flutter
+      # Verify that App.framework's UUID (and therefore our `codeIdentifier`) changes when Dart code is touched
+      - dwarfdump --arch=arm64 --uuid examples/flutter/build/ios/iphoneos/Runner.app/Frameworks/App.framework/App | tee uuid_before
+      - sed -i '' -e 's/add_your_api_key_here/my_api_key/' examples/flutter/lib/main.dart
+      - make examples/flutter
+      - dwarfdump --arch=arm64 --uuid examples/flutter/build/ios/iphoneos/Runner.app/Frameworks/App.framework/App | tee uuid_after
+      - test "$(cat uuid_before)" != "$(cat uuid_after)"
+
   #
   # iOS
   #
@@ -89,6 +106,22 @@ steps:
         upload:
           from: "features/fixtures/app/build/ios/ipa/app.ipa"
           to: "features/fixtures/app/build/ios/ipa/app-3.0.1.ipa"
+
+  - label: Build iOS Test Fixture 3.10.0
+    key: "ios-fixture-3-10-0"
+    timeout_in_minutes: 20
+    agents:
+      queue: ms-arm-12-8
+    env:
+      FLUTTER_BIN: "/opt/flutter/3.10.0/bin/flutter"
+    commands:
+      - pod repo update trunk
+      - features/scripts/build_ios_app.sh
+    plugins:
+      artifacts#v1.5.0:
+        upload:
+          from: "features/fixtures/app/build/ios/ipa/app.ipa"
+          to: "features/fixtures/app/build/ios/ipa/app-3.10.0.ipa"
 
   - label: 'iOS 14 end-to-end tests 2.5.0'
     depends_on: "ios-fixture-2-8-1"
