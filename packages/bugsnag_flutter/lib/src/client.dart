@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:bugsnag_flutter/src/error_factory.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
@@ -523,7 +522,9 @@ class ChannelClient implements BugsnagClient {
     required bool unhandled,
     required bool deliver,
   }) async {
-    final buildID = error.stacktrace.firstOrNull?.codeIdentifier;
+    final buildID = error.stacktrace.isNotEmpty
+        ? error.stacktrace.first.codeIdentifier
+        : null;
     final errorInfo = details?.informationCollector?.call() ?? [];
     final errorContext = details?.context?.toDescription();
     final errorLibrary = details?.library;
