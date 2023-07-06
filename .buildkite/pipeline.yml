@@ -77,6 +77,8 @@ steps:
   - label: Build Android Test Fixture 3.10.0
     key: "android-fixture-3-10-0"
     timeout_in_minutes: 20
+    agents:
+      queue: ms-arm-12-8
     env:
       JAVA_HOME: "/Users/administrator/azul_openjdk_17"
       FLUTTER_BIN: "/opt/flutter/3.10.0/bin/flutter"
