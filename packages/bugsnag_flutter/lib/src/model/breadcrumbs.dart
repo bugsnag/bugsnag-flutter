@@ -12,8 +12,9 @@ class BugsnagBreadcrumb {
   BugsnagBreadcrumb(
     this.message, {
     this.type = BugsnagBreadcrumbType.manual,
-    this.metadata,
-  }) : timestamp = DateTime.now().toUtc();
+    metadata = MetadataMap,
+  })  : timestamp = DateTime.now().toUtc(),
+        metadata = BugsnagMetadata.sanitizedMap(metadata);
 
   BugsnagBreadcrumb.fromJson(Map<String, dynamic> json)
       : message = json.safeGet('name'),
