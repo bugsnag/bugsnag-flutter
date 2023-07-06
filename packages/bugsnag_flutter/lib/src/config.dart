@@ -80,10 +80,25 @@ enum BugsnagEnabledBreadcrumbType {
 
 /// Types of telemetry that may be sent to Bugsnag for product improvement
 /// purposes.
-enum BugsnagTelemetryType {
+class BugsnagTelemetryTypes {
   /// Errors within the Bugsnag SDK.
-  internalErrors,
+  final bool internalErrors;
 
   /// Information about how Bugsnag has been configured.
-  usage,
+  final bool usage;
+
+  const BugsnagTelemetryTypes({
+    this.internalErrors = true,
+    this.usage = true,
+  });
+
+  dynamic toJson() => {
+        'internalErrors': internalErrors,
+        'usage': usage,
+      };
+
+  dynamic toList() =>
+      [if (internalErrors) "internalErrors", if (usage) "usage"];
+
+  static const BugsnagTelemetryTypes all = BugsnagTelemetryTypes();
 }

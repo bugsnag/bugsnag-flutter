@@ -688,7 +688,7 @@ class Bugsnag extends BugsnagClient with DelegateClient {
     Map<String, Map<String, Object>>? metadata,
     List<BugsnagFeatureFlag>? featureFlags,
     List<BugsnagOnErrorCallback> onError = const [],
-    Set<BugsnagTelemetryType>? telemetry,
+    BugsnagTelemetryTypes telemetry = BugsnagTelemetryTypes.all,
     Directory? persistenceDirectory,
     int? versionCode,
   }) async {
@@ -735,9 +735,7 @@ class Bugsnag extends BugsnagClient with DelegateClient {
       if (metadata != null) 'metadata': BugsnagMetadata(metadata),
       'featureFlags': featureFlags,
       'notifier': _notifier,
-      'telemetry': (telemetry ?? BugsnagTelemetryType.values)
-          .map((e) => e.toName())
-          .toList(),
+      'telemetry': telemetry.toList(),
       if (persistenceDirectory != null)
         'persistenceDirectory': persistenceDirectory.absolute.path,
       if (versionCode != null) 'versionCode': versionCode,
