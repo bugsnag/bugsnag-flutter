@@ -81,9 +81,22 @@ void main() {
       );
     });
 
+    test('disabled internal errors only', () async {
+      channel.results['start'] = true;
+      await bugsnag.start(
+          telemetry: const BugsnagTelemetryTypes(internalErrors: false));
+
+      expect(
+        channel['start'][0]['telemetry'],
+        equals(const ["usage"]),
+      );
+    });
+
     test('disabled telemetry', () async {
       channel.results['start'] = true;
-      await bugsnag.start(telemetry: {});
+      await bugsnag.start(
+          telemetry:
+              const BugsnagTelemetryTypes(internalErrors: false, usage: false));
 
       expect(
         channel['start'][0]['telemetry'],
