@@ -142,19 +142,21 @@ void main() {
         expect(actualMetadata["Map"], equals({"1": 2}));
       });
 
-      test('Breadcrumb metadata is sanitized', () async {
+      test('Breadcrumb metadata json roundtrip', () async {
         final sampleMetadata = {
           "List": [1, 2, 3],
           "Enum": BugsnagBreadcrumbType.manual,
           "Map": Map<String, Object>.from({"1": 2}),
         };
-        final breadcrumb = BugsnagBreadcrumb("Hello",
-            type: BugsnagBreadcrumbType.manual, metadata: sampleMetadata);
+        final json = BugsnagBreadcrumb("Hello",
+                type: BugsnagBreadcrumbType.manual, metadata: sampleMetadata)
+            .toJson();
+        final decoded = BugsnagBreadcrumb.fromJson(json);
 
-        expect(breadcrumb.metadata?["List"], equals([1, 2, 3]));
-        expect(breadcrumb.metadata?["Enum"],
-            equals("BugsnagBreadcrumbType.manual"));
-        expect(breadcrumb.metadata?["Map"], equals({"1": 2}));
+        expect(decoded.metadata?["List"], equals([1, 2, 3]));
+        expect(
+            decoded.metadata?["Enum"], equals("BugsnagBreadcrumbType.manual"));
+        expect(decoded.metadata?["Map"], equals({"1": 2}));
       });
     });
   });
