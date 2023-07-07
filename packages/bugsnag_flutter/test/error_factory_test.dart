@@ -16,6 +16,17 @@ void main() {
       expect(error.stacktrace.length, greaterThan(3));
     });
 
+    test('Empty stack trace', () {
+      final error = BugsnagErrorFactory.instance
+          .createError(Exception('this is a message'), StackTrace.empty);
+
+      expect(error.type, equals(BugsnagErrorType.dart));
+      // a surprise _ appears!
+      expect(error.errorClass, equals('_Exception'));
+      expect(error.message, equals('this is a message'));
+      expect(error.stacktrace.length, greaterThan(0));
+    });
+
     test('Exception with an object message', () {
       final error = BugsnagErrorFactory.instance.createError(Exception(main));
 
