@@ -26,7 +26,6 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
     compileSdkVersion flutter.hasProperty('compileSdkVersion') ? flutter.compileSdkVersion : 30
-    namespace 'com.bugsnag.flutter.test.app'
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
