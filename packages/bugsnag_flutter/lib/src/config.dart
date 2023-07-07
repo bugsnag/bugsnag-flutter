@@ -92,12 +92,7 @@ class BugsnagTelemetryTypes {
     this.usage = true,
   });
 
-  dynamic toJson() => {
-        'internalErrors': internalErrors,
-        'usage': usage,
-      };
-
-  dynamic toList() =>
+  dynamic toJson() =>
       [if (internalErrors) "internalErrors", if (usage) "usage"];
 
   static const BugsnagTelemetryTypes all = BugsnagTelemetryTypes();

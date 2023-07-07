@@ -736,7 +736,7 @@ class Bugsnag extends BugsnagClient with DelegateClient {
       if (metadata != null) 'metadata': BugsnagMetadata(metadata),
       'featureFlags': featureFlags,
       'notifier': _notifier,
-      'telemetry': telemetry.toList(),
+      'telemetry': telemetry,
       if (persistenceDirectory != null)
         'persistenceDirectory': persistenceDirectory.absolute.path,
       if (versionCode != null) 'versionCode': versionCode,
