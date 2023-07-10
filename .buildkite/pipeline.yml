@@ -75,10 +75,8 @@ steps:
   # Android
   #
   - label: Build Android Test Fixture 3.10.0
-    
+
     timeout_in_minutes: 20
-    agents:
-      queue: ms-arm-12-8
     env:
       JAVA_HOME: "/Users/administrator/azul_openjdk_17"
       FLUTTER_BIN: "/opt/flutter/3.10.0/bin/flutter"
@@ -91,10 +89,8 @@ steps:
           to: "features/fixtures/app/build/app/outputs/flutter-apk/app-release-3.10.0.apk"
 
   - label: Build Android Test Fixture 3.10.0
-    
+
     timeout_in_minutes: 20
-    agents:
-      queue: ms-arm-12-8
     env:
       JAVA_HOME: "/Users/administrator/azul_openjdk_17"
       FLUTTER_BIN: "/opt/flutter/3.10.0/bin/flutter"
@@ -107,10 +103,8 @@ steps:
           to: "features/fixtures/app/build/app/outputs/flutter-apk/app-release-3.10.0.apk"
 
   - label: Build Android Test Fixture 3.10.0
-    
+
     timeout_in_minutes: 20
-    agents:
-      queue: ms-arm-12-8
     env:
       JAVA_HOME: "/Users/administrator/azul_openjdk_17"
       FLUTTER_BIN: "/opt/flutter/3.10.0/bin/flutter"
@@ -123,10 +117,8 @@ steps:
           to: "features/fixtures/app/build/app/outputs/flutter-apk/app-release-3.10.0.apk"
 
   - label: Build Android Test Fixture 3.10.0
-    
+
     timeout_in_minutes: 20
-    agents:
-      queue: ms-arm-12-8
     env:
       JAVA_HOME: "/Users/administrator/azul_openjdk_17"
       FLUTTER_BIN: "/opt/flutter/3.10.0/bin/flutter"
@@ -139,10 +131,8 @@ steps:
           to: "features/fixtures/app/build/app/outputs/flutter-apk/app-release-3.10.0.apk"
 
   - label: Build Android Test Fixture 3.10.0
-    
+
     timeout_in_minutes: 20
-    agents:
-      queue: ms-arm-12-8
     env:
       JAVA_HOME: "/Users/administrator/azul_openjdk_17"
       FLUTTER_BIN: "/opt/flutter/3.10.0/bin/flutter"
@@ -155,10 +145,8 @@ steps:
           to: "features/fixtures/app/build/app/outputs/flutter-apk/app-release-3.10.0.apk"
 
   - label: Build Android Test Fixture 3.10.0
-    
+
     timeout_in_minutes: 20
-    agents:
-      queue: ms-arm-12-8
     env:
       JAVA_HOME: "/Users/administrator/azul_openjdk_17"
       FLUTTER_BIN: "/opt/flutter/3.10.0/bin/flutter"
@@ -171,10 +159,8 @@ steps:
           to: "features/fixtures/app/build/app/outputs/flutter-apk/app-release-3.10.0.apk"
 
   - label: Build Android Test Fixture 3.10.0
-    
+
     timeout_in_minutes: 20
-    agents:
-      queue: ms-arm-12-8
     env:
       JAVA_HOME: "/Users/administrator/azul_openjdk_17"
       FLUTTER_BIN: "/opt/flutter/3.10.0/bin/flutter"
@@ -187,10 +173,8 @@ steps:
           to: "features/fixtures/app/build/app/outputs/flutter-apk/app-release-3.10.0.apk"
 
   - label: Build Android Test Fixture 3.10.0
-    
+
     timeout_in_minutes: 20
-    agents:
-      queue: ms-arm-12-8
     env:
       JAVA_HOME: "/Users/administrator/azul_openjdk_17"
       FLUTTER_BIN: "/opt/flutter/3.10.0/bin/flutter"
@@ -203,10 +187,8 @@ steps:
           to: "features/fixtures/app/build/app/outputs/flutter-apk/app-release-3.10.0.apk"
 
   - label: Build Android Test Fixture 3.10.0
-    
+
     timeout_in_minutes: 20
-    agents:
-      queue: ms-arm-12-8
     env:
       JAVA_HOME: "/Users/administrator/azul_openjdk_17"
       FLUTTER_BIN: "/opt/flutter/3.10.0/bin/flutter"
@@ -219,10 +201,8 @@ steps:
           to: "features/fixtures/app/build/app/outputs/flutter-apk/app-release-3.10.0.apk"
 
   - label: Build Android Test Fixture 3.10.0
-    
+
     timeout_in_minutes: 20
-    agents:
-      queue: ms-arm-12-8
     env:
       JAVA_HOME: "/Users/administrator/azul_openjdk_17"
       FLUTTER_BIN: "/opt/flutter/3.10.0/bin/flutter"
@@ -235,10 +215,8 @@ steps:
           to: "features/fixtures/app/build/app/outputs/flutter-apk/app-release-3.10.0.apk"
 
   - label: Build Android Test Fixture 3.10.0
-    
+
     timeout_in_minutes: 20
-    agents:
-      queue: ms-arm-12-8
     env:
       JAVA_HOME: "/Users/administrator/azul_openjdk_17"
       FLUTTER_BIN: "/opt/flutter/3.10.0/bin/flutter"
@@ -251,10 +229,8 @@ steps:
           to: "features/fixtures/app/build/app/outputs/flutter-apk/app-release-3.10.0.apk"
 
   - label: Build Android Test Fixture 3.10.0
-    
+
     timeout_in_minutes: 20
-    agents:
-      queue: ms-arm-12-8
     env:
       JAVA_HOME: "/Users/administrator/azul_openjdk_17"
       FLUTTER_BIN: "/opt/flutter/3.10.0/bin/flutter"
@@ -267,10 +243,8 @@ steps:
           to: "features/fixtures/app/build/app/outputs/flutter-apk/app-release-3.10.0.apk"
 
   - label: Build Android Test Fixture 3.10.0
-    
+
     timeout_in_minutes: 20
-    agents:
-      queue: ms-arm-12-8
     env:
       JAVA_HOME: "/Users/administrator/azul_openjdk_17"
       FLUTTER_BIN: "/opt/flutter/3.10.0/bin/flutter"
@@ -283,10 +257,8 @@ steps:
           to: "features/fixtures/app/build/app/outputs/flutter-apk/app-release-3.10.0.apk"
 
   - label: Build Android Test Fixture 3.10.0
-    
+
     timeout_in_minutes: 20
-    agents:
-      queue: ms-arm-12-8
     env:
       JAVA_HOME: "/Users/administrator/azul_openjdk_17"
       FLUTTER_BIN: "/opt/flutter/3.10.0/bin/flutter"
@@ -299,10 +271,8 @@ steps:
           to: "features/fixtures/app/build/app/outputs/flutter-apk/app-release-3.10.0.apk"
 
   - label: Build Android Test Fixture 3.10.0
-    
+
     timeout_in_minutes: 20
-    agents:
-      queue: ms-arm-12-8
     env:
       JAVA_HOME: "/Users/administrator/azul_openjdk_17"
       FLUTTER_BIN: "/opt/flutter/3.10.0/bin/flutter"
@@ -315,10 +285,8 @@ steps:
           to: "features/fixtures/app/build/app/outputs/flutter-apk/app-release-3.10.0.apk"
 
   - label: Build Android Test Fixture 3.10.0
-    
+
     timeout_in_minutes: 20
-    agents:
-      queue: ms-arm-12-8
     env:
       JAVA_HOME: "/Users/administrator/azul_openjdk_17"
       FLUTTER_BIN: "/opt/flutter/3.10.0/bin/flutter"
@@ -331,10 +299,8 @@ steps:
           to: "features/fixtures/app/build/app/outputs/flutter-apk/app-release-3.10.0.apk"
 
   - label: Build Android Test Fixture 3.10.0
-    
+
     timeout_in_minutes: 20
-    agents:
-      queue: ms-arm-12-8
     env:
       JAVA_HOME: "/Users/administrator/azul_openjdk_17"
       FLUTTER_BIN: "/opt/flutter/3.10.0/bin/flutter"
@@ -347,10 +313,8 @@ steps:
           to: "features/fixtures/app/build/app/outputs/flutter-apk/app-release-3.10.0.apk"
 
   - label: Build Android Test Fixture 3.10.0
-    
+
     timeout_in_minutes: 20
-    agents:
-      queue: ms-arm-12-8
     env:
       JAVA_HOME: "/Users/administrator/azul_openjdk_17"
       FLUTTER_BIN: "/opt/flutter/3.10.0/bin/flutter"
@@ -363,10 +327,8 @@ steps:
           to: "features/fixtures/app/build/app/outputs/flutter-apk/app-release-3.10.0.apk"
 
   - label: Build Android Test Fixture 3.10.0
-    
+
     timeout_in_minutes: 20
-    agents:
-      queue: ms-arm-12-8
     env:
       JAVA_HOME: "/Users/administrator/azul_openjdk_17"
       FLUTTER_BIN: "/opt/flutter/3.10.0/bin/flutter"
@@ -379,10 +341,8 @@ steps:
           to: "features/fixtures/app/build/app/outputs/flutter-apk/app-release-3.10.0.apk"
 
   - label: Build Android Test Fixture 3.10.0
-    
+
     timeout_in_minutes: 20
-    agents:
-      queue: ms-arm-12-8
     env:
       JAVA_HOME: "/Users/administrator/azul_openjdk_17"
       FLUTTER_BIN: "/opt/flutter/3.10.0/bin/flutter"
