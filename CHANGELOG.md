@@ -6,6 +6,8 @@
 - Update bugsnag-android from v5.28.3 to [v5.30.0](https://github.com/bugsnag/bugsnag-android/blob/master/CHANGELOG.md#5300-2023-05-11)
 - Prevent crashing if the stack trace is empty
   [#204](https://github.com/bugsnag/bugsnag-flutter/pull/204)
+- Include breadcrumb metadata in sanitizing (allows enums in metadata)
+  [#206](https://github.com/bugsnag/bugsnag-flutter/pull/206)
 
 ## 2.4.0 (2022-12-01)
 
