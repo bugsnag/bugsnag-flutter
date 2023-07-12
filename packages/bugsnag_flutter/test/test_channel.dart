@@ -11,7 +11,7 @@ class MockChannelClientController {
 
   MockChannelClientController() {
     TestWidgetsFlutterBinding.ensureInitialized();
-    TestDefaultBinaryMessengerBinding.instance?.defaultBinaryMessenger
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, _handleClientMethodCall);
   }
 

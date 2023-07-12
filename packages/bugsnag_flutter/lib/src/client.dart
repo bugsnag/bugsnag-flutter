@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:ui';
 
 import 'package:bugsnag_flutter/src/error_factory.dart';
 import 'package:flutter/foundation.dart';
@@ -236,7 +235,7 @@ abstract class BugsnagClient {
   void removeOnError(BugsnagOnErrorCallback onError);
 }
 
-class DelegateClient implements BugsnagClient {
+mixin DelegateClient implements BugsnagClient {
   BugsnagClient? _client;
 
   BugsnagClient get client {
