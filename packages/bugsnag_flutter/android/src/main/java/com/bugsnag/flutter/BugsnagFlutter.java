@@ -51,7 +51,7 @@ class BugsnagFlutter {
 
     Context context;
 
-    JSONObject attach(@NonNull JSONObject args) throws Exception {
+    JSONObject attach(@Nullable JSONObject args) throws Exception {
         JSONObject result = new JSONObject()
                 .put("config", new JSONObject()
                         .put("enabledErrorTypes", new JSONObject()
@@ -71,18 +71,20 @@ class BugsnagFlutter {
 
         client = new InternalHooks(nativeClient);
 
-        Notifier notifier = client.getNotifier();
-        JSONObject notifierJson = args.getJSONObject("notifier");
-        notifier.setName(notifierJson.getString("name"));
-        notifier.setVersion(notifierJson.getString("version"));
-        notifier.setUrl(notifierJson.getString("url"));
-        notifier.setDependencies(Collections.singletonList(new Notifier()));
+        if (args != null && args.has("notifier")) {
+            Notifier notifier = client.getNotifier();
+            JSONObject notifierJson = args.getJSONObject("notifier");
+            notifier.setName(notifierJson.getString("name"));
+            notifier.setVersion(notifierJson.getString("version"));
+            notifier.setUrl(notifierJson.getString("url"));
+            notifier.setDependencies(Collections.singletonList(new Notifier()));
+        }
 
         isAttached = true;
         return result;
     }
 
-    Void start(@NonNull JSONObject args) throws Exception {
+    Void start(@Nullable JSONObject args) throws Exception {
         if (isStarted) {
             Log.w("BugsnagFlutter", "bugsnag.start() was called more than once. Ignoring.");
             return null;
@@ -96,38 +98,39 @@ class BugsnagFlutter {
         if (InternalHooks.getClient() != null) {
             throw new IllegalStateException("bugsnag.start() may not be called after starting Bugsnag natively");
         }
+        JSONObject arguments = args != null ? args : new JSONObject();
 
-        Configuration configuration = args.has("apiKey")
-                ? new Configuration(args.getString("apiKey"))
+        Configuration configuration = arguments.has("apiKey")
+                ? new Configuration(arguments.getString("apiKey"))
                 : Configuration.load(context);
 
-        configuration.setAppType(args.optString("appType", configuration.getAppType()));
-        configuration.setAppVersion(args.optString("appVersion", configuration.getAppVersion()));
-        configuration.setAutoTrackSessions(args.optBoolean("autoTrackSessions", configuration.getAutoTrackSessions()));
-        configuration.setAutoDetectErrors(args.optBoolean("autoDetectErrors", configuration.getAutoDetectErrors()));
-        configuration.setContext(args.optString("context", configuration.getContext()));
-        configuration.setLaunchDurationMillis(args.optLong("launchDurationMillis", configuration.getLaunchDurationMillis()));
-        configuration.setSendLaunchCrashesSynchronously(args.optBoolean("sendLaunchCrashesSynchronously", configuration.getSendLaunchCrashesSynchronously()));
-        configuration.setMaxBreadcrumbs(args.optInt("maxBreadcrumbs", configuration.getMaxBreadcrumbs()));
-        configuration.setMaxPersistedEvents(args.optInt("maxPersistedEvents", configuration.getMaxPersistedEvents()));
-        configuration.setMaxPersistedSessions(args.optInt("maxPersistedSessions", configuration.getMaxPersistedSessions()));
-        configuration.setMaxStringValueLength(args.optInt("maxStringValueLength", configuration.getMaxStringValueLength()));
-        configuration.setReleaseStage(args.optString("releaseStage", configuration.getReleaseStage()));
-        configuration.setPersistUser(args.optBoolean("persistUser", configuration.getPersistUser()));
+        configuration.setAppType(arguments.optString("appType", configuration.getAppType()));
+        configuration.setAppVersion(arguments.optString("appVersion", configuration.getAppVersion()));
+        configuration.setAutoTrackSessions(arguments.optBoolean("autoTrackSessions", configuration.getAutoTrackSessions()));
+        configuration.setAutoDetectErrors(arguments.optBoolean("autoDetectErrors", configuration.getAutoDetectErrors()));
+        configuration.setContext(arguments.optString("context", configuration.getContext()));
+        configuration.setLaunchDurationMillis(arguments.optLong("launchDurationMillis", configuration.getLaunchDurationMillis()));
+        configuration.setSendLaunchCrashesSynchronously(arguments.optBoolean("sendLaunchCrashesSynchronously", configuration.getSendLaunchCrashesSynchronously()));
+        configuration.setMaxBreadcrumbs(arguments.optInt("maxBreadcrumbs", configuration.getMaxBreadcrumbs()));
+        configuration.setMaxPersistedEvents(arguments.optInt("maxPersistedEvents", configuration.getMaxPersistedEvents()));
+        configuration.setMaxPersistedSessions(arguments.optInt("maxPersistedSessions", configuration.getMaxPersistedSessions()));
+        configuration.setMaxStringValueLength(arguments.optInt("maxStringValueLength", configuration.getMaxStringValueLength()));
+        configuration.setReleaseStage(arguments.optString("releaseStage", configuration.getReleaseStage()));
+        configuration.setPersistUser(arguments.optBoolean("persistUser", configuration.getPersistUser()));
 
-        if (args.has("redactedKeys")) {
-            configuration.setRedactedKeys(unwrap(args.optJSONArray("redactedKeys"), new HashSet<>()));
+        if (arguments.has("redactedKeys")) {
+            configuration.setRedactedKeys(unwrap(arguments.optJSONArray("redactedKeys"), new HashSet<>()));
         }
 
-        if (args.has("discardClasses")) {
-            configuration.setDiscardClasses(unwrap(args.optJSONArray("discardClasses"), new HashSet<>()));
+        if (arguments.has("discardClasses")) {
+            configuration.setDiscardClasses(unwrap(arguments.optJSONArray("discardClasses"), new HashSet<>()));
         }
 
-        if (args.has("enabledReleaseStages")) {
-            configuration.setEnabledReleaseStages(unwrap(args.optJSONArray("enabledReleaseStages"), new HashSet<>()));
+        if (arguments.has("enabledReleaseStages")) {
+            configuration.setEnabledReleaseStages(unwrap(arguments.optJSONArray("enabledReleaseStages"), new HashSet<>()));
         }
 
-        JSONObject user = args.optJSONObject("user");
+        JSONObject user = arguments.optJSONObject("user");
         if (user != null) {
             configuration.setUser(
                     user.optString("id", null),
@@ -136,7 +139,7 @@ class BugsnagFlutter {
             );
         }
 
-        JSONObject endpoints = args.optJSONObject("endpoints");
+        JSONObject endpoints = arguments.optJSONObject("endpoints");
         if (endpoints != null) {
             configuration.setEndpoints(
                     new EndpointConfiguration(
@@ -146,7 +149,7 @@ class BugsnagFlutter {
             );
         }
 
-        String sendThreads = args.optString("sendThreads");
+        String sendThreads = arguments.optString("sendThreads");
         if (sendThreads.equals("always")) {
             configuration.setSendThreads(ThreadSendPolicy.ALWAYS);
         } else if (sendThreads.equals("unhandledOnly")) {
@@ -156,10 +159,10 @@ class BugsnagFlutter {
         }
 
         configuration.setEnabledBreadcrumbTypes(
-                EnumHelper.unwrapBreadcrumbTypes(args.optJSONArray("enabledBreadcrumbTypes"))
+                EnumHelper.unwrapBreadcrumbTypes(arguments.optJSONArray("enabledBreadcrumbTypes"))
         );
 
-        JSONObject enabledErrorTypes = args.optJSONObject("enabledErrorTypes");
+        JSONObject enabledErrorTypes = arguments.optJSONObject("enabledErrorTypes");
         if (enabledErrorTypes != null) {
             ErrorTypes errorTypes = new ErrorTypes();
             errorTypes.setUnhandledExceptions(enabledErrorTypes.optBoolean("unhandledExceptions"));
@@ -169,23 +172,25 @@ class BugsnagFlutter {
             configuration.setEnabledErrorTypes(errorTypes);
         }
 
-        unpackMetadata(args.optJSONObject("metadata"), configuration);
+        unpackMetadata(arguments.optJSONObject("metadata"), configuration);
 
-        configuration.addFeatureFlags(unpackFeatureFlags(args.optJSONArray("featureFlags")));
+        configuration.addFeatureFlags(unpackFeatureFlags(arguments.optJSONArray("featureFlags")));
 
         Notifier notifier = InternalHooks.getNotifier(configuration);
-        JSONObject notifierJson = args.getJSONObject("notifier");
-        notifier.setName(notifierJson.getString("name"));
-        notifier.setVersion(notifierJson.getString("version"));
-        notifier.setUrl(notifierJson.getString("url"));
-        notifier.setDependencies(Collections.singletonList(new Notifier()));
-
-        if (args.has("persistenceDirectory")) {
-            configuration.setPersistenceDirectory(new File(args.getString("persistenceDirectory")));
+        if (arguments.has("notifier")) {
+            JSONObject notifierJson = arguments.getJSONObject("notifier");
+            notifier.setName(notifierJson.getString("name"));
+            notifier.setVersion(notifierJson.getString("version"));
+            notifier.setUrl(notifierJson.getString("url"));
+            notifier.setDependencies(Collections.singletonList(new Notifier()));
         }
 
-        if (args.has("projectPackages")) {
-            JSONObject projectPackages = args.optJSONObject("projectPackages");
+        if (arguments.has("persistenceDirectory")) {
+            configuration.setPersistenceDirectory(new File(arguments.getString("persistenceDirectory")));
+        }
+
+        if (arguments.has("projectPackages")) {
+            JSONObject projectPackages = arguments.optJSONObject("projectPackages");
 
             JSONArray packageNames = projectPackages.getJSONArray("packageNames");
             final int packageCount = packageNames.length();
@@ -202,12 +207,12 @@ class BugsnagFlutter {
             configuration.setProjectPackages(packagesSet);
         }
 
-        if (args.has("telemetry")) {
-            configuration.setTelemetry(EnumHelper.unwrapTelemetry(args.optJSONArray("telemetry")));
+        if (arguments.has("telemetry")) {
+            configuration.setTelemetry(EnumHelper.unwrapTelemetry(arguments.optJSONArray("telemetry")));
         }
 
-        if (args.has("versionCode")) {
-            configuration.setVersionCode(args.getInt("versionCode"));
+        if (arguments.has("versionCode")) {
+            configuration.setVersionCode(arguments.getInt("versionCode"));
         }
 
         client = new InternalHooks(Bugsnag.start(context, configuration));
@@ -246,10 +251,15 @@ class BugsnagFlutter {
         return Bugsnag.getContext();
     }
 
-    Void leaveBreadcrumb(@NonNull JSONObject args) throws Exception {
-        Bugsnag.leaveBreadcrumb(args.getString("name"),
-                JsonHelper.unwrap(args.getJSONObject("metaData")),
-                JsonHelper.unpackBreadcrumbType(args.getString("type")));
+    Void leaveBreadcrumb(@Nullable JSONObject args) throws Exception {
+        if (args != null &&
+                args.has("name") &&
+                args.has("metaData") &&
+                args.has("type")) {
+            Bugsnag.leaveBreadcrumb(args.getString("name"),
+                    JsonHelper.unwrap(args.getJSONObject("metaData")),
+                    JsonHelper.unpackBreadcrumbType(args.getString("type")));
+        }
         return null;
     }
 
@@ -268,8 +278,10 @@ class BugsnagFlutter {
         return null;
     }
 
-    Void clearFeatureFlag(@NonNull JSONObject args) throws JSONException {
-        Bugsnag.clearFeatureFlag(args.getString("name"));
+    Void clearFeatureFlag(@Nullable JSONObject args) throws JSONException {
+        if (args != null && args.has("name")) {
+            Bugsnag.clearFeatureFlag(args.getString("name"));
+        }
         return null;
     }
 
@@ -279,7 +291,7 @@ class BugsnagFlutter {
     }
 
     Void addMetadata(@Nullable JSONObject args) throws JSONException {
-        if (args == null) {
+        if (args == null || !args.has("section") || !args.has("metadata")) {
             return null;
         }
 
@@ -291,7 +303,7 @@ class BugsnagFlutter {
     }
 
     Void clearMetadata(@Nullable JSONObject args) throws JSONException {
-        if (args == null) {
+        if (args == null || !args.has("section")) {
             return null;
         }
 
@@ -305,7 +317,7 @@ class BugsnagFlutter {
     }
 
     JSONObject getMetadata(@Nullable JSONObject args) throws JSONException {
-        if (args == null) {
+        if (args == null || !args.has("section")) {
             return null;
         }
 
@@ -341,7 +353,7 @@ class BugsnagFlutter {
 
     @SuppressWarnings("unchecked")
     JSONObject createEvent(@Nullable JSONObject args) throws JSONException {
-        if (args == null) {
+        if (args == null || !args.has("error")) {
             return null;
         }
 
