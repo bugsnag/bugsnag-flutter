@@ -11,25 +11,23 @@ class DiscardClassesScenario extends Scenario {
       endpoints: endpoints,
       discardClasses: const {
         '_Exception',
-      },
-      runApp: () async {
-        try {
-          throw Exception('this should be discarded');
-        } catch (e, stack) {
-          await _notifyError(e, stack, withCallback);
-        }
-
-        try {
-          int.parse('this is not a number');
-        } catch (e, stack) {
-          await _notifyError(e, stack, withCallback);
-        }
-
-        if (extraConfig?.contains('unhandled') == true) {
-          throw Exception('this should be discarded');
-        }
-      },
+      }
     );
+    try {
+      throw Exception('this should be discarded');
+    } catch (e, stack) {
+      await _notifyError(e, stack, withCallback);
+    }
+
+    try {
+      int.parse('this is not a number');
+    } catch (e, stack) {
+      await _notifyError(e, stack, withCallback);
+    }
+
+    if (extraConfig?.contains('unhandled') == true) {
+      throw Exception('this should be discarded');
+    }
   }
 
   Future<void> _notifyError(
