@@ -1,6 +1,6 @@
 # Changelog
 
-## TBD
+## 2.5.0 (2023-07-17)
 
 - Additional null safety checks in BugsnagFlutter.java [#209](https://github.com/bugsnag/bugsnag-flutter/pull/209)
 - Update bugsnag-cocoa from v6.25.0 to [v6.26.2](https://github.com/bugsnag/bugsnag-cocoa/blob/master/CHANGELOG.md#6262-2023-04-20)
