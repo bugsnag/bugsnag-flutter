@@ -27,7 +27,7 @@ class BugsnagBreadcrumb {
         'name': message,
         'type': type.toName(),
         'timestamp': timestamp.toIso8601String(),
-        'metaData': metadata ?? {},
+        'metaData': BugsnagMetadata.sanitizedMap(metadata ?? {}),
       };
 }
 

@@ -17,7 +17,7 @@ import 'model.dart';
 final _notifier = {
   'name': 'Flutter Bugsnag Notifier',
   'url': 'https://github.com/bugsnag/bugsnag-flutter',
-  'version': '2.4.0'
+  'version': '2.5.0'
 };
 
 abstract class BugsnagClient {
@@ -523,7 +523,9 @@ class ChannelClient implements BugsnagClient {
     required bool unhandled,
     required bool deliver,
   }) async {
-    final buildID = error.stacktrace.first.codeIdentifier;
+    final buildID = error.stacktrace.isNotEmpty
+        ? error.stacktrace.first.codeIdentifier
+        : null;
     final errorInfo = details?.informationCollector?.call() ?? [];
     final errorContext = details?.context?.toDescription();
     final errorLibrary = details?.library;

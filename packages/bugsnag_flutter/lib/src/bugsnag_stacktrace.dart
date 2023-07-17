@@ -67,9 +67,11 @@ int? _parseBaseAddress(String line) {
 
 BugsnagStacktrace? _parseStackTrace(String stackTraceString) {
   try {
-    return StackFrame.fromStackTrace(StackTrace.fromString(stackTraceString))
-        .map((frame) => BugsnagStackframe.fromStackFrame(frame))
-        .toList();
+    final stackTrace =
+        StackFrame.fromStackTrace(StackTrace.fromString(stackTraceString))
+            .map((frame) => BugsnagStackframe.fromStackFrame(frame))
+            .toList();
+    return stackTrace.isEmpty ? null : stackTrace;
   } catch (e) {
     return null;
   }

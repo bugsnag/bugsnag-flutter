@@ -17,6 +17,7 @@ void main() {
         'attach': true,
         'createEvent': _mockCreateEvent,
         'deliverEvent': null,
+        'addMetadata': null,
       });
     });
 
@@ -123,6 +124,39 @@ void main() {
         expect(value, isNull);
         expect(channel['createEvent'], hasLength(1));
         expect(channel['createEvent'][0]['deliver'], isTrue);
+      });
+
+      test('Metadata is sanitized', () async {
+        final sampleMetadata = {
+          "List": [1, 2, 3],
+          "Enum": BugsnagBreadcrumbType.manual,
+          "Map": Map<String, Object>.from({"1": 2}),
+        };
+
+        client.addMetadata("Hello", sampleMetadata);
+
+        expect(channel['addMetadata'], hasLength(1));
+        final actualMetadata = channel['addMetadata'][0]['metadata'];
+        expect(actualMetadata["List"], equals([1, 2, 3]));
+        expect(actualMetadata["Enum"], equals("BugsnagBreadcrumbType.manual"));
+        expect(actualMetadata["Map"], equals({"1": 2}));
+      });
+
+      test('Breadcrumb metadata json roundtrip', () async {
+        final sampleMetadata = {
+          "List": [1, 2, 3],
+          "Enum": BugsnagBreadcrumbType.manual,
+          "Map": Map<String, Object>.from({"1": 2}),
+        };
+        final json = BugsnagBreadcrumb("Hello",
+                type: BugsnagBreadcrumbType.manual, metadata: sampleMetadata)
+            .toJson();
+        final decoded = BugsnagBreadcrumb.fromJson(json);
+
+        expect(decoded.metadata?["List"], equals([1, 2, 3]));
+        expect(
+            decoded.metadata?["Enum"], equals("BugsnagBreadcrumbType.manual"));
+        expect(decoded.metadata?["Map"], equals({"1": 2}));
       });
     });
   });

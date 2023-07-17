@@ -25,6 +25,10 @@ apply plugin: 'com.android.library'
 android {
     compileSdkVersion 29
 
+    if (android.hasProperty('namespace')) {
+        namespace 'com.bugsnag.flutter'
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -46,7 +50,7 @@ android {
 }
 
 dependencies {
-    implementation 'com.bugsnag:bugsnag-android:5.28.3'
+    implementation 'com.bugsnag:bugsnag-android:5.30.0'
     testImplementation 'junit:junit:4.12'
 }
 
