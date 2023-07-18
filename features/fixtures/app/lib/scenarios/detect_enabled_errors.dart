@@ -15,12 +15,10 @@ class DetectEnabledErrorsScenario extends Scenario {
         unhandledJvmExceptions:
             extraConfig?.contains('detectJvmExceptions') == true,
       ),
-      endpoints: endpoints,
-      runApp: () {
-        Zone.root.run(_delayedNativeException);
-        throw Exception('Exception from Dart');
-      },
+      endpoints: endpoints
     );
+    Zone.root.run(_delayedNativeException);
+    throw Exception('Exception from Dart');
   }
 
   Future<void> _delayedNativeException() async {

@@ -101,6 +101,7 @@
 				010BAB802833F1160003FF36 /* Frameworks */,
 				010BAB812833F1160003FF36 /* Resources */,
 				E89B3AC476390C585D0BE274 /* [CP] Embed Pods Frameworks */,
+				1C77F3CA453290A61975F62B /* [CP-User] Embed Flutter Build example_flutter Script */,
 			);
 			buildRules = (
 			);
@@ -159,6 +160,16 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		1C77F3CA453290A61975F62B /* [CP-User] Embed Flutter Build example_flutter Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			name = "[CP-User] Embed Flutter Build example_flutter Script";
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -e\nset -u\nsource \"${SRCROOT}/../example_flutter/.ios/Flutter/flutter_export_environment.sh\"\nexport VERBOSE_SCRIPT_LOGGING=1 && \"$FLUTTER_ROOT\"/packages/flutter_tools/bin/xcode_backend.sh embed_and_thin";
+		};
 		4B6EFDDDC5A18D2213239548 /* [CP-User] Run Flutter Build example_flutter Script */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;

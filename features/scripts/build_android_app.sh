@@ -8,4 +8,4 @@ fi
 echo "Flutter Bin: $FLUTTER_BIN"
 
 cd features/fixtures/app
-$FLUTTER_BIN build apk
+$FLUTTER_BIN build apk --no-tree-shake-icons

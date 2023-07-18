@@ -3,7 +3,10 @@ import 'dart:async';
 import 'package:bugsnag_flutter/bugsnag_flutter.dart';
 import 'package:flutter/material.dart';
 
-void main() async => bugsnag.attach(runApp: () => runApp(const MyApp()));
+void main() async {
+  await bugsnag.attach();
+  runApp(const MyApp());
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);

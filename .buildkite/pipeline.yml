@@ -3,52 +3,24 @@ agents:
 
 steps:
 
-  - label: ":test_tube: 2.5.0"
+  - label: ":test_tube: 3.10.0"
     timeout_in_minutes: 10
     env:
-      FLUTTER_BIN: "/opt/flutter/2.5.0/bin/flutter"
+      FLUTTER_BIN: "/opt/flutter/3.10.0/bin/flutter"
     commands:
       - make test
 
-  - label: ":test_tube: 3.0.1"
+  - label: ":lint-roller: 3.10.0"
     timeout_in_minutes: 10
     env:
-      FLUTTER_BIN: "/opt/flutter/3.0.1/bin/flutter"
-    commands:
-      - make test
-
-  - label: ":lint-roller: 2.5.0"
-    timeout_in_minutes: 10
-    env:
-      FLUTTER_BIN: "/opt/flutter/2.5.0/bin/flutter"
+      FLUTTER_BIN: "/opt/flutter/3.10.0/bin/flutter"
     commands:
       - make lint
 
-  - label: ":lint-roller: 3.0.1"
+  - label: Build Example App 3.10.0
     timeout_in_minutes: 10
     env:
-      FLUTTER_BIN: "/opt/flutter/3.0.1/bin/flutter"
-    commands:
-      - make lint
-
-  - label: Build Example App 2.5.0
-    timeout_in_minutes: 10
-    env:
-      FLUTTER_BIN: "/opt/flutter/2.5.0/bin/flutter"
-    commands:
-      - pod repo update
-      - make examples/flutter
-      # Verify that App.framework's UUID (and therefore our `codeIdentifier`) changes when Dart code is touched
-      - dwarfdump --arch=arm64 --uuid examples/flutter/build/ios/iphoneos/Runner.app/Frameworks/App.framework/App | tee uuid_before
-      - sed -i '' -e 's/add_your_api_key_here/my_api_key/' examples/flutter/lib/main.dart
-      - make examples/flutter
-      - dwarfdump --arch=arm64 --uuid examples/flutter/build/ios/iphoneos/Runner.app/Frameworks/App.framework/App | tee uuid_after
-      - test "$(cat uuid_before)" != "$(cat uuid_after)"
-
-  - label: Build Example App 3.0.1
-    timeout_in_minutes: 10
-    env:
-      FLUTTER_BIN: "/opt/flutter/3.0.1/bin/flutter"
+      FLUTTER_BIN: "/opt/flutter/3.10.0/bin/flutter"
     commands:
       - pod repo update
       - make examples/flutter
@@ -62,11 +34,11 @@ steps:
   #
   # iOS
   #
-  - label: Build iOS Test Fixture 2.5.0
-    key: "ios-fixture-2-8-1"
+  - label: Build iOS Test Fixture 3.10.0
+    key: "ios-fixture-3-10-0"
     timeout_in_minutes: 20
     env:
-      FLUTTER_BIN: "/opt/flutter/2.5.0/bin/flutter"
+      FLUTTER_BIN: "/opt/flutter/3.10.0/bin/flutter"
     commands:
       - pod repo update trunk
       - features/scripts/build_ios_app.sh
@@ -74,61 +46,24 @@ steps:
       artifacts#v1.5.0:
         upload:
           from: "features/fixtures/app/build/ios/ipa/app.ipa"
-          to: "features/fixtures/app/build/ios/ipa/app-2.5.0.ipa"
+          to: "features/fixtures/app/build/ios/ipa/app-3.10.0.ipa"
 
-  - label: Build iOS Test Fixture 3.0.1
-    key: "ios-fixture-3-0-1"
-    timeout_in_minutes: 20
-    env:
-      FLUTTER_BIN: "/opt/flutter/3.0.1/bin/flutter"
-    commands:
-      - pod repo update trunk
-      - features/scripts/build_ios_app.sh
-    plugins:
-      artifacts#v1.5.0:
-        upload:
-          from: "features/fixtures/app/build/ios/ipa/app.ipa"
-          to: "features/fixtures/app/build/ios/ipa/app-3.0.1.ipa"
-
-  - label: 'iOS 14 end-to-end tests 2.5.0'
-    depends_on: "ios-fixture-2-8-1"
+  - label: 'iOS 14 end-to-end tests 3.10.0'
+    depends_on: "ios-fixture-3-10-0"
     timeout_in_minutes: 10
     env:
-      FLUTTER_BIN: "/opt/flutter/2.5.0/bin/flutter"
+      FLUTTER_BIN: "/opt/flutter/3.10.0/bin/flutter"
     agents:
       queue: opensource
     plugins:
       artifacts#v1.5.0:
-        download: "features/fixtures/app/build/ios/ipa/app-2.5.0.ipa"
+        download: "features/fixtures/app/build/ios/ipa/app-3.10.0.ipa"
         upload: "maze_output/failed/**/*"
       docker-compose#v3.7.0:
         pull: maze-runner
         run: maze-runner
         command:
-          - "--app=/app/features/fixtures/app/build/ios/ipa/app-2.5.0.ipa"
-          - "--farm=bs"
-          - "--device=IOS_14"
-          - "--fail-fast"
-    concurrency: 5
-    concurrency_group: 'browserstack-app'
-    concurrency_method: eager
-
-  - label: 'iOS 14 end-to-end tests 3.0.1'
-    depends_on: "ios-fixture-3-0-1"
-    timeout_in_minutes: 10
-    env:
-      FLUTTER_BIN: "/opt/flutter/3.0.1/bin/flutter"
-    agents:
-      queue: opensource
-    plugins:
-      artifacts#v1.5.0:
-        download: "features/fixtures/app/build/ios/ipa/app-3.0.1.ipa"
-        upload: "maze_output/failed/**/*"
-      docker-compose#v3.7.0:
-        pull: maze-runner
-        run: maze-runner
-        command:
-          - "--app=/app/features/fixtures/app/build/ios/ipa/app-3.0.1.ipa"
+          - "--app=/app/features/fixtures/app/build/ios/ipa/app-3.10.0.ipa"
           - "--farm=bs"
           - "--device=IOS_14"
           - "--fail-fast"
@@ -139,71 +74,35 @@ steps:
   #
   # Android
   #
-  - label: Build Android Test Fixture 2.5.0
-    key: "android-fixture-2-8-1"
+  - label: Build Android Test Fixture 3.10.0
+    key: "android-fixture-3-10-0"
     timeout_in_minutes: 20
     env:
-      FLUTTER_BIN: "/opt/flutter/2.5.0/bin/flutter"
+      FLUTTER_BIN: "/opt/flutter/3.10.0/bin/flutter"
     commands:
       - features/scripts/build_android_app.sh
     plugins:
       artifacts#v1.5.0:
         upload:
           from: "features/fixtures/app/build/app/outputs/flutter-apk/app-release.apk"
-          to: "features/fixtures/app/build/app/outputs/flutter-apk/app-release-2.5.0.apk"
+          to: "features/fixtures/app/build/app/outputs/flutter-apk/app-release-3.10.0.apk"
 
-  - label: Build Android Test Fixture 3.0.1
-    key: "android-fixture-3-0-1"
-    timeout_in_minutes: 20
-    env:
-      FLUTTER_BIN: "/opt/flutter/3.0.1/bin/flutter"
-    commands:
-      - features/scripts/build_android_app.sh
-    plugins:
-      artifacts#v1.5.0:
-        upload:
-          from: "features/fixtures/app/build/app/outputs/flutter-apk/app-release.apk"
-          to: "features/fixtures/app/build/app/outputs/flutter-apk/app-release-3.0.1.apk"
-
-  - label: 'Android 12 end-to-end tests 2.5.0'
-    depends_on: "android-fixture-2-8-1"
+  - label: 'Android 12 end-to-end tests 3.10.0'
+    depends_on: "android-fixture-3-10-0"
     timeout_in_minutes: 10
     env:
-      FLUTTER_BIN: "/opt/flutter/2.5.0/bin/flutter"
+      FLUTTER_BIN: "/opt/flutter/3.10.0/bin/flutter"
     agents:
       queue: opensource
     plugins:
       artifacts#v1.5.0:
-        download: "features/fixtures/app/build/app/outputs/flutter-apk/app-release-2.5.0.apk"
+        download: "features/fixtures/app/build/app/outputs/flutter-apk/app-release-3.10.0.apk"
         upload: "maze_output/failed/**/*"
       docker-compose#v3.7.0:
         pull: maze-runner
         run: maze-runner
         command:
-          - "--app=/app/features/fixtures/app/build/app/outputs/flutter-apk/app-release-2.5.0.apk"
-          - "--farm=bs"
-          - "--device=ANDROID_12_0"
-          - "--fail-fast"
-    concurrency: 5
-    concurrency_group: 'browserstack-app'
-    concurrency_method: eager
-
-  - label: 'Android 12 end-to-end tests 3.0.1'
-    depends_on: "android-fixture-3-0-1"
-    timeout_in_minutes: 10
-    env:
-      FLUTTER_BIN: "/opt/flutter/3.0.1/bin/flutter"
-    agents:
-      queue: opensource
-    plugins:
-      artifacts#v1.5.0:
-        download: "features/fixtures/app/build/app/outputs/flutter-apk/app-release-3.0.1.apk"
-        upload: "maze_output/failed/**/*"
-      docker-compose#v3.7.0:
-        pull: maze-runner
-        run: maze-runner
-        command:
-          - "--app=/app/features/fixtures/app/build/app/outputs/flutter-apk/app-release-3.0.1.apk"
+          - "--app=/app/features/fixtures/app/build/app/outputs/flutter-apk/app-release-3.10.0.apk"
           - "--farm=bs"
           - "--device=ANDROID_12_0"
           - "--fail-fast"

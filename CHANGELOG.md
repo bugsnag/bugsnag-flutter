@@ -1,5 +1,9 @@
 # Changelog
 
+## TBD
+
+- Bumped minimum Flutter version to 3.10.0 [#203](https://github.com/bugsnag/bugsnag-flutter/pull/203)
+
 ## 2.5.0 (2023-07-17)
 
 - Additional null safety checks in BugsnagFlutter.java [#209](https://github.com/bugsnag/bugsnag-flutter/pull/209)
