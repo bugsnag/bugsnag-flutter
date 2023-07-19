@@ -6,25 +6,26 @@ import 'package:bugsnag_example/native_crashes.dart';
 import 'package:bugsnag_flutter/bugsnag_flutter.dart';
 import 'package:flutter/material.dart';
 
-void main() async => bugsnag.start(
-      // Wrap your application start to capture unhandled errors
-      runApp: () => runApp(const ExampleApp()),
-      // Find your API key in the settings menu of your Bugsnag dashboard
-      apiKey: 'add_your_api_key_here',
-      // Specify in-project packages if you have multiple or are splitting debug info in your build (--split-debug-info)
-      projectPackages: const BugsnagProjectPackages.only({'bugsnag_example'}),
-      // onError callbacks can be used to modify or reject certain events
-      onError: [
-        (event) {
-          if (event.unhandled) {
-            // Metadata can be added on a per-event basis
-            event.addMetadata('info', const {'hint': 'Example'});
-          }
-          // Return `true` to allow or `false` to prevent sending the event.
-          return true;
+void main() async {
+  await bugsnag.start(
+    // Find your API key in the settings menu of your Bugsnag dashboard
+    apiKey: 'add_your_api_key_here',
+    // Specify in-project packages if you have multiple or are splitting debug info in your build (--split-debug-info)
+    projectPackages: const BugsnagProjectPackages.only({'bugsnag_example'}),
+    // onError callbacks can be used to modify or reject certain events
+    onError: [
+      (event) {
+        if (event.unhandled) {
+          // Metadata can be added on a per-event basis
+          event.addMetadata('info', const {'hint': 'Example'});
         }
-      ],
-    );
+        // Return `true` to allow or `false` to prevent sending the event.
+        return true;
+      }
+    ],
+  );
+  runApp(const ExampleApp());
+}
 
 class ExampleApp extends StatelessWidget {
   const ExampleApp({Key? key}) : super(key: key);

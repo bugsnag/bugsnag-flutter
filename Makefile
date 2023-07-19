@@ -57,7 +57,7 @@ aar:
 examples/flutter:
 	cd $@ && $(FLUTTER_BIN) pub get
 	cd $@ && $(FLUTTER_BIN) build apk --suppress-analytics
-	cd $@ && $(FLUTTER_BIN) build ios --no-codesign --suppress-analytics
+	cd $@ && $(FLUTTER_BIN) build ios --no-codesign --suppress-analytics --no-tree-shake-icons
 
 test:
 	cd packages/bugsnag_flutter && $(FLUTTER_BIN) test -r expanded --suppress-analytics

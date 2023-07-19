@@ -4,7 +4,8 @@ import 'scenario.dart';
 
 class OnErrorScenario extends Scenario {
   @override
-  Future<void> run() => bugsnag.start(
+  Future<void> run() async { 
+    await bugsnag.start(
         endpoints: endpoints,
         onError: [
           (event) => event.errors.first.message != 'Ignored',
@@ -15,10 +16,9 @@ class OnErrorScenario extends Scenario {
             event.errors.first.message = 'Not ignored';
             return true;
           },
-        ],
-        runApp: () async {
-          await bugsnag.notify(Exception('Ignored'), StackTrace.current);
-          await bugsnag.notify(Exception('Test'), StackTrace.current);
-        },
+        ]
       );
+    await bugsnag.notify(Exception('Ignored'), StackTrace.current);
+    await bugsnag.notify(Exception('Test'), StackTrace.current);
+  }
 }

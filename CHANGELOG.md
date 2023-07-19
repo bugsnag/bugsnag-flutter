@@ -1,5 +1,18 @@
 # Changelog
 
+## 3.0.0 (2023-07-19)
+
+### Breaking Changes
+
+- Bumped minimum Flutter version to 3.10.0
+  [#203](https://github.com/bugsnag/bugsnag-flutter/pull/203)
+- `runApp` options have been removed from `start` and `attach`, instead simply `await bugsnag.start`
+  [#203](https://github.com/bugsnag/bugsnag-flutter/pull/203)
+- `telemetry` has been made easier to control by replacing the `Set<BugsnagTelemetryType>` with a new `BugsnagTelemetryTypes`
+  [#207](https://github.com/bugsnag/bugsnag-flutter/pull/207)
+
+Please see our [Upgrading guide](./UPGRADING.MD) for more information on upgrading to v3.x.
+
 ## 2.5.0 (2023-07-17)
 
 - Additional null safety checks in BugsnagFlutter.java [#209](https://github.com/bugsnag/bugsnag-flutter/pull/209)
