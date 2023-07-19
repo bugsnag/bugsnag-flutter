@@ -17,7 +17,7 @@ import 'model.dart';
 final _notifier = {
   'name': 'Flutter Bugsnag Notifier',
   'url': 'https://github.com/bugsnag/bugsnag-flutter',
-  'version': '2.5.0'
+  'version': '3.0.0'
 };
 
 abstract class BugsnagClient {
@@ -618,7 +618,6 @@ class Bugsnag extends BugsnagClient with DelegateClient {
   /// - [addFeatureFlags]
   /// - [addOnError]
   Future<void> attach({
-    FutureOr<void> Function()? runApp,
     List<BugsnagOnErrorCallback> onError = const [],
   }) async {
     // make sure we can use Channels
