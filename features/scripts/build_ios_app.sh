@@ -8,4 +8,4 @@ fi
 echo "Flutter Bin: $FLUTTER_BIN"
 
 cd features/fixtures/app
-$FLUTTER_BIN build ipa --allowProvisioningUpdates --export-options-plist=ios/exportOptions.plist
+$FLUTTER_BIN build ipa -allowProvisioningUpdates --export-options-plist=ios/exportOptions.plist
