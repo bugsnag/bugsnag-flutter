@@ -1,5 +1,5 @@
 agents:
-  queue: ms-arm-12-7
+  queue: macos-arm-12
 
 steps:
 
@@ -120,7 +120,7 @@ steps:
           to: "features/fixtures/app/build/ios/ipa/app-3.10.0.ipa"
 
   - label: Build iOS Test Fixture 3.10.0
-    
+
     timeout_in_minutes: 20
     env:
       FLUTTER_BIN: "/opt/flutter/3.10.0/bin/flutter"
