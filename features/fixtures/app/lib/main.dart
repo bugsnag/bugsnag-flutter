@@ -2,10 +2,12 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:MazeRunner/channels.dart';
 import 'package:bugsnag_flutter/bugsnag_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'scenarios/scenario.dart';
 import 'scenarios/scenarios.dart';
@@ -61,13 +63,38 @@ class MazeRunnerFlutterApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: const Color.fromARGB(255, 73, 73, 227),
       ),
-      home: const MazeRunnerHomePage(),
+      home: FutureBuilder<String>(
+        future: Future(() async {
+          for (var i = 0; i < 30; i++) {
+            try {
+              final Directory directory = await getExternalStorageDirectory() ?? await getApplicationDocumentsDirectory();
+              final File file = File('${directory.path.replaceAll('app_flutter', 'files')}/fixture_config.json');
+              final text = await file.readAsString();
+              Map<String, dynamic> json = jsonDecode(text);
+              if (json.containsKey('maze_address')) {
+                return json['maze_address'];
+              }
+            } catch (e) {
+              print("Couldn't read file");
+            }
+            await Future.delayed(const Duration(seconds: 1));
+          }
+          return '';
+        }),
+        builder: (_, mazerunnerUrl) {
+        if (mazerunnerUrl.data != null) {
+          return MazeRunnerHomePage(mazerunnerUrl: mazerunnerUrl.data!,);
+        } else {
+          return Container(color: Colors.white, child: const Center(child: CircularProgressIndicator()));
+        }
+      }),
     );
   }
 }
 
 class MazeRunnerHomePage extends StatefulWidget {
-  const MazeRunnerHomePage({Key? key}) : super(key: key);
+  final String mazerunnerUrl;
+  const MazeRunnerHomePage({Key? key, required this.mazerunnerUrl,}) : super(key: key);
 
   @override
   State<MazeRunnerHomePage> createState() => _HomePageState();
@@ -86,22 +113,13 @@ class _HomePageState extends State<MazeRunnerHomePage> {
     _scenarioNameController = TextEditingController();
     _extraConfigController = TextEditingController();
     _commandEndpointController = TextEditingController(
-      text: const String.fromEnvironment(
-        'bsg.endpoint.command',
-        defaultValue: 'http://bs-local.com:9339/command',
-      ),
+      text: 'http://${widget.mazerunnerUrl}/command',
     );
     _notifyEndpointController = TextEditingController(
-      text: const String.fromEnvironment(
-        'bsg.endpoint.notify',
-        defaultValue: 'http://bs-local.com:9339/notify',
-      ),
+      text: 'http://${widget.mazerunnerUrl}/notify',
     );
     _sessionEndpointController = TextEditingController(
-      text: const String.fromEnvironment(
-        'bsg.endpoint.session',
-        defaultValue: 'http://bs-local.com:9339/sessions',
-      ),
+      text: 'http://${widget.mazerunnerUrl}/sessions',
     );
   }
 
