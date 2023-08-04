@@ -70,23 +70,26 @@ class MazeRunnerFlutterApp extends StatelessWidget {
               final Directory directory = await getExternalStorageDirectory() ?? await getApplicationDocumentsDirectory();
               final File file = File('${directory.path.replaceAll('app_flutter', 'files')}/fixture_config.json');
               final text = await file.readAsString();
+              print("fixture_config.json found with contents: $text");
               Map<String, dynamic> json = jsonDecode(text);
               if (json.containsKey('maze_address')) {
+                print("fixture_config.json found with contents: $text");
                 return json['maze_address'];
               }
             } catch (e) {
-              print("Couldn't read file");
+              print("Couldn't read fixture_config.json: $e");
             }
             await Future.delayed(const Duration(seconds: 1));
           }
-          return '';
+          print("fixture_config.json not read within 30s, defaulting to BrowserStack address");
+          return 'bs-local.com:9339';
         }),
         builder: (_, mazerunnerUrl) {
-        if (mazerunnerUrl.data != null) {
-          return MazeRunnerHomePage(mazerunnerUrl: mazerunnerUrl.data!,);
-        } else {
-          return Container(color: Colors.white, child: const Center(child: CircularProgressIndicator()));
-        }
+          if (mazerunnerUrl.data != null) {
+            return MazeRunnerHomePage(mazerunnerUrl: mazerunnerUrl.data!,);
+          } else {
+            return Container(color: Colors.white, child: const Center(child: CircularProgressIndicator()));
+          }
       }),
     );
   }
