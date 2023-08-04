@@ -22,6 +22,18 @@ services:
     volumes:
       - ./features/:/app/features/
       - ./maze_output:/app/maze_output
+      
+  cocoa-maze-runner-bitbar:
+    image: 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v8-cli
+    environment:
+      <<: *common-environment
+      BITBAR_USERNAME:
+      BITBAR_ACCESS_KEY:
+      ports:
+        - "9000-9499:9339"
+      volumes:
+        - ./features/:/app/features/
+        - ./maze_output:/app/maze_output
 
 networks:
   default:
