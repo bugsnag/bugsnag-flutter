@@ -64,7 +64,7 @@ steps:
         run: maze-runner
         command:
           - "--app=/app/features/fixtures/app/build/ios/ipa/app-3.10.0.ipa"
-          - "--farm=bs"
+          - "--farm=bb"
           - "--device=IOS_14"
           - "--fail-fast"
     concurrency: 5
