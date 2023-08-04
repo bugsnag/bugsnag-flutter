@@ -49,7 +49,7 @@ steps:
           from: "features/fixtures/app/build/ios/ipa/app.ipa"
           to: "features/fixtures/app/build/ios/ipa/app-3.10.0.ipa"
 
-  - label: 'iOS 14 end-to-end tests 3.10.0'
+  - label: ':bitbar: iOS 14 end-to-end tests 3.10.0'
     depends_on: "ios-fixture-3-10-0"
     timeout_in_minutes: 10
     env:
@@ -61,8 +61,9 @@ steps:
         download: "features/fixtures/app/build/ios/ipa/app-3.10.0.ipa"
         upload: "maze_output/failed/**/*"
       docker-compose#v4.7.0:
-        pull: cocoa-maze-runner-bitbar
-        run: cocoa-maze-runner-bitbar
+        pull: maze-runner
+        run: maze-runner
+        service-ports: true
         command:
           - "--app=/app/features/fixtures/app/build/ios/ipa/app-3.10.0.ipa"
           - "--farm=bb"
@@ -70,8 +71,7 @@ steps:
           - "--no-tunnel"
           - "--aws-public-ip"
           - "--fail-fast"
-          - "--order=random"
-    concurrency: 5
+    concurrency: 25
     concurrency_group: 'bitbar-app'
     concurrency_method: eager
 
@@ -92,7 +92,7 @@ steps:
           from: "features/fixtures/app/build/app/outputs/flutter-apk/app-release.apk"
           to: "features/fixtures/app/build/app/outputs/flutter-apk/app-release-3.10.0.apk"
 
-  - label: 'Android 12 end-to-end tests 3.10.0'
+  - label: ':bitbar: Android 12 end-to-end tests 3.10.0'
     depends_on: "android-fixture-3-10-0"
     timeout_in_minutes: 10
     env:
@@ -103,14 +103,17 @@ steps:
       artifacts#v1.5.0:
         download: "features/fixtures/app/build/app/outputs/flutter-apk/app-release-3.10.0.apk"
         upload: "maze_output/failed/**/*"
-      docker-compose#v3.7.0:
+      docker-compose#v4.7.0:
         pull: maze-runner
         run: maze-runner
+        service-ports: true
         command:
           - "--app=/app/features/fixtures/app/build/app/outputs/flutter-apk/app-release-3.10.0.apk"
           - "--farm=bb"
           - "--device=ANDROID_12_0"
+          - "--no-tunnel"
+          - "--aws-public-ip"
           - "--fail-fast"
-    concurrency: 5
+    concurrency: 25
     concurrency_group: 'bitbar-app'
     concurrency_method: eager
