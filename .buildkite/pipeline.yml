@@ -60,16 +60,19 @@ steps:
       artifacts#v1.5.0:
         download: "features/fixtures/app/build/ios/ipa/app-3.10.0.ipa"
         upload: "maze_output/failed/**/*"
-      docker-compose#v3.7.0:
-        pull: maze-runner
-        run: maze-runner
+      docker-compose#v4.7.0:
+        pull: cocoa-maze-runner-bitbar
+        run: cocoa-maze-runner-bitbar
         command:
           - "--app=/app/features/fixtures/app/build/ios/ipa/app-3.10.0.ipa"
           - "--farm=bb"
           - "--device=IOS_14"
+          - "--no-tunnel"
+          - "--aws-public-ip"
           - "--fail-fast"
+          - "--order=random"
     concurrency: 5
-    concurrency_group: 'browserstack-app'
+    concurrency_group: 'bitbar-app'
     concurrency_method: eager
 
   #
@@ -109,5 +112,5 @@ steps:
           - "--device=ANDROID_12_0"
           - "--fail-fast"
     concurrency: 5
-    concurrency_group: 'browserstack-app'
+    concurrency_group: 'bitbar-app'
     concurrency_method: eager
