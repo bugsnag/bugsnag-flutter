@@ -22,6 +22,7 @@ def execute_command(action, scenario_name)
   command = { action: action, scenario_name: scenario_name, extra_config: extra_config }
   Maze::Server.commands.add command
 
+  Maze.driver.wait_for_element('runCommand', 30, true)
   touch_action = Appium::TouchAction.new
   touch_action.tap({:x => 200, :y => 200})
   touch_action.perform
