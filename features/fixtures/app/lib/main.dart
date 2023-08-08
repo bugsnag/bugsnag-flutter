@@ -67,7 +67,7 @@ class MazeRunnerFlutterApp extends StatelessWidget {
         future: Future(() async {
           for (var i = 0; i < 30; i++) {
             try {
-              final Directory directory = await getExternalStorageDirectory() ?? await getApplicationDocumentsDirectory();
+              final Directory directory = await appFilesDirectory();
               final File file = File('${directory.path.replaceAll('app_flutter', 'files')}/fixture_config.json');
               final text = await file.readAsString();
               print("fixture_config.json found with contents: $text");
@@ -93,6 +93,14 @@ class MazeRunnerFlutterApp extends StatelessWidget {
       }),
     );
   }
+
+  Future<Directory> appFilesDirectory() async {
+    if (Platform.isAndroid) {
+      return await getExternalStorageDirectory() ?? await getApplicationDocumentsDirectory();
+    }
+    return await getApplicationDocumentsDirectory();
+  }
+
 }
 
 class MazeRunnerHomePage extends StatefulWidget {
@@ -109,6 +117,7 @@ class _HomePageState extends State<MazeRunnerHomePage> {
   late TextEditingController _commandEndpointController;
   late TextEditingController _notifyEndpointController;
   late TextEditingController _sessionEndpointController;
+  bool didTapRunCommand = false;
 
   @override
   void initState() {
@@ -139,6 +148,9 @@ class _HomePageState extends State<MazeRunnerHomePage> {
 
   /// Fetches the next command
   void _onRunCommand(BuildContext context) async {
+    setState(() {
+      didTapRunCommand = true;
+    });
     log('Fetching the next command');
     final commandUrl = _commandEndpointController.value.text;
     final commandStr = await MazeRunnerChannels.getCommand(commandUrl);
@@ -229,6 +241,7 @@ class _HomePageState extends State<MazeRunnerHomePage> {
               Container(
                   height: 400.0,
                   width: double.infinity,
+                  color: didTapRunCommand ? Colors.blue : Colors.yellow,
                   child: TextButton(
                     child: const Text("Run Command"),
                     onPressed: () => _onRunCommand(context),

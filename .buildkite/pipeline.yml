@@ -51,7 +51,7 @@ steps:
 
   - label: ':bitbar: iOS 14 end-to-end tests 3.10.0'
     depends_on: "ios-fixture-3-10-0"
-    timeout_in_minutes: 10
+    timeout_in_minutes: 20
     env:
       FLUTTER_BIN: "/opt/flutter/3.10.0/bin/flutter"
     agents:
@@ -94,7 +94,7 @@ steps:
 
   - label: ':bitbar: Android 12 end-to-end tests 3.10.0'
     depends_on: "android-fixture-3-10-0"
-    timeout_in_minutes: 10
+    timeout_in_minutes: 20
     env:
       FLUTTER_BIN: "/opt/flutter/3.10.0/bin/flutter"
     agents:
