@@ -51,13 +51,6 @@ Then('the app is not running') do
 end
 
 Then(/^on (Android|iOS), (.+)/) do |platform, step_text|
-  current_platform = case Maze.config.farm
-                     when :bs
-                       Maze.driver.capabilities['os']
-                     when :sl, :local
-                       Maze.driver.capabilities['platformName']
-                     else
-                       Maze.driver.os
-                     end
+  current_platform = Maze::Helper.get_current_platform
   step(step_text) if current_platform.casecmp(platform).zero?
 end
