@@ -70,7 +70,6 @@ steps:
           - "--device=IOS_14|IOS_15|IOS_16"
           - "--no-tunnel"
           - "--aws-public-ip"
-          - "--fail-fast"
     concurrency: 25
     concurrency_group: 'bitbar-app'
     concurrency_method: eager
