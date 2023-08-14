@@ -30,7 +30,7 @@
     NSLog(@"FlutterMethodCallHandler: %@ %@", call.method, call.arguments);
     
     if([@"getCommand" isEqualToString:call.method]) {
-        result([self getCommand]);
+        result([self getCommandWithUrl:call.arguments[@"commandUrl"]]);
     } else if([@"runScenario" isEqualToString:call.method]) {
         NSString *scenarioName = call.arguments[@"scenarioName"];
         Scenario *targetScenario = [Scenario createScenarioNamed:scenarioName];
@@ -85,8 +85,8 @@
 }
 
 
--(NSString *)getCommand {
-    NSURL *url = [NSURL URLWithString:@"http://bs-local.com:9339/command"];
+-(NSString *)getCommandWithUrl:(NSString *)urlString {
+    NSURL *url = [NSURL URLWithString:urlString];
     NSData *data = [NSData dataWithContentsOfURL:url];
     NSString *ret = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 

@@ -21,7 +21,7 @@ def execute_command(action, scenario_name)
   extra_config = $extra_config || ''
   command = { action: action, scenario_name: scenario_name, extra_config: extra_config }
   Maze::Server.commands.add command
-
+  
   touch_action = Appium::TouchAction.new
   touch_action.tap({:x => 200, :y => 200})
   touch_action.perform
@@ -50,13 +50,6 @@ Then('the app is not running') do
 end
 
 Then(/^on (Android|iOS), (.+)/) do |platform, step_text|
-  current_platform = case Maze.config.farm
-                     when :bs
-                       Maze.driver.capabilities['os']
-                     when :sl, :local
-                       Maze.driver.capabilities['platformName']
-                     else
-                       Maze.driver.os
-                     end
+  current_platform = Maze::Helper.get_current_platform
   step(step_text) if current_platform.casecmp(platform).zero?
 end

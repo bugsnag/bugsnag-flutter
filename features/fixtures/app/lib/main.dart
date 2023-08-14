@@ -67,29 +67,40 @@ class MazeRunnerFlutterApp extends StatelessWidget {
         future: Future(() async {
           for (var i = 0; i < 30; i++) {
             try {
-              final Directory directory = await getExternalStorageDirectory() ?? await getApplicationDocumentsDirectory();
+              final Directory directory = await appFilesDirectory();
               final File file = File('${directory.path.replaceAll('app_flutter', 'files')}/fixture_config.json');
               final text = await file.readAsString();
+              print("fixture_config.json found with contents: $text");
               Map<String, dynamic> json = jsonDecode(text);
               if (json.containsKey('maze_address')) {
+                print("fixture_config.json found with contents: $text");
                 return json['maze_address'];
               }
             } catch (e) {
-              print("Couldn't read file");
+              print("Couldn't read fixture_config.json: $e");
             }
             await Future.delayed(const Duration(seconds: 1));
           }
-          return '';
+          print("fixture_config.json not read within 30s, defaulting to BrowserStack address");
+          return 'bs-local.com:9339';
         }),
         builder: (_, mazerunnerUrl) {
-        if (mazerunnerUrl.data != null) {
-          return MazeRunnerHomePage(mazerunnerUrl: mazerunnerUrl.data!,);
-        } else {
-          return Container(color: Colors.white, child: const Center(child: CircularProgressIndicator()));
-        }
+          if (mazerunnerUrl.data != null) {
+            return MazeRunnerHomePage(mazerunnerUrl: mazerunnerUrl.data!,);
+          } else {
+            return Container(color: Colors.white, child: const Center(child: CircularProgressIndicator()));
+          }
       }),
     );
   }
+
+  Future<Directory> appFilesDirectory() async {
+    if (Platform.isAndroid) {
+      return await getExternalStorageDirectory() ?? await getApplicationDocumentsDirectory();
+    }
+    return await getApplicationDocumentsDirectory();
+  }
+
 }
 
 class MazeRunnerHomePage extends StatefulWidget {
@@ -121,6 +132,7 @@ class _HomePageState extends State<MazeRunnerHomePage> {
     _sessionEndpointController = TextEditingController(
       text: 'http://${widget.mazerunnerUrl}/sessions',
     );
+    _onRunCommand(context, retry: true);
   }
 
   @override
@@ -135,11 +147,19 @@ class _HomePageState extends State<MazeRunnerHomePage> {
   }
 
   /// Fetches the next command
-  void _onRunCommand(BuildContext context) async {
+  void _onRunCommand(BuildContext context, {bool retry = false}) async {
     log('Fetching the next command');
     final commandUrl = _commandEndpointController.value.text;
     final commandStr = await MazeRunnerChannels.getCommand(commandUrl);
     log('The command is: $commandStr');
+
+    if (commandStr.isEmpty) {
+      log('Empty command, retrying...');
+      if (retry) {
+        Future.delayed(const Duration(seconds: 1)).then((value) => _onRunCommand(context, retry: true));
+      }
+      return;
+    }
 
     final command = Command.fromJsonString(commandStr);
     _scenarioNameController.text = command.scenarioName;
@@ -223,7 +243,7 @@ class _HomePageState extends State<MazeRunnerHomePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              Container(
+              SizedBox(
                   height: 400.0,
                   width: double.infinity,
                   child: TextButton(
