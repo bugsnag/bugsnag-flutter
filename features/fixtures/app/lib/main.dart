@@ -132,7 +132,7 @@ class _HomePageState extends State<MazeRunnerHomePage> {
     _sessionEndpointController = TextEditingController(
       text: 'http://${widget.mazerunnerUrl}/sessions',
     );
-    _onRunCommand(context);
+    _onRunCommand(context, retry: true);
   }
 
   @override
@@ -147,11 +147,19 @@ class _HomePageState extends State<MazeRunnerHomePage> {
   }
 
   /// Fetches the next command
-  void _onRunCommand(BuildContext context) async {
+  void _onRunCommand(BuildContext context, {bool retry = false}) async {
     log('Fetching the next command');
     final commandUrl = _commandEndpointController.value.text;
     final commandStr = await MazeRunnerChannels.getCommand(commandUrl);
     log('The command is: $commandStr');
+
+    if (commandStr.isEmpty) {
+      log('Empty command, retrying...');
+      if (retry) {
+        Future.delayed(const Duration(seconds: 1)).then((value) => _onRunCommand(context, retry: true));
+      }
+      return;
+    }
 
     final command = Command.fromJsonString(commandStr);
     _scenarioNameController.text = command.scenarioName;
