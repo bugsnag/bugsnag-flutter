@@ -117,7 +117,6 @@ class _HomePageState extends State<MazeRunnerHomePage> {
   late TextEditingController _commandEndpointController;
   late TextEditingController _notifyEndpointController;
   late TextEditingController _sessionEndpointController;
-  bool didTapRunCommand = false;
 
   @override
   void initState() {
@@ -133,6 +132,7 @@ class _HomePageState extends State<MazeRunnerHomePage> {
     _sessionEndpointController = TextEditingController(
       text: 'http://${widget.mazerunnerUrl}/sessions',
     );
+    _onRunCommand(context);
   }
 
   @override
@@ -148,9 +148,6 @@ class _HomePageState extends State<MazeRunnerHomePage> {
 
   /// Fetches the next command
   void _onRunCommand(BuildContext context) async {
-    setState(() {
-      didTapRunCommand = true;
-    });
     log('Fetching the next command');
     final commandUrl = _commandEndpointController.value.text;
     final commandStr = await MazeRunnerChannels.getCommand(commandUrl);
@@ -238,10 +235,9 @@ class _HomePageState extends State<MazeRunnerHomePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              Container(
+              SizedBox(
                   height: 400.0,
                   width: double.infinity,
-                  color: didTapRunCommand ? Colors.blue : Colors.yellow,
                   child: TextButton(
                     child: const Text("Run Command"),
                     onPressed: () => _onRunCommand(context),
