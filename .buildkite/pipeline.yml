@@ -41,6 +41,7 @@ steps:
       FLUTTER_BIN: "/opt/flutter/3.10.0/bin/flutter"
     commands:
       - pod repo update trunk
+      - bundle install
       - features/scripts/build_ios_app.sh
     plugins:
       artifacts#v1.5.0:
@@ -48,9 +49,9 @@ steps:
           from: "features/fixtures/app/build/ios/ipa/app.ipa"
           to: "features/fixtures/app/build/ios/ipa/app-3.10.0.ipa"
 
-  - label: 'iOS 14 end-to-end tests 3.10.0'
+  - label: ':bitbar: iOS 14 end-to-end tests 3.10.0'
     depends_on: "ios-fixture-3-10-0"
-    timeout_in_minutes: 10
+    timeout_in_minutes: 20
     env:
       FLUTTER_BIN: "/opt/flutter/3.10.0/bin/flutter"
     agents:
@@ -59,16 +60,19 @@ steps:
       artifacts#v1.5.0:
         download: "features/fixtures/app/build/ios/ipa/app-3.10.0.ipa"
         upload: "maze_output/failed/**/*"
-      docker-compose#v3.7.0:
+      docker-compose#v4.7.0:
         pull: maze-runner
         run: maze-runner
+        service-ports: true
         command:
           - "--app=/app/features/fixtures/app/build/ios/ipa/app-3.10.0.ipa"
-          - "--farm=bs"
-          - "--device=IOS_14"
+          - "--farm=bb"
+          - "--device=IOS_14|IOS_15|IOS_16"
+          - "--no-tunnel"
+          - "--aws-public-ip"
           - "--fail-fast"
-    concurrency: 5
-    concurrency_group: 'browserstack-app'
+    concurrency: 25
+    concurrency_group: 'bitbar-app'
     concurrency_method: eager
 
   #
@@ -80,6 +84,7 @@ steps:
     env:
       FLUTTER_BIN: "/opt/flutter/3.10.0/bin/flutter"
     commands:
+      - bundle install
       - features/scripts/build_android_app.sh
     plugins:
       artifacts#v1.5.0:
@@ -87,9 +92,9 @@ steps:
           from: "features/fixtures/app/build/app/outputs/flutter-apk/app-release.apk"
           to: "features/fixtures/app/build/app/outputs/flutter-apk/app-release-3.10.0.apk"
 
-  - label: 'Android 12 end-to-end tests 3.10.0'
+  - label: ':bitbar: Android 12 end-to-end tests 3.10.0'
     depends_on: "android-fixture-3-10-0"
-    timeout_in_minutes: 10
+    timeout_in_minutes: 20
     env:
       FLUTTER_BIN: "/opt/flutter/3.10.0/bin/flutter"
     agents:
@@ -98,14 +103,17 @@ steps:
       artifacts#v1.5.0:
         download: "features/fixtures/app/build/app/outputs/flutter-apk/app-release-3.10.0.apk"
         upload: "maze_output/failed/**/*"
-      docker-compose#v3.7.0:
+      docker-compose#v4.7.0:
         pull: maze-runner
         run: maze-runner
+        service-ports: true
         command:
           - "--app=/app/features/fixtures/app/build/app/outputs/flutter-apk/app-release-3.10.0.apk"
-          - "--farm=bs"
-          - "--device=ANDROID_12_0"
+          - "--farm=bb"
+          - "--device=ANDROID_10|ANDROID_11|ANDROID_12|ANDROID_13"
+          - "--no-tunnel"
+          - "--aws-public-ip"
           - "--fail-fast"
-    concurrency: 5
-    concurrency_group: 'browserstack-app'
+    concurrency: 25
+    concurrency_group: 'bitbar-app'
     concurrency_method: eager

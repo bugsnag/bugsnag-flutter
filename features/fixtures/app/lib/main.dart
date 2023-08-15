@@ -2,10 +2,12 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:MazeRunner/channels.dart';
 import 'package:bugsnag_flutter/bugsnag_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'scenarios/scenario.dart';
 import 'scenarios/scenarios.dart';
@@ -61,13 +63,49 @@ class MazeRunnerFlutterApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: const Color.fromARGB(255, 73, 73, 227),
       ),
-      home: const MazeRunnerHomePage(),
+      home: FutureBuilder<String>(
+        future: Future(() async {
+          for (var i = 0; i < 30; i++) {
+            try {
+              final Directory directory = await appFilesDirectory();
+              final File file = File('${directory.path.replaceAll('app_flutter', 'files')}/fixture_config.json');
+              final text = await file.readAsString();
+              print("fixture_config.json found with contents: $text");
+              Map<String, dynamic> json = jsonDecode(text);
+              if (json.containsKey('maze_address')) {
+                print("fixture_config.json found with contents: $text");
+                return json['maze_address'];
+              }
+            } catch (e) {
+              print("Couldn't read fixture_config.json: $e");
+            }
+            await Future.delayed(const Duration(seconds: 1));
+          }
+          print("fixture_config.json not read within 30s, defaulting to BrowserStack address");
+          return 'bs-local.com:9339';
+        }),
+        builder: (_, mazerunnerUrl) {
+          if (mazerunnerUrl.data != null) {
+            return MazeRunnerHomePage(mazerunnerUrl: mazerunnerUrl.data!,);
+          } else {
+            return Container(color: Colors.white, child: const Center(child: CircularProgressIndicator()));
+          }
+      }),
     );
   }
+
+  Future<Directory> appFilesDirectory() async {
+    if (Platform.isAndroid) {
+      return await getExternalStorageDirectory() ?? await getApplicationDocumentsDirectory();
+    }
+    return await getApplicationDocumentsDirectory();
+  }
+
 }
 
 class MazeRunnerHomePage extends StatefulWidget {
-  const MazeRunnerHomePage({Key? key}) : super(key: key);
+  final String mazerunnerUrl;
+  const MazeRunnerHomePage({Key? key, required this.mazerunnerUrl,}) : super(key: key);
 
   @override
   State<MazeRunnerHomePage> createState() => _HomePageState();
@@ -86,23 +124,15 @@ class _HomePageState extends State<MazeRunnerHomePage> {
     _scenarioNameController = TextEditingController();
     _extraConfigController = TextEditingController();
     _commandEndpointController = TextEditingController(
-      text: const String.fromEnvironment(
-        'bsg.endpoint.command',
-        defaultValue: 'http://bs-local.com:9339/command',
-      ),
+      text: 'http://${widget.mazerunnerUrl}/command',
     );
     _notifyEndpointController = TextEditingController(
-      text: const String.fromEnvironment(
-        'bsg.endpoint.notify',
-        defaultValue: 'http://bs-local.com:9339/notify',
-      ),
+      text: 'http://${widget.mazerunnerUrl}/notify',
     );
     _sessionEndpointController = TextEditingController(
-      text: const String.fromEnvironment(
-        'bsg.endpoint.session',
-        defaultValue: 'http://bs-local.com:9339/sessions',
-      ),
+      text: 'http://${widget.mazerunnerUrl}/sessions',
     );
+    _onRunCommand(context, retry: true);
   }
 
   @override
@@ -117,11 +147,19 @@ class _HomePageState extends State<MazeRunnerHomePage> {
   }
 
   /// Fetches the next command
-  void _onRunCommand(BuildContext context) async {
+  void _onRunCommand(BuildContext context, {bool retry = false}) async {
     log('Fetching the next command');
     final commandUrl = _commandEndpointController.value.text;
     final commandStr = await MazeRunnerChannels.getCommand(commandUrl);
     log('The command is: $commandStr');
+
+    if (commandStr.isEmpty) {
+      log('Empty command, retrying...');
+      if (retry) {
+        Future.delayed(const Duration(seconds: 1)).then((value) => _onRunCommand(context, retry: true));
+      }
+      return;
+    }
 
     final command = Command.fromJsonString(commandStr);
     _scenarioNameController.text = command.scenarioName;
@@ -205,7 +243,7 @@ class _HomePageState extends State<MazeRunnerHomePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              Container(
+              SizedBox(
                   height: 400.0,
                   width: double.infinity,
                   child: TextButton(
