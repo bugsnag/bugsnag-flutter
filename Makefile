@@ -88,3 +88,27 @@ e2e_ios_local: features/fixtures/app/build/ios/ipa/app.ipa
 
 features/fixtures/app/build/ios/ipa/app.ipa: $(shell find packages/bugsnag_flutter features/fixtures/app/ios/Runner features/fixtures/app/lib -type f)
 	cd features/fixtures/app && $(FLUTTER_BIN) build ipa --export-options-plist=ios/exportOptions.plist
+
+update-bugsnag-android:
+ifeq ($(VERSION),)
+	@$(error VERSION is not defined. Run with `make VERSION=number update-bugsnag-android`)
+endif
+	sed -i '' "s/'com.bugsnag:bugsnag-android:.*'/'com.bugsnag:bugsnag-android:$(VERSION)'/" packages/bugsnag_flutter/android/build.gradle
+
+update-bugsnag-cocoa:
+ifeq ($(VERSION),)
+	@$(error VERSION is not defined. Run with `make VERSION=number update-bugsnag-cocoa`)
+endif
+	sed -i '' "s/s.dependency 'Bugsnag', '.*'/s.dependency 'Bugsnag', '$(VERSION)'/" packages/bugsnag_flutter/ios/bugsnag_flutter.podspec
+
+update-bugsnag-dependency:
+ifeq ($(SUBMODULE),)
+	@$(error SUBMODULE is not defined. Run with `make SUBMODULE=target update-bugsnag-dependency`)
+endif
+ifeq ($(SUBMODULE), bugsnag-android)
+	$(MAKE) update-bugsnag-android
+else ifeq ($(SUBMODULE), bugsnag-cocoa)
+	$(MAKE) update-bugsnag-cocoa
+else
+	@$(error SUBMODULE must be one of bugsnag-android or bugsnag-cocoa)
+endif
