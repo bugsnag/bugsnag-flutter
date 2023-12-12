@@ -9,3 +9,8 @@ gem 'bugsnag-maze-runner', '~> 8.0'
 
 # Locally, you can run against Maze Runner branches and uncommitted changes:
 #gem 'bugsnag-maze-runner', path: '../maze-runner'
+
+# Only install bumpsnag if we're using Github actions
+unless ENV['GITHUB_ACTIONS'].nil?
+  gem 'bumpsnag', git: 'https://github.com/bugsnag/platforms-bumpsnag', branch: 'main'
+end
