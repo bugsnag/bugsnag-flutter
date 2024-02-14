@@ -22,6 +22,7 @@ steps:
     env:
       FLUTTER_BIN: "/opt/flutter/3.10.0/bin/flutter"
     commands:
+      - bundle install
       - pod repo update
       - make examples/flutter
       # Verify that App.framework's UUID (and therefore our `codeIdentifier`) changes when Dart code is touched
@@ -40,8 +41,8 @@ steps:
     env:
       FLUTTER_BIN: "/opt/flutter/3.10.0/bin/flutter"
     commands:
-      - pod repo update trunk
       - bundle install
+      - pod repo update trunk
       - features/scripts/build_ios_app.sh
     plugins:
       artifacts#v1.5.0:
