@@ -1,7 +1,7 @@
 # Changelog
 
 
-# TBD ()
+## 3.0.2 (2024-02-28)
 
 - Change the bugsnag_breadcrumbs_http http dependancy to ">=0.13.4" so that there are less strict version requirements [#235](https://github.com/bugsnag/bugsnag-flutter/pull/235)
 
