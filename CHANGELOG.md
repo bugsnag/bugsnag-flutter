@@ -1,10 +1,16 @@
 # Changelog
 
+
+## 3.0.2 (2024-02-28)
+
+- Change the bugsnag_breadcrumbs_http http dependancy to ">=0.13.4" so that there are less strict version requirements [#235](https://github.com/bugsnag/bugsnag-flutter/pull/235)
+
+- Bundle apple xprivacy manifest with the flutter package [#230](https://github.com/bugsnag/bugsnag-flutter/pull/230)
+
 ## 3.0.1 (2024-01-11)
 
 - Update bugsnag-cocoa from v6.26.2 to [v6.28.0](https://github.com/bugsnag/bugsnag-cocoa/blob/master/CHANGELOG.md#6280-2023-12-13)
 - Update bugsnag-android from v5.30.0 to [v5.31.3](https://github.com/bugsnag/bugsnag-android/blob/master/CHANGELOG.md#5313-2023-11-06)
-
 
 ## 3.0.0 (2023-07-19)
 

@@ -18,3 +18,4 @@ Releasing
   - Create a release and tag from `main`
     on [GitHub Releases](https://github.com/bugsnag/bugsnag-flutter/releases)
 - Merge outstanding docs PRs related to this release 
+- Merge main into next
