@@ -74,6 +74,9 @@ abstract class BugsnagClient {
     BugsnagBreadcrumbType type = BugsnagBreadcrumbType.manual,
   });
 
+
+  dynamic networkInstrumentation(dynamic data);
+
   /// Returns the current buffer of breadcrumbs that will be sent with captured
   /// events. This ordered list represents the most recent breadcrumbs to be
   /// captured up to the limit set in [start].
@@ -572,6 +575,12 @@ class ChannelClient implements BugsnagClient {
 
   Future<void> _deliverEvent(BugsnagEvent event) =>
       _channel.invokeMethod('deliverEvent', event);
+
+  @override
+  networkInstrumentation(data) {
+    // TODO: implement networkInstrumentation
+    throw UnimplementedError();
+  }
 }
 
 /// The primary `Client`. Typically this class is not accessed directly, and
@@ -588,6 +597,7 @@ class ChannelClient implements BugsnagClient {
 /// - [start]
 class Bugsnag extends BugsnagClient with DelegateClient {
   Bugsnag._internal();
+  final Map<String, Stopwatch> _openNetworkRequests = {};
 
   /// Attach Bugsnag to an already initialised native notifier, optionally
   /// adding to its existing configuration. Use [start] if your application
@@ -769,6 +779,46 @@ class Bugsnag extends BugsnagClient with DelegateClient {
 
     return const <String>{};
   }
+
+  @override
+  networkInstrumentation(data) {
+    if (data is! Map<String, dynamic>) return true;
+    String status = data["status"];
+    String requestId = data["request_id"];
+    if (status == "started") {
+      _onRequestStarted(requestId);
+    } else if (status == "complete") {
+      _onRequestComplete(requestId, data);
+    }
+    return true;
+  }
+
+  void _onRequestStarted(String requestId) {
+    final stopwatch = Stopwatch()..start();
+    _openNetworkRequests[requestId] = stopwatch;
+  }
+
+  void _onRequestComplete(String requestId, data) {
+    final stopwatch = _openNetworkRequests.remove(requestId);
+    if (stopwatch != null) {
+      final duration = stopwatch.elapsedMilliseconds;
+      final String clientName = data["client"];
+      final params = data["url"].split("?").last;
+      final int statusCode = data["status_code"];
+      final String status = statusCode < 400 ? "succeeded" : "failed";
+      leaveBreadcrumb("$clientName request $status", metadata: {
+        "duration": duration,
+        "method": data["method"],
+        "url": data["url"].split("?").first,
+        if(params.isNotEmpty) "urlParams": params,
+        if(data["request_content_length"] != null) "requestContentLength": data["request_content_length"],
+        if(data["response_content_length"] != null) "responseContentLength": data["response_content_length"],
+        if(data["status_code"] != null) "status": data["status_code"],
+      }, type: BugsnagBreadcrumbType.request);
+    }
+  }
+
+
 }
 
 /// In order to determine where a crash happens Bugsnag needs to know which
