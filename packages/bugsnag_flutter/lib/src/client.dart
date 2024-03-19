@@ -808,7 +808,7 @@ class Bugsnag extends BugsnagClient with DelegateClient {
       final String status = statusCode < 400 ? "succeeded" : "failed";
       leaveBreadcrumb("$clientName request $status", metadata: {
         "duration": duration,
-        "method": data["method"],
+        "method": data["http_method"],
         "url": data["url"].split("?").first,
         if(params.isNotEmpty) "urlParams": params,
         if(data["request_content_length"] != null) "requestContentLength": data["request_content_length"],
