@@ -22,14 +22,12 @@ Scenario: Http Wrapper Breadcrumbs
     And I wait to receive an error
     Then the error payload field "events" is an array with 1 elements
     And the error payload field "events.0.breadcrumbs" is an array with 2 elements
-    And the error payload field "events.0.breadcrumbs.0.name" equals "Bugsnag loaded"
-    And the error payload field "events.0.breadcrumbs.0.type" equals "state"
-    And the error payload field "events.0.breadcrumbs.1.metaData.foo" equals "bar"
-    And the error payload field "events.0.breadcrumbs.1.metaData.object.test" equals "hello"
-    And the error payload field "events.0.breadcrumbs.1.metaData.object.bool" is true
-    And the error payload field "events.0.breadcrumbs.1.metaData.object.number" equals 1234
-    And the error payload field "events.0.breadcrumbs.1.metaData.object.list.0" equals 'abc'
-    And the error payload field "events.0.breadcrumbs.1.metaData.object.list.1" equals 4321
-    And the error payload field "events.0.breadcrumbs.1.metaData.object.list.2" is true
-    And the error payload field "events.0.breadcrumbs.1.name" equals "Manual breadcrumb"
-    And the error payload field "events.0.breadcrumbs.1.type" equals "manual"
+    And the error payload field "events.0.breadcrumbs.1.name" equals "IOClient request succeeded"
+    And the error payload field "events.0.breadcrumbs.1.type" equals "request"
+    And the error payload field "events.0.breadcrumbs.1.metaData.status" equals 200
+    And the error payload field "events.0.breadcrumbs.1.metaData.method" equals "GET"
+    And the error payload field "events.0.breadcrumbs.1.metaData.duration" is greater than 1
+    And the error payload field "events.0.breadcrumbs.1.metaData.url" matches the regex "^http:\/\/\S*:\d{4}(\/.*)?"
+    And the error payload field "events.0.breadcrumbs.1.metaData.responseContentLength" is greater than 1
+    And the error payload field "events.0.breadcrumbs.1.metaData.urlParams" equals "test=test"
+

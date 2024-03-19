@@ -803,7 +803,10 @@ class Bugsnag extends BugsnagClient with DelegateClient {
     if (stopwatch != null) {
       final duration = stopwatch.elapsedMilliseconds;
       final String clientName = data["client"];
-      final params = data["url"].split("?").last;
+      String params = "";
+      if(data["url"].split("?").length > 1){
+        params = data["url"].split("?").last;
+      }
       final int statusCode = data["status_code"];
       final String status = statusCode < 400 ? "succeeded" : "failed";
       leaveBreadcrumb("$clientName request $status", metadata: {
@@ -811,8 +814,8 @@ class Bugsnag extends BugsnagClient with DelegateClient {
         "method": data["http_method"],
         "url": data["url"].split("?").first,
         if(params.isNotEmpty) "urlParams": params,
-        if(data["request_content_length"] != null) "requestContentLength": data["request_content_length"],
-        if(data["response_content_length"] != null) "responseContentLength": data["response_content_length"],
+        if(data["request_content_length"] != null && data["request_content_length"] > 0) "requestContentLength": data["request_content_length"],
+        if(data["response_content_length"] != null && data["response_content_length"] > 0) "responseContentLength": data["response_content_length"],
         if(data["status_code"] != null) "status": data["status_code"],
       }, type: BugsnagBreadcrumbType.request);
     }
