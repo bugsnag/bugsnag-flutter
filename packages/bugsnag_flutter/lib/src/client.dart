@@ -21,6 +21,9 @@ final _notifier = {
 };
 
 abstract class BugsnagClient {
+
+  final Map<String, Stopwatch> _openNetworkRequests = {};
+
   /// An utility error handling function that will send reported errors to
   /// Bugsnag as unhandled. The [errorHandler] is suitable for use with
   /// common Dart error callbacks such as [runZonedGuarded] or [Future.onError].
@@ -73,9 +76,6 @@ abstract class BugsnagClient {
     Map<String, Object>? metadata,
     BugsnagBreadcrumbType type = BugsnagBreadcrumbType.manual,
   });
-
-
-  dynamic networkInstrumentation(dynamic data);
 
   /// Returns the current buffer of breadcrumbs that will be sent with captured
   /// events. This ordered list represents the most recent breadcrumbs to be
@@ -237,6 +237,51 @@ abstract class BugsnagClient {
 
   /// Removes a previously added "on error" callback.
   void removeOnError(BugsnagOnErrorCallback onError);
+
+
+  @override
+  networkInstrumentation(data) {
+    if (data is! Map<String, dynamic>) return true;
+    String status = data["status"];
+    String requestId = data["request_id"];
+    if (status == "started") {
+      _onRequestStarted(requestId);
+    } else if (status == "complete") {
+      _onRequestComplete(requestId, data);
+    }
+    return true;
+  }
+
+  void _onRequestStarted(String requestId) {
+    final stopwatch = Stopwatch()..start();
+    _openNetworkRequests[requestId] = stopwatch;
+  }
+
+  void _onRequestComplete(String requestId, data) {
+    final stopwatch = _openNetworkRequests.remove(requestId);
+    if (stopwatch != null) {
+      final duration = stopwatch.elapsedMilliseconds;
+      final String clientName = data["client"];
+      String params = "";
+      if(data["url"].split("?").length > 1){
+        params = data["url"].split("?").last;
+      }
+      final int statusCode = data["status_code"];
+      final String status = statusCode < 400 ? "succeeded" : "failed";
+      leaveBreadcrumb("$clientName request $status", metadata: {
+        "duration": duration,
+        "method": data["http_method"],
+        "url": data["url"].split("?").first,
+        if(params.isNotEmpty) "urlParams": params,
+        if(data["request_content_length"] != null && data["request_content_length"] > 0) "requestContentLength": data["request_content_length"],
+        if(data["response_content_length"] != null && data["response_content_length"] > 0) "responseContentLength": data["response_content_length"],
+        if(data["status_code"] != null) "status": data["status_code"],
+      }, type: BugsnagBreadcrumbType.request);
+    }
+  }
+
+
+
 }
 
 mixin DelegateClient implements BugsnagClient {
@@ -341,7 +386,7 @@ mixin DelegateClient implements BugsnagClient {
       client.removeOnError(onError);
 }
 
-class ChannelClient implements BugsnagClient {
+class ChannelClient extends BugsnagClient {
   FlutterExceptionHandler? _previousFlutterOnError;
   ErrorCallback? _previousPlatformDispatcherOnError;
 
@@ -597,7 +642,6 @@ class ChannelClient implements BugsnagClient {
 /// - [start]
 class Bugsnag extends BugsnagClient with DelegateClient {
   Bugsnag._internal();
-  final Map<String, Stopwatch> _openNetworkRequests = {};
 
   /// Attach Bugsnag to an already initialised native notifier, optionally
   /// adding to its existing configuration. Use [start] if your application
@@ -779,48 +823,6 @@ class Bugsnag extends BugsnagClient with DelegateClient {
 
     return const <String>{};
   }
-
-  @override
-  networkInstrumentation(data) {
-    if (data is! Map<String, dynamic>) return true;
-    String status = data["status"];
-    String requestId = data["request_id"];
-    if (status == "started") {
-      _onRequestStarted(requestId);
-    } else if (status == "complete") {
-      _onRequestComplete(requestId, data);
-    }
-    return true;
-  }
-
-  void _onRequestStarted(String requestId) {
-    final stopwatch = Stopwatch()..start();
-    _openNetworkRequests[requestId] = stopwatch;
-  }
-
-  void _onRequestComplete(String requestId, data) {
-    final stopwatch = _openNetworkRequests.remove(requestId);
-    if (stopwatch != null) {
-      final duration = stopwatch.elapsedMilliseconds;
-      final String clientName = data["client"];
-      String params = "";
-      if(data["url"].split("?").length > 1){
-        params = data["url"].split("?").last;
-      }
-      final int statusCode = data["status_code"];
-      final String status = statusCode < 400 ? "succeeded" : "failed";
-      leaveBreadcrumb("$clientName request $status", metadata: {
-        "duration": duration,
-        "method": data["http_method"],
-        "url": data["url"].split("?").first,
-        if(params.isNotEmpty) "urlParams": params,
-        if(data["request_content_length"] != null && data["request_content_length"] > 0) "requestContentLength": data["request_content_length"],
-        if(data["response_content_length"] != null && data["response_content_length"] > 0) "responseContentLength": data["response_content_length"],
-        if(data["status_code"] != null) "status": data["status_code"],
-      }, type: BugsnagBreadcrumbType.request);
-    }
-  }
-
 
 }
 
