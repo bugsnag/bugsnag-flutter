@@ -239,7 +239,6 @@ abstract class BugsnagClient {
   void removeOnError(BugsnagOnErrorCallback onError);
 
 
-  @override
   networkInstrumentation(data) {
     if (data is! Map<String, dynamic>) return true;
     String status = data["status"];

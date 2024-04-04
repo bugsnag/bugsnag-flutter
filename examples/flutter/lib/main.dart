@@ -1,15 +1,16 @@
 import 'dart:async';
-
-import 'package:bugsnag_breadcrumbs_dart_io/bugsnag_breadcrumbs_dart_io.dart';
-import 'package:bugsnag_breadcrumbs_http/bugsnag_breadcrumbs_http.dart' as http;
+import 'package:bugsnag_flutter_dart_io_http_client/bugsnag_flutter_dart_io_http_client.dart' as dart_io;
+import 'package:bugsnag_http_client/bugsnag_http_client.dart' as http;
 import 'package:bugsnag_example/native_crashes.dart';
 import 'package:bugsnag_flutter/bugsnag_flutter.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
+  http.addSubscriber(bugsnag.networkInstrumentation);
+  dart_io.addSubscriber(bugsnag.networkInstrumentation);
   await bugsnag.start(
     // Find your API key in the settings menu of your Bugsnag dashboard
-    apiKey: 'add_your_api_key_here',
+    apiKey: '227df1042bc7772c321dbde3b31a03c2',
     // Specify in-project packages if you have multiple or are splitting debug info in your build (--split-debug-info)
     projectPackages: const BugsnagProjectPackages.only({'bugsnag_example'}),
     // onError callbacks can be used to modify or reject certain events
@@ -48,7 +49,7 @@ class ExampleHomeScreen extends StatelessWidget {
 
   // Unhandled exceptions will automatically be detected and reported.
   // They are displayed with an 'Error' severity on the dashboard.
-  void _unhandledFlutterError() {
+  void _unhandledFlutterError() async {
     throw Exception('Unhandled Exception');
   }
 
@@ -87,7 +88,7 @@ class ExampleHomeScreen extends StatelessWidget {
       http.get(Uri.parse('https://example.invalid')).ignore();
 
   void _networkHttpClient() async {
-    var client = BugsnagHttpClient();
+    var client = dart_io.HttpClient();
     try {
       final request = await client.getUrl(Uri.parse('https://example.com'));
       await request.close();
