@@ -238,48 +238,57 @@ abstract class BugsnagClient {
   /// Removes a previously added "on error" callback.
   void removeOnError(BugsnagOnErrorCallback onError);
 
+  networkInstrumentation(dynamic data) {
+    try {
+      if (data is! Map<String, dynamic>) return;
+      String? status = data["status"];
+      String? requestId = data["request_id"];
+      if (requestId == null || status == null) return;
 
-  networkInstrumentation(data) {
-    if (data is! Map<String, dynamic>) return true;
-    String status = data["status"];
-    String requestId = data["request_id"];
-    if (status == "started") {
-      _onRequestStarted(requestId);
-    } else if (status == "complete") {
-      _onRequestComplete(requestId, data);
+      if (status == "started") {
+        _onRequestStarted(requestId);
+      } else if (status == "complete") {
+        _onRequestComplete(requestId, data);
+      }
+    } catch (e) {
+      // Fail silently
     }
-    return true;
   }
 
   void _onRequestStarted(String requestId) {
-    final stopwatch = Stopwatch()..start();
-    _openNetworkRequests[requestId] = stopwatch;
+      final stopwatch = Stopwatch()..start();
+      _openNetworkRequests[requestId] = stopwatch;
   }
 
-  void _onRequestComplete(String requestId, data) {
-    final stopwatch = _openNetworkRequests.remove(requestId);
-    if (stopwatch != null) {
-      final duration = stopwatch.elapsedMilliseconds;
-      final String clientName = data["client"];
-      String params = "";
-      if(data["url"].split("?").length > 1){
-        params = data["url"].split("?").last;
+  void _onRequestComplete(String requestId, dynamic data) {
+      final stopwatch = _openNetworkRequests.remove(requestId);
+      if (stopwatch != null && data is Map<String, dynamic>) {
+        final duration = stopwatch.elapsedMilliseconds;
+        final String? clientName = data["client"];
+        if (clientName == null) return;
+
+        String params = "";
+        final url = data["url"];
+        final splitUrl = url.split("?");
+        if (splitUrl != null && splitUrl.length > 1) {
+          params = splitUrl.last;
+        }
+        final statusCode = data["status_code"];
+        if (statusCode == null) return;
+
+        final String status = statusCode < 400 ? "succeeded" : "failed";
+        // Assuming leaveBreadcrumb is a predefined method to log the event
+        leaveBreadcrumb("$clientName request $status", metadata: {
+          "duration": duration,
+          "method": data["http_method"],
+          "url": splitUrl.first,
+          if(params.isNotEmpty) "urlParams": params,
+          if(data["request_content_length"] != null && data["request_content_length"] > 0) "requestContentLength": data["request_content_length"],
+          if(data["response_content_length"] != null && data["response_content_length"] > 0) "responseContentLength": data["response_content_length"],
+          "status": statusCode,
+        }, type: BugsnagBreadcrumbType.request);
       }
-      final int statusCode = data["status_code"];
-      final String status = statusCode < 400 ? "succeeded" : "failed";
-      leaveBreadcrumb("$clientName request $status", metadata: {
-        "duration": duration,
-        "method": data["http_method"],
-        "url": data["url"].split("?").first,
-        if(params.isNotEmpty) "urlParams": params,
-        if(data["request_content_length"] != null && data["request_content_length"] > 0) "requestContentLength": data["request_content_length"],
-        if(data["response_content_length"] != null && data["response_content_length"] > 0) "responseContentLength": data["response_content_length"],
-        if(data["status_code"] != null) "status": data["status_code"],
-      }, type: BugsnagBreadcrumbType.request);
-    }
   }
-
-
 
 }
 
@@ -621,10 +630,7 @@ class ChannelClient extends BugsnagClient {
       _channel.invokeMethod('deliverEvent', event);
 
   @override
-  networkInstrumentation(data) {
-    // TODO: implement networkInstrumentation
-    throw UnimplementedError();
-  }
+  networkInstrumentation(data) {}
 }
 
 /// The primary `Client`. Typically this class is not accessed directly, and
