@@ -273,7 +273,7 @@ abstract class BugsnagClient {
         if (splitUrl != null && splitUrl.length > 1) {
           params = splitUrl.last;
         }
-        final statusCode = data["status_code"];
+        final int? statusCode = data["status_code"];
         if (statusCode == null) return;
 
         final String status = statusCode < 400 ? "succeeded" : "failed";
