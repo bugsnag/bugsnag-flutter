@@ -286,7 +286,9 @@ abstract class BugsnagClient {
           if(data["request_content_length"] != null && data["request_content_length"] > 0) "requestContentLength": data["request_content_length"],
           if(data["response_content_length"] != null && data["response_content_length"] > 0) "responseContentLength": data["response_content_length"],
           "status": statusCode,
-        }, type: BugsnagBreadcrumbType.request);
+          },
+          type: BugsnagBreadcrumbType.request,
+        );
       }
   }
 
