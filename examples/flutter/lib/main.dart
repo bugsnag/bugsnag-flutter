@@ -155,19 +155,19 @@ class ExampleHomeScreen extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: _networkSuccess,
-              child: const Text('Success'),
+              child: const Text('Http Success'),
             ),
             ElevatedButton(
               onPressed: _networkFailure,
-              child: const Text('Failure'),
+              child: const Text('Http Failure'),
             ),
             ElevatedButton(
               onPressed: _networkError,
-              child: const Text('Error'),
+              child: const Text('Http Error'),
             ),
             ElevatedButton(
               onPressed: _networkDartIoHttpClient,
-              child: const Text('DartIoHttpClient'),
+              child: const Text('Dart Io Success'),
             ),
           ],
         ),
