@@ -22,7 +22,7 @@ Scenario: Http Wrapper Breadcrumbs
     And I wait to receive an error
     Then the error payload field "events" is an array with 1 elements
     And the error payload field "events.0.breadcrumbs" is an array with 2 elements
-    And the error payload field "events.0.breadcrumbs.1.name" equals "IOClient request succeeded"
+    And the error payload field "events.0.breadcrumbs.1.name" equals "package:http request succeeded"
     And the error payload field "events.0.breadcrumbs.1.type" equals "request"
     And the error payload field "events.0.breadcrumbs.1.metaData.status" equals 200
     And the error payload field "events.0.breadcrumbs.1.metaData.method" equals "GET"
@@ -36,7 +36,7 @@ Scenario: Dart IO Wrapper Breadcrumbs
     And I wait to receive an error
     Then the error payload field "events" is an array with 1 elements
     And the error payload field "events.0.breadcrumbs" is an array with 2 elements
-    And the error payload field "events.0.breadcrumbs.1.name" equals "_HttpClient request succeeded"
+    And the error payload field "events.0.breadcrumbs.1.name" equals "dart:io request succeeded"
     And the error payload field "events.0.breadcrumbs.1.type" equals "request"
     And the error payload field "events.0.breadcrumbs.1.metaData.status" equals 200
     And the error payload field "events.0.breadcrumbs.1.metaData.method" equals "GET"
