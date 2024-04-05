@@ -282,9 +282,12 @@ abstract class BugsnagClient {
           "duration": duration,
           "method": data["http_method"],
           "url": splitUrl.first,
-          if(params.isNotEmpty) "urlParams": params,
-          if(data["request_content_length"] != null && data["request_content_length"] > 0) "requestContentLength": data["request_content_length"],
-          if(data["response_content_length"] != null && data["response_content_length"] > 0) "responseContentLength": data["response_content_length"],
+          if(params.isNotEmpty)
+              "urlParams": params,
+          if(data["request_content_length"] != null && data["request_content_length"] > 0)
+              "requestContentLength": data["request_content_length"],
+          if(data["response_content_length"] != null && data["response_content_length"] > 0)
+              "responseContentLength": data["response_content_length"],
           "status": statusCode,
           },
           type: BugsnagBreadcrumbType.request,
