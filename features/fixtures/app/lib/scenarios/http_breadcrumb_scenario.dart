@@ -10,7 +10,7 @@ class HttpBreadcrumbScenario extends Scenario {
       enabledBreadcrumbTypes: {BugsnagEnabledBreadcrumbType.state},
       endpoints: endpoints,
     );
-    await http.get(Uri.parse("http://www.google.com" + "?test=test"));
+    await http.get(Uri.parse("http://www.google.com?test=test"));
     await bugsnag.notify(Exception('HttpBreadcrumbScenario'), null);
   }
 }

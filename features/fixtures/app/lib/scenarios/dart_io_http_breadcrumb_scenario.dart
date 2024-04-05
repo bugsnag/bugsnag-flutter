@@ -14,7 +14,7 @@ class DartIoHttpBreadcrumbScenario extends Scenario {
 
     var client = dart_io.HttpClient();
     try {
-      final request = await client.getUrl(Uri.parse('https://example.com' + '?test=test'));
+      final request = await client.getUrl(Uri.parse('http://www.google.com?test=test'));
       await request.close();
     } finally {
       client.close();
