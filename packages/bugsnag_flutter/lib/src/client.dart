@@ -21,6 +21,9 @@ final _notifier = {
 };
 
 abstract class BugsnagClient {
+
+  final Map<String, Stopwatch> _openNetworkRequests = {};
+
   /// An utility error handling function that will send reported errors to
   /// Bugsnag as unhandled. The [errorHandler] is suitable for use with
   /// common Dart error callbacks such as [runZonedGuarded] or [Future.onError].
@@ -234,6 +237,64 @@ abstract class BugsnagClient {
 
   /// Removes a previously added "on error" callback.
   void removeOnError(BugsnagOnErrorCallback onError);
+
+  networkInstrumentation(dynamic data) {
+    try {
+      if (data is! Map<String, dynamic>) return;
+      String? status = data["status"];
+      String? requestId = data["request_id"];
+      if (requestId == null || status == null) return;
+
+      if (status == "started") {
+        _onRequestStarted(requestId);
+      } else if (status == "complete") {
+        _onRequestComplete(requestId, data);
+      }
+    } catch (e) {
+      // Fail silently
+    }
+  }
+
+  void _onRequestStarted(String requestId) {
+      final stopwatch = Stopwatch()..start();
+      _openNetworkRequests[requestId] = stopwatch;
+  }
+
+  void _onRequestComplete(String requestId, dynamic data) {
+      final stopwatch = _openNetworkRequests.remove(requestId);
+      if (stopwatch != null && data is Map<String, dynamic>) {
+        final duration = stopwatch.elapsedMilliseconds;
+        final String? clientName = data["client"];
+        if (clientName == null) return;
+
+        String params = "";
+        final url = data["url"];
+        final splitUrl = url.split("?");
+        if (splitUrl != null && splitUrl.length > 1) {
+          params = splitUrl.last;
+        }
+        final int? statusCode = data["status_code"];
+        if (statusCode == null) return;
+
+        final String status = statusCode < 400 ? "succeeded" : "failed";
+        // Assuming leaveBreadcrumb is a predefined method to log the event
+        leaveBreadcrumb("$clientName request $status", metadata: {
+          "duration": duration,
+          "method": data["http_method"],
+          "url": splitUrl.first,
+          if(params.isNotEmpty)
+              "urlParams": params,
+          if(data["request_content_length"] != null && data["request_content_length"] > 0)
+              "requestContentLength": data["request_content_length"],
+          if(data["response_content_length"] != null && data["response_content_length"] > 0)
+              "responseContentLength": data["response_content_length"],
+          "status": statusCode,
+          },
+          type: BugsnagBreadcrumbType.request,
+        );
+      }
+  }
+
 }
 
 mixin DelegateClient implements BugsnagClient {
@@ -338,7 +399,7 @@ mixin DelegateClient implements BugsnagClient {
       client.removeOnError(onError);
 }
 
-class ChannelClient implements BugsnagClient {
+class ChannelClient extends BugsnagClient {
   FlutterExceptionHandler? _previousFlutterOnError;
   ErrorCallback? _previousPlatformDispatcherOnError;
 
@@ -572,6 +633,9 @@ class ChannelClient implements BugsnagClient {
 
   Future<void> _deliverEvent(BugsnagEvent event) =>
       _channel.invokeMethod('deliverEvent', event);
+
+  @override
+  networkInstrumentation(data) {}
 }
 
 /// The primary `Client`. Typically this class is not accessed directly, and
@@ -769,6 +833,7 @@ class Bugsnag extends BugsnagClient with DelegateClient {
 
     return const <String>{};
   }
+
 }
 
 /// In order to determine where a crash happens Bugsnag needs to know which
