@@ -41,6 +41,8 @@ dependencies:
   http: ^1.1.0
   bugsnag_http_client:
       path: ../../../packages/bugsnag_http_client
+  bugsnag_flutter_dart_io_http_client:
+        path: ../../../packages/bugsnag_flutter_dart_io_http_client
 dev_dependencies:
   flutter_test:
     sdk: flutter

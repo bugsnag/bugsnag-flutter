@@ -21,6 +21,7 @@ import 'start_bugsnag_scenario.dart';
 import 'throw_exception_scenario.dart';
 import 'unhandled_exception_scenario.dart';
 import 'http_breadcrumb_scenario.dart';
+import 'dart_io_http_breadcrumb_scenario.dart';
 
 class ScenarioInfo<T extends Scenario> {
   const ScenarioInfo(this.name, this.init);
@@ -57,4 +58,5 @@ final List<ScenarioInfo<Scenario>> scenarios = [
   ScenarioInfo(
       'UnhandledExceptionScenario', () => UnhandledExceptionScenario()),
   ScenarioInfo("HttpBreadcrumbScenario", () => HttpBreadcrumbScenario()),
+  ScenarioInfo("DartIoHttpBreadcrumbScenario", () => DartIoHttpBreadcrumbScenario()),
 ];

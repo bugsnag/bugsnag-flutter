@@ -87,7 +87,7 @@ class ExampleHomeScreen extends StatelessWidget {
   void _networkError() async =>
       http.get(Uri.parse('https://example.invalid')).ignore();
 
-  void _networkHttpClient() async {
+  void _networkDartIoHttpClient() async {
     var client = dart_io.HttpClient();
     try {
       final request = await client.getUrl(Uri.parse('https://example.com'));
@@ -166,8 +166,8 @@ class ExampleHomeScreen extends StatelessWidget {
               child: const Text('Error'),
             ),
             ElevatedButton(
-              onPressed: _networkHttpClient,
-              child: const Text('HttpClient'),
+              onPressed: _networkDartIoHttpClient,
+              child: const Text('DartIoHttpClient'),
             ),
           ],
         ),

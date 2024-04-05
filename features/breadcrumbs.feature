@@ -31,3 +31,17 @@ Scenario: Http Wrapper Breadcrumbs
     And the error payload field "events.0.breadcrumbs.1.metaData.responseContentLength" is greater than 1
     And the error payload field "events.0.breadcrumbs.1.metaData.urlParams" equals "test=test"
 
+Scenario: Dart IO Wrapper Breadcrumbs
+    Given I run "DartIoHttpBreadcrumbScenario"
+    And I wait to receive an error
+    Then the error payload field "events" is an array with 1 elements
+    And the error payload field "events.0.breadcrumbs" is an array with 2 elements
+    And the error payload field "events.0.breadcrumbs.1.name" equals "IOClient request succeeded"
+    And the error payload field "events.0.breadcrumbs.1.type" equals "request"
+    And the error payload field "events.0.breadcrumbs.1.metaData.status" equals 200
+    And the error payload field "events.0.breadcrumbs.1.metaData.method" equals "GET"
+    And the error payload field "events.0.breadcrumbs.1.metaData.duration" is greater than 1
+    And the error payload field "events.0.breadcrumbs.1.metaData.url" equals "http://www.google.com"
+    And the error payload field "events.0.breadcrumbs.1.metaData.responseContentLength" is greater than 1
+    And the error payload field "events.0.breadcrumbs.1.metaData.urlParams" equals "test=test"
+
