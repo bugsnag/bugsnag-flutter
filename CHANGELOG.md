@@ -1,7 +1,7 @@
 # Changelog
 
 
-## TBD ()
+## 3.1.0 (2024-04-09)
 
 - Added networkInstrumentation listener so that the new [http](https://pub.dev/packages/bugsnag_http_client) and [dart:io](https://pub.dev/packages/bugsnag_flutter_dart_io_http_client) wrappers can trigger network breadcrumbs [#237](https://github.com/bugsnag/bugsnag-flutter/pull/237)
 
