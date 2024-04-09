@@ -37,9 +37,12 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
-  http: ^0.13.4
   path_provider: ^2.0.15
-
+  http: ^1.1.0
+  bugsnag_http_client:
+      path: ../../../packages/bugsnag_http_client
+  bugsnag_flutter_dart_io_http_client:
+        path: ../../../packages/bugsnag_flutter_dart_io_http_client
 dev_dependencies:
   flutter_test:
     sdk: flutter

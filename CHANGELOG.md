@@ -1,6 +1,14 @@
 # Changelog
 
 
+## 3.1.0 (2024-04-09)
+
+This release introduces a new `networkInstrumentation` listener so that the new [http](https://pub.dev/packages/bugsnag_http_client) and [dart:io](https://pub.dev/packages/bugsnag_flutter_dart_io_http_client) wrappers can trigger network breadcrumbs. It also introduces support for [dio](https://pub.dev/packages/dio).
+
+The previous `bugsnag_breadcrumbs_http` and `bugsnag_breadcrumbs_dart_io` packages will continue to work but will be deprecated in the next major release.
+
+See our [online docs](https://docs.bugsnag.com/platforms/flutter/customizing-breadcrumbs/#network-request-breadcrumbs) for full integration instructions.
+
 ## 3.0.2 (2024-02-28)
 
 - Change the bugsnag_breadcrumbs_http http dependancy to ">=0.13.4" so that there are less strict version requirements [#235](https://github.com/bugsnag/bugsnag-flutter/pull/235)

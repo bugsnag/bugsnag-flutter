@@ -1,12 +1,13 @@
 import 'dart:async';
-
-import 'package:bugsnag_breadcrumbs_dart_io/bugsnag_breadcrumbs_dart_io.dart';
-import 'package:bugsnag_breadcrumbs_http/bugsnag_breadcrumbs_http.dart' as http;
+import 'package:bugsnag_flutter_dart_io_http_client/bugsnag_flutter_dart_io_http_client.dart' as dart_io;
+import 'package:bugsnag_http_client/bugsnag_http_client.dart' as http;
 import 'package:bugsnag_example/native_crashes.dart';
 import 'package:bugsnag_flutter/bugsnag_flutter.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
+  http.addSubscriber(bugsnag.networkInstrumentation);
+  dart_io.addSubscriber(bugsnag.networkInstrumentation);
   await bugsnag.start(
     // Find your API key in the settings menu of your Bugsnag dashboard
     apiKey: 'add_your_api_key_here',
@@ -48,7 +49,7 @@ class ExampleHomeScreen extends StatelessWidget {
 
   // Unhandled exceptions will automatically be detected and reported.
   // They are displayed with an 'Error' severity on the dashboard.
-  void _unhandledFlutterError() {
+  void _unhandledFlutterError() async {
     throw Exception('Unhandled Exception');
   }
 
@@ -86,8 +87,8 @@ class ExampleHomeScreen extends StatelessWidget {
   void _networkError() async =>
       http.get(Uri.parse('https://example.invalid')).ignore();
 
-  void _networkHttpClient() async {
-    var client = BugsnagHttpClient();
+  void _networkDartIoHttpClient() async {
+    var client = dart_io.HttpClient();
     try {
       final request = await client.getUrl(Uri.parse('https://example.com'));
       await request.close();
@@ -154,19 +155,19 @@ class ExampleHomeScreen extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: _networkSuccess,
-              child: const Text('Success'),
+              child: const Text('Http Success'),
             ),
             ElevatedButton(
               onPressed: _networkFailure,
-              child: const Text('Failure'),
+              child: const Text('Http Failure'),
             ),
             ElevatedButton(
               onPressed: _networkError,
-              child: const Text('Error'),
+              child: const Text('Http Error'),
             ),
             ElevatedButton(
-              onPressed: _networkHttpClient,
-              child: const Text('HttpClient'),
+              onPressed: _networkDartIoHttpClient,
+              child: const Text('Dart Io Success'),
             ),
           ],
         ),
