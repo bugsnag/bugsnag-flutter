@@ -241,7 +241,11 @@ class BugsnagFlutter {
 
     Void setContext(@Nullable JSONObject args) {
         if (args != null) {
-            Bugsnag.setContext((String) args.opt("context"));
+            if (args.opt("context") instanceof String) {
+                Bugsnag.setContext((String) args.opt("context"));
+            } else {
+                Bugsnag.setContext(null);
+            }
         }
 
         return null;
