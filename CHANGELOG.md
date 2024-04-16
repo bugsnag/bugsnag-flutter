@@ -1,5 +1,8 @@
 # Changelog
 
+## TBD
+
+- Fixed: Navigator.pushAndRemoveUntil throws exception [#242](https://github.com/bugsnag/bugsnag-flutter/pull/242)
 
 ## 3.1.0 (2024-04-09)
 
