@@ -254,7 +254,7 @@ class BugsnagFlutter {
     Void leaveBreadcrumb(@Nullable JSONObject args) throws Exception {
         if (args != null &&
                 hasString(args, "name") &&
-                hasString(args, "metaData") &&
+                args.has("metaData") &&
                 hasString(args, "type")) {
             Bugsnag.leaveBreadcrumb(args.getString("name"),
                     JsonHelper.unwrap(args.getJSONObject("metaData")),
@@ -291,7 +291,7 @@ class BugsnagFlutter {
     }
 
     Void addMetadata(@Nullable JSONObject args) throws JSONException {
-        if (args == null || !hasString(args,"section") || !hasString(args,"metadata")) {
+        if (args == null || !hasString(args,"section") || args.has("metadata")) {
             return null;
         }
 
