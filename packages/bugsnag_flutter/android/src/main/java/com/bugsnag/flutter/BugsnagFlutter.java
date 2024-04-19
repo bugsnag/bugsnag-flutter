@@ -104,18 +104,18 @@ class BugsnagFlutter {
                 ? new Configuration(arguments.getString("apiKey"))
                 : Configuration.load(context);
 
-        configuration.setAppType(arguments.optString("appType", configuration.getAppType()));
-        configuration.setAppVersion(arguments.optString("appVersion", configuration.getAppVersion()));
+        configuration.setAppType(getString(arguments, "appType", configuration.getAppType()));
+        configuration.setAppVersion(getString(arguments, "appVersion", configuration.getAppVersion()));
         configuration.setAutoTrackSessions(arguments.optBoolean("autoTrackSessions", configuration.getAutoTrackSessions()));
         configuration.setAutoDetectErrors(arguments.optBoolean("autoDetectErrors", configuration.getAutoDetectErrors()));
-        configuration.setContext(arguments.optString("context", configuration.getContext()));
+        configuration.setContext(getString(arguments, "context", configuration.getContext()));
         configuration.setLaunchDurationMillis(arguments.optLong("launchDurationMillis", configuration.getLaunchDurationMillis()));
         configuration.setSendLaunchCrashesSynchronously(arguments.optBoolean("sendLaunchCrashesSynchronously", configuration.getSendLaunchCrashesSynchronously()));
         configuration.setMaxBreadcrumbs(arguments.optInt("maxBreadcrumbs", configuration.getMaxBreadcrumbs()));
         configuration.setMaxPersistedEvents(arguments.optInt("maxPersistedEvents", configuration.getMaxPersistedEvents()));
         configuration.setMaxPersistedSessions(arguments.optInt("maxPersistedSessions", configuration.getMaxPersistedSessions()));
         configuration.setMaxStringValueLength(arguments.optInt("maxStringValueLength", configuration.getMaxStringValueLength()));
-        configuration.setReleaseStage(arguments.optString("releaseStage", configuration.getReleaseStage()));
+        configuration.setReleaseStage(getString(arguments, "releaseStage", configuration.getReleaseStage()));
         configuration.setPersistUser(arguments.optBoolean("persistUser", configuration.getPersistUser()));
 
         if (arguments.has("redactedKeys")) {
@@ -133,9 +133,9 @@ class BugsnagFlutter {
         JSONObject user = arguments.optJSONObject("user");
         if (user != null) {
             configuration.setUser(
-                    user.optString("id", null),
-                    user.optString("email", null),
-                    user.optString("name", null)
+                    getString(user, "id"),
+                    getString(user, "email"),
+                    getString(user, "name")
             );
         }
 
@@ -228,9 +228,9 @@ class BugsnagFlutter {
     Void setUser(@Nullable JSONObject user) {
         if (user != null) {
             Bugsnag.setUser(
-                    (String) user.opt("id"),
-                    (String) user.opt("email"),
-                    (String) user.opt("name")
+                    getString(user, "id"),
+                    getString(user, "email"),
+                    getString(user, "name")
             );
         } else {
             Bugsnag.setUser(null, null, null);
@@ -241,11 +241,7 @@ class BugsnagFlutter {
 
     Void setContext(@Nullable JSONObject args) {
         if (args != null) {
-            if (args.opt("context") instanceof String) {
-                Bugsnag.setContext((String) args.opt("context"));
-            } else {
-                Bugsnag.setContext(null);
-            }
+            Bugsnag.setContext(getString(args, "context"));
         }
 
         return null;
@@ -257,9 +253,9 @@ class BugsnagFlutter {
 
     Void leaveBreadcrumb(@Nullable JSONObject args) throws Exception {
         if (args != null &&
-                args.has("name") &&
-                args.has("metaData") &&
-                args.has("type")) {
+                hasString(args, "name") &&
+                hasString(args, "metaData") &&
+                hasString(args, "type")) {
             Bugsnag.leaveBreadcrumb(args.getString("name"),
                     JsonHelper.unwrap(args.getJSONObject("metaData")),
                     JsonHelper.unpackBreadcrumbType(args.getString("type")));
@@ -283,7 +279,7 @@ class BugsnagFlutter {
     }
 
     Void clearFeatureFlag(@Nullable JSONObject args) throws JSONException {
-        if (args != null && args.has("name")) {
+        if (args != null && hasString(args, "name")) {
             Bugsnag.clearFeatureFlag(args.getString("name"));
         }
         return null;
@@ -295,7 +291,7 @@ class BugsnagFlutter {
     }
 
     Void addMetadata(@Nullable JSONObject args) throws JSONException {
-        if (args == null || !args.has("section") || !args.has("metadata")) {
+        if (args == null || !hasString(args,"section") || !hasString(args,"metadata")) {
             return null;
         }
 
@@ -307,11 +303,11 @@ class BugsnagFlutter {
     }
 
     Void clearMetadata(@Nullable JSONObject args) throws JSONException {
-        if (args == null || !args.has("section")) {
+        if (args == null || !hasString(args,"section")) {
             return null;
         }
 
-        if (args.has("key")) {
+        if (hasString(args,"key")) {
             Bugsnag.clearMetadata(args.getString("section"), args.getString("key"));
         } else {
             Bugsnag.clearMetadata(args.getString("section"));
@@ -321,7 +317,7 @@ class BugsnagFlutter {
     }
 
     JSONObject getMetadata(@Nullable JSONObject args) throws JSONException {
-        if (args == null || !args.has("section")) {
+        if (args == null || !hasString(args,"section")) {
             return null;
         }
 
@@ -357,7 +353,7 @@ class BugsnagFlutter {
 
     @SuppressWarnings("unchecked")
     JSONObject createEvent(@Nullable JSONObject args) throws JSONException {
-        if (args == null || !args.has("error")) {
+        if (args == null || !hasString(args,"error")) {
             return null;
         }
 
@@ -406,5 +402,22 @@ class BugsnagFlutter {
         Event event = client.unmapEvent(unwrap(eventJson));
         client.deliverEvent(event);
         return null;
+    }
+
+    @Nullable String getString(JSONObject args, String key) {
+        if (!args.has(key)) {
+            return null;
+        }
+        Object value = args.opt(key);
+        return value instanceof String ? (String) value : null;
+    }
+
+    @Nullable String getString(JSONObject args, String key, @Nullable String fallback) {
+        String value = getString(args, key);
+        return value != null ? value : fallback;
+    }
+
+    boolean hasString(JSONObject args, String key) {
+        return getString(args, key) != null;
     }
 }
