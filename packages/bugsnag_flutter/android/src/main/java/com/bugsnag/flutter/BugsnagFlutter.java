@@ -303,11 +303,11 @@ class BugsnagFlutter {
     }
 
     Void clearMetadata(@Nullable JSONObject args) throws JSONException {
-        if (args == null || !hasString(args,"section")) {
+        if (args == null || !hasString(args, "section")) {
             return null;
         }
 
-        if (hasString(args,"key")) {
+        if (hasString(args, "key")) {
             Bugsnag.clearMetadata(args.getString("section"), args.getString("key"));
         } else {
             Bugsnag.clearMetadata(args.getString("section"));
