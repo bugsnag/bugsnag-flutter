@@ -291,7 +291,7 @@ class BugsnagFlutter {
     }
 
     Void addMetadata(@Nullable JSONObject args) throws JSONException {
-        if (args == null || !hasString(args,"section") || args.has("metadata")) {
+        if (args == null || !hasString(args,"section") || !args.has("metadata")) {
             return null;
         }
 
