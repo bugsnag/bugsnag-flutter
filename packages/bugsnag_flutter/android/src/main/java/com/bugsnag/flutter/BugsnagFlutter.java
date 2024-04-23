@@ -317,7 +317,7 @@ class BugsnagFlutter {
     }
 
     JSONObject getMetadata(@Nullable JSONObject args) throws JSONException {
-        if (args == null || !hasString(args,"section")) {
+        if (args == null || !hasString(args, "section")) {
             return null;
         }
 
@@ -405,9 +405,6 @@ class BugsnagFlutter {
     }
 
     @Nullable String getString(JSONObject args, String key) {
-        if (!args.has(key)) {
-            return null;
-        }
         Object value = args.opt(key);
         return value instanceof String ? (String) value : null;
     }
