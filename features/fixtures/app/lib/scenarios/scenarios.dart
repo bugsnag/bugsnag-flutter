@@ -1,3 +1,6 @@
+import 'package:MazeRunner/scenarios/null_context_scenario.dart';
+import 'package:MazeRunner/scenarios/null_user_scenario.dart';
+
 import 'app_hang_scenario.dart';
 import 'attach_bugsnag_scenario.dart';
 import 'breadcrumbs_scenario.dart';
@@ -58,5 +61,8 @@ final List<ScenarioInfo<Scenario>> scenarios = [
   ScenarioInfo(
       'UnhandledExceptionScenario', () => UnhandledExceptionScenario()),
   ScenarioInfo("HttpBreadcrumbScenario", () => HttpBreadcrumbScenario()),
-  ScenarioInfo("DartIoHttpBreadcrumbScenario", () => DartIoHttpBreadcrumbScenario()),
+  ScenarioInfo(
+      "DartIoHttpBreadcrumbScenario", () => DartIoHttpBreadcrumbScenario()),
+  ScenarioInfo("NullContextScenario", () => NullContextScenario()),
+  ScenarioInfo("NullUserScenario", () => NullUserScenario()),
 ];
