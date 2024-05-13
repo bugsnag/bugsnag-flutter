@@ -13,8 +13,8 @@ steps:
   - label: "check path"
     commands:
       - ruby --version
-      - ls -lah /Users/administrator/.rbenv/versions/3.3.0/bin
       - bundle install
+      - ls -lah /Users/administrator/.rbenv/versions/3.3.0/bin
       - which pod
 
   - label: ":lint-roller: 3.10.0"
