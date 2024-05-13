@@ -12,6 +12,8 @@ steps:
 
   - label: "check path"
     commands:
+      - ruby --version
+      - echo $GEM_HOME
       - bundle install
       - which pod
 
