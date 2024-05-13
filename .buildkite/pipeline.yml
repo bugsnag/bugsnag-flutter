@@ -10,6 +10,10 @@ steps:
     commands:
       - make test
 
+  - label: "check path"
+    commands:
+      - echo $PATH
+
   - label: ":lint-roller: 3.10.0"
     timeout_in_minutes: 10
     env:
