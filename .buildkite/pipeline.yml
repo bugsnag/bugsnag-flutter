@@ -12,7 +12,8 @@ steps:
 
   - label: "check path"
     commands:
-      - echo $PATH
+      - bundle install
+      - which pod
 
   - label: ":lint-roller: 3.10.0"
     timeout_in_minutes: 10
