@@ -353,7 +353,7 @@ class BugsnagFlutter {
 
     @SuppressWarnings("unchecked")
     JSONObject createEvent(@Nullable JSONObject args) throws JSONException {
-        if (args == null || !args.has("error")) {
+        if (args == null || !args.has("error") || client == null) {
             return null;
         }
 
@@ -391,7 +391,7 @@ class BugsnagFlutter {
     }
 
     JSONObject deliverEvent(@Nullable JSONObject eventJson) {
-        if (eventJson == null) {
+        if (eventJson == null || client == null) {
             return null;
         }
 
