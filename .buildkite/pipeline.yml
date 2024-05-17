@@ -1,26 +1,26 @@
 agents:
-  queue: macos-12-arm
+  queue: macos-14-5
 
 steps:
 
-  - label: ":test_tube: 3.10.0"
+  - label: ":test_tube: 3.19.0"
     timeout_in_minutes: 10
     env:
-      FLUTTER_BIN: "/opt/flutter/3.10.0/bin/flutter"
+      FLUTTER_BIN: "/opt/flutter/3.19.0/bin/flutter"
     commands:
       - make test
 
-  - label: ":lint-roller: 3.10.0"
+  - label: ":lint-roller: 3.19.0"
     timeout_in_minutes: 10
     env:
-      FLUTTER_BIN: "/opt/flutter/3.10.0/bin/flutter"
+      FLUTTER_BIN: "/opt/flutter/3.19.0/bin/flutter"
     commands:
       - make lint
 
-  - label: Build Example App 3.10.0
+  - label: Build Example App 3.19.0
     timeout_in_minutes: 10
     env:
-      FLUTTER_BIN: "/opt/flutter/3.10.0/bin/flutter"
+      FLUTTER_BIN: "/opt/flutter/3.19.0/bin/flutter"
     commands:
       - bundle install
       - pod repo update
@@ -35,11 +35,11 @@ steps:
   #
   # iOS
   #
-  - label: Build iOS Test Fixture 3.10.0
+  - label: Build iOS Test Fixture 3.19.0
     key: "ios-fixture-3-10-0"
     timeout_in_minutes: 20
     env:
-      FLUTTER_BIN: "/opt/flutter/3.10.0/bin/flutter"
+      FLUTTER_BIN: "/opt/flutter/3.19.0/bin/flutter"
     commands:
       - bundle install
       - pod repo update trunk
@@ -48,25 +48,25 @@ steps:
       artifacts#v1.5.0:
         upload:
           from: "features/fixtures/app/build/ios/ipa/app.ipa"
-          to: "features/fixtures/app/build/ios/ipa/app-3.10.0.ipa"
+          to: "features/fixtures/app/build/ios/ipa/app-3.19.0.ipa"
 
-  - label: ':bitbar: iOS 14 end-to-end tests 3.10.0'
+  - label: ':bitbar: iOS 14 end-to-end tests 3.19.0'
     depends_on: "ios-fixture-3-10-0"
     timeout_in_minutes: 20
     env:
-      FLUTTER_BIN: "/opt/flutter/3.10.0/bin/flutter"
+      FLUTTER_BIN: "/opt/flutter/3.19.0/bin/flutter"
     agents:
       queue: opensource
     plugins:
       artifacts#v1.5.0:
-        download: "features/fixtures/app/build/ios/ipa/app-3.10.0.ipa"
+        download: "features/fixtures/app/build/ios/ipa/app-3.19.0.ipa"
         upload: "maze_output/failed/**/*"
       docker-compose#v4.7.0:
         pull: maze-runner
         run: maze-runner
         service-ports: true
         command:
-          - "--app=/app/features/fixtures/app/build/ios/ipa/app-3.10.0.ipa"
+          - "--app=/app/features/fixtures/app/build/ios/ipa/app-3.19.0.ipa"
           - "--farm=bb"
           - "--device=IOS_14|IOS_15|IOS_16"
           - "--no-tunnel"
@@ -79,11 +79,11 @@ steps:
   #
   # Android
   #
-  - label: Build Android Test Fixture 3.10.0
+  - label: Build Android Test Fixture 3.19.0
     key: "android-fixture-3-10-0"
     timeout_in_minutes: 20
     env:
-      FLUTTER_BIN: "/opt/flutter/3.10.0/bin/flutter"
+      FLUTTER_BIN: "/opt/flutter/3.19.0/bin/flutter"
     commands:
       - bundle install
       - features/scripts/build_android_app.sh
@@ -91,25 +91,25 @@ steps:
       artifacts#v1.5.0:
         upload:
           from: "features/fixtures/app/build/app/outputs/flutter-apk/app-release.apk"
-          to: "features/fixtures/app/build/app/outputs/flutter-apk/app-release-3.10.0.apk"
+          to: "features/fixtures/app/build/app/outputs/flutter-apk/app-release-3.19.0.apk"
 
-  - label: ':bitbar: Android 12 end-to-end tests 3.10.0'
+  - label: ':bitbar: Android 12 end-to-end tests 3.19.0'
     depends_on: "android-fixture-3-10-0"
     timeout_in_minutes: 20
     env:
-      FLUTTER_BIN: "/opt/flutter/3.10.0/bin/flutter"
+      FLUTTER_BIN: "/opt/flutter/3.19.0/bin/flutter"
     agents:
       queue: opensource
     plugins:
       artifacts#v1.5.0:
-        download: "features/fixtures/app/build/app/outputs/flutter-apk/app-release-3.10.0.apk"
+        download: "features/fixtures/app/build/app/outputs/flutter-apk/app-release-3.19.0.apk"
         upload: "maze_output/failed/**/*"
       docker-compose#v4.7.0:
         pull: maze-runner
         run: maze-runner
         service-ports: true
         command:
-          - "--app=/app/features/fixtures/app/build/app/outputs/flutter-apk/app-release-3.10.0.apk"
+          - "--app=/app/features/fixtures/app/build/app/outputs/flutter-apk/app-release-3.19.0.apk"
           - "--farm=bb"
           - "--device=ANDROID_10|ANDROID_11|ANDROID_12|ANDROID_13"
           - "--no-tunnel"
