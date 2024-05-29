@@ -1,7 +1,7 @@
 # Bugsnag error monitoring & reporting for Flutter apps
 
 [![Documentation](https://img.shields.io/badge/documentation-latest-blue.svg)](https://docs.bugsnag.com/platforms/flutter/)
-[![Build status](https://badge.buildkite.com/e5d6c82f7202bbfe7114be8b8cb245b447a29470cd9320658b.svg)](https://buildkite.com/bugsnag/bugsnag-flutter)
+[![Build status](https://badge.buildkite.com/e5d6c82f7202bbfe7114be8b8cb245b447a29470cd9320658b.svg?branch=main)](https://buildkite.com/bugsnag/bugsnag-flutter)
 
 The [Bugsnag](https://www.bugsnag.com) error reporting library automatically detects Dart errors and
 native crashes in Flutter apps running on iOS and Android, collecting diagnostic information and
