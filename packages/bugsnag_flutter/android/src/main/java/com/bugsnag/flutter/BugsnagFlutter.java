@@ -91,7 +91,8 @@ class BugsnagFlutter {
         }
 
         if (isAnyStarted) {
-            Log.i("BugsnagFlutter", "bugsnag.start() was called from a previous Flutter context. Ignoring.");
+            Log.w("BugsnagFlutter", "bugsnag.start() was called from a previous Flutter context. Reusing existing client. Config not applied.");
+            client = new InternalHooks(InternalHooks.getClient());
             return null;
         }
 
