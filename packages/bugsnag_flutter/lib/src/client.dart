@@ -299,12 +299,15 @@ abstract class BugsnagClient {
 
 mixin DelegateClient implements BugsnagClient {
   BugsnagClient? _client;
+  bool _started = false;
 
   BugsnagClient get client {
     final localClient = _client;
     if (localClient == null) {
       throw Exception(
           'You must start or attach bugsnag before calling any other methods');
+    } else {
+      _started = true;
     }
 
     return localClient;
@@ -313,6 +316,8 @@ mixin DelegateClient implements BugsnagClient {
   set client(BugsnagClient client) {
     _client = client;
   }
+
+  bool isStarted() => _started;
 
   @override
   void Function(dynamic error, StackTrace? stack) get errorHandler =>
@@ -833,7 +838,6 @@ class Bugsnag extends BugsnagClient with DelegateClient {
 
     return const <String>{};
   }
-
 }
 
 /// In order to determine where a crash happens Bugsnag needs to know which
