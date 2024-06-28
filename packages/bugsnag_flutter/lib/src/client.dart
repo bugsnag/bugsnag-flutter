@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:bugsnag_bridge/bugsnag_bridge.dart';
 import 'package:bugsnag_flutter/src/error_factory.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/scheduler.dart';
@@ -421,6 +422,8 @@ class ChannelClient extends BugsnagClient {
 
   final CallbackCollection<BugsnagEvent> _onErrorCallbacks = {};
 
+  final contextProvider = BugsnagContextProviderImpl();
+
   @override
   void Function(dynamic error, StackTrace? stack) get errorHandler =>
       _notifyUnhandled;
@@ -616,13 +619,21 @@ class ChannelClient extends BugsnagClient {
           PlatformDispatcher.instance.initialLifecycleState,
       if (lifecycleState != null) 'lifecycleState': lifecycleState,
     };
+    final spanContext = contextProvider.getCurrentSpanContext();
+    final correlation = spanContext != null
+        ? {
+            'spanId': spanContext.spanId,
+            'traceId': spanContext.traceId,
+          }
+        : null;
     final eventJson = await _channel.invokeMethod(
       'createEvent',
       {
         'error': error,
         'flutterMetadata': metadata,
         'unhandled': unhandled,
-        'deliver': deliver
+        'deliver': deliver,
+        if (correlation != null) 'correlation': correlation,
       },
     );
 

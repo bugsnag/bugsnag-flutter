@@ -475,6 +475,15 @@ static NSArray *jsonToRegularExpressions(NSArray *source) {
             [event addMetadata:DartCodeBuildId withKey:@"buildID" toSection:@"flutter"];
         }
     }
+
+    NSDictionary *correlation = json[@"correlation"];
+    if (correlation != nil) {
+        NSString *traceId = correlation[@"traceId"];
+        NSString *spanId = correlation[@"spanId"];
+        if (traceId != nil && spanId != nil) {
+            event.correlation = [[BugsnagCorrelation alloc] initWithTraceId:traceId spanId:spanId];            
+        }
+    }
     
     if ([json[@"deliver"] boolValue]) {
         [client notifyInternal:event block:nil];
