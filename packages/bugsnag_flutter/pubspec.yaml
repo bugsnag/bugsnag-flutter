@@ -13,6 +13,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  bugsnag_bridge:
+    git: #TODO: Remove once bugsnag_bridge is released to pub.dev
+      url: https://github.com/bugsnag/bugsnag-flutter-common
+      ref: robert/bugsnag-bridge-span-context
+      path: packages/bugsnag-flutter-bridge
 
 dev_dependencies:
   flutter_test:
