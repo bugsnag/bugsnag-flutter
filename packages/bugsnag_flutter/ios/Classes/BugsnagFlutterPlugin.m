@@ -51,11 +51,22 @@ static NSString *NSStringOrNil(id value) {
     return [value isKindOfClass:[NSString class]] ? value : nil;
 }
 
-static NSArray *stringsToRegularExpressions(NSArray *source) {
+static NSArray *jsonToRegularExpressions(NSArray *source) {
     NSMutableArray *result = [NSMutableArray new];
-    for (NSString *pattern in source) {
+    for (NSDictionary *element in source) {
+        NSString *pattern = element[@"pattern"];
+        NSInteger options = 0;
+        if ([element[@"isDotAll"] boolValue]) {
+            options |= NSRegularExpressionDotMatchesLineSeparators;
+        }
+        if (![element[@"isCaseSensitive"] boolValue]) {
+            options |= NSRegularExpressionCaseInsensitive;
+        }
+        if ([element[@"isMultiLine"] boolValue]) {
+            options |= NSRegularExpressionAnchorsMatchLines;
+        }
         NSError *error = nil;
-        NSRegularExpression *expression =  [NSRegularExpression regularExpressionWithPattern:pattern options:0 error:&error];
+        NSRegularExpression *expression =  [NSRegularExpression regularExpressionWithPattern:pattern options:options error:&error];
         if (expression != nil) {
             [result addObject: expression];
         } else if (error) {
@@ -292,12 +303,12 @@ static NSArray *stringsToRegularExpressions(NSArray *source) {
 
     NSArray *redactedKeys = arguments[@"redactedKeys"];
     if ([redactedKeys isKindOfClass:[NSArray class]]) {
-        configuration.redactedKeys = [NSSet setWithArray: stringsToRegularExpressions(redactedKeys)];
+        configuration.redactedKeys = [NSSet setWithArray: jsonToRegularExpressions(redactedKeys)];
     }
 
     NSArray *discardClasses = arguments[@"discardClasses"];
     if ([discardClasses isKindOfClass:[NSArray class]]) {
-        configuration.discardClasses = [NSSet setWithArray: stringsToRegularExpressions(discardClasses)];
+        configuration.discardClasses = [NSSet setWithArray: jsonToRegularExpressions(discardClasses)];
     }
 
     NSArray *enabledReleaseStages = arguments[@"enabledReleaseStages"];

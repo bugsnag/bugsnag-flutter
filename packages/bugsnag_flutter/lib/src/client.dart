@@ -13,6 +13,7 @@ import 'config.dart';
 import 'enum_utils.dart';
 import 'last_run_info.dart';
 import 'model.dart';
+import 'regexp_json.dart';
 
 final _notifier = {
   'name': 'Flutter Bugsnag Notifier',
@@ -787,9 +788,10 @@ class Bugsnag extends BugsnagClient with DelegateClient {
       'launchDurationMillis': launchDurationMillis,
       'sendLaunchCrashesSynchronously': sendLaunchCrashesSynchronously,
       'appHangThresholdMillis': appHangThresholdMillis,
-      'redactedKeys': List<String>.from(
-          redactedKeys?.map((e) => e.pattern) ?? {'password'}),
-      'discardClasses': List<String>.from(discardClasses.map((e) => e.pattern)),
+      'redactedKeys': List<dynamic>.from(redactedKeys?.map((e) => e.toJson()) ??
+          {RegExp('password').toJson()}),
+      'discardClasses':
+          List<dynamic>.from(discardClasses.map((e) => e.toJson())),
       if (enabledReleaseStages != null)
         'enabledReleaseStages': enabledReleaseStages.toList(),
       'enabledBreadcrumbTypes':

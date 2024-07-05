@@ -345,11 +345,25 @@ class BugsnagFlutter {
         return null;
     }
 
-    HashSet<Pattern> regexSetFromArray(JSONArray array) {
-        HashSet<String> originalSet = unwrap(array, new HashSet<String>());
-        HashSet<Pattern> result = new HashSet<>();
-        for(String element: originalSet) {
-            result.add(Pattern.compile(element));
+    Set<Pattern> regexSetFromArray(JSONArray array) throws JSONException {
+        HashSet<Pattern> result = new HashSet<>(array.length());
+        for (int i = 0; i < array.length(); i++) {
+            JSONObject element = array.getJSONObject(i);
+            String pattern = getString(element, "pattern");
+            int flags = 0;
+            if (element.optBoolean("isDotAll")) {
+                flags |= Pattern.DOTALL;
+            }
+            if (!element.optBoolean("isCaseSensitive")) {
+                flags |= Pattern.CASE_INSENSITIVE;
+            }
+            if (element.optBoolean("isMultiLine")) {
+                flags |= Pattern.MULTILINE;
+            }
+
+            if (pattern != null) {
+                result.add(Pattern.compile(pattern, flags));
+            }
         }
         return result;
     }
