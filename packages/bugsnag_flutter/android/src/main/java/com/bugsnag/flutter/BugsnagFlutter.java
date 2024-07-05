@@ -32,6 +32,7 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 class BugsnagFlutter {
 
@@ -120,11 +121,11 @@ class BugsnagFlutter {
         configuration.setPersistUser(arguments.optBoolean("persistUser", configuration.getPersistUser()));
 
         if (arguments.has("redactedKeys")) {
-            configuration.setRedactedKeys(unwrap(arguments.optJSONArray("redactedKeys"), new HashSet<>()));
+            configuration.setRedactedKeys(regexSetFromArray(arguments.optJSONArray("redactedKeys")));
         }
 
         if (arguments.has("discardClasses")) {
-            configuration.setDiscardClasses(unwrap(arguments.optJSONArray("discardClasses"), new HashSet<>()));
+            configuration.setDiscardClasses(regexSetFromArray(arguments.optJSONArray("discardClasses")));
         }
 
         if (arguments.has("enabledReleaseStages")) {
@@ -342,6 +343,15 @@ class BugsnagFlutter {
     Void markLaunchCompleted(@Nullable Void args) {
         Bugsnag.markLaunchCompleted();
         return null;
+    }
+
+    HashSet<Pattern> regexSetFromArray(JSONArray array) {
+        HashSet<String> originalSet = unwrap(array, new HashSet<String>());
+        HashSet<Pattern> result = new HashSet<>();
+        for(String element: originalSet) {
+            result.add(Pattern.compile(element));
+        }
+        return result;
     }
 
     JSONObject getLastRunInfo(@Nullable Void args) throws JSONException {

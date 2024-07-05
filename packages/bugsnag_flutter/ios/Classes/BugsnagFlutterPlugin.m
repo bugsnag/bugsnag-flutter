@@ -51,6 +51,20 @@ static NSString *NSStringOrNil(id value) {
     return [value isKindOfClass:[NSString class]] ? value : nil;
 }
 
+static NSArray *stringsToRegularExpressions(NSArray *source) {
+    NSMutableArray *result = [NSMutableArray new];
+    for (NSString *pattern in source) {
+        NSError *error = nil;
+        NSRegularExpression *expression =  [NSRegularExpression regularExpressionWithPattern:pattern options:0 error:&error];
+        if (expression != nil) {
+            [result addObject: expression];
+        } else if (error) {
+            NSLog(@"Error encountered while parsing regular expression %@", error);
+        }
+    }
+    return result;
+}
+
 @interface BugsnagEvent (BugsnagFlutterPlugin)
 
 @property (nullable, nonatomic) NSArray *projectPackages;
@@ -278,12 +292,12 @@ static NSString *NSStringOrNil(id value) {
 
     NSArray *redactedKeys = arguments[@"redactedKeys"];
     if ([redactedKeys isKindOfClass:[NSArray class]]) {
-        configuration.redactedKeys = [NSSet setWithArray:redactedKeys];
+        configuration.redactedKeys = [NSSet setWithArray: stringsToRegularExpressions(redactedKeys)];
     }
 
     NSArray *discardClasses = arguments[@"discardClasses"];
     if ([discardClasses isKindOfClass:[NSArray class]]) {
-        configuration.discardClasses = [NSSet setWithArray:discardClasses];
+        configuration.discardClasses = [NSSet setWithArray: stringsToRegularExpressions(discardClasses)];
     }
 
     NSArray *enabledReleaseStages = arguments[@"enabledReleaseStages"];
