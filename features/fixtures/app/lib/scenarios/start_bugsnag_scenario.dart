@@ -31,7 +31,8 @@ class StartBugsnagScenario extends Scenario {
             'password': 'not redacted'
           }
         },
-        sendThreads: BugsnagThreadSendPolicy.never);
+        sendThreads: BugsnagThreadSendPolicy.never,
+      );
     await bugsnag.notify(
       Exception('Exception with attached info'),
       StackTrace.current,
