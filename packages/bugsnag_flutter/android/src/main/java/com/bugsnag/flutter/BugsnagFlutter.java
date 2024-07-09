@@ -32,6 +32,7 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 class BugsnagFlutter {
 
@@ -120,11 +121,11 @@ class BugsnagFlutter {
         configuration.setPersistUser(arguments.optBoolean("persistUser", configuration.getPersistUser()));
 
         if (arguments.has("redactedKeys")) {
-            configuration.setRedactedKeys(unwrap(arguments.optJSONArray("redactedKeys"), new HashSet<>()));
+            configuration.setRedactedKeys(regexSetFromArray(arguments.optJSONArray("redactedKeys")));
         }
 
         if (arguments.has("discardClasses")) {
-            configuration.setDiscardClasses(unwrap(arguments.optJSONArray("discardClasses"), new HashSet<>()));
+            configuration.setDiscardClasses(regexSetFromArray(arguments.optJSONArray("discardClasses")));
         }
 
         if (arguments.has("enabledReleaseStages")) {
@@ -342,6 +343,29 @@ class BugsnagFlutter {
     Void markLaunchCompleted(@Nullable Void args) {
         Bugsnag.markLaunchCompleted();
         return null;
+    }
+
+    Set<Pattern> regexSetFromArray(JSONArray array) throws JSONException {
+        HashSet<Pattern> result = new HashSet<>(array.length());
+        for (int i = 0; i < array.length(); i++) {
+            JSONObject element = array.getJSONObject(i);
+            String pattern = getString(element, "pattern");
+            int flags = 0;
+            if (element.optBoolean("isDotAll")) {
+                flags |= Pattern.DOTALL;
+            }
+            if (!element.optBoolean("isCaseSensitive")) {
+                flags |= Pattern.CASE_INSENSITIVE;
+            }
+            if (element.optBoolean("isMultiLine")) {
+                flags |= Pattern.MULTILINE;
+            }
+
+            if (pattern != null) {
+                result.add(Pattern.compile(pattern, flags));
+            }
+        }
+        return result;
     }
 
     JSONObject getLastRunInfo(@Nullable Void args) throws JSONException {
