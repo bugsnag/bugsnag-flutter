@@ -481,7 +481,7 @@ static NSArray *jsonToRegularExpressions(NSArray *source) {
         NSString *traceId = correlation[@"traceId"];
         NSString *spanId = correlation[@"spanId"];
         if (traceId != nil && spanId != nil) {
-            event.correlation = [[BugsnagCorrelation alloc] initWithTraceId:traceId spanId:spanId];            
+            [event setCorrelationTraceId:traceId spanId:spanId];
         }
     }
     
