@@ -619,11 +619,11 @@ class ChannelClient extends BugsnagClient {
           PlatformDispatcher.instance.initialLifecycleState,
       if (lifecycleState != null) 'lifecycleState': lifecycleState,
     };
-    final spanContext = contextProvider.getCurrentSpanContext();
-    final correlation = spanContext != null
+    final traceContext = contextProvider.getCurrentTraceContext();
+    final correlation = traceContext != null
         ? {
-            'spanId': spanContext.spanId,
-            'traceId': spanContext.traceId,
+            'spanId': traceContext.spanId,
+            'traceId': traceContext.traceId,
           }
         : null;
     final eventJson = await _channel.invokeMethod(

@@ -5,6 +5,7 @@ homepage: https://www.bugsnag.com/
 documentation: https://docs.bugsnag.com/platforms/flutter/
 repository: https://github.com/bugsnag/bugsnag-flutter
 issue_tracker: https://github.com/bugsnag/bugsnag-flutter/issues
+publish_to: none
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -16,7 +17,6 @@ dependencies:
   bugsnag_bridge:
     git: #TODO: Remove once bugsnag_bridge is released to pub.dev
       url: https://github.com/bugsnag/bugsnag-flutter-common
-      ref: robert/bugsnag-bridge-span-context
       path: packages/bugsnag-flutter-bridge
 
 dev_dependencies:
