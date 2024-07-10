@@ -39,7 +39,7 @@ steps:
     key: "ios-fixture-3-10-0"
     timeout_in_minutes: 20
     agents:
-      queue: ms-arm-12-4
+      queue: ms-arm-12-2
     env:
       FLUTTER_BIN: "/opt/flutter/3.10.0/bin/flutter"
     commands:
