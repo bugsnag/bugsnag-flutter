@@ -18,6 +18,7 @@ import com.bugsnag.android.EndpointConfiguration;
 import com.bugsnag.android.ErrorTypes;
 import com.bugsnag.android.Event;
 import com.bugsnag.android.InternalHooks;
+import com.bugsnag.android.Logger;
 import com.bugsnag.android.LastRunInfo;
 import com.bugsnag.android.Notifier;
 import com.bugsnag.android.ThreadSendPolicy;
@@ -219,6 +220,48 @@ class BugsnagFlutter {
         if (arguments.has("versionCode")) {
             configuration.setVersionCode(arguments.getInt("versionCode"));
         }
+
+        configuration.setLogger(new Logger() {
+            @Override
+            public void e(@NonNull String msg) {
+                Log.e("Bugsnag", msg);
+            }
+
+            @Override
+            public void e(@NonNull String msg, @NonNull Throwable throwable) {
+                Log.e("Bugsnag", msg, throwable);
+            }
+
+            @Override
+            public void w(@NonNull String msg) {
+                Log.w("Bugsnag", msg);
+            }
+
+            @Override
+            public void w(@NonNull String msg, @NonNull Throwable throwable) {
+                Log.w("Bugsnag", msg, throwable);
+            }
+
+            @Override
+            public void i(@NonNull String msg) {
+                Log.i("Bugsnag", msg);
+            }
+
+            @Override
+            public void i(@NonNull String msg, @NonNull Throwable throwable) {
+                Log.i("Bugsnag", msg, throwable);
+            }
+
+            @Override
+            public void d(@NonNull String msg) {
+                Log.d("Bugsnag", msg);
+            }
+
+            @Override
+            public void d(@NonNull String msg, @NonNull Throwable throwable) {
+                Log.d("Bugsnag", msg, throwable);
+            }
+        });
 
         client = new InternalHooks(Bugsnag.start(context, configuration));
         isAnyStarted = true;
