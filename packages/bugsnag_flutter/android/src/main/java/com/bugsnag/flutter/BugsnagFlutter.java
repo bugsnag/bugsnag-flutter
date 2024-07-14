@@ -411,18 +411,21 @@ class BugsnagFlutter {
 
         JSONObject correlation = args.optJSONObject("correlation");
         if (correlation != null) {
-
-            String traceId = getString(correlation, "traceId");
-            String spanId = getString(correlation, "spanId");
-            if (traceId != null &&
-                    traceId.length() == HEX_LONG_LENGTH * 2 &&
-                    spanId != null &&
-                    spanId.length() == HEX_LONG_LENGTH
-            ) {
-                long traceIdMostSignificantBits = hexToLong(traceId.substring(0, HEX_LONG_LENGTH));
-                long traceIdLeastSignificantBits = hexToLong(traceId.substring(HEX_LONG_LENGTH));
-                long spanIdAsLong = hexToLong(spanId);
-                event.setTraceCorrelation(new UUID(traceIdMostSignificantBits, traceIdLeastSignificantBits), spanIdAsLong);
+            try {
+                String traceId = getString(correlation, "traceId");
+                String spanId = getString(correlation, "spanId");
+                if (traceId != null &&
+                        traceId.length() == HEX_LONG_LENGTH * 2 &&
+                        spanId != null &&
+                        spanId.length() == HEX_LONG_LENGTH
+                ) {
+                    long traceIdMostSignificantBits = hexToLong(traceId.substring(0, HEX_LONG_LENGTH));
+                    long traceIdLeastSignificantBits = hexToLong(traceId.substring(HEX_LONG_LENGTH));
+                    long spanIdAsLong = hexToLong(spanId);
+                    event.setTraceCorrelation(new UUID(traceIdMostSignificantBits, traceIdLeastSignificantBits), spanIdAsLong);
+                }
+            } catch(Exception e) {
+                Log.e("BugsnagFlutter", "correlation parsing", e);
             }
         }
 
@@ -463,7 +466,7 @@ class BugsnagFlutter {
         return getString(args, key) != null;
     }
 
-    static long hexToLong(String hex) {
+    private static long hexToLong(String hex) {
         return Long.parseLong(hex.substring(0, 2), 16) << 56 |
                 Long.parseLong(hex.substring(2), 16);
     }
