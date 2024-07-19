@@ -93,7 +93,7 @@ steps:
           from: "features/fixtures/app/build/app/outputs/flutter-apk/app-release.apk"
           to: "features/fixtures/app/build/app/outputs/flutter-apk/app-release-3.10.0.apk"
 
-  - label: ':bitbar: Android 12 end-to-end tests 3.10.0'
+  - label: ':browserstack: Android 12 end-to-end tests 3.10.0'
     depends_on: "android-fixture-3-10-0"
     timeout_in_minutes: 20
     env:
@@ -110,11 +110,10 @@ steps:
         service-ports: true
         command:
           - "--app=/app/features/fixtures/app/build/app/outputs/flutter-apk/app-release-3.10.0.apk"
-          - "--farm=bb"
+          - "--farm=bs"
           - "--device=ANDROID_10|ANDROID_11|ANDROID_12|ANDROID_13"
-          - "--no-tunnel"
-          - "--aws-public-ip"
+          - "--appium-version=1.22.0"
           - "--fail-fast"
-    concurrency: 25
-    concurrency_group: 'bitbar'
+    concurrency: 5
+    concurrency_group: 'browserstack-app'
     concurrency_method: eager
