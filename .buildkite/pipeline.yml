@@ -70,7 +70,7 @@ steps:
           - "--farm=bb"
           - "--device=IOS_14|IOS_15|IOS_16"
           - "--no-tunnel"
-          - "appium-version=1.22"
+          - "--appium-version=1.22"
           - "--aws-public-ip"
           - "--fail-fast"
     concurrency: 25
@@ -114,7 +114,7 @@ steps:
           - "--farm=bb"
           - "--device=ANDROID_10|ANDROID_11|ANDROID_12|ANDROID_13"
           - "--no-tunnel"
-          - "appium-version=1.22"
+          - "--appium-version=1.22"
           - "--aws-public-ip"
           - "--fail-fast"
     concurrency: 25
