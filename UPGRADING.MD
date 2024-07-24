@@ -1,6 +1,29 @@
 Upgrading
 =========
 
+## 3.x to 4.x
+
+### Key points
+
+- Added more flexibility when defining `redactedKeys` and `discardClasses` in `start` by changing their type to `Set<RegExp>`
+
+### Starting Bugsnag
+
+Start accepts `Set<RegExp>` for `redactedKeys` and `discardClasses`. To specify them use:
+
+```dart
+bugsnag.start(
+  // other options
+  redactedKeys: {
+    RegExp('password'),
+    RegExp('^[A-Fa-f0-9]{16}\$', multiLine: true)
+  },
+  discardClasses: {
+    RegExp('sec', caseSensitive: false),
+  },
+);
+```
+
 ## 2.x to 3.x
 
 A minimum of Flutter version of 3.10.0 is now required.
