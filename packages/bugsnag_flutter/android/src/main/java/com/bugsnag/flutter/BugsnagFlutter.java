@@ -425,7 +425,7 @@ class BugsnagFlutter {
                     event.setTraceCorrelation(new UUID(traceIdMostSignificantBits, traceIdLeastSignificantBits), spanIdAsLong);
                 }
             } catch(Exception e) {
-                Log.e("BugsnagFlutter", "correlation parsing", e);
+                // ignore the error, the error correlation will be missing
             }
         }
 

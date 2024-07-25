@@ -1,5 +1,10 @@
 # Changelog
 
+## TBD
+
+- Getting the correlation trace ID and span ID through `flutter_bridge` and adding it to events.
+  [251](https://github.com/bugsnag/bugsnag-flutter/pull/251)
+
 ## 3.1.1 (2024-04-24)
 
 - Fixed: Navigator.pushAndRemoveUntil throws exception [#242](https://github.com/bugsnag/bugsnag-flutter/pull/242)
