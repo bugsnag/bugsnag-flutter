@@ -31,7 +31,7 @@ staging/bugsnag_flutter:
 	mkdir -p staging/bugsnag_flutter
 	cd packages/bugsnag_flutter && cp -a . ../../staging/bugsnag_flutter
 	rm -f staging/bugsnag_flutter/pubspec.lock
-	cp -r examples staging/bugsnag_flutter/examples
+	cp -r examples/flutter staging/bugsnag_flutter/example
 	cp README.md staging/bugsnag_flutter/.
 	cp LICENSE staging/bugsnag_flutter/.
 	cp CHANGELOG.md staging/bugsnag_flutter/.
