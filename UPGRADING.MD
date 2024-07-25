@@ -5,15 +5,15 @@ Upgrading
 
 ### Key points
 
-- Added more flexibility when defining `redactedKeys` and `discardClasses` in `start` by changing their type to `Set<RegExp>`
+- The configuration options `discardClasses` and `redactedKeys` are now `RegExp`s instead of strings. This allows developers to have more control over how they perform. 
 
-### Starting Bugsnag
+### Starting the client
 
-Start accepts `Set<RegExp>` for `redactedKeys` and `discardClasses`. To specify them use:
+`bugsnag.start` accepts `Set<RegExp>` for `redactedKeys` and `discardClasses`. To specify them use:
 
 ```dart
 bugsnag.start(
-  // other options
+  // ...
   redactedKeys: {
     RegExp('password'),
     RegExp('^[A-Fa-f0-9]{16}\$', multiLine: true)
@@ -21,8 +21,8 @@ bugsnag.start(
   discardClasses: {
     RegExp('sec', caseSensitive: false),
   },
+  // ...
 );
-```
 
 ## 2.x to 3.x
 
