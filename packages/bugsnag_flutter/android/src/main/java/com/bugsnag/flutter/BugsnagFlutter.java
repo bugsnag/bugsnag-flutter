@@ -33,6 +33,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
+import java.util.UUID;
 
 class BugsnagFlutter {
 
@@ -42,6 +43,8 @@ class BugsnagFlutter {
 
     private static boolean isAnyStarted = false;
     private boolean isStarted = false;
+
+    static final int HEX_LONG_LENGTH = 16;
 
     /*
      ***********************************************************************************************
@@ -406,6 +409,26 @@ class BugsnagFlutter {
             event.addMetadata("flutter", (Map<String, Object>) flutterMetadata);
         }
 
+        JSONObject correlation = args.optJSONObject("correlation");
+        if (correlation != null) {
+            try {
+                String traceId = getString(correlation, "traceId");
+                String spanId = getString(correlation, "spanId");
+                if (traceId != null &&
+                        traceId.length() == HEX_LONG_LENGTH * 2 &&
+                        spanId != null &&
+                        spanId.length() == HEX_LONG_LENGTH
+                ) {
+                    long traceIdMostSignificantBits = hexToLong(traceId.substring(0, HEX_LONG_LENGTH));
+                    long traceIdLeastSignificantBits = hexToLong(traceId.substring(HEX_LONG_LENGTH));
+                    long spanIdAsLong = hexToLong(spanId);
+                    event.setTraceCorrelation(new UUID(traceIdMostSignificantBits, traceIdLeastSignificantBits), spanIdAsLong);
+                }
+            } catch(Exception e) {
+                // ignore the error, the error correlation will be missing
+            }
+        }
+
         if (deliver) {
             // Flutter layer has asked us to deliver the Event immediately
             client.deliverEvent(event);
@@ -441,5 +464,10 @@ class BugsnagFlutter {
 
     boolean hasString(JSONObject args, String key) {
         return getString(args, key) != null;
+    }
+
+    private static long hexToLong(String hex) {
+        return Long.parseLong(hex.substring(0, 2), 16) << 56 |
+                Long.parseLong(hex.substring(2), 16);
     }
 }

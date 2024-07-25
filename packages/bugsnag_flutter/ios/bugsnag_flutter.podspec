@@ -16,5 +16,5 @@ Bugsnag crash monitoring and reporting tool for Flutter apps
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }
 
   s.dependency 'Flutter'
-  s.dependency 'Bugsnag', '6.28.0'
+  s.dependency 'Bugsnag', '6.30.0'
 end
