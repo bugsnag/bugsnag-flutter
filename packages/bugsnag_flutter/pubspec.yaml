@@ -1,6 +1,6 @@
 name: bugsnag_flutter
 description: Bugsnag crash monitoring and reporting tool for Flutter apps
-version: 3.1.1
+version: 4.0.0
 homepage: https://www.bugsnag.com/
 documentation: https://docs.bugsnag.com/platforms/flutter/
 repository: https://github.com/bugsnag/bugsnag-flutter
