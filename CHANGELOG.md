@@ -1,5 +1,17 @@
 # Changelog
 
+## 4.0.0 (2024-07-29)
+
+### Breaking Changes
+
+- The configuration options `discardClasses` and `redactedKeys` are now `RegExp`s instead of strings. This allows developers to have more control over how they perform.
+  [249](https://github.com/bugsnag/bugsnag-flutter/pull/249)
+  
+- Getting the correlation trace ID and span ID through `flutter_bridge` and adding it to events.
+  [251](https://github.com/bugsnag/bugsnag-flutter/pull/251)
+
+Please see our [Upgrading guide](./UPGRADING.MD) for more information on upgrading to v4.x.
+
 ## 3.1.1 (2024-04-24)
 
 - Fixed: Navigator.pushAndRemoveUntil throws exception [#242](https://github.com/bugsnag/bugsnag-flutter/pull/242)

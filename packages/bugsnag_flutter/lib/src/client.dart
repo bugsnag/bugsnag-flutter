@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:bugsnag_bridge/bugsnag_bridge.dart';
 import 'package:bugsnag_flutter/src/error_factory.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/scheduler.dart';
@@ -13,15 +14,15 @@ import 'config.dart';
 import 'enum_utils.dart';
 import 'last_run_info.dart';
 import 'model.dart';
+import 'regexp_json.dart';
 
 final _notifier = {
   'name': 'Flutter Bugsnag Notifier',
   'url': 'https://github.com/bugsnag/bugsnag-flutter',
-  'version': '3.1.1'
+  'version': '4.0.0'
 };
 
 abstract class BugsnagClient {
-
   final Map<String, Stopwatch> _openNetworkRequests = {};
 
   /// An utility error handling function that will send reported errors to
@@ -256,45 +257,47 @@ abstract class BugsnagClient {
   }
 
   void _onRequestStarted(String requestId) {
-      final stopwatch = Stopwatch()..start();
-      _openNetworkRequests[requestId] = stopwatch;
+    final stopwatch = Stopwatch()..start();
+    _openNetworkRequests[requestId] = stopwatch;
   }
 
   void _onRequestComplete(String requestId, dynamic data) {
-      final stopwatch = _openNetworkRequests.remove(requestId);
-      if (stopwatch != null && data is Map<String, dynamic>) {
-        final duration = stopwatch.elapsedMilliseconds;
-        final String? clientName = data["client"];
-        if (clientName == null) return;
+    final stopwatch = _openNetworkRequests.remove(requestId);
+    if (stopwatch != null && data is Map<String, dynamic>) {
+      final duration = stopwatch.elapsedMilliseconds;
+      final String? clientName = data["client"];
+      if (clientName == null) return;
 
-        String params = "";
-        final url = data["url"];
-        final splitUrl = url.split("?");
-        if (splitUrl != null && splitUrl.length > 1) {
-          params = splitUrl.last;
-        }
-        final int? statusCode = data["status_code"];
-        if (statusCode == null) return;
+      String params = "";
+      final url = data["url"];
+      final splitUrl = url.split("?");
+      if (splitUrl != null && splitUrl.length > 1) {
+        params = splitUrl.last;
+      }
+      final int? statusCode = data["status_code"];
+      if (statusCode == null) return;
 
-        final String status = statusCode < 400 ? "succeeded" : "failed";
-        // Assuming leaveBreadcrumb is a predefined method to log the event
-        leaveBreadcrumb("$clientName request $status", metadata: {
+      final String status = statusCode < 400 ? "succeeded" : "failed";
+      // Assuming leaveBreadcrumb is a predefined method to log the event
+      leaveBreadcrumb(
+        "$clientName request $status",
+        metadata: {
           "duration": duration,
           "method": data["http_method"],
           "url": splitUrl.first,
-          if(params.isNotEmpty)
-              "urlParams": params,
-          if(data["request_content_length"] != null && data["request_content_length"] > 0)
-              "requestContentLength": data["request_content_length"],
-          if(data["response_content_length"] != null && data["response_content_length"] > 0)
-              "responseContentLength": data["response_content_length"],
+          if (params.isNotEmpty) "urlParams": params,
+          if (data["request_content_length"] != null &&
+              data["request_content_length"] > 0)
+            "requestContentLength": data["request_content_length"],
+          if (data["response_content_length"] != null &&
+              data["response_content_length"] > 0)
+            "responseContentLength": data["response_content_length"],
           "status": statusCode,
-          },
-          type: BugsnagBreadcrumbType.request,
-        );
-      }
+        },
+        type: BugsnagBreadcrumbType.request,
+      );
+    }
   }
-
 }
 
 mixin DelegateClient implements BugsnagClient {
@@ -418,6 +421,8 @@ class ChannelClient extends BugsnagClient {
       MethodChannel('com.bugsnag/client', JSONMethodCodec());
 
   final CallbackCollection<BugsnagEvent> _onErrorCallbacks = {};
+
+  final contextProvider = BugsnagContextProviderImpl();
 
   @override
   void Function(dynamic error, StackTrace? stack) get errorHandler =>
@@ -614,13 +619,21 @@ class ChannelClient extends BugsnagClient {
           PlatformDispatcher.instance.initialLifecycleState,
       if (lifecycleState != null) 'lifecycleState': lifecycleState,
     };
+    final traceContext = contextProvider.getCurrentTraceContext();
+    final correlation = traceContext != null
+        ? {
+            'spanId': traceContext.spanId,
+            'traceId': traceContext.traceId,
+          }
+        : null;
     final eventJson = await _channel.invokeMethod(
       'createEvent',
       {
         'error': error,
         'flutterMetadata': metadata,
         'unhandled': unhandled,
-        'deliver': deliver
+        'deliver': deliver,
+        if (correlation != null) 'correlation': correlation,
       },
     );
 
@@ -742,8 +755,8 @@ class Bugsnag extends BugsnagClient with DelegateClient {
     int launchDurationMillis = 5000,
     bool sendLaunchCrashesSynchronously = true,
     int appHangThresholdMillis = appHangThresholdFatalOnly,
-    Set<String> redactedKeys = const {'password'},
-    Set<String> discardClasses = const {},
+    Set<RegExp>? redactedKeys,
+    Set<RegExp> discardClasses = const {},
     Set<String>? enabledReleaseStages,
     Set<BugsnagEnabledBreadcrumbType>? enabledBreadcrumbTypes,
     BugsnagProjectPackages projectPackages =
@@ -786,8 +799,10 @@ class Bugsnag extends BugsnagClient with DelegateClient {
       'launchDurationMillis': launchDurationMillis,
       'sendLaunchCrashesSynchronously': sendLaunchCrashesSynchronously,
       'appHangThresholdMillis': appHangThresholdMillis,
-      'redactedKeys': List<String>.from(redactedKeys),
-      'discardClasses': List<String>.from(discardClasses),
+      'redactedKeys': List<dynamic>.from(redactedKeys?.map((e) => e.toJson()) ??
+          {RegExp('password').toJson()}),
+      'discardClasses':
+          List<dynamic>.from(discardClasses.map((e) => e.toJson())),
       if (enabledReleaseStages != null)
         'enabledReleaseStages': enabledReleaseStages.toList(),
       'enabledBreadcrumbTypes':
@@ -833,7 +848,6 @@ class Bugsnag extends BugsnagClient with DelegateClient {
 
     return const <String>{};
   }
-
 }
 
 /// In order to determine where a crash happens Bugsnag needs to know which

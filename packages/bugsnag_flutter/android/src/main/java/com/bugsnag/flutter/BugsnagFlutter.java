@@ -32,6 +32,8 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
+import java.util.UUID;
 
 class BugsnagFlutter {
 
@@ -41,6 +43,8 @@ class BugsnagFlutter {
 
     private static boolean isAnyStarted = false;
     private boolean isStarted = false;
+
+    static final int HEX_LONG_LENGTH = 16;
 
     /*
      ***********************************************************************************************
@@ -91,7 +95,8 @@ class BugsnagFlutter {
         }
 
         if (isAnyStarted) {
-            Log.i("BugsnagFlutter", "bugsnag.start() was called from a previous Flutter context. Ignoring.");
+            Log.w("BugsnagFlutter", "bugsnag.start() was called from a previous Flutter context. Reusing existing client. Config not applied.");
+            client = new InternalHooks(InternalHooks.getClient());
             return null;
         }
 
@@ -119,11 +124,11 @@ class BugsnagFlutter {
         configuration.setPersistUser(arguments.optBoolean("persistUser", configuration.getPersistUser()));
 
         if (arguments.has("redactedKeys")) {
-            configuration.setRedactedKeys(unwrap(arguments.optJSONArray("redactedKeys"), new HashSet<>()));
+            configuration.setRedactedKeys(regexSetFromArray(arguments.optJSONArray("redactedKeys")));
         }
 
         if (arguments.has("discardClasses")) {
-            configuration.setDiscardClasses(unwrap(arguments.optJSONArray("discardClasses"), new HashSet<>()));
+            configuration.setDiscardClasses(regexSetFromArray(arguments.optJSONArray("discardClasses")));
         }
 
         if (arguments.has("enabledReleaseStages")) {
@@ -343,6 +348,29 @@ class BugsnagFlutter {
         return null;
     }
 
+    Set<Pattern> regexSetFromArray(JSONArray array) throws JSONException {
+        HashSet<Pattern> result = new HashSet<>(array.length());
+        for (int i = 0; i < array.length(); i++) {
+            JSONObject element = array.getJSONObject(i);
+            String pattern = getString(element, "pattern");
+            int flags = 0;
+            if (element.optBoolean("isDotAll")) {
+                flags |= Pattern.DOTALL;
+            }
+            if (!element.optBoolean("isCaseSensitive")) {
+                flags |= Pattern.CASE_INSENSITIVE;
+            }
+            if (element.optBoolean("isMultiLine")) {
+                flags |= Pattern.MULTILINE;
+            }
+
+            if (pattern != null) {
+                result.add(Pattern.compile(pattern, flags));
+            }
+        }
+        return result;
+    }
+
     JSONObject getLastRunInfo(@Nullable Void args) throws JSONException {
         LastRunInfo lastRunInfo = Bugsnag.getLastRunInfo();
         return (lastRunInfo == null) ? null : new JSONObject()
@@ -353,7 +381,7 @@ class BugsnagFlutter {
 
     @SuppressWarnings("unchecked")
     JSONObject createEvent(@Nullable JSONObject args) throws JSONException {
-        if (args == null || !args.has("error")) {
+        if (args == null || !args.has("error") || client == null) {
             return null;
         }
 
@@ -381,6 +409,26 @@ class BugsnagFlutter {
             event.addMetadata("flutter", (Map<String, Object>) flutterMetadata);
         }
 
+        JSONObject correlation = args.optJSONObject("correlation");
+        if (correlation != null) {
+            try {
+                String traceId = getString(correlation, "traceId");
+                String spanId = getString(correlation, "spanId");
+                if (traceId != null &&
+                        traceId.length() == HEX_LONG_LENGTH * 2 &&
+                        spanId != null &&
+                        spanId.length() == HEX_LONG_LENGTH
+                ) {
+                    long traceIdMostSignificantBits = hexToLong(traceId.substring(0, HEX_LONG_LENGTH));
+                    long traceIdLeastSignificantBits = hexToLong(traceId.substring(HEX_LONG_LENGTH));
+                    long spanIdAsLong = hexToLong(spanId);
+                    event.setTraceCorrelation(new UUID(traceIdMostSignificantBits, traceIdLeastSignificantBits), spanIdAsLong);
+                }
+            } catch(Exception e) {
+                // ignore the error, the error correlation will be missing
+            }
+        }
+
         if (deliver) {
             // Flutter layer has asked us to deliver the Event immediately
             client.deliverEvent(event);
@@ -391,7 +439,7 @@ class BugsnagFlutter {
     }
 
     JSONObject deliverEvent(@Nullable JSONObject eventJson) {
-        if (eventJson == null) {
+        if (eventJson == null || client == null) {
             return null;
         }
 
@@ -416,5 +464,10 @@ class BugsnagFlutter {
 
     boolean hasString(JSONObject args, String key) {
         return getString(args, key) != null;
+    }
+
+    private static long hexToLong(String hex) {
+        return Long.parseLong(hex.substring(0, 2), 16) << 56 |
+                Long.parseLong(hex.substring(2), 16);
     }
 }

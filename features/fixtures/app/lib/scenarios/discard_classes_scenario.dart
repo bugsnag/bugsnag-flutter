@@ -9,9 +9,9 @@ class DiscardClassesScenario extends Scenario {
 
     await bugsnag.start(
       endpoints: endpoints,
-      discardClasses: const {
-        '_Exception',
-      }
+      discardClasses: {
+        RegExp('_Exception'),
+      },
     );
     try {
       throw Exception('this should be discarded');
