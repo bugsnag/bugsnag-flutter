@@ -1,7 +1,7 @@
 #import "BugsnagFlutterPlugin.h"
 
 #import "BugsnagFlutterConfiguration.h"
-#import "BugsnagInternals.h"
+#import "BugsnagInternalsPlugin.h"
 
 #import <dlfcn.h>
 #import <mach-o/dyld.h>
