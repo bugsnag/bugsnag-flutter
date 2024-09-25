@@ -67,6 +67,8 @@ steps:
           - "--app=/app/features/fixtures/app/build/ios/ipa/app-3.10.0.ipa"
           - "--farm=bb"
           - "--device=IOS_14|IOS_15|IOS_16"
+          - "--no-tunnel"
+          - "--aws-public-ip"
           - "--fail-fast"
       test-collector#v1.10.2:
         files: "reports/TEST-*.xml"
@@ -108,14 +110,10 @@ steps:
         service-ports: true
         command:
           - "--app=/app/features/fixtures/app/build/app/outputs/flutter-apk/app-release-3.10.0.apk"
-          - "--farm=bb"
+          - "--farm=bs"
           - "--device=ANDROID_12"
           - "--appium-version=1.22.0"
           - "--fail-fast"
-      test-collector#v1.10.2:
-        files: "reports/TEST-*.xml"
-        format: "junit"
-        branch: "^main|next$$"
-    concurrency: 25
-    concurrency_group: 'bitbar'
+    concurrency: 5
+    concurrency_group: 'browserstack-app'
     concurrency_method: eager
