@@ -70,6 +70,10 @@ steps:
           - "--no-tunnel"
           - "--aws-public-ip"
           - "--fail-fast"
+      test-collector#v1.10.2:
+        files: "reports/TEST-*.xml"
+        format: "junit"
+        branch: "^main|next$$"
     concurrency: 25
     concurrency_group: 'bitbar'
     concurrency_method: eager
@@ -110,6 +114,10 @@ steps:
           - "--device=ANDROID_12"
           - "--appium-version=1.22.0"
           - "--fail-fast"
+      test-collector#v1.10.2:
+        files: "reports/TEST-*.xml"
+        format: "junit"
+        branch: "^main|next$$"
     concurrency: 5
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
