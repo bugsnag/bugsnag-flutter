@@ -23,7 +23,7 @@ rootProject.allprojects {
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 34
+    compileSdkVersion 31
 
     if (android.hasProperty('namespace')) {
         namespace 'com.bugsnag.flutter'
