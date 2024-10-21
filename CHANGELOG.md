@@ -1,6 +1,6 @@
 # Changelog
 
-## TBD
+## 4.1.0 (2024-10-21)
 
 - Upgrade Android compileSdkVersion from 29 to 31.
   [263](https://github.com/bugsnag/bugsnag-flutter/pull/263)
