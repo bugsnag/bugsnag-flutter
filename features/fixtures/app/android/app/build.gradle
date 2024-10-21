@@ -45,7 +45,7 @@ android {
 
     defaultConfig {
         applicationId "com.bugsnag.flutter.test.app"
-        minSdkVersion 16
+        minSdkVersion flutter.minSdkVersion
         targetSdkVersion flutter.hasProperty('targetSdkVersion') ? flutter.targetSdkVersion : 30
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
