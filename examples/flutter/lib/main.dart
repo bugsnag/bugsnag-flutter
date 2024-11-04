@@ -111,7 +111,7 @@ class ExampleHomeScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 16),
               child: Text(
                 'Unhandled Errors',
-                style: Theme.of(context).textTheme.headline6,
+                style: Theme.of(context).textTheme.titleLarge,
               ),
             ),
             ElevatedButton(
@@ -132,14 +132,14 @@ class ExampleHomeScreen extends StatelessWidget {
                 Navigator.pushNamed(context, '/native-crashes');
               },
               style: ElevatedButton.styleFrom(
-                primary: Colors.redAccent.shade200,
+                backgroundColor: Colors.redAccent.shade200,
               ),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16),
               child: Text(
                 'Breadcrumbs',
-                style: Theme.of(context).textTheme.headline6,
+                style: Theme.of(context).textTheme.titleLarge,
               ),
             ),
             ElevatedButton(
@@ -150,7 +150,7 @@ class ExampleHomeScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 16),
               child: Text(
                 'Network Breadcrumbs',
-                style: Theme.of(context).textTheme.headline6,
+                style: Theme.of(context).textTheme.titleLarge,
               ),
             ),
             ElevatedButton(
