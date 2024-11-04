@@ -17,10 +17,12 @@ steps:
     commands:
       - make lint
 
-  - label: Build Example App 3.10.0
+  - label: Build Example App 3.24.4
     timeout_in_minutes: 10
+    agents:
+      queue: macos-14
     env:
-      FLUTTER_BIN: "/opt/flutter/3.10.0/bin/flutter"
+      FLUTTER_BIN: "/opt/flutter/3.24.4/bin/flutter"
     commands:
       - bundle install
       - pod repo update
