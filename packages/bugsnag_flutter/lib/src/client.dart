@@ -19,7 +19,7 @@ import 'regexp_json.dart';
 final _notifier = {
   'name': 'Flutter Bugsnag Notifier',
   'url': 'https://github.com/bugsnag/bugsnag-flutter',
-  'version': '4.0.0'
+  'version': '4.1.0'
 };
 
 abstract class BugsnagClient {
