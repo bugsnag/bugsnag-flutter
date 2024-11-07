@@ -9,6 +9,7 @@ steps:
       queue: macos-14-5
     env:
       FLUTTER_BIN: "/opt/flutter/3.24.4/bin/flutter"
+      JAVA_VERSION: "17"
     commands:
       - bundle install
       - pod repo update
