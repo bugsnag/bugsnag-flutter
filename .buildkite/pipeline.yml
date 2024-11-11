@@ -1,6 +1,9 @@
 agents:
   queue: macos-14
 
+env:
+  JAVA_VERSION: "17"
+
 steps:
 
   - label: ":test_tube: 3.10.0"
@@ -88,7 +91,6 @@ steps:
     timeout_in_minutes: 20
     env:
       FLUTTER_VERSION: "3.10.0"
-      JAVA_VERSION: "17"
     commands:
       - bundle install
       - features/scripts/build_android_app.sh
