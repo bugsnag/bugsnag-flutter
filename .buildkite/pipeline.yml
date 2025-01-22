@@ -1,28 +1,29 @@
 agents:
-  queue: macos-12-arm
+  queue: macos-14
+
+env:
+  JAVA_VERSION: "17"
 
 steps:
 
   - label: ":test_tube: 3.10.0"
     timeout_in_minutes: 10
     env:
-      FLUTTER_BIN: "/opt/flutter/3.10.0/bin/flutter"
+      FLUTTER_VERSION: "3.10.0"
     commands:
       - make test
 
   - label: ":lint-roller: 3.10.0"
     timeout_in_minutes: 10
     env:
-      FLUTTER_BIN: "/opt/flutter/3.10.0/bin/flutter"
+      FLUTTER_VERSION: "3.10.0"
     commands:
       - make lint
 
   - label: Build Example App 3.24.4
     timeout_in_minutes: 10
-    agents:
-      queue: macos-14
     env:
-      FLUTTER_BIN: "/opt/flutter/3.24.4/bin/flutter"
+      FLUTTER_VERSION: "3.24.4"
     commands:
       - bundle install
       - pod repo update
@@ -40,8 +41,10 @@ steps:
   - label: Build iOS Test Fixture 3.10.0
     key: "ios-fixture-3-10-0"
     timeout_in_minutes: 20
+    agents:
+      queue: macos-12-arm
     env:
-      FLUTTER_BIN: "/opt/flutter/3.10.0/bin/flutter"
+      FLUTTER_VERSION: "3.10.0"
     commands:
       - bundle install
       - pod repo update trunk
@@ -87,7 +90,7 @@ steps:
     key: "android-fixture-3-10-0"
     timeout_in_minutes: 20
     env:
-      FLUTTER_BIN: "/opt/flutter/3.10.0/bin/flutter"
+      FLUTTER_VERSION: "3.10.0"
     commands:
       - bundle install
       - features/scripts/build_android_app.sh

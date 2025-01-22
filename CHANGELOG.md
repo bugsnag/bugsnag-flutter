@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.1.1 (2025-01-22)
+
+- Update bugsnag-android from v6.6.0 to [v6.10.0](https://github.com/bugsnag/bugsnag-android/blob/master/CHANGELOG.md#6100-2024-11-14)
+
 ## 4.1.0 (2024-11-04)
 
 - Upgrade Android compileSdkVersion from 29 to 31.
