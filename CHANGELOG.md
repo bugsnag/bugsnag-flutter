@@ -1,5 +1,9 @@
 # Changelog
 
+## TBD
+
+- Update bugsnag-cocoa from v6.30.0 to [v6.31.0](https://github.com/bugsnag/bugsnag-cocoa/blob/next/CHANGELOG.md#6310-2025-01-13)
+
 ## 4.1.1 (2025-01-22)
 
 - Update bugsnag-android from v6.6.0 to [v6.10.0](https://github.com/bugsnag/bugsnag-android/blob/master/CHANGELOG.md#6100-2024-11-14)
