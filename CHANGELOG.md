@@ -3,6 +3,9 @@
 ## TBD
 
 - Update bugsnag-cocoa from v6.30.0 to [v6.32.0](https://github.com/bugsnag/bugsnag-cocoa/blob/next/CHANGELOG.md#6320-2025-02-11)
+### Dependencies
+
+Update bugsnag-android to [v6.12.1](https//github.com/bugsnag/bugsnag-android/releases/tag/v6.12.1) [#278](https://github.com/bugsnag/bugsnag-flutter/pull/278)
 
 ## 4.1.1 (2025-01-22)
 
@@ -19,10 +22,8 @@
 
 - The configuration options `discardClasses` and `redactedKeys` are now `RegExp`s instead of strings. This allows developers to have more control over how they perform.
   [249](https://github.com/bugsnag/bugsnag-flutter/pull/249)
-  
 - Getting the correlation trace ID and span ID through `flutter_bridge` and adding it to events.
   [251](https://github.com/bugsnag/bugsnag-flutter/pull/251)
-
 Please see our [Upgrading guide](./UPGRADING.MD) for more information on upgrading to v4.x.
 
 ## 3.1.1 (2024-04-24)
@@ -32,15 +33,12 @@ Please see our [Upgrading guide](./UPGRADING.MD) for more information on upgradi
 ## 3.1.0 (2024-04-09)
 
 This release introduces a new `networkInstrumentation` listener so that the new [http](https://pub.dev/packages/bugsnag_http_client) and [dart:io](https://pub.dev/packages/bugsnag_flutter_dart_io_http_client) wrappers can trigger network breadcrumbs. It also introduces support for [dio](https://pub.dev/packages/dio).
-
 The previous `bugsnag_breadcrumbs_http` and `bugsnag_breadcrumbs_dart_io` packages will continue to work but will be deprecated in the next major release.
-
 See our [online docs](https://docs.bugsnag.com/platforms/flutter/customizing-breadcrumbs/#network-request-breadcrumbs) for full integration instructions.
 
 ## 3.0.2 (2024-02-28)
 
 - Change the bugsnag_breadcrumbs_http http dependancy to ">=0.13.4" so that there are less strict version requirements [#235](https://github.com/bugsnag/bugsnag-flutter/pull/235)
-
 - Bundle apple xprivacy manifest with the flutter package [#230](https://github.com/bugsnag/bugsnag-flutter/pull/230)
 
 ## 3.0.1 (2024-01-11)
@@ -58,7 +56,6 @@ See our [online docs](https://docs.bugsnag.com/platforms/flutter/customizing-bre
   [#203](https://github.com/bugsnag/bugsnag-flutter/pull/203)
 - `telemetry` has been made easier to control by replacing the `Set<BugsnagTelemetryType>` with a new `BugsnagTelemetryTypes`
   [#207](https://github.com/bugsnag/bugsnag-flutter/pull/207)
-
 Please see our [Upgrading guide](./UPGRADING.MD) for more information on upgrading to v3.x.
 
 ## 2.5.0 (2023-07-17)
@@ -106,7 +103,7 @@ Please see our [Upgrading guide](./UPGRADING.MD) for more information on upgradi
 ## 2.1.0 (2022-06-14)
 
 - Networking breadcrumbs can now be easily captured by using the `bugsnag_breadcrumbs_http` or `bugsnag_breadcrumbs_dart_io` packages
-  [#116](https://github.com/bugsnag/bugsnag-flutter/pull/116) 
+  [#116](https://github.com/bugsnag/bugsnag-flutter/pull/116)
   [#115](https://github.com/bugsnag/bugsnag-flutter/pull/115)
 - Added `BugsnagNavigatorObserver` to automatically log navigation breadcrumbs and context
 - Column numbers will be captured as `null` instead of `-1` when they're not available
@@ -128,6 +125,7 @@ First official Bugsnag release.
 
 First official release-candidate from Bugsnag. Completely rewritten to have tight integration with `bugsnag-cocoa`(https://github.com/bugsnag/bugsnag-cocoa) and `bugsnag-android`(https://github.com/bugsnag/bugsnag-android) and consistency of naming and behaviour with our other client libraries.
 
-## 1.X 
+## 1.X
 
 [Community-created package](https://github.com/GetDutchie/bugsnag_flutter).
+
