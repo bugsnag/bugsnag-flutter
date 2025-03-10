@@ -93,13 +93,13 @@ update-bugsnag-android:
 ifeq ($(VERSION),)
 	@$(error VERSION is not defined. Run with `make VERSION=number update-bugsnag-android`)
 endif
-	sed -i '' "s/'com.bugsnag:bugsnag-android:.*'/'com.bugsnag:bugsnag-android:$(VERSION)'/" packages/bugsnag_flutter/android/build.gradle
+	sed -i '' "s/'com.bugsnag:bugsnag-android:.*'/'com.bugsnag:bugsnag-android:$(subst v,,$(VERSION))'/" packages/bugsnag_flutter/android/build.gradle
 
 update-bugsnag-cocoa:
 ifeq ($(VERSION),)
 	@$(error VERSION is not defined. Run with `make VERSION=number update-bugsnag-cocoa`)
 endif
-	sed -i '' "s/s.dependency 'Bugsnag', '.*'/s.dependency 'Bugsnag', '$(VERSION)'/" packages/bugsnag_flutter/ios/bugsnag_flutter.podspec
+	sed -i '' "s/s.dependency 'Bugsnag', '.*'/s.dependency 'Bugsnag', '$(subst v,,$(VERSION))'/" packages/bugsnag_flutter/ios/bugsnag_flutter.podspec
 
 update-bugsnag-dependency:
 ifeq ($(SUBMODULE),)
