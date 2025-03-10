@@ -2,10 +2,11 @@
 
 ## TBD
 
-- Update bugsnag-cocoa from v6.30.0 to [v6.32.0](https://github.com/bugsnag/bugsnag-cocoa/blob/next/CHANGELOG.md#6320-2025-02-11)
 ### Dependencies
 
-Update bugsnag-android to [v6.12.1](https//github.com/bugsnag/bugsnag-android/releases/tag/v6.12.1) [#278](https://github.com/bugsnag/bugsnag-flutter/pull/278)
+- Update bugsnag-cocoa to [v6.32.1](https//github.com/bugsnag/bugsnag-cocoa/releases/tag/v6.32.1) [#276](https://github.com/bugsnag/bugsnag-flutter/pull/276)
+
+- Update bugsnag-android to [v6.12.1](https//github.com/bugsnag/bugsnag-android/releases/tag/v6.12.1) [#278](https://github.com/bugsnag/bugsnag-flutter/pull/278)
 
 ## 4.1.1 (2025-01-22)
 
