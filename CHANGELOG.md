@@ -1,6 +1,6 @@
 # Changelog
 
-## TBD
+## 4.1.2 (2025-03-10)
 
 ### Dependencies
 
