@@ -452,10 +452,9 @@ static NSArray *jsonToRegularExpressions(NSArray *source) {
     event.context = client.context;
     event.projectPackages = self.projectPackages;
 
-    // TODO: Expose BugsnagClient's featureFlagStore or provide a better way to create an event
-    id featureFlagStore = [client valueForKey:@"featureFlagStore"];
+    id featureFlagStore = [client featureFlagStore];
     @synchronized (featureFlagStore) {
-        event.featureFlagStore = [featureFlagStore copy];
+        event.featureFlagStore = [featureFlagStore copyMemoryStore];
     }
 
     for (BugsnagStackframe *frame in error.stacktrace) {
