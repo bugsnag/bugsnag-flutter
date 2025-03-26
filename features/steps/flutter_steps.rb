@@ -34,18 +34,19 @@ def execute_command(action, scenario_name)
 end
 
 When('I relaunch the app') do
-  Maze.driver.launch_app
+  Maze::Api::Appium::AppManager.new.launch
 end
 
 When("I relaunch the app after a crash") do
   # Wait for the app to stop running before relaunching
   step 'the app is not running'
-  Maze.driver.launch_app
+  Maze::Api::Appium::AppManager.new.launch
 end
 
 Then('the app is not running') do
+  manager = Maze::Api::Appium::AppManager.new
   Maze::Wait.new(interval: 1, timeout: 20).until do
-    Maze.driver.app_state('com.bugsnag.flutter.test.app') == :not_running
+    manager.state == :not_running
   end
 end
 
