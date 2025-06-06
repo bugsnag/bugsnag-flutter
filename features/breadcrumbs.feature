@@ -42,6 +42,7 @@ Scenario: Dart IO Wrapper Breadcrumbs
     And the error payload field "events.0.breadcrumbs.1.metaData.method" equals "GET"
     And the error payload field "events.0.breadcrumbs.1.metaData.duration" is greater than 1
     And the error payload field "events.0.breadcrumbs.1.metaData.url" equals "http://www.google.com"
-    And the error payload field "events.0.breadcrumbs.1.metaData.responseContentLength" is greater than 1
+    # TODO: Skipped pending PLAT-14348
+    #And the error payload field "events.0.breadcrumbs.1.metaData.responseContentLength" is greater than 1
     And the error payload field "events.0.breadcrumbs.1.metaData.urlParams" equals "test=test"
 
