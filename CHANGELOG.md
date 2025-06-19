@@ -2,6 +2,8 @@
 
 ## TBD
 
+- Set default endpoints based on API key [#288](https://github.com/bugsnag/bugsnag-flutter/pull/288)
+
 ### Dependencies
 
 Update bugsnag-cocoa to [v6.32.2](https//github.com/bugsnag/bugsnag-cocoa/releases/tag/v6.32.2) [#283](https://github.com/bugsnag/bugsnag-flutter/pull/283)
