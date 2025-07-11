@@ -19,7 +19,7 @@ import 'regexp_json.dart';
 final _notifier = {
   'name': 'Flutter Bugsnag Notifier',
   'url': 'https://github.com/bugsnag/bugsnag-flutter',
-  'version': '4.1.2'
+  'version': '4.1.3'
 };
 
 abstract class BugsnagClient {
@@ -768,6 +768,16 @@ class Bugsnag extends BugsnagClient with DelegateClient {
     Directory? persistenceDirectory,
     int? versionCode,
   }) async {
+    const String _hubPrefix = '00000';
+    const _hubNotify = 'https://notify.insighthub.smartbear.com';
+    const _hubSessions = 'https://sessions.insighthub.smartbear.com';
+
+    if (apiKey != null &&
+        apiKey.startsWith(_hubPrefix) &&
+        endpoints == BugsnagEndpointConfiguration.bugsnag) {
+      endpoints = const BugsnagEndpointConfiguration(_hubNotify, _hubSessions);
+    }
+
     final detectDartErrors =
         autoDetectErrors && enabledErrorTypes.unhandledDartExceptions;
 
