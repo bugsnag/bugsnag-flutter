@@ -1,6 +1,6 @@
 # Changelog
 
-## TBD
+## 4.1.3 (2025-07-11)
 
 - Set default endpoints based on API key [#288](https://github.com/bugsnag/bugsnag-flutter/pull/288)
 
