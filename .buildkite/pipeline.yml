@@ -82,6 +82,10 @@ steps:
     concurrency: 25
     concurrency_group: 'bitbar'
     concurrency_method: eager
+    retry:
+      automatic:
+        - exit_status: 103  # Appium session failed
+          limit: 2
 
   #
   # Android
@@ -128,3 +132,7 @@ steps:
     concurrency: 5
     concurrency_group: 'browserstack-app'
     concurrency_method: eager
+    retry:
+      automatic:
+        - exit_status: 103  # Appium session failed
+          limit: 2
