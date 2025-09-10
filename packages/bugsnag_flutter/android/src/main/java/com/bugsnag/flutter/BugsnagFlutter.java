@@ -256,6 +256,15 @@ class BugsnagFlutter {
         return Bugsnag.getContext();
     }
 
+    @Nullable String setGroupingDiscriminator(@Nullable JSONObject args) {
+        String value = args != null ? getString(args, "value") : null;
+        return Bugsnag.setGroupingDiscriminator(value);
+    }
+
+    @Nullable String getGroupingDiscriminator(@Nullable JSONObject args) {
+        return Bugsnag.getGroupingDiscriminator(); // may be null
+    }
+
     Void leaveBreadcrumb(@Nullable JSONObject args) throws Exception {
         if (args != null &&
                 hasString(args, "name") &&
@@ -407,6 +416,13 @@ class BugsnagFlutter {
         Object flutterMetadata = JsonHelper.unwrap(args.optJSONObject("flutterMetadata"));
         if (flutterMetadata instanceof Map) {
             event.addMetadata("flutter", (Map<String, Object>) flutterMetadata);
+        }
+
+        if (event.getGroupingDiscriminator() == null) {
+            String global = Bugsnag.getGroupingDiscriminator();
+            if (global != null) {
+                event.setGroupingDiscriminator(global);
+            }
         }
 
         JSONObject correlation = args.optJSONObject("correlation");
