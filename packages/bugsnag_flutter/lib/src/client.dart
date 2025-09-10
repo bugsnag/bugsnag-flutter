@@ -461,6 +461,17 @@ class ChannelClient extends BugsnagClient {
   Future<String?> getContext() => _channel.invokeMethod('getContext');
 
   @override
+  Future<String?> getGroupingDiscriminator() =>
+      _channel.invokeMethod<String?>('getGroupingDiscriminator');
+
+  @override
+  Future<String?> setGroupingDiscriminator(String? value) =>
+      _channel.invokeMethod<String?>(
+        'setGroupingDiscriminator',
+        {'value': value},
+      );
+
+  @override
   Future<void> leaveBreadcrumb(
     String message, {
     Map<String, Object>? metadata,
@@ -669,13 +680,6 @@ class ChannelClient extends BugsnagClient {
   @override
   networkInstrumentation(data) {}
 
-  @override
-  Future<String?> getGroupingDiscriminator() =>
-    _channel.invokeMethod<String?>('getGroupingDiscriminator');
-
-  @override
-  Future<String?> setGroupingDiscriminator(String? value) =>
-      _channel.invokeMethod<String?>('setGroupingDiscriminator', value);
 }
 
 /// The primary `Client`. Typically this class is not accessed directly, and
@@ -886,17 +890,6 @@ class Bugsnag extends BugsnagClient with DelegateClient {
     return const <String>{};
   }
 
-  @override
-  Future<String?> getGroupingDiscriminator() {
-    // TODO: implement getGroupingDiscriminator
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<String?> setGroupingDiscriminator(String? value) {
-    // TODO: implement setGroupingDiscriminator
-    throw UnimplementedError();
-  }
 }
 
 /// In order to determine where a crash happens Bugsnag needs to know which
