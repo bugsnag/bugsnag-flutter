@@ -14,3 +14,9 @@ Feature: Grouping Discriminator
     And I discard the oldest error
     And the exception "message" equals "GroupingDiscriminator-3"
     And the event "groupingDiscriminator" equals "Callback GroupingDiscriminator"
+
+  Scenario: Grouping Discriminator in Native Event
+    When I run "NativeCrashScenario" and relaunch the crashed app
+    And I configure Bugsnag for "NativeCrashScenario"
+    And I wait to receive an error
+    And the event "groupingDiscriminator" equals "Native Grouping Discriminator"

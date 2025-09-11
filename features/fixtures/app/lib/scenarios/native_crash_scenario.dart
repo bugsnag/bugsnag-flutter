@@ -10,7 +10,8 @@ class NativeCrashScenario extends Scenario {
       endpoints: endpoints,
       autoDetectErrors: extraConfig?.contains('noDetectErrors') != true,
     );
-
+    //used in the Scenario: Grouping Discriminator in Native Event
+    bugsnag.setGroupingDiscriminator("Native Grouping Discriminator");
     await MazeRunnerChannels.runScenario('NativeCrashScenario');
   }
 }
