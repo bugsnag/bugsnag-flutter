@@ -494,6 +494,13 @@ static NSArray *jsonToRegularExpressions(NSArray *source) {
         }
     }
     
+    if (event.groupingDiscriminator == nil) {
+        NSString *global = [Bugsnag groupingDiscriminator];
+        if (global != nil) {
+            event.groupingDiscriminator = global;
+        }
+    }
+
     if ([json[@"deliver"] boolValue]) {
         [client notifyInternal:event block:nil];
         return nil;
