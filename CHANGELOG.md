@@ -1,5 +1,9 @@
 # Changelog
 
+## TBD
+
+- Added `groupingDiscriminator` property to events and methods for setting and getting the global `groupingDiscriminator` to `bugsnag` [#294](https://github.com/bugsnag/bugsnag-flutter/pull/294)
+
 ## 4.1.3 (2025-07-11)
 
 - Set default endpoints based on API key [#288](https://github.com/bugsnag/bugsnag-flutter/pull/288)
