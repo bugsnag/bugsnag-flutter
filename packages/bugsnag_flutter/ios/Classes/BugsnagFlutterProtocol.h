@@ -33,4 +33,7 @@
 - (NSDictionary *)createEvent:(NSDictionary *)json;
 - (void)deliverEvent:(NSDictionary *)json;
 
+- (NSString * _Nullable)setGroupingDiscriminator:(NSDictionary *)arguments;
+- (NSString * _Nullable)getGroupingDiscriminator:(NSDictionary *)arguments;
+
 @end

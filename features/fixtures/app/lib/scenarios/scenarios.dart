@@ -25,6 +25,7 @@ import 'throw_exception_scenario.dart';
 import 'unhandled_exception_scenario.dart';
 import 'http_breadcrumb_scenario.dart';
 import 'dart_io_http_breadcrumb_scenario.dart';
+import 'grouping_discriminator_scenario.dart';
 
 class ScenarioInfo<T extends Scenario> {
   const ScenarioInfo(this.name, this.init);
@@ -65,4 +66,5 @@ final List<ScenarioInfo<Scenario>> scenarios = [
       "DartIoHttpBreadcrumbScenario", () => DartIoHttpBreadcrumbScenario()),
   ScenarioInfo("NullContextScenario", () => NullContextScenario()),
   ScenarioInfo("NullUserScenario", () => NullUserScenario()),
+  ScenarioInfo("GroupingDiscriminatorScenario", () => GroupingDiscriminatorScenario())
 ];

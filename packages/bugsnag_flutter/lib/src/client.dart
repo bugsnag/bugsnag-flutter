@@ -239,6 +239,12 @@ abstract class BugsnagClient {
   /// Removes a previously added "on error" callback.
   void removeOnError(BugsnagOnErrorCallback onError);
 
+  /// Sets the global grouping discriminator
+  Future<String?> setGroupingDiscriminator(String? value);
+
+  /// Returns the current global grouping discriminator.
+  Future<String?> getGroupingDiscriminator();
+
   networkInstrumentation(dynamic data) {
     try {
       if (data is! Map<String, dynamic>) return;
@@ -387,6 +393,14 @@ mixin DelegateClient implements BugsnagClient {
   Future<BugsnagLastRunInfo?> getLastRunInfo() => client.getLastRunInfo();
 
   @override
+  Future<String?> setGroupingDiscriminator(String? value) =>
+      client.setGroupingDiscriminator(value);
+
+  @override
+  Future<String?> getGroupingDiscriminator() =>
+      client.getGroupingDiscriminator();
+
+  @override
   Future<void> notify(
     dynamic error,
     StackTrace? stackTrace, {
@@ -445,6 +459,17 @@ class ChannelClient extends BugsnagClient {
 
   @override
   Future<String?> getContext() => _channel.invokeMethod('getContext');
+
+  @override
+  Future<String?> getGroupingDiscriminator() =>
+      _channel.invokeMethod<String?>('getGroupingDiscriminator');
+
+  @override
+  Future<String?> setGroupingDiscriminator(String? value) =>
+      _channel.invokeMethod<String?>(
+        'setGroupingDiscriminator',
+        {'value': value},
+      );
 
   @override
   Future<void> leaveBreadcrumb(
@@ -638,7 +663,12 @@ class ChannelClient extends BugsnagClient {
     );
 
     if (eventJson != null) {
-      return BugsnagEvent.fromJson(eventJson);
+      final event = BugsnagEvent.fromJson(eventJson);
+
+      // Inherit the global value only if the event doesn't already have one
+      event.groupingDiscriminator ??= await getGroupingDiscriminator();
+
+      return event; // callbacks run after this, and can still override
     }
 
     return null;
@@ -649,6 +679,7 @@ class ChannelClient extends BugsnagClient {
 
   @override
   networkInstrumentation(data) {}
+
 }
 
 /// The primary `Client`. Typically this class is not accessed directly, and
@@ -858,6 +889,7 @@ class Bugsnag extends BugsnagClient with DelegateClient {
 
     return const <String>{};
   }
+
 }
 
 /// In order to determine where a crash happens Bugsnag needs to know which

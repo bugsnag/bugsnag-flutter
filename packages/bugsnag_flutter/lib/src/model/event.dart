@@ -45,6 +45,10 @@ class BugsnagEvent {
   /// visible page or screen.
   String? context;
 
+  /// A tie-breaker used to discriminate events that would otherwise group.
+  /// If set on the Event, it takes priority over the global value.
+  String? groupingDiscriminator;
+
   /// The grouping hash of the event to override the default grouping on the
   /// dashboard. All events with the same grouping hash will be grouped together
   /// into one error. This is an advanced usage of the library and mis-using it
@@ -151,6 +155,7 @@ class BugsnagEvent {
             [],
         context = json['context'] as String?,
         groupingHash = json['groupingHash'] as String?,
+        groupingDiscriminator = json['groupingDiscriminator'] as String?,
         _unhandled = json['unhandled'] == true,
         _originalUnhandled = json['unhandled'] == true,
         severity = BugsnagSeverity.values.findByName(json['severity']),
@@ -179,6 +184,7 @@ class BugsnagEvent {
       'breadcrumbs': breadcrumbs,
       if (context != null) 'context': context,
       if (groupingHash != null) 'groupingHash': groupingHash,
+      if (groupingDiscriminator != null) 'groupingDiscriminator': groupingDiscriminator,
       'unhandled': unhandled,
       'severity': severity.toName(),
       'severityReason': _severityReason,

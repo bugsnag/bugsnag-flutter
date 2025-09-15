@@ -18,6 +18,7 @@ void main() {
         'createEvent': _mockCreateEvent,
         'deliverEvent': null,
         'addMetadata': null,
+        'getGroupingDiscriminator': null,
       });
     });
 
