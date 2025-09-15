@@ -418,7 +418,11 @@ class BugsnagFlutter {
             event.addMetadata("flutter", (Map<String, Object>) flutterMetadata);
         }
 
-        if (event.getGroupingDiscriminator() == null) {
+        // Check for groupingDiscriminator from Dart layer first, then fall back to global
+        String dartGroupingDiscriminator = args.optString("groupingDiscriminator", null);
+        if (dartGroupingDiscriminator != null) {
+            event.setGroupingDiscriminator(dartGroupingDiscriminator);
+        } else if (event.getGroupingDiscriminator() == null) {
             String global = Bugsnag.getGroupingDiscriminator();
             if (global != null) {
                 event.setGroupingDiscriminator(global);

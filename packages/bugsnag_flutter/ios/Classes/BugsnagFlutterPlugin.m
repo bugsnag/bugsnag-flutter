@@ -494,7 +494,11 @@ static NSArray *jsonToRegularExpressions(NSArray *source) {
         }
     }
     
-    if (event.groupingDiscriminator == nil) {
+    // Check for groupingDiscriminator from Dart layer first, then fall back to global
+    NSString *dartGroupingDiscriminator = NSStringOrNil(json[@"groupingDiscriminator"]);
+    if (dartGroupingDiscriminator != nil) {
+        event.groupingDiscriminator = dartGroupingDiscriminator;
+    } else if (event.groupingDiscriminator == nil) {
         NSString *global = [Bugsnag groupingDiscriminator];
         if (global != nil) {
             event.groupingDiscriminator = global;
