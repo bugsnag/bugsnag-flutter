@@ -23,6 +23,7 @@ bugsnag.start(
   },
   // ...
 );
+```
 
 ## 2.x to 3.x
 
@@ -50,7 +51,7 @@ Future<void> main() async {
   // configuration here
   );
   runApp(MyApplication());
-}
+}  
 ```
 
 Telemetry options have been simplified into a new dedicated type instead of being a set. To specify custom telemetry options, use:

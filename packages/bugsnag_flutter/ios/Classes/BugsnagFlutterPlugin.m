@@ -183,6 +183,16 @@ static NSArray *jsonToRegularExpressions(NSArray *source) {
     return Bugsnag.context;
 }
 
+- (NSString * _Nullable)setGroupingDiscriminator:(NSDictionary *)arguments {
+    NSString *value = NSStringOrNil(arguments[@"value"]);
+    // Atomic swap handled by native; returns previous value (may be nil)
+    return [Bugsnag setGroupingDiscriminator:value];
+}
+
+- (NSString * _Nullable)getGroupingDiscriminator:(NSDictionary *)arguments {
+    return [Bugsnag groupingDiscriminator]; // may be nil
+}
+
 - (void)leaveBreadcrumb:(NSDictionary *)arguments {
     [Bugsnag leaveBreadcrumbWithMessage:arguments[@"name"]
                                metadata:arguments[@"metaData"]
@@ -484,6 +494,17 @@ static NSArray *jsonToRegularExpressions(NSArray *source) {
         }
     }
     
+    // Check for groupingDiscriminator from Dart layer first, then fall back to global
+    NSString *dartGroupingDiscriminator = NSStringOrNil(json[@"groupingDiscriminator"]);
+    if (dartGroupingDiscriminator != nil) {
+        event.groupingDiscriminator = dartGroupingDiscriminator;
+    } else if (event.groupingDiscriminator == nil) {
+        NSString *global = [Bugsnag groupingDiscriminator];
+        if (global != nil) {
+            event.groupingDiscriminator = global;
+        }
+    }
+
     if ([json[@"deliver"] boolValue]) {
         [client notifyInternal:event block:nil];
         return nil;

@@ -43,6 +43,8 @@ public class BugsnagFlutterPlugin implements FlutterPlugin, MethodCallHandler {
         addFunction("getLastRunInfo",       bugsnag::getLastRunInfo);
         addFunction("attach",               bugsnag::attach);
         addFunction("start",                bugsnag::start);
+        addFunction("setGroupingDiscriminator", bugsnag::setGroupingDiscriminator);
+        addFunction("getGroupingDiscriminator", bugsnag::getGroupingDiscriminator);
     }
 
     private <T> void addFunction(String name, BSGFunction<T> function) {
