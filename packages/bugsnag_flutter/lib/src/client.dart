@@ -799,14 +799,14 @@ class Bugsnag extends BugsnagClient with DelegateClient {
     Directory? persistenceDirectory,
     int? versionCode,
   }) async {
-    const String _hubPrefix = '00000';
-    const _hubNotify = 'https://notify.insighthub.smartbear.com';
-    const _hubSessions = 'https://sessions.insighthub.smartbear.com';
+    const String _secondaryPrefix = '00000';
+    const _secondaryNotify = 'https://notify.bugsnag.smartbear.com';
+    const _secondarySessions = 'https://sessions.bugsnag.smartbear.com';
 
     if (apiKey != null &&
-        apiKey.startsWith(_hubPrefix) &&
+        apiKey.startsWith(_secondaryPrefix) &&
         endpoints == BugsnagEndpointConfiguration.bugsnag) {
-      endpoints = const BugsnagEndpointConfiguration(_hubNotify, _hubSessions);
+      endpoints = const BugsnagEndpointConfiguration(_secondaryNotify, _secondarySessions);
     }
 
     final detectDartErrors =
