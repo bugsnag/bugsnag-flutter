@@ -56,7 +56,7 @@ void main() {
           'map': {'name': 'Foo', 'job': 'Barman'},
           'bad_map': {
             'car': 'Ferrari',
-            'color': anyOf('Color(alpha: 1.0000, red: 0.0000, green: 0.0000, blue: 0.0000, colorSpace: ColorSpace.sRGB)','Color(0xff000000)'),
+            'color': anyOf('Color(alpha: 1.0000, red: 1.0000, green: 0.0000, blue: 0.0000, colorSpace: ColorSpace.sRGB)','Color(0xffff0000)'),
           },
           'dodgy': '[exception]: DodgyException',
           'empty_array': [],
