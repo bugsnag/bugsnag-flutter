@@ -25,21 +25,21 @@ steps:
       FLUTTER_VERSION: "3.38.3"
     commands:
       - "make lint"
-#
-#  - label: "Build Example App 3.24.4"
-#    timeout_in_minutes: 10
-#    env:
-#      FLUTTER_VERSION: "3.24.4"
-#    commands:
-#      - "bundle install"
-#      - "pod repo update"
-#      - "make examples/flutter"
-#      # Verify that App.framework's UUID (and therefore our `codeIdentifier`) changes when Dart code is touched"
-#      - "dwarfdump --arch=arm64 --uuid examples/flutter/build/ios/iphoneos/Runner.app/Frameworks/App.framework/App | tee uuid_before"
-#      - "sed -i '' -e 's/add_your_api_key_here/my_api_key/' examples/flutter/lib/main.dart"
-#      - "make examples/flutter"
-#      - "dwarfdump --arch=arm64 --uuid examples/flutter/build/ios/iphoneos/Runner.app/Frameworks/App.framework/App | tee uuid_after"
-#      - "test \"$(cat uuid_before)\" != \"$(cat uuid_after)\""
+
+  - label: ":flutter: Build Example App 3.38.3"
+    timeout_in_minutes: 10
+    env:
+      FLUTTER_VERSION: "3.38.3"
+    commands:
+      - "bundle install"
+      - "pod repo update"
+      - "make examples/flutter"
+      # Verify that App.framework's UUID (and therefore our `codeIdentifier`) changes when Dart code is touched"
+      - "dwarfdump --arch=arm64 --uuid examples/flutter/build/ios/iphoneos/Runner.app/Frameworks/App.framework/App | tee uuid_before"
+      - "sed -i '' -e 's/add_your_api_key_here/my_api_key/' examples/flutter/lib/main.dart"
+      - "make examples/flutter"
+      - "dwarfdump --arch=arm64 --uuid examples/flutter/build/ios/iphoneos/Runner.app/Frameworks/App.framework/App | tee uuid_after"
+      - "test \"$(cat uuid_before)\" != \"$(cat uuid_after)\""
 #
 #  #
 #  # iOS
