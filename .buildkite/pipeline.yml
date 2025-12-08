@@ -2,7 +2,7 @@ agents:
   queue: "macos-15"
 
 env:
-  JAVA_VERSION: "21"
+  JAVA_VERSION: "17"
   XCODE_VERSION: "16.3.0"
 
 steps:
@@ -64,7 +64,7 @@ steps:
               from: "features/fixtures/app/build/ios/ipa/app.ipa"
               to: "features/fixtures/app/build/ios/ipa/app-{{matrix}}.ipa"
 
-      - label: "Build Android Test Fixture {{flutter}}"
+      - label: "Build Android Test Fixture {{matrix}}"
         key: "android-fixture"
         timeout_in_minutes: 20
         matrix:
