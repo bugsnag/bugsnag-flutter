@@ -11,31 +11,24 @@ localPropertiesFile.withReader("UTF-8") { reader ->
 def flutterSdkPath = properties.getProperty("flutter.sdk")
 assert flutterSdkPath != null : "flutter.sdk not set in local.properties"
 
-// Read Flutter version from the SDK
-def flutterVersionFile = new File(flutterSdkPath, "version")
-def flutterVersion = "0.0.0"
+// Read Gradle version safely
+def gradleVersion = gradle.gradleVersion
+def gradleParts = gradleVersion.tokenize('.').collect { it as int }
+def gradleMajor = gradleParts[0]
+def gradleMinor = gradleParts[1]
 
-if (flutterVersionFile.exists()) {
-    flutterVersion = flutterVersionFile.text.trim()
-}
+// Declarative settings plugin requires Gradle >= 7.6
+def supportsPluginsBlock = (gradleMajor > 7) || (gradleMajor == 7 && gradleMinor >= 6)
 
-// Parse X.Y.Z → major/minor ints
-def parts = flutterVersion.tokenize('.')
-def major = parts.size() > 0 ? parts[0].toInteger() : 0
-def minor = parts.size() > 1 ? parts[1].toInteger() : 0
-
-// Flutter >= 3.16 uses declarative plugin block
-def useDeclarative = (major > 3) || (major == 3 && minor >= 16)
-
-if (useDeclarative) {
-    println "Using declarative Flutter Gradle plugin (Flutter $flutterVersion)"
+if (supportsPluginsBlock) {
+    println "Using declarative Flutter Gradle plugin (Gradle $gradleVersion)"
 
     plugins {
         id("dev.flutter.flutter-gradle-plugin") version "1.0.0"
     }
 
 } else {
-    println "Using legacy plugin loader (Flutter $flutterVersion)"
+    println "Using legacy plugin loader (Gradle $gradleVersion)"
 
     apply from: "$flutterSdkPath/packages/flutter_tools/gradle/app_plugin_loader.gradle"
 }
