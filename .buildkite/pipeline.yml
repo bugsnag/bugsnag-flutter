@@ -64,6 +64,25 @@ steps:
               from: "features/fixtures/app/build/ios/ipa/app.ipa"
               to: "features/fixtures/app/build/ios/ipa/app-{{matrix}}.ipa"
 
+      - label: "Build Android Test Fixture {{flutter}}"
+        key: "android-fixture"
+        timeout_in_minutes: 20
+        matrix:
+          - "3.38.3"
+          - "3.24.4"
+          - "3.19.0"
+          - "3.10.0"
+        env:
+          FLUTTER_VERSION: "{{matrix}}"
+        commands:
+          - "bundle install"
+          - "features/scripts/build_android_app.sh"
+        plugins:
+          artifacts#v1.5.0:
+            upload:
+              from: "features/fixtures/app/build/app/outputs/flutter-apk/app-release.apk"
+              to: "features/fixtures/app/build/app/outputs/flutter-apk/app-release-{{matrix}}.apk"
+
   - group: "End-to-end Tests"
     steps:
       - label: ":bitbar: Flutter {{matrix}} iOS end-to-end tests"
