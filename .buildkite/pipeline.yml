@@ -68,7 +68,7 @@ steps:
         key: "android-fixture"
         timeout_in_minutes: 20
         matrix:
-          - "3.38.3"
+#          - "3.38.3" Skipped: Waiting on PLAT-15326
           - "3.24.4"
           - "3.19.0"
           - "3.10.0"
@@ -128,7 +128,7 @@ steps:
         depends_on: "android-fixture"
         timeout_in_minutes: 20
         matrix:
-          - "3.38.3"
+#          - "3.38.3" Skipped: Waiting on PLAT-15326
           - "3.24.4"
           - "3.19.0"
           - "3.10.0"
