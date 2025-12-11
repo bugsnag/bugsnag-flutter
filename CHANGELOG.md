@@ -2,6 +2,7 @@
 
 ## TBD
 
+- Upgrade Android compileSdkVersion from 31 to 36 to support 16kB memory pages.
 - Amend secondary instance URL to bugsnag.smartbear.com [#299](https://github.com/bugsnag/bugsnag-flutter/pull/299)
 
 ## 4.2.0 (2025-09-29)
@@ -40,7 +41,7 @@ Update bugsnag-cocoa to [v6.32.2](https//github.com/bugsnag/bugsnag-cocoa/releas
   [249](https://github.com/bugsnag/bugsnag-flutter/pull/249)
 - Getting the correlation trace ID and span ID through `flutter_bridge` and adding it to events.
   [251](https://github.com/bugsnag/bugsnag-flutter/pull/251)
-Please see our [Upgrading guide](./UPGRADING.MD) for more information on upgrading to v4.x.
+  Please see our [Upgrading guide](./UPGRADING.MD) for more information on upgrading to v4.x.
 
 ## 3.1.1 (2024-04-24)
 
@@ -72,7 +73,7 @@ See our [online docs](https://docs.bugsnag.com/platforms/flutter/customizing-bre
   [#203](https://github.com/bugsnag/bugsnag-flutter/pull/203)
 - `telemetry` has been made easier to control by replacing the `Set<BugsnagTelemetryType>` with a new `BugsnagTelemetryTypes`
   [#207](https://github.com/bugsnag/bugsnag-flutter/pull/207)
-Please see our [Upgrading guide](./UPGRADING.MD) for more information on upgrading to v3.x.
+  Please see our [Upgrading guide](./UPGRADING.MD) for more information on upgrading to v3.x.
 
 ## 2.5.0 (2023-07-17)
 
@@ -144,4 +145,3 @@ First official release-candidate from Bugsnag. Completely rewritten to have tigh
 ## 1.X
 
 [Community-created package](https://github.com/GetDutchie/bugsnag_flutter).
-
