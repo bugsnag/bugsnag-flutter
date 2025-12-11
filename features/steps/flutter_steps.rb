@@ -32,13 +32,13 @@ def execute_command(action, scenario_name)
 end
 
 When('I relaunch the app') do
-  Maze::Api::Appium::AppManager.new.launch
+  Maze::Api::Appium::AppManager.new.activate
 end
 
 When("I relaunch the app after a crash") do
   # Wait for the app to stop running before relaunching
   step 'the app is not running'
-  Maze::Api::Appium::AppManager.new.launch
+  Maze::Api::Appium::AppManager.new.activate
 end
 
 Then('the app is not running') do
