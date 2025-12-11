@@ -108,7 +108,7 @@ steps:
             command:
               - "--app=/app/features/fixtures/app/build/ios/ipa/app-{{matrix}}.ipa"
               - "--farm=bb"
-              - "--device=IOS_14|IOS_15|IOS_16"
+              - "--device=IOS_17|IOS_18|IOS_26"
               - "--no-tunnel"
               - "--aws-public-ip"
               - "--fail-fast"
