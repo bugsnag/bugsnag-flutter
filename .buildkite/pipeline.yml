@@ -61,8 +61,8 @@ steps:
         plugins:
           artifacts#v1.5.0:
             upload:
-              from: "features/fixtures/app/build/ios/ipa/app.ipa"
-              to: "features/fixtures/app/build/ios/ipa/app-{{matrix}}.ipa"
+              from: "features/fixtures/mazerunner/build/ios/ipa/mazerunner.ipa"
+              to: "features/fixtures/mazerunner/build/ios/ipa/mazerunner-{{matrix}}.ipa"
 
       - label: "Build Android Test Fixture {{matrix}}"
         key: "android-fixture"
