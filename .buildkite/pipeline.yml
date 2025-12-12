@@ -80,7 +80,7 @@ steps:
         plugins:
           artifacts#v1.5.0:
             upload:
-              from: "features/fixtures/app/build/app/outputs/flutter-apk/app-release.apk"
+              from: "features/fixtures/app/build/app/outputs/flutter-apk/app-release-{{matrix}}.apk"
               to: "features/fixtures/app/build/app/outputs/flutter-apk/app-release-{{matrix}}.apk"
 
   - group: "End-to-end Tests"
@@ -98,7 +98,7 @@ steps:
           queue: "opensource"
         plugins:
           artifacts#v1.5.0:
-            download: "features/fixtures/maze_runner/build/ios/ipa/mazerunner-{{matrix}}.ipa"
+            download: "features/fixtures/mazerunner/build/ios/ipa/mazerunner-{{matrix}}.ipa"
             upload:
               - "maze_output/failed/**/*"
               - "maze_output/maze_output.zip"
@@ -107,7 +107,7 @@ steps:
             run: "maze-runner"
             service-ports: true
             command:
-              - "--app=/app/features/fixtures/maze_runner/build/ios/ipa/mazerunner-{{matrix}}.ipa"
+              - "--app=/app/features/fixtures/mazerunner/build/ios/ipa/mazerunner-{{matrix}}.ipa"
               - "--farm=bb"
               - "--device=IOS_17|IOS_18|IOS_26"
               - "--no-tunnel"
@@ -139,7 +139,7 @@ steps:
           queue: "opensource"
         plugins:
           artifacts#v1.5.0:
-            download: "features/fixtures/maze_runner/build/app/outputs/flutter-apk/app-release-{{matrix}}.apk"
+            download: "features/fixtures/app/build/app/outputs/flutter-apk/app-release-{{matrix}}.apk"
             upload:
               - "maze_output/failed/**/*"
               - "maze_output/maze_output.zip"
@@ -148,7 +148,7 @@ steps:
             run: "maze-runner"
             service-ports: true
             command:
-              - "--app=features/fixtures/maze_runner/build/app/outputs/flutter-apk/app-release-{{matrix}}.apk"
+              - "--app=features/fixtures/app/build/app/outputs/flutter-apk/app-release-{{matrix}}.apk"
               - "--farm=bb"
               - "--device=ANDROID_14|ANDROID_15|ANDROID_16"
               - "--fail-fast"

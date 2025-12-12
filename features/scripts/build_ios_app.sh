@@ -28,7 +28,7 @@ echo "--- 🚧 Running xcodebuild to set provisioning profile (failure allowed).
 EXPORT_OPTIONS="$(pwd)/features/fixture_resources/exportOptions.plist"
 echo "Using export options plist at: \"$EXPORT_OPTIONS\""
 
-IOS_DIR="features/fixtures/maze_runner/ios"
+IOS_DIR="features/fixtures/mazerunner/ios"
 echo "Changing directory to \"$IOS_DIR\""
 cd "$IOS_DIR"
 

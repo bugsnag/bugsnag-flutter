@@ -8,7 +8,7 @@ if [[ -z "${FLUTTER_BIN:-}" ]]; then
   echo "FLUTTER_BIN not set; defaulting to 'flutter'"
 fi
 
-FIXTURE_NAME="maze_runner"
+FIXTURE_NAME="mazerunner"
 
 FIXTURE_LOCATION="features/fixtures/$FIXTURE_NAME"
 
