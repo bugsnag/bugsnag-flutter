@@ -102,3 +102,18 @@ rm -rf "$DART_TEST_LOCATION"
 rm -rf "$DART_LOCATION"
 
 cp -r "$BS_DART_LOCATION" "$BS_DART_DESTINATION"
+
+if $FLUTTER_BIN --version | grep -qE 'Flutter 3\.(3[8-9]|[4-9][0-9]|[1-9][0-9]{2,})'; then
+  APP_DELEGATE_FILE="features/fixture_resources/ios/AppDelegate.swift"
+  APP_DELEGATE_DEST_FILE="features/fixtures/$FIXTURE_NAME/ios/Runner/AppDelegate.swift"
+  MAIN_ACTIVITY_FILE="features/fixture_resources/android/MainActivity.kt"
+  MAIN_ACTIVITY_DEST_FILE="features/fixtures/$FIXTURE_NAME/android/app/src/main/kotlin/com/bugsnag/mazerunner/MainActivity.kt"
+else
+  APP_DELEGATE_FILE="features/fixture_resources/ios/Runner/AppDelegate.m"
+  APP_DELEGATE_DEST_FILE="features/fixtures/$FIXTURE_NAME/ios/Runner/AppDelegate.swift"
+  MAIN_ACTIVITY_FILE="features/fixture_resources/android/MainActivity.java"
+  MAIN_ACTIVITY_DEST_FILE="features/fixtures/$FIXTURE_NAME/android/app/src/main/kotlin/com/bugsnag/mazerunner/MainActivity.java"
+fi
+
+cp "$APP_DELEGATE_FILE" "$APP_DELEGATE_DEST_FILE"
+cp "$MAIN_ACTIVITY_FILE" "$MAIN_ACTIVITY_DEST_FILE"
