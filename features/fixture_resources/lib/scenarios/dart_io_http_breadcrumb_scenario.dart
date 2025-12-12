@@ -1,4 +1,4 @@
-import 'package:maze_runner/scenarios/scenario.dart';
+import 'package:mazerunner/scenarios/scenario.dart';
 import 'package:bugsnag_flutter/bugsnag_flutter.dart';
 import 'package:bugsnag_flutter_dart_io_http_client/bugsnag_flutter_dart_io_http_client.dart' as dart_io;
 

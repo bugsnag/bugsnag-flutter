@@ -1,4 +1,4 @@
-import 'package:maze_runner/channels.dart';
+import 'package:mazerunner/channels.dart';
 import 'package:bugsnag_flutter/bugsnag_flutter.dart';
 
 import 'scenario.dart';

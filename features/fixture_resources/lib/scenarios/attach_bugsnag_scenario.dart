@@ -1,4 +1,4 @@
-import 'package:maze_runner/scenarios/scenario.dart';
+import 'package:mazerunner/scenarios/scenario.dart';
 import 'package:bugsnag_flutter/bugsnag_flutter.dart';
 
 class AttachBugsnagScenario extends Scenario {

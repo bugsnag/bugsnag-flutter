@@ -1,5 +1,5 @@
-import 'package:maze_runner/scenarios/null_context_scenario.dart';
-import 'package:maze_runner/scenarios/null_user_scenario.dart';
+import 'package:mazerunner/scenarios/null_context_scenario.dart';
+import 'package:mazerunner/scenarios/null_user_scenario.dart';
 
 import 'app_hang_scenario.dart';
 import 'attach_bugsnag_scenario.dart';

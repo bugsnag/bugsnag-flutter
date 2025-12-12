@@ -4,7 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:maze_runner/channels.dart';
+import 'package:mazerunner/channels.dart';
 import 'package:bugsnag_flutter/bugsnag_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';

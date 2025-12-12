@@ -1,5 +1,5 @@
-import 'package:maze_runner/channels.dart';
-import 'package:maze_runner/scenarios/scenario.dart';
+import 'package:mazerunner/channels.dart';
+import 'package:mazerunner/scenarios/scenario.dart';
 import 'package:bugsnag_flutter/bugsnag_flutter.dart';
 
 class AppHangScenario extends Scenario {
