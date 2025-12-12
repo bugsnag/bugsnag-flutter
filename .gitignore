@@ -2,5 +2,7 @@
 Package.resolved
 Podfile.lock
 maze_output/
+maze-runner.log
 Gemfile.lock
 .idea/
+bugsnag-flutter.iml

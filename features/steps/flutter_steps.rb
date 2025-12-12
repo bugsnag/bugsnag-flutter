@@ -22,9 +22,7 @@ def execute_command(action, scenario_name)
   command = { action: action, scenario_name: scenario_name, extra_config: extra_config }
   Maze::Server.commands.add command
   
-  touch_action = Appium::TouchAction.new
-  touch_action.tap({:x => 200, :y => 200})
-  touch_action.perform
+  Maze::Api::Appium::UiManager.new.touch_at(200, 200)
 
   $extra_config = ''
   # Ensure fixture has read the command
@@ -34,13 +32,13 @@ def execute_command(action, scenario_name)
 end
 
 When('I relaunch the app') do
-  Maze::Api::Appium::AppManager.new.launch
+  Maze::Api::Appium::AppManager.new.activate
 end
 
 When("I relaunch the app after a crash") do
   # Wait for the app to stop running before relaunching
   step 'the app is not running'
-  Maze::Api::Appium::AppManager.new.launch
+  Maze::Api::Appium::AppManager.new.activate
 end
 
 Then('the app is not running') do
