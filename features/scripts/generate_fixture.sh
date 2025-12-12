@@ -109,7 +109,7 @@ if $FLUTTER_BIN --version | grep -qE 'Flutter 3\.(3[8-9]|[4-9][0-9]|[1-9][0-9]{2
   MAIN_ACTIVITY_FILE="features/fixture_resources/android/MainActivity.kt"
   MAIN_ACTIVITY_DEST_FILE="features/fixtures/$FIXTURE_NAME/android/app/src/main/kotlin/com/bugsnag/mazerunner/MainActivity.kt"
 else
-  APP_DELEGATE_FILE="features/fixture_resources/ios/Runner/AppDelegate.m"
+  APP_DELEGATE_FILE="features/fixture_resources/ios/AppDelegate.m"
   APP_DELEGATE_DEST_FILE="features/fixtures/$FIXTURE_NAME/ios/Runner/AppDelegate.swift"
   MAIN_ACTIVITY_FILE="features/fixture_resources/android/MainActivity.java"
   MAIN_ACTIVITY_DEST_FILE="features/fixtures/$FIXTURE_NAME/android/app/src/main/kotlin/com/bugsnag/mazerunner/MainActivity.java"
