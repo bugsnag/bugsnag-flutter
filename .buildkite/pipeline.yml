@@ -92,21 +92,22 @@ steps:
           - "3.38.3"
           - "3.24.4"
           - "3.19.0"
-          - "3.10.0"
+        env:
+          FLUTTER_VERSION: "{{matrix}}"
         agents:
           queue: "opensource"
         plugins:
           artifacts#v1.5.0:
-            download: "features/fixtures/app/build/ios/ipa/app-{{matrix}}.ipa"
+            download: "features/fixtures/mazerunner/build/ios/ipa/mazerunner-{{matrix}}.ipa"
             upload:
-              - "maze_output/maze_output.zip"
               - "maze_output/failed/**/*"
+              - "maze_output/maze_output.zip"
           docker-compose#v4.7.0:
             pull: "maze-runner"
             run: "maze-runner"
             service-ports: true
             command:
-              - "--app=/app/features/fixtures/app/build/ios/ipa/app-{{matrix}}.ipa"
+              - "--app=/app/features/fixtures/mazerunner/build/ios/ipa/mazerunner-{{matrix}}.ipa"
               - "--farm=bb"
               - "--device=IOS_17|IOS_18|IOS_26"
               - "--no-tunnel"
@@ -124,38 +125,42 @@ steps:
             - exit_status: 103  # Appium session failed
               limit: 2
 
-      - label: ":browserstack: Flutter {{matrix}} Android 12 end-to-end tests"
+      - label: ":bitbar: Flutter {{matrix}} Android end-to-end tests"
         depends_on: "android-fixture"
         timeout_in_minutes: 20
         matrix:
-#          - "3.38.3" Skipped: Waiting on PLAT-15326
+#          - "3.38.3"
           - "3.24.4"
           - "3.19.0"
           - "3.10.0"
+        env:
+          FLUTTER_VERSION: "{{matrix}}"
         agents:
           queue: "opensource"
         plugins:
           artifacts#v1.5.0:
-            download: "features/fixtures/app/build/app/outputs/flutter-apk/app-release-{{matrix}}.apk"
+            download: "features/fixtures/mazerunner/build/app/outputs/flutter-apk/app-release-{{matrix}}.apk"
             upload:
-              - "maze_output/maze_output.zip"
               - "maze_output/failed/**/*"
+              - "maze_output/maze_output.zip"
           docker-compose#v4.7.0:
             pull: "maze-runner"
             run: "maze-runner"
             service-ports: true
             command:
-              - "--app=/app/features/fixtures/app/build/app/outputs/flutter-apk/app-release-{{matrix}}.apk"
-              - "--farm=bs"
-              - "--device=ANDROID_15"
-              - "--appium-version=2.19.0"
+              - "--app=features/fixtures/mazerunner/build/app/outputs/flutter-apk/app-release-{{matrix}}.apk"
+              - "--farm=bb"
+              - "--device=ANDROID_14|ANDROID_15|ANDROID_16"
               - "--fail-fast"
+              - "--no-tunnel"
+              - "--aws-public-ip"
+              - "--appium-version=1.22"
           test-collector#v1.10.2:
             files: "reports/TEST-*.xml"
             format: "junit"
             branch: "^main|next$$"
-        concurrency: 5
-        concurrency_group: "browserstack-app"
+        concurrency: 25
+        concurrency_group: "bitbar"
         concurrency_method: "eager"
         retry:
           automatic:
