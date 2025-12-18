@@ -15,7 +15,7 @@ class MazeRunnerChannels {
   }
 
   static Future<void> runScenario(String scenarioName,
-          {Map<String, dynamic>? arguments}) async =>
+      {Map<String, dynamic>? arguments}) async =>
       platform.invokeMethod('runScenario', {
         'scenarioName': scenarioName,
         ...?arguments,

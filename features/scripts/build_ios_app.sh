@@ -22,8 +22,6 @@ echo "--- 🔧 Generate Fixture"
 echo "Running generate_fixture.sh script"
 ./features/scripts/generate_fixture.sh
 
-
-
 echo "--- 🚧 Running xcodebuild to set provisioning profile (failure allowed)..."
 EXPORT_OPTIONS="$(pwd)/features/fixture_resources/exportOptions.plist"
 echo "Using export options plist at: \"$EXPORT_OPTIONS\""

@@ -8,9 +8,7 @@ if [[ -z "${FLUTTER_BIN:-}" ]]; then
   echo "FLUTTER_BIN not set; defaulting to 'flutter'"
 fi
 
-FIXTURE_NAME="mazerunner"
-
-FIXTURE_LOCATION="features/fixtures/$FIXTURE_NAME"
+FIXTURE_LOCATION=features/fixtures/mazerunner
 
 PACKAGE_PATH="$(pwd)/packages/bugsnag_flutter"
 
@@ -18,42 +16,40 @@ HTTP_WRAPPER_PACKAGE_PATH="$(pwd)/packages/bugsnag_http_client"
 
 DART_IO_WRAPPER_PACKAGE_PATH="$(pwd)/packages/bugsnag_flutter_dart_io_http_client"
 
-EXPORT_OPTIONS="features/fixture_resources/exportOptions.plist"
+EXPORT_OPTIONS=features/fixture_resources/exportOptions.plist
 
-XCODE_PROJECT="features/fixtures/$FIXTURE_NAME/ios/Runner.xcodeproj/project.pbxproj"
+XCODE_PROJECT=features/fixtures/mazerunner/ios/Runner.xcodeproj/project.pbxproj
 
-XCODE_PLIST="features/fixtures/$FIXTURE_NAME/ios/Runner/Info.plist"
+XCODE_PLIST=features/fixtures/mazerunner/ios/Runner/Info.plist
 
-ANDROID_MANIFEST="features/fixtures/$FIXTURE_NAME/android/app/src/main/AndroidManifest.xml"
+ANDROID_MANIFEST=features/fixtures/mazerunner/android/app/src/main/AndroidManifest.xml
 
-DART_LOCATION="features/fixtures/$FIXTURE_NAME/lib"
+DART_LOCATION=features/fixtures/mazerunner/lib
 
-DART_TEST_LOCATION="features/fixtures/test"
+DART_TEST_LOCATION=features/fixtures/test
 
-BS_DART_LOCATION="features/fixture_resources/lib"
+BS_DART_LOCATION=features/fixture_resources/lib
 
-BS_DART_DESTINATION="features/fixtures/$FIXTURE_NAME"
+BS_DART_DESTINATION=features/fixtures/mazerunner
 
 # Change android gradle file based on flutter version
 if $FLUTTER_BIN --version | grep -qE 'Flutter 3\.(3[8-9]|[4-9][0-9]|[1-9][0-9]{2,})'; then
-  ANDROID_GRADLE="features/fixtures/$FIXTURE_NAME/android/app/build.gradle.kts"
+  ANDROID_GRADLE=features/fixtures/mazerunner/android/app/build.gradle.kts
 else
-  ANDROID_GRADLE="features/fixtures/$FIXTURE_NAME/android/app/build.gradle"
+  ANDROID_GRADLE=features/fixtures/mazerunner/android/app/build.gradle
 fi
 
-PODFILE="features/fixtures/$FIXTURE_NAME/ios/Podfile"
+PODFILE=features/fixtures/mazerunner/ios/Podfile
 
-echo "--- Removing old fixture"
+echo "Remove old fixture"
 
-rm -rf "$FIXTURE_LOCATION"
+rm -rf $FIXTURE_LOCATION
 
-echo "--- Creating new Flutter fixture"
+echo "Create blank fixture"
 
-"$FLUTTER_BIN" create "$FIXTURE_LOCATION"  --org com.bugsnag --platforms=ios,android
+$FLUTTER_BIN create $FIXTURE_LOCATION  --org com.bugsnag --platforms=ios,android
 
-echo "--- Adding dependencies"
-
-$FLUTTER_BIN pub add --directory="$FIXTURE_LOCATION" "bugsnag_flutter:{'path':'$PACKAGE_PATH'}"
+echo "Add dependencies"
 
 $FLUTTER_BIN pub add --directory="$FIXTURE_LOCATION" path_provider
 
@@ -62,8 +58,8 @@ $FLUTTER_BIN pub add --directory="$FIXTURE_LOCATION" http
 # Change the version of native_flutter_proxy based on flutter version. >= 3.20.0 requires a newer version
 if $FLUTTER_BIN --version | grep -qE 'Flutter 3\.(2[0-9]|[3-9][0-9]|[1-9][0-9]{2,})'; then
   $FLUTTER_BIN pub add --directory="$FIXTURE_LOCATION" "native_flutter_proxy"
-  sed -i '' "s|import 'package:native_flutter_proxy/custom_proxy.dart';|import 'package:native_flutter_proxy/src/custom_proxy.dart';|" "${BS_DART_LOCATION}/main.dart"
-  sed -i '' "s|import 'package:native_flutter_proxy/native_proxy_reader.dart';|import 'package:native_flutter_proxy/src/native_proxy_reader.dart';|" "${BS_DART_LOCATION}/main.dart"
+  sed -i '' "s|import 'package:native_flutter_proxy/custom_proxy.dart';|import 'package:native_flutter_proxy/src/custom_proxy.dart';|" $BS_DART_LOCATION/main.dart
+  sed -i '' "s|import 'package:native_flutter_proxy/native_proxy_reader.dart';|import 'package:native_flutter_proxy/src/native_proxy_reader.dart';|" $BS_DART_LOCATION/main.dart
 else
   $FLUTTER_BIN pub add --directory="$FIXTURE_LOCATION" "native_flutter_proxy:0.1.15"
 fi
@@ -73,47 +69,36 @@ $FLUTTER_BIN pub add --directory="$FIXTURE_LOCATION" "bugsnag_flutter_dart_io_ht
 
 $FLUTTER_BIN pub add --directory="$FIXTURE_LOCATION" dio
 
-echo "--- Updating Android Gradle file"
+$FLUTTER_BIN pub add --directory="$FIXTURE_LOCATION" "bugsnag_flutter:{'path':'$PACKAGE_PATH'}"
+
+echo "update min sdk version in android gradle file"
 
 sed -i '' 's/minSdkVersion flutter.minSdkVersion/minSdkVersion 19/g' "$ANDROID_GRADLE"
 
-echo "--- Updating iOS Podfile"
+echo "Add min platform to pod file"
 
 sed -i '' "s/# platform :ios, '11.0'/platform :ios, '12.0'/" "$PODFILE"
 
-echo "--- Updating Xcode project"
+echo "Add dev team to Xcode project"
 
 sed -i '' "s/ENABLE_BITCODE = NO;/ENABLE_BITCODE = NO;\nDEVELOPMENT_TEAM = 7W9PZ27Y5F;\nCODE_SIGN_STYLE = Automatic;/g" "$XCODE_PROJECT"
 
-echo "--- Updating Xcode plist"
+echo "Add cleartext permission to xcode plist"
 
 sed -i '' "s/<key>CFBundleDevelopmentRegion<\/key>/<key>NSAppTransportSecurity<\/key><dict><key>NSAllowsArbitraryLoads<\/key><true\/><\/dict>\n<key>CFBundleDevelopmentRegion<\/key>/g" "$XCODE_PLIST"
 
-echo "--- Updating Android Manifest"
+echo "Add Android internet permission"
 
-sed -i '' "s|</application>|</application>\n<uses-permission android:name='android.permission.INTERNET'/>|g" "$ANDROID_MANIFEST"
+sed -i '' "s/<\/application>/<\/application>\n<uses-permission android:name='android.permission.INTERNET'\/\>/g" "$ANDROID_MANIFEST"
 
-sed -i '' "s|android:icon=\"@mipmap/ic_launcher\">|android:icon=\"@mipmap/ic_launcher\"\n        android:usesCleartextTraffic=\"true\">|g" "$ANDROID_MANIFEST"
+echo "Add Android usesCleartextTraffic value"
 
-echo "--- Copying test fixture code"
+sed -i '' "s/android:icon=\"@mipmap\/ic_launcher\"\>/android:icon=\"@mipmap\/ic_launcher\"\n\t\tandroid:usesCleartextTraffic=\"true\"\>/g" "$ANDROID_MANIFEST"
 
-rm -rf "$DART_TEST_LOCATION"
+echo "Copy test fixture code"
 
-rm -rf "$DART_LOCATION"
+rm -rf $DART_TEST_LOCATION
 
-cp -r "$BS_DART_LOCATION" "$BS_DART_DESTINATION"
+rm -rf $DART_LOCATION
 
-if $FLUTTER_BIN --version | grep -qE 'Flutter 3\.(3[8-9]|[4-9][0-9]|[1-9][0-9]{2,})'; then
-  APP_DELEGATE_FILE="features/fixture_resources/ios/AppDelegate.swift"
-  APP_DELEGATE_DEST_FILE="features/fixtures/$FIXTURE_NAME/ios/Runner/AppDelegate.swift"
-  MAIN_ACTIVITY_FILE="features/fixture_resources/android/MainActivity.kt"
-  MAIN_ACTIVITY_DEST_FILE="features/fixtures/$FIXTURE_NAME/android/app/src/main/kotlin/com/bugsnag/mazerunner/MainActivity.kt"
-else
-  APP_DELEGATE_FILE="features/fixture_resources/ios/AppDelegate.m"
-  APP_DELEGATE_DEST_FILE="features/fixtures/$FIXTURE_NAME/ios/Runner/AppDelegate.swift"
-  MAIN_ACTIVITY_FILE="features/fixture_resources/android/MainActivity.java"
-  MAIN_ACTIVITY_DEST_FILE="features/fixtures/$FIXTURE_NAME/android/app/src/main/kotlin/com/bugsnag/mazerunner/MainActivity.java"
-fi
-
-cp "$APP_DELEGATE_FILE" "$APP_DELEGATE_DEST_FILE"
-cp "$MAIN_ACTIVITY_FILE" "$MAIN_ACTIVITY_DEST_FILE"
+cp -r $BS_DART_LOCATION $BS_DART_DESTINATION
