@@ -10,8 +10,6 @@ abstract class Scenario {
 
   String? extraConfig;
 
-  void Function()? runCommandCallback;
-
   Future<void> clearPersistentData() async {
     print('[MazeRunner] Clearing Persistent Data...');
     await MazeRunnerChannels.clearPersistentData();
@@ -25,10 +23,6 @@ abstract class Scenario {
   Widget? createWidget() => null;
 
   Future<void> run();
-
-  void invokeMethod(String name) {}
-
-  RouteSettings? routeSettings() => null;
 }
 
 void expect(dynamic actual, dynamic expected) {
