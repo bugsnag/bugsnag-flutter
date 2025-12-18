@@ -1,9 +1,7 @@
-package com.bugsnag.flutter.test.app;
+package fixture_resources.android;
 
 import android.os.Bundle;
-
 import androidx.annotation.Nullable;
-
 import io.flutter.embedding.android.FlutterActivity;
 import io.flutter.plugin.common.MethodChannel;
 

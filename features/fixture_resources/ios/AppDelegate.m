@@ -1,111 +1,96 @@
-import Flutter
-import UIKit
-import Bugsnag
-import bugsnag_flutter
+#import <Bugsnag/Bugsnag.h>
+#import <bugsnag_flutter/BugsnagFlutterConfiguration.h>
 
-@main
-class AppDelegate: FlutterAppDelegate {
+#import "AppDelegate.h"
+#import "GeneratedPluginRegistrant.h"
+#import "Scenarios/Scenario.h"
 
-    override func application(
-        _ application: UIApplication,
-        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil
-    ) -> Bool {
+@implementation AppDelegate
 
-        GeneratedPluginRegistrant.register(with: self)
+- (BOOL)application:(UIApplication *)application
+    didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    
+    [GeneratedPluginRegistrant registerWithRegistry:self];
 
-        let controller = window?.rootViewController as! FlutterViewController
-        let nativeChannel = FlutterMethodChannel(
-            name: "com.bugsnag.mazeRunner/platform",
-            binaryMessenger: controller.engine.binaryMessenger
-        )
+    FlutterViewController* controller = (FlutterViewController*)self.window.rootViewController;
+    
+    FlutterMethodChannel* nativeChannel = [FlutterMethodChannel methodChannelWithName:@"com.bugsnag.mazeRunner/platform"
+              binaryMessenger:controller.engine.binaryMessenger
+    ];
 
-        nativeChannel.setMethodCallHandler { [weak self] call, result in
-            self?.onMethod(call: call, result: result)
+    [nativeChannel setMethodCallHandler:^(FlutterMethodCall *call, FlutterResult result) {
+        [self onMethod :call :result];
+    }];
+
+    return [super application:application didFinishLaunchingWithOptions:launchOptions];
+}
+
+-(void)onMethod:(FlutterMethodCall*) call
+               :(FlutterResult) result {
+    NSLog(@"FlutterMethodCallHandler: %@ %@", call.method, call.arguments);
+    
+    if([@"getCommand" isEqualToString:call.method]) {
+        result([self getCommandWithUrl:call.arguments[@"commandUrl"]]);
+    } else if([@"runScenario" isEqualToString:call.method]) {
+        NSString *scenarioName = call.arguments[@"scenarioName"];
+        Scenario *targetScenario = [Scenario createScenarioNamed:scenarioName];
+        
+        if(targetScenario == nil) {
+            result([FlutterError errorWithCode:@"NoSuchScenario"
+                                       message:scenarioName
+                                       details:nil]);
+        } else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [targetScenario runWithArguments:call.arguments];
+                result(nil);
+            });
         }
-
-        return super.application(application, didFinishLaunchingWithOptions: launchOptions)
-    }
-
-    func onMethod(call: FlutterMethodCall, result: @escaping FlutterResult) {
-        print("FlutterMethodCallHandler: \(call.method) \(String(describing: call.arguments))")
-
-        guard let args = call.arguments as? [String: Any] else {
-            result(FlutterError(code: "InvalidArguments", message: nil, details: nil))
-            return
+    } else if([@"startBugsnag" isEqualToString:call.method]) {
+        BugsnagConfiguration *config = [BugsnagConfiguration loadConfig];
+        config.apiKey = @"abc12312312312312312312312312312";
+        
+        NSString *notifyEndpoint = call.arguments[@"notifyEndpoint"];
+        NSString *sessionEndpoint = call.arguments[@"sessionEndpoint"];
+        NSString *extraConfig = call.arguments[@"extraConfig"];
+        
+        if(notifyEndpoint != nil && sessionEndpoint != nil) {
+            config.endpoints = [[BugsnagEndpointConfiguration alloc] initWithNotify:notifyEndpoint
+                                                                           sessions:sessionEndpoint];
         }
-
-        switch call.method {
-        case "getCommand":
-            if let url = args["commandUrl"] as? String {
-                result(getCommand(urlString: url))
-            } else {
-                result(nil)
-            }
-
-        case "runScenario":
-            if let scenarioName = args["scenarioName"] as? String,
-               let targetScenario = Scenario.createScenario(named: scenarioName) {
-                DispatchQueue.main.async {
-                    targetScenario.run(withArguments: args)
-                    result(nil)
-                }
-            } else {
-                result(FlutterError(code: "NoSuchScenario", message: args["scenarioName"] as? String, details: nil))
-            }
-
-        case "startBugsnag":
-            let config = BugsnagConfiguration.loadConfig()
-            config.apiKey = "abc12312312312312312312312312312"
-
-            if let notify = args["notifyEndpoint"] as? String,
-               let session = args["sessionEndpoint"] as? String {
-                config.endpoints = BugsnagEndpointConfiguration(
-                    notify: notify,
-                    sessions: session
-                )
-            }
-
-            Bugsnag.start(with: config)
-
-            if let extra = args["extraConfig"] as? String,
-               extra.contains("disableDartErrors") {
-                BugsnagFlutterConfiguration.enabledErrorTypes().dartErrors = false
-            }
-
-            result(nil)
-
-        case "clearPersistentData":
-            if let bundleID = Bundle.main.bundleIdentifier {
-                UserDefaults.standard.removePersistentDomain(forName: bundleID)
-            }
-
-            let appSupport = NSSearchPathForDirectoriesInDomains(.applicationSupportDirectory, .userDomainMask, true)[0]
-            let bugsnagDir = (appSupport as NSString).appendingPathComponent("com.bugsnag.Bugsnag")
-
-            do {
-                try FileManager.default.removeItem(atPath: bugsnagDir)
-            } catch let error as NSError {
-                if !(error.domain == NSCocoaErrorDomain && error.code == NSFileNoSuchFileError) {
-                    print(error)
-                }
-            }
-
-            result(nil)
-
-        case "appHang":
-            DispatchQueue.main.async {
-                sleep(3)
-                result(nil)
-            }
-
-        default:
-            result(FlutterMethodNotImplemented)
+        
+        [Bugsnag startWithConfiguration:config];
+        
+        if ([extraConfig containsString:@"disableDartErrors"]) {
+            BugsnagFlutterConfiguration.enabledErrorTypes.dartErrors = NO;
         }
-    }
-
-    func getCommand(urlString: String) -> String? {
-        guard let url = URL(string: urlString),
-              let data = try? Data(contentsOf: url) else { return nil }
-        return String(data: data, encoding: .utf8)
+        
+        result(nil);
+    } else if ([@"clearPersistentData" isEqual:call.method]) {
+        [NSUserDefaults.standardUserDefaults removePersistentDomainForName:NSBundle.mainBundle.bundleIdentifier];
+        NSString *appSupportDir = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES)[0];
+        NSString *bugsnagDir = [appSupportDir stringByAppendingPathComponent:@"com.bugsnag.Bugsnag"];
+        NSError *error = nil;
+        if (![NSFileManager.defaultManager removeItemAtPath:bugsnagDir error:&error]) {
+            if (![error.domain isEqualToString:NSCocoaErrorDomain] && error.code != NSFileNoSuchFileError) {
+                NSLog(@"%@", error);
+            }
+        }
+        result(nil);
+    } else if ([@"appHang" isEqualToString:call.method]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            sleep(3);
+            result(nil);
+        });
     }
 }
+
+
+-(NSString *)getCommandWithUrl:(NSString *)urlString {
+    NSURL *url = [NSURL URLWithString:urlString];
+    NSData *data = [NSData dataWithContentsOfURL:url];
+    NSString *ret = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+
+    return ret;
+}
+
+@end
