@@ -2,7 +2,7 @@
 
 ## TBD
 
-- Upgrade Android compileSdkVersion from 31 to 34.
+- Upgrade Android compileSdkVersion from 31 to 34 [#305](https://github.com/bugsnag/bugsnag-flutter/pull/305)
 - Amend secondary instance URL to bugsnag.smartbear.com [#299](https://github.com/bugsnag/bugsnag-flutter/pull/299)
 
 ## 4.2.0 (2025-09-29)
