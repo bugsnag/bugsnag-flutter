@@ -26,7 +26,7 @@ apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
-    compileSdkVersion flutter.hasProperty('compileSdkVersion') ? flutter.compileSdkVersion : 30
+    compileSdkVersion flutter.hasProperty('compileSdkVersion') ? flutter.compileSdkVersion : 34
     namespace "com.bugsnag.flutter.test.app"
     ndkVersion flutter.ndkVersion
 
@@ -46,7 +46,7 @@ android {
     defaultConfig {
         applicationId "com.bugsnag.flutter.test.app"
         minSdkVersion flutter.minSdkVersion
-        targetSdkVersion flutter.hasProperty('targetSdkVersion') ? flutter.targetSdkVersion : 30
+        targetSdkVersion flutter.hasProperty('targetSdkVersion') ? flutter.targetSdkVersion : 34
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
