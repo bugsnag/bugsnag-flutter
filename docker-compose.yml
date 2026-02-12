@@ -1,7 +1,7 @@
 services:
 
   maze-runner:
-    image: 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v10-cli
+    image: 855461928731.dkr.ecr.us-west-1.amazonaws.com/maze-runner-releases:latest-v11-cli
     environment:
       DEBUG:
       BITBAR_USERNAME:
