@@ -13,6 +13,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_web_plugins:
+    sdk: flutter
   bugsnag_bridge: ^2.0.0
 
 dev_dependencies:
@@ -32,3 +34,6 @@ flutter:
         pluginClass: BugsnagFlutterPlugin
       ios:
         pluginClass: BugsnagFlutterPlugin
+      web:
+        pluginClass: BugsnagFlutterWeb
+        fileName: bugsnag_flutter_web.dart
