@@ -16,6 +16,7 @@ dependencies:
   flutter_web_plugins:
     sdk: flutter
   bugsnag_bridge: ^2.0.0
+  web: ^1.0.0
 
 dev_dependencies:
   flutter_test:

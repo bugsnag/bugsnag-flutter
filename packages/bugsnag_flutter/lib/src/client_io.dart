@@ -316,6 +316,7 @@ Future<BugsnagClient> platformStart({
   Object? persistenceDirectory,
   int? versionCode,
   required Map<String, dynamic> notifier,
+  bool collectUserIp = true,
 }) async {
   final detectDartErrors =
       autoDetectErrors && enabledErrorTypes.unhandledDartExceptions;

@@ -38,6 +38,7 @@ Future<BugsnagClient> platformStart({
   Object? persistenceDirectory,
   int? versionCode,
   required Map<String, dynamic> notifier,
+  bool collectUserIp = true,
 }) async {
   throw UnsupportedError('start() is not supported on this platform');
 }
