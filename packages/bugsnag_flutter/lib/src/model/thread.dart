@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'package:flutter/foundation.dart';
 
 import '_model_extensions.dart';
 import 'event.dart';
@@ -46,7 +46,7 @@ class BugsnagThread {
         type = json
                 .safeGet<String>('type')
                 ?.let((name) => BugsnagErrorType.forName(name)) ??
-            (Platform.isAndroid
+            (defaultTargetPlatform == TargetPlatform.android
                 ? BugsnagErrorType.android
                 : BugsnagErrorType.cocoa),
         _stacktrace = json.safeGet<List>('stacktrace')?.let((frames) =>

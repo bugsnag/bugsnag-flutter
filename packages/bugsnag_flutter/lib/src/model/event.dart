@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'package:flutter/foundation.dart';
 
 import '../enum_utils.dart';
 import '_model_extensions.dart';
@@ -270,7 +270,7 @@ class BugsnagError {
         type = json
                 .safeGet<String>('type')
                 ?.let((type) => BugsnagErrorType.forName(type)) ??
-            (Platform.isAndroid
+            (defaultTargetPlatform == TargetPlatform.android
                 ? BugsnagErrorType.android
                 : BugsnagErrorType.cocoa),
         stacktrace = BugsnagStackframe.stacktraceFromJson(
