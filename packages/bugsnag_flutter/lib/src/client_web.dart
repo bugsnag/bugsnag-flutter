@@ -22,6 +22,9 @@ external JSObject _bugsnagStart(JSObject config);
 @JS('Bugsnag.notify')
 external void _bugsnagNotify(JSAny error, [JSObject? options]);
 
+@JS('Bugsnag.resumeSession')
+external JSBoolean _bugsnagResumeSession();
+
 /// Web implementation of BugsnagClient using JS interop.
 class WebClient extends BugsnagClient {
   FlutterExceptionHandler? _previousFlutterOnError;
@@ -105,9 +108,9 @@ class WebClient extends BugsnagClient {
       throw UnimplementedError('pauseSession is not yet supported on web');
 
   @override
-  Future<bool> resumeSession() {
-    print('BUGSNAG: resumeSession()');
-    return Future.value(true);
+  Future<bool> resumeSession() async {
+    _checkBugsnagLoaded();
+    return _bugsnagResumeSession().toDart;
   }
 
   @override
@@ -157,6 +160,14 @@ class WebClient extends BugsnagClient {
 
   @override
   networkInstrumentation(data) {}
+
+  void _checkBugsnagLoaded() {
+    if (_bugsnagJS == null) {
+      throw Exception(
+        'Bugsnag is not loaded. Please add the @bugsnag/js script to your web/index.html.',
+      );
+    }
+  }
 }
 
 /// Create bugsnag-js configuration from Bugsnag Flutter configuration.
