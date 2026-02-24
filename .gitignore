@@ -6,3 +6,4 @@ maze-runner.log
 Gemfile.lock
 .idea/
 bugsnag-flutter.iml
+.claude/*.local.json
