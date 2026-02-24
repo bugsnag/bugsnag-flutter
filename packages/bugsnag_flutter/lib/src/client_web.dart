@@ -22,6 +22,9 @@ external JSObject _bugsnagStart(JSObject config);
 @JS('Bugsnag.notify')
 external void _bugsnagNotify(JSAny error, [JSObject? options]);
 
+@JS('Bugsnag.setUser')
+external void _bugsnagSetUser(JSString? id, JSString? email, JSString? name);
+
 @JS('Bugsnag.resumeSession')
 external JSBoolean _bugsnagResumeSession();
 
@@ -44,7 +47,8 @@ class WebClient extends BugsnagClient {
 
   @override
   Future<void> setUser({String? id, String? email, String? name}) async {
-    print('BUGSNAG: setUser(id: $id, email: $email, name: $name)');
+    _checkBugsnagLoaded();
+    _bugsnagSetUser(id?.toJS, email?.toJS, name?.toJS);
   }
 
   @override
