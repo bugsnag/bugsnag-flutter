@@ -17,7 +17,7 @@ class WebClient extends BugsnagClient {
 
   @override
   Future<void> setUser({String? id, String? email, String? name}) async {
-    print('setUser(id: $id, email: $email, name: $name)');
+    print('BUGSNAG: setUser(id: $id, email: $email, name: $name)');
   }
 
   @override
@@ -81,8 +81,10 @@ class WebClient extends BugsnagClient {
       throw UnimplementedError('pauseSession is not yet supported on web');
 
   @override
-  Future<bool> resumeSession() =>
-      throw UnimplementedError('resumeSession is not yet supported on web');
+  Future<bool> resumeSession() {
+    print('BUGSNAG: resumeSession()');
+    return Future.value(true);
+  }
 
   @override
   Future<void> markLaunchCompleted() =>
@@ -99,7 +101,7 @@ class WebClient extends BugsnagClient {
     StackTrace? stackTrace, {
     BugsnagOnErrorCallback? callback,
   }) async {
-    print('notify($error)');
+    print('BUGSNAG: notify($error)');
   }
 
   @override
@@ -162,7 +164,7 @@ Future<BugsnagClient> platformStart({
   int? versionCode,
   required Map<String, dynamic> notifier,
 }) async {
-  print('start()');
+  print('BUGSNAG: start()');
   return WebClient();
 }
 
