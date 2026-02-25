@@ -276,11 +276,11 @@ class BugsnagError {
         stacktrace = BugsnagStackframe.stacktraceFromJson(
             (json['stacktrace'] as List).cast());
 
-  dynamic toJson() => {
+  Map<String, dynamic> toJson() => {
         'errorClass': errorClass,
         if (message != null) 'message': message,
         'type': type.name,
-        'stacktrace': stacktrace,
+        'stacktrace': stacktrace.map((frame) => frame.toJson()).toList(),
       };
 }
 

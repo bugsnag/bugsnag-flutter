@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'callbacks.dart';
 import 'client.dart';
 import 'config.dart';
+import 'error_factory.dart';
 import 'last_run_info.dart';
 import 'model.dart';
 
@@ -131,7 +132,7 @@ class WebClient extends BugsnagClient {
     StackTrace? stackTrace, {
     BugsnagOnErrorCallback? callback,
   }) async {
-    print('BUGSNAG: notify($error)');
+    await _notifyInternal(error, false, stackTrace, callback);
   }
 
   @override
@@ -145,12 +146,68 @@ class WebClient extends BugsnagClient {
   }
 
   void _onFlutterError(FlutterErrorDetails details) {
-    print('BUGSNAG: FlutterError.onError: ${details.exception}');
+    _notifyInternal(details.exception, true, details.stack, null);
+    _previousFlutterOnError?.call(details);
   }
 
   bool _onDispatcherError(Object exception, StackTrace stack) {
-    print('BUGSNAG: PlatformDispatcher.onError: $exception');
-    return false; // allow default error handling to continue
+    _notifyInternal(exception, true, stack, null);
+    return _previousPlatformDispatcherOnError?.call(exception, stack) ?? false;
+  }
+
+  Future<void> _notifyInternal(
+    dynamic error,
+    bool unhandled,
+    StackTrace? stackTrace,
+    BugsnagOnErrorCallback? callback,
+  ) async {
+    _checkBugsnagLoaded();
+
+    // Create a basic event for Dart-side callbacks
+    final errorPayload =
+        BugsnagErrorFactory.instance.createError(error, stackTrace);
+    final event = BugsnagEvent.fromJson(<String, dynamic>{
+      'exceptions': [errorPayload.toJson()],
+      'threads': <dynamic>[],
+      'breadcrumbs': <dynamic>[],
+      'unhandled': unhandled,
+      'severity': unhandled ? 'error' : 'warning',
+      'severityReason': <String, dynamic>{
+        'type': unhandled ? 'unhandledException' : 'handledException',
+      },
+      'user': <String, dynamic>{},
+      'device': <String, dynamic>{},
+      'app': <String, dynamic>{},
+      'featureFlags': <dynamic>[],
+      'projectPackages': <dynamic>[],
+    });
+
+    if (!await _onErrorCallbacks.dispatch(event)) {
+      return;
+    }
+
+    if (callback != null && !await callback.invokeSafely(event)) {
+      return;
+    }
+
+    // Send to bugsnag-js
+    try {
+      final jsError = _jsCreateError(error.toString().toJS);
+      final options = _mapToJSObject({
+        'metadata': {
+          'dart_error': {
+            'type': error.runtimeType.toString(),
+            'message': error.toString(),
+            if (stackTrace != null) 'stackTrace': stackTrace.toString(),
+          }
+        }
+      });
+      _bugsnagNotify(jsError, options);
+    } catch (e) {
+      if (kDebugMode) {
+        print('[Bugsnag] Failed to notify: $e');
+      }
+    }
   }
 
   @override
