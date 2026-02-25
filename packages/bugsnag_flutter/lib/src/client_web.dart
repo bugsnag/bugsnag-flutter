@@ -34,9 +34,16 @@ class WebClient extends BugsnagClient {
   FlutterExceptionHandler? _previousFlutterOnError;
   bool Function(Object, StackTrace)? _previousPlatformDispatcherOnError;
   final CallbackCollection<BugsnagEvent> _onErrorCallbacks = {};
-  final bool _autoDetectErrors;
 
-  WebClient(this._autoDetectErrors);
+  WebClient(bool autoDetectErrors) {
+    if (autoDetectErrors) {
+      _previousFlutterOnError = FlutterError.onError;
+      FlutterError.onError = _onFlutterError;
+      _previousPlatformDispatcherOnError =
+          PlatformDispatcher.instance.onError;
+      PlatformDispatcher.instance.onError = _onDispatcherError;
+    }
+  }
 
   @override
   void Function(dynamic error, StackTrace? stack) get errorHandler =>
@@ -257,19 +264,11 @@ JSObject _mapToJSObject(Map<String, Object?> map) {
   return _jsonParse(jsonString.toJS);
 }
 
-Map<String, Object> _jsObjectToMap(JSObject obj) {
-  final jsonString = _jsonStringify(obj).toDart;
-  return (jsonDecode(jsonString) as Map).cast<String, Object>();
-}
-
 @JS('Error')
 external JSAny _jsCreateError(JSString message);
 
 @JS('JSON.parse')
 external JSObject _jsonParse(JSString json);
-
-@JS('JSON.stringify')
-external JSString _jsonStringify(JSAny? value);
 
 Future<BugsnagClient> platformStart({
   String? apiKey,
@@ -326,14 +325,6 @@ Future<BugsnagClient> platformStart({
   _bugsnagStart(jsConfig);
 
   final client = WebClient(detectDartErrors);
-
-  if (detectDartErrors) {
-    client._previousFlutterOnError = FlutterError.onError;
-    FlutterError.onError = client._onFlutterError;
-    client._previousPlatformDispatcherOnError =
-        PlatformDispatcher.instance.onError;
-    PlatformDispatcher.instance.onError = client._onDispatcherError;
-  }
 
   for (final callback in onError) {
     client.addOnError(callback);
