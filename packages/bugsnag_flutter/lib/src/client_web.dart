@@ -21,13 +21,18 @@ external JSObject? get _bugsnagJS;
 external JSObject _bugsnagStart(JSObject config);
 
 @JS('Bugsnag.notify')
-external void _bugsnagNotify(JSAny error, [JSObject? options]);
+external void _bugsnagNotify(JSAny error, [JSFunction? onError]);
 
 @JS('Bugsnag.setUser')
 external void _bugsnagSetUser(JSString? id, JSString? email, JSString? name);
 
 @JS('Bugsnag.resumeSession')
 external JSBoolean _bugsnagResumeSession();
+
+/// Extension type for the bugsnag-js Event object passed to onError callbacks.
+extension type _BugsnagJsEvent(JSObject _) implements JSObject {
+  external void addMetadata(JSString section, JSObject metadata);
+}
 
 /// Web implementation of BugsnagClient using JS interop.
 class WebClient extends BugsnagClient {
@@ -50,7 +55,7 @@ class WebClient extends BugsnagClient {
       _notifyUnhandled;
 
   void _notifyUnhandled(dynamic error, StackTrace? stackTrace) {
-    notify(error, stackTrace);
+    _notifyInternal(error, true, stackTrace, null);
   }
 
   @override
@@ -200,16 +205,15 @@ class WebClient extends BugsnagClient {
     // Send to bugsnag-js
     try {
       final jsError = _jsCreateError(error.toString().toJS);
-      final options = _mapToJSObject({
-        'metadata': {
-          'dart_error': {
-            'type': error.runtimeType.toString(),
-            'message': error.toString(),
-            if (stackTrace != null) 'stackTrace': stackTrace.toString(),
-          }
-        }
+      final metadata = _mapToJSObject({
+        'type': error.runtimeType.toString(),
+        'message': error.toString(),
+        if (stackTrace != null) 'stackTrace': stackTrace.toString(),
       });
-      _bugsnagNotify(jsError, options);
+      final onError = (_BugsnagJsEvent event) {
+        event.addMetadata('dart_error'.toJS, metadata);
+      }.toJS;
+      _bugsnagNotify(jsError, onError);
     } catch (e) {
       if (kDebugMode) {
         print('[Bugsnag] Failed to notify: $e');

@@ -7,7 +7,7 @@ repository: https://github.com/bugsnag/bugsnag-flutter
 issue_tracker: https://github.com/bugsnag/bugsnag-flutter/issues
 
 environment:
-  sdk: ">=3.0.0 <4.0.0"
+  sdk: ">=3.3.0 <4.0.0"
   flutter: ">=3.10.0"
 
 dependencies:
@@ -16,7 +16,6 @@ dependencies:
   flutter_web_plugins:
     sdk: flutter
   bugsnag_bridge: ^2.0.0
-  web: ^1.0.0
 
 dev_dependencies:
   flutter_test:
