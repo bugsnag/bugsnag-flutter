@@ -424,6 +424,9 @@ mixin DelegateClient implements BugsnagClient {
 class Bugsnag extends BugsnagClient with DelegateClient {
   Bugsnag._internal();
 
+  /// Whether Bugsnag has been started via [start] or [attach].
+  bool get isStarted => _client != null;
+
   /// Attach Bugsnag to an already initialised native notifier, optionally
   /// adding to its existing configuration. Use [start] if your application
   /// is entirely built in Flutter.
