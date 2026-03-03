@@ -270,9 +270,11 @@ class BugsnagError {
         type = json
                 .safeGet<String>('type')
                 ?.let((type) => BugsnagErrorType.forName(type)) ??
-            (defaultTargetPlatform == TargetPlatform.android
-                ? BugsnagErrorType.android
-                : BugsnagErrorType.cocoa),
+            (kIsWeb
+                ? BugsnagErrorType.browserJs
+                : defaultTargetPlatform == TargetPlatform.android
+                    ? BugsnagErrorType.android
+                    : BugsnagErrorType.cocoa),
         stacktrace = BugsnagStackframe.stacktraceFromJson(
             (json['stacktrace'] as List).cast());
 
@@ -298,6 +300,9 @@ class BugsnagErrorType {
   /// An error captured from Dart
   static const dart = BugsnagErrorType._create('dart');
 
+  /// An error captured from a browser's JavaScript layer
+  static const browserJs = BugsnagErrorType._create('browserJs');
+
   final String name;
 
   const BugsnagErrorType._create(this.name);
@@ -320,6 +325,7 @@ class BugsnagErrorType {
     if (name == cocoa.name) return cocoa;
     if (name == c.name) return c;
     if (name == dart.name) return dart;
+    if (name == browserJs.name) return browserJs;
 
     return BugsnagErrorType._create(name);
   }

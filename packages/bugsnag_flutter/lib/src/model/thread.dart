@@ -46,9 +46,11 @@ class BugsnagThread {
         type = json
                 .safeGet<String>('type')
                 ?.let((name) => BugsnagErrorType.forName(name)) ??
-            (defaultTargetPlatform == TargetPlatform.android
-                ? BugsnagErrorType.android
-                : BugsnagErrorType.cocoa),
+            (kIsWeb
+                ? BugsnagErrorType.browserJs
+                : defaultTargetPlatform == TargetPlatform.android
+                    ? BugsnagErrorType.android
+                    : BugsnagErrorType.cocoa),
         _stacktrace = json.safeGet<List>('stacktrace')?.let((frames) =>
                 BugsnagStackframe.stacktraceFromJson(frames.cast())) ??
             [];
