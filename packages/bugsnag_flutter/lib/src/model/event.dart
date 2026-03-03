@@ -270,11 +270,11 @@ class BugsnagError {
         type = json
                 .safeGet<String>('type')
                 ?.let((type) => BugsnagErrorType.forName(type)) ??
-            (kIsWeb
-                ? BugsnagErrorType.browserJs
-                : defaultTargetPlatform == TargetPlatform.android
-                    ? BugsnagErrorType.android
-                    : BugsnagErrorType.cocoa),
+            switch ((kIsWeb, defaultTargetPlatform)) {
+              (true, _) => BugsnagErrorType.browserJs,
+              (_, TargetPlatform.android) => BugsnagErrorType.android,
+              _ => BugsnagErrorType.cocoa,
+            },
         stacktrace = BugsnagStackframe.stacktraceFromJson(
             (json['stacktrace'] as List).cast());
 
