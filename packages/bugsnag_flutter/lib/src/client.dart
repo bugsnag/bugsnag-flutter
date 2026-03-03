@@ -519,6 +519,7 @@ class Bugsnag extends BugsnagClient with DelegateClient {
     BugsnagTelemetryTypes telemetry = BugsnagTelemetryTypes.all,
     Object? persistenceDirectory,
     int? versionCode,
+    /// Web only. Controls whether the user's IP is collected.
     bool collectUserIp = true,
   }) async {
     const String _secondaryPrefix = '00000';
