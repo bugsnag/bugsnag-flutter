@@ -247,7 +247,6 @@ JSObject _createWebConfig({
   String? appVersion,
   String? releaseStage,
   Set<String>? enabledReleaseStages,
-  BugsnagProjectPackages? projectPackages,
   bool collectUserIp = true,
 }) {
   final config = <String, Object?>{
@@ -321,7 +320,6 @@ Future<BugsnagClient> platformStart({
     appVersion: appVersion,
     releaseStage: releaseStage,
     enabledReleaseStages: enabledReleaseStages,
-    projectPackages: projectPackages,
     collectUserIp: collectUserIp,
   );
 
