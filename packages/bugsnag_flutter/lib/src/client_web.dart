@@ -1,0 +1,343 @@
+import 'dart:convert';
+import 'dart:js_interop';
+
+import 'package:flutter/foundation.dart';
+
+import 'callbacks.dart';
+import 'client.dart';
+import 'config.dart';
+import 'error_factory.dart';
+import 'last_run_info.dart';
+import 'model.dart';
+
+/// JS interop bindings for the Bugsnag browser library.
+/// Requires @bugsnag/browser to be loaded in the page.
+
+@JS('Bugsnag')
+external JSObject? get _bugsnagJS;
+
+@JS('Bugsnag.start')
+external JSObject _bugsnagStart(JSObject config);
+
+@JS('Bugsnag.notify')
+external void _bugsnagNotify(JSAny error, [JSFunction? onError]);
+
+@JS('Bugsnag.setUser')
+external void _bugsnagSetUser(JSString? id, JSString? email, JSString? name);
+
+@JS('Bugsnag.resumeSession')
+external JSBoolean _bugsnagResumeSession();
+
+/// Extension type for the bugsnag-js Event object passed to onError callbacks.
+extension type _BugsnagJsEvent(JSObject _) implements JSObject {
+  external void addMetadata(JSString section, JSObject metadata);
+}
+
+/// Web implementation of BugsnagClient using JS interop.
+class WebClient extends BugsnagClient {
+  FlutterExceptionHandler? _previousFlutterOnError;
+  bool Function(Object, StackTrace)? _previousPlatformDispatcherOnError;
+  final CallbackCollection<BugsnagEvent> _onErrorCallbacks = {};
+
+  WebClient(bool autoDetectErrors) {
+    if (autoDetectErrors) {
+      _previousFlutterOnError = FlutterError.onError;
+      FlutterError.onError = _onFlutterError;
+      _previousPlatformDispatcherOnError =
+          PlatformDispatcher.instance.onError;
+      PlatformDispatcher.instance.onError = _onDispatcherError;
+    }
+  }
+
+  @override
+  void Function(dynamic error, StackTrace? stack) get errorHandler =>
+      _notifyUnhandled;
+
+  void _notifyUnhandled(dynamic error, StackTrace? stackTrace) {
+    _notifyInternal(error, true, stackTrace, null);
+  }
+
+  @override
+  Future<void> setUser({String? id, String? email, String? name}) async {
+    _checkBugsnagLoaded();
+    _bugsnagSetUser(id?.toJS, email?.toJS, name?.toJS);
+  }
+
+  @override
+  Future<BugsnagUser> getUser() =>
+      throw UnimplementedError('getUser is not yet supported on web');
+
+  @override
+  Future<void> setContext(String? context) =>
+      throw UnimplementedError('setContext is not yet supported on web');
+
+  @override
+  Future<String?> getContext() =>
+      throw UnimplementedError('getContext is not yet supported on web');
+
+  @override
+  Future<void> leaveBreadcrumb(
+    String message, {
+    Map<String, Object>? metadata,
+    BugsnagBreadcrumbType type = BugsnagBreadcrumbType.manual,
+  }) =>
+      throw UnimplementedError('leaveBreadcrumb is not yet supported on web');
+
+  @override
+  Future<List<BugsnagBreadcrumb>> getBreadcrumbs() =>
+      throw UnimplementedError('getBreadcrumbs is not yet supported on web');
+
+  @override
+  Future<void> addFeatureFlag(String name, [String? variant]) =>
+      throw UnimplementedError('addFeatureFlag is not yet supported on web');
+
+  @override
+  Future<void> addFeatureFlags(List<BugsnagFeatureFlag> featureFlags) =>
+      throw UnimplementedError('addFeatureFlags is not yet supported on web');
+
+  @override
+  Future<void> clearFeatureFlag(String name) =>
+      throw UnimplementedError('clearFeatureFlag is not yet supported on web');
+
+  @override
+  Future<void> clearFeatureFlags() =>
+      throw UnimplementedError('clearFeatureFlags is not yet supported on web');
+
+  @override
+  Future<void> addMetadata(String section, Map<String, Object> metadata) =>
+      throw UnimplementedError('addMetadata is not yet supported on web');
+
+  @override
+  Future<void> clearMetadata(String section, [String? key]) =>
+      throw UnimplementedError('clearMetadata is not yet supported on web');
+
+  @override
+  Future<Map<String, Object>?> getMetadata(String section) =>
+      throw UnimplementedError('getMetadata is not yet supported on web');
+
+  @override
+  Future<void> startSession() =>
+      throw UnimplementedError('startSession is not yet supported on web');
+
+  @override
+  Future<void> pauseSession() =>
+      throw UnimplementedError('pauseSession is not yet supported on web');
+
+  @override
+  Future<bool> resumeSession() async {
+    _checkBugsnagLoaded();
+    return _bugsnagResumeSession().toDart;
+  }
+
+  @override
+  Future<void> markLaunchCompleted() => throw UnimplementedError(
+      'markLaunchCompleted is not yet supported on web');
+
+  @override
+  Future<BugsnagLastRunInfo?> getLastRunInfo() =>
+      throw UnimplementedError('getLastRunInfo is not yet supported on web');
+
+  @override
+  Future<void> notify(
+    dynamic error,
+    StackTrace? stackTrace, {
+    BugsnagOnErrorCallback? callback,
+  }) async {
+    await _notifyInternal(error, false, stackTrace, callback);
+  }
+
+  @override
+  void addOnError(BugsnagOnErrorCallback onError) {
+    _onErrorCallbacks.add(onError);
+  }
+
+  @override
+  void removeOnError(BugsnagOnErrorCallback onError) {
+    _onErrorCallbacks.remove(onError);
+  }
+
+  void _onFlutterError(FlutterErrorDetails details) {
+    _notifyInternal(details.exception, true, details.stack, null);
+    _previousFlutterOnError?.call(details);
+  }
+
+  bool _onDispatcherError(Object exception, StackTrace stack) {
+    _notifyInternal(exception, true, stack, null);
+    return _previousPlatformDispatcherOnError?.call(exception, stack) ?? false;
+  }
+
+  Future<void> _notifyInternal(
+    dynamic error,
+    bool unhandled,
+    StackTrace? stackTrace,
+    BugsnagOnErrorCallback? callback,
+  ) async {
+    _checkBugsnagLoaded();
+
+    // Create a basic event for Dart-side callbacks
+    final errorPayload =
+        BugsnagErrorFactory.instance.createError(error, stackTrace);
+    final event = BugsnagEvent.fromJson(<String, dynamic>{
+      'exceptions': [errorPayload.toJson()],
+      'threads': <dynamic>[],
+      'breadcrumbs': <dynamic>[],
+      'unhandled': unhandled,
+      'severity': unhandled ? 'error' : 'warning',
+      'severityReason': <String, dynamic>{
+        'type': unhandled ? 'unhandledException' : 'handledException',
+      },
+      'user': <String, dynamic>{},
+      'device': <String, dynamic>{},
+      'app': <String, dynamic>{},
+      'featureFlags': <dynamic>[],
+      'projectPackages': <dynamic>[],
+    });
+
+    if (!await _onErrorCallbacks.dispatch(event)) {
+      return;
+    }
+
+    if (callback != null && !await callback.invokeSafely(event)) {
+      return;
+    }
+
+    // Send to bugsnag-js
+    try {
+      final jsError = _jsCreateError(error.toString().toJS);
+      final metadata = _mapToJSObject({
+        'type': error.runtimeType.toString(),
+        'message': error.toString(),
+        if (stackTrace != null) 'stackTrace': stackTrace.toString(),
+      });
+      final onError = (_BugsnagJsEvent event) {
+        event.addMetadata('dart_error'.toJS, metadata);
+      }.toJS;
+      _bugsnagNotify(jsError, onError);
+    } catch (e) {
+      if (kDebugMode) {
+        print('[Bugsnag] Failed to notify: $e');
+      }
+    }
+  }
+
+  @override
+  Future<String?> setGroupingDiscriminator(String? value) =>
+      throw UnimplementedError(
+          'setGroupingDiscriminator is not yet supported on web');
+
+  @override
+  Future<String?> getGroupingDiscriminator() => throw UnimplementedError(
+      'getGroupingDiscriminator is not yet supported on web');
+
+  // Intentionally a no-op, mirroring the implementation of client_io.dart.
+  @override
+  networkInstrumentation(data) {}
+
+  void _checkBugsnagLoaded() {
+    if (_bugsnagJS == null) {
+      throw Exception(
+        'Bugsnag is not loaded. Please add the @bugsnag/js script to your web/index.html.',
+      );
+    }
+  }
+}
+
+/// Create bugsnag-js configuration from Bugsnag Flutter configuration.
+JSObject _createWebConfig({
+  required String apiKey,
+  String? appVersion,
+  String? releaseStage,
+  Set<String>? enabledReleaseStages,
+  bool collectUserIp = true,
+}) {
+  final config = <String, Object?>{
+    'apiKey': apiKey,
+    if (appVersion != null) 'appVersion': appVersion,
+    if (releaseStage != null) 'releaseStage': releaseStage,
+    if (enabledReleaseStages != null)
+      'enabledReleaseStages': enabledReleaseStages.toList(),
+    'collectUserIp': collectUserIp,
+  };
+
+  return _mapToJSObject(config);
+}
+
+JSObject _mapToJSObject(Map<String, Object?> map) {
+  final jsonString = jsonEncode(map);
+  return _jsonParse(jsonString.toJS);
+}
+
+@JS('Error')
+external JSAny _jsCreateError(JSString message);
+
+@JS('JSON.parse')
+external JSObject _jsonParse(JSString json);
+
+Future<BugsnagClient> platformStart({
+  String? apiKey,
+  BugsnagUser? user,
+  bool persistUser = true,
+  String? context,
+  String? appType,
+  String? appVersion,
+  String? bundleVersion,
+  String? releaseStage,
+  BugsnagEnabledErrorTypes enabledErrorTypes = BugsnagEnabledErrorTypes.all,
+  BugsnagEndpointConfiguration endpoints = BugsnagEndpointConfiguration.bugsnag,
+  int maxBreadcrumbs = 50,
+  int maxPersistedSessions = 128,
+  int maxPersistedEvents = 32,
+  int maxStringValueLength = 10000,
+  bool autoTrackSessions = true,
+  bool autoDetectErrors = true,
+  BugsnagThreadSendPolicy sendThreads = BugsnagThreadSendPolicy.always,
+  int launchDurationMillis = 5000,
+  bool sendLaunchCrashesSynchronously = true,
+  int appHangThresholdMillis = Bugsnag.appHangThresholdFatalOnly,
+  Set<RegExp>? redactedKeys,
+  Set<RegExp> discardClasses = const {},
+  Set<String>? enabledReleaseStages,
+  Set<BugsnagEnabledBreadcrumbType>? enabledBreadcrumbTypes,
+  BugsnagProjectPackages projectPackages =
+      const BugsnagProjectPackages.withDefaults({}),
+  Map<String, Map<String, Object>>? metadata,
+  List<BugsnagFeatureFlag>? featureFlags,
+  List<BugsnagOnErrorCallback> onError = const [],
+  BugsnagTelemetryTypes telemetry = BugsnagTelemetryTypes.all,
+  Object? persistenceDirectory,
+  int? versionCode,
+  required Map<String, dynamic> notifier,
+  bool collectUserIp = true,
+}) async {
+  if (apiKey == null) {
+    throw ArgumentError('apiKey is required for web platform');
+  }
+
+  final detectDartErrors =
+      autoDetectErrors && enabledErrorTypes.unhandledDartExceptions;
+
+  final jsConfig = _createWebConfig(
+    apiKey: apiKey,
+    appVersion: appVersion,
+    releaseStage: releaseStage,
+    enabledReleaseStages: enabledReleaseStages,
+    collectUserIp: collectUserIp,
+  );
+
+  _bugsnagStart(jsConfig);
+
+  final client = WebClient(detectDartErrors);
+
+  for (final callback in onError) {
+    client.addOnError(callback);
+  }
+
+  return client;
+}
+
+Future<BugsnagClient> platformAttach({
+  List<BugsnagOnErrorCallback> onError = const [],
+  required Map<String, dynamic> notifier,
+}) async {
+  throw UnsupportedError('attach() is not supported on web');
+}

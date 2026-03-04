@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'package:flutter/foundation.dart';
 
 import '../enum_utils.dart';
 import '_model_extensions.dart';
@@ -270,17 +270,19 @@ class BugsnagError {
         type = json
                 .safeGet<String>('type')
                 ?.let((type) => BugsnagErrorType.forName(type)) ??
-            (Platform.isAndroid
-                ? BugsnagErrorType.android
-                : BugsnagErrorType.cocoa),
+            switch ((kIsWeb, defaultTargetPlatform)) {
+              (true, _) => BugsnagErrorType.browserJs,
+              (_, TargetPlatform.android) => BugsnagErrorType.android,
+              _ => BugsnagErrorType.cocoa,
+            },
         stacktrace = BugsnagStackframe.stacktraceFromJson(
             (json['stacktrace'] as List).cast());
 
-  dynamic toJson() => {
+  Map<String, dynamic> toJson() => {
         'errorClass': errorClass,
         if (message != null) 'message': message,
         'type': type.name,
-        'stacktrace': stacktrace,
+        'stacktrace': stacktrace.map((frame) => frame.toJson()).toList(),
       };
 }
 
@@ -297,6 +299,9 @@ class BugsnagErrorType {
 
   /// An error captured from Dart
   static const dart = BugsnagErrorType._create('dart');
+
+  /// An error captured from a browser's JavaScript layer
+  static const browserJs = BugsnagErrorType._create('browserJs');
 
   final String name;
 
@@ -320,6 +325,7 @@ class BugsnagErrorType {
     if (name == cocoa.name) return cocoa;
     if (name == c.name) return c;
     if (name == dart.name) return dart;
+    if (name == browserJs.name) return browserJs;
 
     return BugsnagErrorType._create(name);
   }
