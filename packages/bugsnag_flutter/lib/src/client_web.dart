@@ -229,6 +229,7 @@ class WebClient extends BugsnagClient {
   Future<String?> getGroupingDiscriminator() => throw UnimplementedError(
       'getGroupingDiscriminator is not yet supported on web');
 
+  // Intentionally a no-op, mirroring the implementation of client_io.dart.
   @override
   networkInstrumentation(data) {}
 
