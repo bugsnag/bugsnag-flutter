@@ -36,4 +36,6 @@
 - (NSString * _Nullable)setGroupingDiscriminator:(NSDictionary *)arguments;
 - (NSString * _Nullable)getGroupingDiscriminator:(NSDictionary *)arguments;
 
+- (NSNumber *)isStarted:(NSDictionary *)arguments;
+
 @end

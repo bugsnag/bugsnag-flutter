@@ -25,6 +25,18 @@ final _notifier = {
 abstract class BugsnagClient {
   final Map<String, Stopwatch> _openNetworkRequests = {};
 
+  /// Whether Bugsnag has been initialized via [start] or [attach].
+  ///
+  /// Returns `true` if initialized, `false` otherwise. Use this to safely check
+  /// before calling other Bugsnag methods without try/catch blocks.
+  ///
+  /// ```dart
+  /// if (bugsnag.isStarted) {
+  ///   await bugsnag.setContext('my-screen');
+  /// }
+  /// ```
+  bool get isStarted;
+
   /// An utility error handling function that will send reported errors to
   /// Bugsnag as unhandled. The [errorHandler] is suitable for use with
   /// common Dart error callbacks such as [runZonedGuarded] or [Future.onError].
@@ -324,6 +336,9 @@ mixin DelegateClient implements BugsnagClient {
   }
 
   @override
+  bool get isStarted => _client != null;
+
+  @override
   void Function(dynamic error, StackTrace? stack) get errorHandler =>
       client.errorHandler;
 
@@ -419,6 +434,7 @@ mixin DelegateClient implements BugsnagClient {
 class ChannelClient extends BugsnagClient {
   FlutterExceptionHandler? _previousFlutterOnError;
   ErrorCallback? _previousPlatformDispatcherOnError;
+  bool _isStarted = false;
 
   ChannelClient(bool autoDetectErrors) {
     if (autoDetectErrors) {
@@ -437,6 +453,9 @@ class ChannelClient extends BugsnagClient {
   final CallbackCollection<BugsnagEvent> _onErrorCallbacks = {};
 
   final contextProvider = BugsnagContextProviderImpl();
+
+  @override
+  bool get isStarted => _isStarted;
 
   @override
   void Function(dynamic error, StackTrace? stack) get errorHandler =>
@@ -739,6 +758,7 @@ class Bugsnag extends BugsnagClient with DelegateClient {
         result['config']['enabledErrorTypes']['dartErrors'] as bool;
 
     final client = ChannelClient(autoDetectErrors);
+    client._isStarted = true;
     client._onErrorCallbacks.addAll(onError);
     this.client = client;
   }
@@ -860,9 +880,10 @@ class Bugsnag extends BugsnagClient with DelegateClient {
       if (versionCode != null) 'versionCode': versionCode,
     });
 
-    final client = ChannelClient(detectDartErrors);
-    client._onErrorCallbacks.addAll(onError);
-    this.client = client;
+  final client = ChannelClient(detectDartErrors);
+  client._isStarted = true;
+  client._onErrorCallbacks.addAll(onError);
+  this.client = client;
 
     if (autoTrackSessions) {
       await resumeSession().onError((error, stackTrace) => true);

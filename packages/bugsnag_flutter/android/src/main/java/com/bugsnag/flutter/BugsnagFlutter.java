@@ -265,6 +265,10 @@ class BugsnagFlutter {
         return Bugsnag.getGroupingDiscriminator(); // may be null
     }
 
+    Boolean isStarted(@Nullable JSONObject args) {
+        return isStarted;
+    }
+
     Void leaveBreadcrumb(@Nullable JSONObject args) throws Exception {
         if (args != null &&
                 hasString(args, "name") &&
