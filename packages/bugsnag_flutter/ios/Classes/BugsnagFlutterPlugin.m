@@ -194,7 +194,7 @@ static NSArray *jsonToRegularExpressions(NSArray *source) {
 }
 
 - (NSNumber *)isStarted:(NSDictionary *)arguments {
-    return @(self.isStarted);
+    return @([Bugsnag client] != nil);
 }
 
 - (void)leaveBreadcrumb:(NSDictionary *)arguments {
