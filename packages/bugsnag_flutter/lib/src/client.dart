@@ -880,10 +880,10 @@ class Bugsnag extends BugsnagClient with DelegateClient {
       if (versionCode != null) 'versionCode': versionCode,
     });
 
-  final client = ChannelClient(detectDartErrors);
-  client._isStarted = true;
-  client._onErrorCallbacks.addAll(onError);
-  this.client = client;
+    final client = ChannelClient(detectDartErrors);
+    client._isStarted = true;
+    client._onErrorCallbacks.addAll(onError);
+    this.client = client;
 
     if (autoTrackSessions) {
       await resumeSession().onError((error, stackTrace) => true);
