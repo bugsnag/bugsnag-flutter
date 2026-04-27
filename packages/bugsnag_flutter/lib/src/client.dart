@@ -98,6 +98,7 @@ abstract class BugsnagClient {
   /// are more than one `FeatureFlag`.
   ///
   /// See also:
+  ///
   /// - [addFeatureFlag]
   /// - [clearFeatureFlag]
   /// - [clearFeatureFlags]
@@ -108,6 +109,7 @@ abstract class BugsnagClient {
   /// flag does not exist this will have no effect.
   ///
   /// See also:
+  ///
   /// - [addFeatureFlag]
   /// - [addFeatureFlags]
   /// - [clearFeatureFlags]
@@ -117,6 +119,7 @@ abstract class BugsnagClient {
   /// being reported.
   ///
   /// See also:
+  ///
   /// - [addFeatureFlag]
   /// - [addFeatureFlags]
   /// - [clearFeatureFlag]
