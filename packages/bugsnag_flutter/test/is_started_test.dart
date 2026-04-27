@@ -32,12 +32,14 @@ void main() {
 
     test('bugsnag.start transitions isStarted to true', () async {
       channel.results['start'] = true;
+      channel.results['isStarted'] = true;
 
       await bugsnag.start(autoTrackSessions: false);
 
       expect(bugsnag.isStarted, isTrue);
       expect((bugsnag.client as ChannelClient).isStarted, isTrue);
       expect(channel['start'], hasLength(1));
+      expect(channel['isStarted'], hasLength(1));
     });
 
     test('bugsnag.attach transitions isStarted to true', () async {
@@ -46,12 +48,25 @@ void main() {
           'enabledErrorTypes': {'dartErrors': true}
         }
       };
+      channel.results['isStarted'] = true;
 
       await bugsnag.attach();
 
       expect(bugsnag.isStarted, isTrue);
       expect((bugsnag.client as ChannelClient).isStarted, isTrue);
       expect(channel['attach'], hasLength(1));
+      expect(channel['isStarted'], hasLength(1));
+    });
+
+    test('bugsnag.start falls back to started=true if platform isStarted is unavailable', () async {
+      channel.results['start'] = true;
+
+      await bugsnag.start(autoTrackSessions: false);
+
+      expect(bugsnag.isStarted, isTrue);
+      expect((bugsnag.client as ChannelClient).isStarted, isTrue);
+      expect(channel['start'], hasLength(1));
+      expect(channel['isStarted'], hasLength(1));
     });
   });
 }

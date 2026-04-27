@@ -25,7 +25,7 @@ final _notifier = {
 abstract class BugsnagClient {
   final Map<String, Stopwatch> _openNetworkRequests = {};
 
-  /// Whether Bugsnag has been initialized via [start] or [attach].
+  /// Whether Bugsnag has been initialized via [Bugsnag.start] or [Bugsnag.attach].
   ///
   /// Returns `true` if initialized, `false` otherwise. Use this to safely check
   /// before calling other Bugsnag methods without try/catch blocks.
@@ -457,6 +457,17 @@ class ChannelClient extends BugsnagClient {
   @override
   bool get isStarted => _isStarted;
 
+  Future<void> syncIsStarted({required bool fallback}) async {
+    try {
+      final started = await _channel.invokeMethod<bool>('isStarted');
+      _isStarted = started ?? fallback;
+    } catch (_) {
+      // Keep backward compatibility if the native side does not expose
+      // isStarted in older host apps.
+      _isStarted = fallback;
+    }
+  }
+
   @override
   void Function(dynamic error, StackTrace? stack) get errorHandler =>
       _notifyUnhandled;
@@ -758,7 +769,7 @@ class Bugsnag extends BugsnagClient with DelegateClient {
         result['config']['enabledErrorTypes']['dartErrors'] as bool;
 
     final client = ChannelClient(autoDetectErrors);
-    client._isStarted = true;
+    await client.syncIsStarted(fallback: true);
     client._onErrorCallbacks.addAll(onError);
     this.client = client;
   }
@@ -881,7 +892,7 @@ class Bugsnag extends BugsnagClient with DelegateClient {
     });
 
     final client = ChannelClient(detectDartErrors);
-    client._isStarted = true;
+    await client.syncIsStarted(fallback: true);
     client._onErrorCallbacks.addAll(onError);
     this.client = client;
 

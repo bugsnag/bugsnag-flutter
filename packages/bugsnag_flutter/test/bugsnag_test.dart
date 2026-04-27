@@ -17,6 +17,7 @@ void main() {
           'enabledErrorTypes': {'dartErrors': true}
         }
       };
+      channel.results['isStarted'] = true;
 
       await bugsnag.attach();
 
@@ -25,6 +26,7 @@ void main() {
 
     test('default projectPackages', () async {
       channel.results['start'] = true;
+      channel.results['isStarted'] = true;
       await bugsnag.start();
 
       // file "packages" are <unknown>
@@ -39,6 +41,7 @@ void main() {
 
     test('default telemetry', () async {
       channel.results['start'] = true;
+      channel.results['isStarted'] = true;
       await bugsnag.start();
 
       expect(
@@ -49,6 +52,7 @@ void main() {
 
     test('disabled internal errors only', () async {
       channel.results['start'] = true;
+      channel.results['isStarted'] = true;
       await bugsnag.start(
           telemetry: const BugsnagTelemetryTypes(internalErrors: false));
 
@@ -60,6 +64,7 @@ void main() {
 
     test('disabled telemetry', () async {
       channel.results['start'] = true;
+      channel.results['isStarted'] = true;
       await bugsnag.start(
           telemetry:
               const BugsnagTelemetryTypes(internalErrors: false, usage: false));
