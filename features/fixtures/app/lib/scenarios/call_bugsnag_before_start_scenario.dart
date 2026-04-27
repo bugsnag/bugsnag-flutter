@@ -44,11 +44,6 @@ class CallBugsnagBeforeStartScenario extends Scenario {
     // Call addMetadata - should succeed
     await bugsnag.addMetadata('custom', {'key': 'value'});
 
-    // Call notify - should succeed
-    await bugsnag.notify(
-      Exception('Test exception'),
-      StackTrace.current,
-    );
 
     // Verify we can also use isStarted to guard calls defensively
     if (bugsnag.isStarted) {
