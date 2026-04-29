@@ -25,6 +25,9 @@ Future<Map<String, dynamic>> _captureEndpoints(
         'config': {'enabledErrorTypes': {'dartErrors': true}}
       };
     }
+    if (call.method == 'isStarted') {
+      return true;
+    }
     return null;
   }
 

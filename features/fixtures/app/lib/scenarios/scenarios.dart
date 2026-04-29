@@ -4,6 +4,7 @@ import 'package:MazeRunner/scenarios/null_user_scenario.dart';
 import 'app_hang_scenario.dart';
 import 'attach_bugsnag_scenario.dart';
 import 'breadcrumbs_scenario.dart';
+import 'call_bugsnag_before_start_scenario.dart';
 import 'detect_enabled_errors.dart';
 import 'discard_classes_scenario.dart';
 import 'error_handler_scenario.dart';
@@ -39,6 +40,7 @@ final List<ScenarioInfo<Scenario>> scenarios = [
   ScenarioInfo('AppHangScenario', () => AppHangScenario()),
   ScenarioInfo('AttachBugsnagScenario', () => AttachBugsnagScenario()),
   ScenarioInfo('BreadcrumbsScenario', () => BreadcrumbsScenario()),
+  ScenarioInfo('CallBugsnagBeforeStartScenario', () => CallBugsnagBeforeStartScenario()),
   ScenarioInfo(
       'DetectEnabledErrorsScenario', () => DetectEnabledErrorsScenario()),
   ScenarioInfo('DiscardClassesScenario', () => DiscardClassesScenario()),
