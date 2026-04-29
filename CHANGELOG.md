@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.2.1 (2026-04-29)
+
+- Added `isStarted` to `BugsnagClient` to allow checking whether Bugsnag has been initialized via `start` or `attach`, helping prevent method calls before initialization. [#312](https://github.com/bugsnag/bugsnag-flutter/pull/312)
+
 ## TBD
 
 - Upgrade Android compileSdkVersion from 31 to 34 [#305](https://github.com/bugsnag/bugsnag-flutter/pull/305)
