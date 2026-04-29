@@ -25,6 +25,9 @@ Future<Map<String, dynamic>> _captureEndpoints(
         'config': {'enabledErrorTypes': {'dartErrors': true}}
       };
     }
+    if (call.method == 'isStarted') {
+      return true;
+    }
     return null;
   }
 
@@ -44,13 +47,13 @@ void main() {
   // Test fixtures
   // ────────────────────────────────────────────────────────────
   const normalKey = 'a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d';
-  const hubKey    = '00000c0ffeebabe0000deadbeef0000';
+  const secondaryKey    = '00000c0ffeebabe0000deadbeef0000';
 
   const defaultNotify   = 'https://notify.bugsnag.com';
   const defaultSessions = 'https://sessions.bugsnag.com';
 
-  const hubNotify   = 'https://notify.insighthub.smartbear.com';
-  const hubSessions = 'https://sessions.insighthub.smartbear.com';
+  const secondaryNotify   = 'https://notify.bugsnag.smartbear.com';
+  const secondarySessions = 'https://sessions.bugsnag.smartbear.com';
 
   const customNotify   = 'https://my.example.com/n';
   const customSessions = 'https://my.example.com/s';
@@ -64,17 +67,17 @@ void main() {
       expect(ep['sessions'], defaultSessions);
     });
 
-    test('automatically switches to InsightHub for Hub-key', () async {
+    test('automatically switches to secondary endpoint for secondary-key', () async {
       final ep = await _captureEndpoints(
-              () => bugsnag.start(apiKey: hubKey));
+              () => bugsnag.start(apiKey: secondaryKey));
 
-      expect(ep['notify'],   hubNotify);
-      expect(ep['sessions'], hubSessions);
+      expect(ep['notify'],   secondaryNotify);
+      expect(ep['sessions'], secondarySessions);
     });
 
-    test('honours explicit endpoints even with a Hub-key', () async {
+    test('honours explicit endpoints even with a secondary-key', () async {
       final ep = await _captureEndpoints(() => bugsnag.start(
-        apiKey: hubKey,
+        apiKey: secondaryKey,
         endpoints: const BugsnagEndpointConfiguration(
           customNotify,
           customSessions,

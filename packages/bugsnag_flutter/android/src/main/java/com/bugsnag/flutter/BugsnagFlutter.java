@@ -256,13 +256,19 @@ class BugsnagFlutter {
         return Bugsnag.getContext();
     }
 
-    @Nullable String setGroupingDiscriminator(@Nullable JSONObject args) {
+    @Nullable
+    String setGroupingDiscriminator(@Nullable JSONObject args) {
         String value = args != null ? getString(args, "value") : null;
         return Bugsnag.setGroupingDiscriminator(value);
     }
 
-    @Nullable String getGroupingDiscriminator(@Nullable JSONObject args) {
+    @Nullable
+    String getGroupingDiscriminator(@Nullable JSONObject args) {
         return Bugsnag.getGroupingDiscriminator(); // may be null
+    }
+
+    Boolean isStarted(@Nullable JSONObject args) {
+        return InternalHooks.getClient() != null;
     }
 
     Void leaveBreadcrumb(@Nullable JSONObject args) throws Exception {
@@ -305,7 +311,7 @@ class BugsnagFlutter {
     }
 
     Void addMetadata(@Nullable JSONObject args) throws JSONException {
-        if (args == null || !hasString(args,"section") || !args.has("metadata")) {
+        if (args == null || !hasString(args, "section") || !args.has("metadata")) {
             return null;
         }
 
@@ -444,7 +450,7 @@ class BugsnagFlutter {
                     long spanIdAsLong = hexToLong(spanId);
                     event.setTraceCorrelation(new UUID(traceIdMostSignificantBits, traceIdLeastSignificantBits), spanIdAsLong);
                 }
-            } catch(Exception e) {
+            } catch (Exception e) {
                 // ignore the error, the error correlation will be missing
             }
         }
@@ -472,12 +478,14 @@ class BugsnagFlutter {
         return null;
     }
 
-    @Nullable String getString(JSONObject args, String key) {
+    @Nullable
+    String getString(JSONObject args, String key) {
         Object value = args.opt(key);
         return value instanceof String ? (String) value : null;
     }
 
-    @Nullable String getString(JSONObject args, String key, @Nullable String fallback) {
+    @Nullable
+    String getString(JSONObject args, String key, @Nullable String fallback) {
         String value = getString(args, key);
         return value != null ? value : fallback;
     }

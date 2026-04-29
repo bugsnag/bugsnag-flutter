@@ -193,6 +193,10 @@ static NSArray *jsonToRegularExpressions(NSArray *source) {
     return [Bugsnag groupingDiscriminator]; // may be nil
 }
 
+- (NSNumber *)isStarted:(NSDictionary *)arguments {
+    return @([Bugsnag client] != nil);
+}
+
 - (void)leaveBreadcrumb:(NSDictionary *)arguments {
     [Bugsnag leaveBreadcrumbWithMessage:arguments[@"name"]
                                metadata:arguments[@"metaData"]

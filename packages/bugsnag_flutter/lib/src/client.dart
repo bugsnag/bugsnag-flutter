@@ -19,11 +19,23 @@ import 'regexp_json.dart';
 final _notifier = {
   'name': 'Flutter Bugsnag Notifier',
   'url': 'https://github.com/bugsnag/bugsnag-flutter',
-  'version': '4.2.0'
+  'version': '4.2.1'
 };
 
 abstract class BugsnagClient {
   final Map<String, Stopwatch> _openNetworkRequests = {};
+
+  /// Whether Bugsnag has been initialized via [Bugsnag.start] or [Bugsnag.attach].
+  ///
+  /// Returns `true` if initialized, `false` otherwise. Use this to safely check
+  /// before calling other Bugsnag methods without try/catch blocks.
+  ///
+  /// ```dart
+  /// if (bugsnag.isStarted) {
+  ///   await bugsnag.setContext('my-screen');
+  /// }
+  /// ```
+  bool get isStarted;
 
   /// An utility error handling function that will send reported errors to
   /// Bugsnag as unhandled. The [errorHandler] is suitable for use with
@@ -324,6 +336,9 @@ mixin DelegateClient implements BugsnagClient {
   }
 
   @override
+  bool get isStarted => _client != null;
+
+  @override
   void Function(dynamic error, StackTrace? stack) get errorHandler =>
       client.errorHandler;
 
@@ -419,6 +434,7 @@ mixin DelegateClient implements BugsnagClient {
 class ChannelClient extends BugsnagClient {
   FlutterExceptionHandler? _previousFlutterOnError;
   ErrorCallback? _previousPlatformDispatcherOnError;
+  bool _isStarted = false;
 
   ChannelClient(bool autoDetectErrors) {
     if (autoDetectErrors) {
@@ -437,6 +453,20 @@ class ChannelClient extends BugsnagClient {
   final CallbackCollection<BugsnagEvent> _onErrorCallbacks = {};
 
   final contextProvider = BugsnagContextProviderImpl();
+
+  @override
+  bool get isStarted => _isStarted;
+
+  Future<void> syncIsStarted({required bool fallback}) async {
+    try {
+      final started = await _channel.invokeMethod<bool>('isStarted');
+      _isStarted = started ?? fallback;
+    } catch (_) {
+      // Keep backward compatibility if the native side does not expose
+      // isStarted in older host apps.
+      _isStarted = fallback;
+    }
+  }
 
   @override
   void Function(dynamic error, StackTrace? stack) get errorHandler =>
@@ -739,6 +769,7 @@ class Bugsnag extends BugsnagClient with DelegateClient {
         result['config']['enabledErrorTypes']['dartErrors'] as bool;
 
     final client = ChannelClient(autoDetectErrors);
+    await client.syncIsStarted(fallback: true);
     client._onErrorCallbacks.addAll(onError);
     this.client = client;
   }
@@ -799,14 +830,14 @@ class Bugsnag extends BugsnagClient with DelegateClient {
     Directory? persistenceDirectory,
     int? versionCode,
   }) async {
-    const String _hubPrefix = '00000';
-    const _hubNotify = 'https://notify.insighthub.smartbear.com';
-    const _hubSessions = 'https://sessions.insighthub.smartbear.com';
+    const String _secondaryPrefix = '00000';
+    const _secondaryNotify = 'https://notify.bugsnag.smartbear.com';
+    const _secondarySessions = 'https://sessions.bugsnag.smartbear.com';
 
     if (apiKey != null &&
-        apiKey.startsWith(_hubPrefix) &&
+        apiKey.startsWith(_secondaryPrefix) &&
         endpoints == BugsnagEndpointConfiguration.bugsnag) {
-      endpoints = const BugsnagEndpointConfiguration(_hubNotify, _hubSessions);
+      endpoints = const BugsnagEndpointConfiguration(_secondaryNotify, _secondarySessions);
     }
 
     final detectDartErrors =
@@ -861,6 +892,7 @@ class Bugsnag extends BugsnagClient with DelegateClient {
     });
 
     final client = ChannelClient(detectDartErrors);
+    await client.syncIsStarted(fallback: true);
     client._onErrorCallbacks.addAll(onError);
     this.client = client;
 
