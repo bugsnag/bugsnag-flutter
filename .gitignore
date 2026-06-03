@@ -6,3 +6,24 @@ maze-runner.log
 Gemfile.lock
 .idea/
 bugsnag-flutter.iml
+.gitleaks.toml
+.pre-commit-config.yaml
+.gitleaks-baseline.json
+
+# Build artifacts
+*.log
+*.apk
+*.ipa
+
+# IDE / OS
+.vs
+xcuserdata
+
+# Gradle
+.gradle
+local.properties
+
+# Test results
+TestResult.xml
+testResults.xml
+nunit-agent*.log
