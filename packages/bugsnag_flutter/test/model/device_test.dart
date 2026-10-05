@@ -112,8 +112,8 @@ void main() {
       expect(device.time, DateTime.utc(2022, 3, 3, 2, 15, 50, 405));
       expect(device.totalMemory, 7823929344);
 
-      // change the time to Local, toJson should convert it back
-      device.time = DateTime(2022, 3, 3, 2, 15, 50, 405);
+      // change the time to Local, toJson should convert it back to UTC
+      device.time = DateTime.utc(2022, 3, 3, 2, 15, 50, 405).toLocal();
 
       expect(device.toJson(), json);
     });
