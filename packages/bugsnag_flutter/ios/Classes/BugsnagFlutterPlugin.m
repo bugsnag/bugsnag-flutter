@@ -510,6 +510,9 @@ static NSArray *jsonToRegularExpressions(NSArray *source) {
     }
 
     if ([json[@"deliver"] boolValue]) {
+        // Dart errors don't terminate the app, and unhandled events default to
+        // StoreOnly (sent on next launch), so deliver them straight away.
+        event.deliveryStrategy = SendImmediately;
         [client notifyInternal:event block:nil];
         return nil;
     } else {
@@ -521,6 +524,7 @@ static NSArray *jsonToRegularExpressions(NSArray *source) {
 
 - (void)deliverEvent:(NSDictionary *)json {
     BugsnagEvent *event = [[BugsnagEvent alloc] initWithJson:json];
+    event.deliveryStrategy = SendImmediately;
     [Bugsnag.client notifyInternal:event block:nil];
 }
 

@@ -97,6 +97,24 @@ void main() {
     });
 
     group('errorHandler', () {
+      test('marks dispatcher errors as handled', () {
+        final previous = PlatformDispatcher.instance.onError;
+        addTearDown(() {
+          PlatformDispatcher.instance.onError = previous;
+        });
+        PlatformDispatcher.instance.onError = (error, stack) => false;
+
+        ChannelClient(true);
+        final handled = PlatformDispatcher.instance.onError?.call(
+          Exception('unhandled'),
+          StackTrace.empty,
+        );
+
+        expect(handled, isTrue);
+        expect(channel['createEvent'], hasLength(1));
+        expect(channel['createEvent'][0]['unhandled'], isTrue);
+      });
+
       test('delivers unhandled exceptions', () {
         runZonedGuarded(() {
           dynamic string = "this is not a number";
