@@ -8,7 +8,7 @@
 
 ### Dependencies
 
-- Update bugsnag-android to [v6.27.1](https://github.com/bugsnag/bugsnag-android/releases/tag/v6.27.1) [#318](https://github.com/bugsnag/bugsnag-flutter/pull/318)
+- Update bugsnag-android to [v6.28.0](https://github.com/bugsnag/bugsnag-android/releases/tag/v6.28.0) [#318](https://github.com/bugsnag/bugsnag-flutter/pull/318)
 - Update bugsnag-cocoa to [v6.38.0](https://github.com/bugsnag/bugsnag-cocoa/releases/tag/v6.38.0) [#318](https://github.com/bugsnag/bugsnag-flutter/pull/318)
 
 ## 4.2.1 (2026-04-29)
