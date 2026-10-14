@@ -1,6 +1,21 @@
 # Changelog
 
-## TBD
+## 4.2.2 (2026-10-13)
+
+### Bug fixes
+
+- Fix unhandled Dart errors on iOS only being delivered on the next app launch instead of immediately [#318](https://github.com/bugsnag/bugsnag-flutter/pull/318)
+
+### Dependencies
+
+- Update bugsnag-android to [v6.28.0](https://github.com/bugsnag/bugsnag-android/releases/tag/v6.28.0) [#318](https://github.com/bugsnag/bugsnag-flutter/pull/318)
+- Update bugsnag-cocoa to [v6.38.0](https://github.com/bugsnag/bugsnag-cocoa/releases/tag/v6.38.0) [#318](https://github.com/bugsnag/bugsnag-flutter/pull/318)
+
+## 4.2.1 (2026-04-29)
+
+- Added `isStarted` to `BugsnagClient` to allow checking whether Bugsnag has been initialized via `start` or `attach`, helping prevent method calls before initialization. [#312](https://github.com/bugsnag/bugsnag-flutter/pull/312)
+
+### Enhancements
 
 - Upgrade Android compileSdkVersion from 31 to 34 [#305](https://github.com/bugsnag/bugsnag-flutter/pull/305)
 - Amend secondary instance URL to bugsnag.smartbear.com [#299](https://github.com/bugsnag/bugsnag-flutter/pull/299)

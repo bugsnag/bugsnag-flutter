@@ -1,34 +1,25 @@
-include ':app'
+pluginManagement {
+    def flutterSdkPath = {
+        def properties = new Properties()
+        file("local.properties").withInputStream { properties.load(it) }
+        def flutterSdkPath = properties.getProperty("flutter.sdk")
+        assert flutterSdkPath != null, "flutter.sdk not set in local.properties"
+        return flutterSdkPath
+    }()
 
-def localPropertiesFile = new File(rootProject.projectDir, "local.properties")
-def properties = new Properties()
+    includeBuild("$flutterSdkPath/packages/flutter_tools/gradle")
 
-assert localPropertiesFile.exists()
-localPropertiesFile.withReader("UTF-8") { reader ->
-    properties.load(reader)
-}
-
-def flutterSdkPath = properties.getProperty("flutter.sdk")
-assert flutterSdkPath != null : "flutter.sdk not set in local.properties"
-
-// Read Gradle version safely
-def gradleVersion = gradle.gradleVersion
-def gradleParts = gradleVersion.tokenize('.').collect { it as int }
-def gradleMajor = gradleParts[0]
-def gradleMinor = gradleParts[1]
-
-// Declarative settings plugin requires Gradle >= 7.6
-def supportsPluginsBlock = (gradleMajor > 7) || (gradleMajor == 7 && gradleMinor >= 6)
-
-if (supportsPluginsBlock) {
-    println "Using declarative Flutter Gradle plugin (Gradle $gradleVersion)"
-
-    plugins {
-        id("dev.flutter.flutter-gradle-plugin") version "1.0.0"
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
     }
-
-} else {
-    println "Using legacy plugin loader (Gradle $gradleVersion)"
-
-    apply from: "$flutterSdkPath/packages/flutter_tools/gradle/app_plugin_loader.gradle"
 }
+
+plugins {
+    id "dev.flutter.flutter-plugin-loader" version "1.0.0"
+    id "com.android.application" version "8.6.0" apply false
+    id "org.jetbrains.kotlin.android" version "2.1.0" apply false
+}
+
+include ":app"
