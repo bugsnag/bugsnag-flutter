@@ -19,7 +19,7 @@ import 'regexp_json.dart';
 final _notifier = {
   'name': 'Flutter Bugsnag Notifier',
   'url': 'https://github.com/bugsnag/bugsnag-flutter',
-  'version': '4.2.1'
+  'version': '4.2.2'
 };
 
 abstract class BugsnagClient {
@@ -593,7 +593,12 @@ class ChannelClient extends BugsnagClient {
 
   bool _onDispatcherError(Object exception, StackTrace stack) {
     _notifyInternal(exception, true, null, stack, null);
-    return _previousPlatformDispatcherOnError?.call(exception, stack) ?? false;
+    // A previous handler may log the error, but this callback has to return
+    // true once Bugsnag has accepted it. Returning false tells the engine the
+    // error is unhandled, and it may terminate the isolate before the async
+    // notify reaches the native notifier.
+    _previousPlatformDispatcherOnError?.call(exception, stack);
+    return true;
   }
 
   Future<void> _notifyInternal(
@@ -709,7 +714,6 @@ class ChannelClient extends BugsnagClient {
 
   @override
   networkInstrumentation(data) {}
-
 }
 
 /// The primary `Client`. Typically this class is not accessed directly, and
@@ -837,7 +841,8 @@ class Bugsnag extends BugsnagClient with DelegateClient {
     if (apiKey != null &&
         apiKey.startsWith(_secondaryPrefix) &&
         endpoints == BugsnagEndpointConfiguration.bugsnag) {
-      endpoints = const BugsnagEndpointConfiguration(_secondaryNotify, _secondarySessions);
+      endpoints = const BugsnagEndpointConfiguration(
+          _secondaryNotify, _secondarySessions);
     }
 
     final detectDartErrors =
@@ -921,7 +926,6 @@ class Bugsnag extends BugsnagClient with DelegateClient {
 
     return const <String>{};
   }
-
 }
 
 /// In order to determine where a crash happens Bugsnag needs to know which
