@@ -1,4 +1,4 @@
-#import "BugsnagFlutterEnabledErrorTypes.h"
+#import "./include/bugsnag_flutter/BugsnagFlutterEnabledErrorTypes.h"
 
 @implementation BugsnagFlutterEnabledErrorTypes
 
