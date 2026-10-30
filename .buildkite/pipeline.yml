@@ -10,7 +10,7 @@ steps:
     steps:
       - label: ":test_tube: {{matrix}}"
         matrix:
-          - "3.38.3"
+          - "3.47.9"
           - "3.24.4"
           - "3.19.0"
           - "3.10.0"
@@ -20,17 +20,17 @@ steps:
         commands:
           - "make test"
 
-  - label: ":lint-roller: 3.38.3"
+  - label: ":lint-roller: 3.47.9"
     timeout_in_minutes: 10
     env:
-      FLUTTER_VERSION: "3.38.3"
+      FLUTTER_VERSION: "3.47.9"
     commands:
       - "make lint"
 
-  - label: ":flutter: Build Example App 3.38.3"
+  - label: ":flutter: Build Example App 3.47.9"
     timeout_in_minutes: 10
     env:
-      FLUTTER_VERSION: "3.38.3"
+      FLUTTER_VERSION: "3.47.9"
     commands:
       - "bundle install"
       - "pod repo update"
@@ -48,7 +48,7 @@ steps:
         key: "ios-fixture"
         timeout_in_minutes: 20
         matrix:
-          - "3.38.3"
+          - "3.47.9"
           - "3.24.4"
           - "3.19.0"
           - "3.10.0"
@@ -68,7 +68,7 @@ steps:
         key: "android-fixture"
         timeout_in_minutes: 20
         matrix:
-#          - "3.38.3" Skipped: Waiting on PLAT-15326
+#          - "3.47.9" Skipped: Waiting on PLAT-15326
           - "3.24.4"
           - "3.19.0"
           - "3.10.0"
@@ -89,7 +89,7 @@ steps:
         depends_on: "ios-fixture"
         timeout_in_minutes: 20
         matrix:
-          - "3.38.3"
+          - "3.47.9"
           - "3.24.4"
           - "3.19.0"
           - "3.10.0"
@@ -128,7 +128,7 @@ steps:
         depends_on: "android-fixture"
         timeout_in_minutes: 20
         matrix:
-#          - "3.38.3" Skipped: Waiting on PLAT-15326
+#          - "3.47.9" Skipped: Waiting on PLAT-15326
           - "3.24.4"
           - "3.19.0"
           - "3.10.0"
