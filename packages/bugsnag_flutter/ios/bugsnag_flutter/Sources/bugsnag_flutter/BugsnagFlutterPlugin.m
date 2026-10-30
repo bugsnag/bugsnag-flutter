@@ -1,7 +1,11 @@
-#import "BugsnagFlutterPlugin.h"
+#import "./include/bugsnag_flutter/BugsnagFlutterPlugin.h"
 
-#import "BugsnagFlutterConfiguration.h"
+#import "./include/bugsnag_flutter/BugsnagFlutterConfiguration.h"
+#if SWIFT_PACKAGE
+#import "BugsnagFlutterInternals.h"
+#else
 #import "BugsnagInternals.h"
+#endif
 
 #import <dlfcn.h>
 #import <mach-o/dyld.h>
@@ -252,13 +256,13 @@ static NSArray *jsonToRegularExpressions(NSArray *source) {
             }
         }
     };
-    
+
     static BOOL isAttached;
     if (isAttached) {
         NSLog(@"bugsnag.attach() has already been called. Ignoring.");
         return result;
     }
-    
+
     if (!Bugsnag.client) {
         [NSException raise:NSInternalInconsistencyException format:
          @"bugsnag.attach() can only be called once the native layer has already been started, have you called [Bugsnag start] from your iOS code?"];
@@ -269,7 +273,7 @@ static NSArray *jsonToRegularExpressions(NSArray *source) {
     Bugsnag.client.notifier.version = notifier[@"version"];
     Bugsnag.client.notifier.url = notifier[@"url"];
     Bugsnag.client.notifier.dependencies = @[[[BugsnagNotifier alloc] init]];
-    
+
     self.projectPackages = BugsnagFlutterConfiguration.projectPackages;
 
     isAttached = YES;
@@ -291,9 +295,9 @@ static NSArray *jsonToRegularExpressions(NSArray *source) {
     if (Bugsnag.client) {
         [NSException raise:NSInternalInconsistencyException format:@"bugsnag.start() may not be called after starting Bugsnag natively"];
     }
-    
+
     BugsnagConfiguration *configuration = [BugsnagConfiguration loadConfig];
-    
+
     for (NSString *key in @[BSG_KEYPATH(configuration, apiKey),
                             BSG_KEYPATH(configuration, appHangThresholdMillis),
                             BSG_KEYPATH(configuration, appType),
@@ -336,19 +340,19 @@ static NSArray *jsonToRegularExpressions(NSArray *source) {
                      withEmail:user[@"email"]
                        andName:user[@"name"]];
     }
-    
+
     NSNumber *persistUser = arguments[@"persistUser"];
     if ([persistUser isKindOfClass:[NSNumber class]] &&
         configuration.persistUser != [persistUser boolValue]) {
         configuration.persistUser = [persistUser boolValue];
     }
-    
+
     NSDictionary *endpoints = arguments[@"endpoints"];
     if ([endpoints isKindOfClass:[NSDictionary class]]) {
         configuration.endpoints.notify = endpoints[@"notify"];
         configuration.endpoints.sessions = endpoints[@"sessions"];
     }
-    
+
     NSString *sendThreads = arguments[@"sendThreads"];
     if ([sendThreads isKindOfClass:[NSString class]]) {
         if ([sendThreads isEqualToString:@"always"]) {
@@ -359,7 +363,7 @@ static NSArray *jsonToRegularExpressions(NSArray *source) {
             configuration.sendThreads = BSGThreadSendPolicyNever;
         }
     }
-    
+
     NSArray *enabledBreadcrumbTypes = arguments[@"enabledBreadcrumbTypes"];
     if ([enabledBreadcrumbTypes isKindOfClass:[NSArray class]]) {
         BSGEnabledBreadcrumbType value =
@@ -372,7 +376,7 @@ static NSArray *jsonToRegularExpressions(NSArray *source) {
         ([enabledBreadcrumbTypes containsObject:@"user"]        ? BSGEnabledBreadcrumbTypeUser          : 0);
         configuration.enabledBreadcrumbTypes = value;
     }
-    
+
     NSDictionary *enabledErrorTypes = arguments[@"enabledErrorTypes"];
     if ([enabledErrorTypes isKindOfClass:[NSDictionary class]]) {
         configuration.enabledErrorTypes.unhandledExceptions = [enabledErrorTypes[@"crashes"] boolValue];
@@ -383,42 +387,42 @@ static NSArray *jsonToRegularExpressions(NSArray *source) {
         configuration.enabledErrorTypes.thermalKills        = [enabledErrorTypes[@"thermalKills"] boolValue];
         configuration.enabledErrorTypes.appHangs            = [enabledErrorTypes[@"appHangs"] boolValue];
     }
-    
+
     NSDictionary *metadata = arguments[@"metadata"];
     if ([metadata isKindOfClass:[NSDictionary class]]) {
         for (NSString *section in metadata) {
             [configuration addMetadata:metadata[section] toSection:section];
         }
     }
-    
+
     NSArray *featureFlags = arguments[@"featureFlags"];
     if ([featureFlags isKindOfClass:[NSArray class]]) {
         for (NSDictionary *flag in featureFlags) {
             [configuration addFeatureFlagWithName:flag[@"featureFlag"] variant:flag[@"variant"]];
         }
     }
-    
+
     NSDictionary *notifier = arguments[@"notifier"];
     configuration.notifier = [[BugsnagNotifier alloc] initWithName:notifier[@"name"]
                                                            version:notifier[@"version"]
                                                                url:notifier[@"url"]
                                                       dependencies:@[[[BugsnagNotifier alloc] init]]];
-    
+
     NSDictionary *projectPackages = arguments[@"projectPackages"];
     if ([projectPackages isKindOfClass:[NSDictionary class]]) {
         self.projectPackages = projectPackages[@"packageNames"];
     }
-    
+
     NSArray *telemetry = arguments[@"telemetry"];
     if ([telemetry isKindOfClass:[NSArray class]]) {
-        BSGTelemetryOptions value = 
+        BSGTelemetryOptions value =
         ([telemetry containsObject:@"internalErrors"] ? BSGTelemetryInternalErrors : 0) |
         ([telemetry containsObject:@"usage"]          ? BSGTelemetryUsage          : 0) ;
         configuration.telemetry = value;
     }
-    
+
     [Bugsnag startWithConfiguration:configuration];
-    
+
     self.started = YES;
     isAnyStarted = YES;
 }
@@ -476,7 +480,7 @@ static NSArray *jsonToRegularExpressions(NSArray *source) {
             frame.codeIdentifier = DartCodeBuildId;
         }
     }
-    
+
     if (client.configuration.sendThreads == BSGThreadSendPolicyAlways) {
         event.threads = [BugsnagThread allThreads:YES callStackReturnAddresses:NSThread.callStackReturnAddresses];
     }
@@ -497,7 +501,7 @@ static NSArray *jsonToRegularExpressions(NSArray *source) {
             [event setCorrelationTraceId:traceId spanId:spanId];
         }
     }
-    
+
     // Check for groupingDiscriminator from Dart layer first, then fall back to global
     NSString *dartGroupingDiscriminator = NSStringOrNil(json[@"groupingDiscriminator"]);
     if (dartGroupingDiscriminator != nil) {
@@ -545,7 +549,7 @@ static NSArray *jsonToRegularExpressions(NSArray *source) {
         event.projectPackages = json[@"projectPackages"];
         return event;
     }));
-    
+
     selector = @selector(toJsonWithRedactedKeys:);
     __block NSDictionary * (*toJsonWithRedactedKeys)(id, SEL, NSSet *) = (void *)
     method_setImplementation(class_getInstanceMethod([BugsnagEvent class], selector),
@@ -581,7 +585,7 @@ const void *ProjectPackagesKey = &ProjectPackagesKey;
         frame.loadAddress = json[@"loadAddress"];
         return frame;
     }));
-    
+
     selector = @selector(toDictionary);
     __block NSDictionary * (*toDictionary)(id, SEL) = (void *)
     method_setImplementation(class_getInstanceMethod([BugsnagStackframe class], selector),
