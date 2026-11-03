@@ -1,4 +1,4 @@
-#import "BugsnagFlutterConfiguration.h"
+#import "./include/bugsnag_flutter/BugsnagFlutterConfiguration.h"
 
 @implementation BugsnagFlutterConfiguration
 

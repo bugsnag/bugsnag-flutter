@@ -100,6 +100,7 @@ ifeq ($(VERSION),)
 	@$(error VERSION is not defined. Run with `make VERSION=number update-bugsnag-cocoa`)
 endif
 	sed -i '' "s/s.dependency 'Bugsnag', '.*'/s.dependency 'Bugsnag', '$(subst v,,$(VERSION))'/" packages/bugsnag_flutter/ios/bugsnag_flutter.podspec
+	sed -i '' "s/let bugsnagCocoaVersion: Version = \".*\"/let bugsnagCocoaVersion: Version = \"$(subst v,,$(VERSION))\"/" packages/bugsnag_flutter/ios/bugsnag_flutter/Package.swift
 
 update-bugsnag-dependency:
 ifeq ($(SUBMODULE),)
