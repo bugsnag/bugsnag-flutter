@@ -1,5 +1,15 @@
 # Changelog
 
+## 4.3.0 (2026-11-03)
+
+### Enhancements
+
+- Add Swift Package Manager support for iOS. Swift Package Manager integration requires iOS 13.0 or later; CocoaPods integration continues to support iOS 12.0 or later [#323](https://github.com/bugsnag/bugsnag-flutter/pull/323)
+
+### Bug fixes
+
+- Include the plugin's `PrivacyInfo.xcprivacy` privacy manifest in CocoaPods builds [#323](https://github.com/bugsnag/bugsnag-flutter/pull/323)
+
 ## 4.2.2 (2026-10-15)
 
 ### Bug fixes
