@@ -14,15 +14,13 @@ let package = Package(
         .library(name: "bugsnag-flutter", targets: ["bugsnag_flutter"])
     ],
     dependencies: [
-        .package(url: "https://github.com/bugsnag/bugsnag-cocoa", exact: bugsnagCocoaVersion),
-        .package(name: "FlutterFramework", path: "../FlutterFramework")
+        .package(url: "https://github.com/bugsnag/bugsnag-cocoa", exact: bugsnagCocoaVersion)
     ],
     targets: [
         .target(
             name: "bugsnag_flutter",
             dependencies: [
-                .product(name: "Bugsnag", package: "bugsnag-cocoa"),
-                .product(name: "FlutterFramework", package: "FlutterFramework")
+                .product(name: "Bugsnag", package: "bugsnag-cocoa")
             ],
             resources: [
                 .process("PrivacyInfo.xcprivacy")
