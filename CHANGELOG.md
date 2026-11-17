@@ -4,7 +4,7 @@
 
 ### Bug fixes
 
-- Fix public headers being copied outside `bugsnag_flutter.framework` in CocoaPods builds
+- Fix public headers being copied outside `bugsnag_flutter.framework` in CocoaPods builds [#329](https://github.com/bugsnag/bugsnag-flutter/pull/329)
 
 ## 4.3.0 (2026-11-03)
 
