@@ -1,5 +1,11 @@
 # Changelog
 
+## TBD
+
+### Bug fixes
+
+- Fix public headers being copied outside `bugsnag_flutter.framework` in CocoaPods builds
+
 ## 4.3.0 (2026-11-03)
 
 ### Enhancements
