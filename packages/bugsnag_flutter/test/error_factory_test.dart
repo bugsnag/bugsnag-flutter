@@ -27,6 +27,17 @@ void main() {
       expect(error.stacktrace.length, greaterThan(0));
     });
 
+    test('Fallback stacktrace in an unrecognised format', () {
+      const safariStackTrace =
+          'notify@https://example.com/main.dart.js:77004:15\n'
+          'a@https://example.com/main.dart.js:5796:63';
+
+      final stacktrace =
+          BugsnagErrorFactory.instance.fallbackStacktrace(safariStackTrace);
+
+      expect(stacktrace, isEmpty);
+    });
+
     test('Exception with an object message', () {
       final error = BugsnagErrorFactory.instance.createError(Exception(main));
 

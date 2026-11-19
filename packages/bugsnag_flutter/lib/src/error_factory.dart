@@ -1,4 +1,5 @@
 import 'package:bugsnag_flutter/src/bugsnag_stacktrace.dart';
+import 'package:flutter/foundation.dart';
 
 import 'model/event.dart';
 import 'model/stackframe.dart';
@@ -82,7 +83,14 @@ class BugsnagErrorFactory {
   }
 
   BugsnagStacktrace _fallbackStacktrace() =>
-      parseStackTraceString(StackTrace.current.toString())!;
+      fallbackStacktrace(StackTrace.current.toString());
+
+  /// Parses [currentStackTrace], or returns an empty stacktrace when its format
+  /// is not recognised, such as the `method@url:line:column` frames of Safari
+  /// and Firefox on web.
+  @visibleForTesting
+  BugsnagStacktrace fallbackStacktrace(String currentStackTrace) =>
+      parseStackTraceString(currentStackTrace) ?? [];
 
   /// Extract the probable "Display name" for an error based on it's type.
   /// This method trims any `_` off the front of the type name.
