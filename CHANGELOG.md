@@ -1,5 +1,11 @@
 # Changelog
 
+## TBD
+
+### Bug fixes
+
+- Fix public headers missing from `bugsnag_flutter.framework` in CocoaPods builds using `use_frameworks!`, which caused iOS builds to fail with `'BugsnagFlutterConfiguration.h' file not found` [#328](https://github.com/bugsnag/bugsnag-flutter/issues/328)
+
 ## 4.3.0 (2026-11-03)
 
 ### Enhancements
