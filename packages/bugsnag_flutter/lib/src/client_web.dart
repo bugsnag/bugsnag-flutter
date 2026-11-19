@@ -31,6 +31,7 @@ external JSBoolean _bugsnagResumeSession();
 /// Extension type for the bugsnag-js Event object passed to onError callbacks.
 extension type _BugsnagJsEvent(JSObject _) implements JSObject {
   external void addMetadata(JSString section, JSObject metadata);
+  external set groupingHash(JSString value);
 }
 
 /// Web implementation of BugsnagClient using JS interop.
@@ -209,8 +210,14 @@ class WebClient extends BugsnagClient {
         'message': error.toString(),
         if (stackTrace != null) 'stackTrace': stackTrace.toString(),
       });
-      final onError = (_BugsnagJsEvent event) {
-        event.addMetadata('dart_error'.toJS, metadata);
+      // The JS error is created here, so bugsnag-js would group every event
+      // on this frame. A grouping hash set by a Dart callback overrides that.
+      final groupingHash = event.groupingHash;
+      final onError = (_BugsnagJsEvent jsEvent) {
+        jsEvent.addMetadata('dart_error'.toJS, metadata);
+        if (groupingHash != null) {
+          jsEvent.groupingHash = groupingHash.toJS;
+        }
       }.toJS;
       _bugsnagNotify(jsError, onError);
     } catch (e) {
