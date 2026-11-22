@@ -64,6 +64,9 @@ class BugsnagFlutter {
                 );
 
         if (isAttached) {
+            if (client == null) {
+                client = new InternalHooks(InternalHooks.getClient());
+            }
             Log.i("BugsnagFlutter", "bugsnag.attach() has already been called. Ignoring.");
             return result;
         }

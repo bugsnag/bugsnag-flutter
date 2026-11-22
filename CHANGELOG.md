@@ -4,6 +4,7 @@
 
 ### Bug fixes
 
+- Fix Dart errors being dropped on Android in every `FlutterEngine` after the first that calls `bugsnag.attach()` [#334](https://github.com/bugsnag/bugsnag-flutter/issues/334)
 - Fix public headers missing from `bugsnag_flutter.framework` in CocoaPods builds using `use_frameworks!`, which caused iOS builds to fail with `'BugsnagFlutterConfiguration.h' file not found` [#328](https://github.com/bugsnag/bugsnag-flutter/issues/328)
 
 ## 4.3.0 (2026-11-03)

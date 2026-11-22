@@ -75,3 +75,15 @@ Feature: Attach to running native Bugsnag instance
     And the event "user.name" equals "Old Man Tables"
     And event 0 contains the feature flag "demo-mode" with no variant
     And event 0 contains the feature flag "sample-group" with variant "123"
+
+  @skip_ios
+  Scenario: attach from a second Flutter engine
+    When I run "AttachSecondEngineScenario"
+    Then I wait to receive 2 errors
+    And the error is valid for the error reporting API version "4.0" for the "Flutter Bugsnag Notifier" notifier
+    And the exception "message" equals "Handled exception from first engine"
+    And I discard the oldest error
+    And the error is valid for the error reporting API version "4.0" for the "Flutter Bugsnag Notifier" notifier
+    And the exception "errorClass" equals "_Exception"
+    And the exception "message" equals "Handled exception from second engine"
+    And the event "unhandled" is false
