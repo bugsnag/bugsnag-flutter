@@ -259,6 +259,9 @@ static NSArray *jsonToRegularExpressions(NSArray *source) {
 
     static BOOL isAttached;
     if (isAttached) {
+        // attach() may be called from another FlutterEngine, which has its own plugin instance
+        // that still needs the project packages for the events it creates
+        self.projectPackages = BugsnagFlutterConfiguration.projectPackages;
         NSLog(@"bugsnag.attach() has already been called. Ignoring.");
         return result;
     }
