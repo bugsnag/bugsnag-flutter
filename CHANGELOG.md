@@ -1,6 +1,6 @@
 # Changelog
 
-## TBD
+## 4.3.1 (2026-11-19)
 
 ### Bug fixes
 
