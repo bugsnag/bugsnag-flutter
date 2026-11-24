@@ -64,7 +64,15 @@ class BugsnagFlutter {
                 );
 
         if (isAttached) {
-            Log.i("BugsnagFlutter", "bugsnag.attach() has already been called. Ignoring.");
+            if (client == null) {
+                // attach() was called from another FlutterEngine: each engine has its own
+                // BugsnagFlutter instance, so this one still needs the native client or it
+                // will silently drop every event
+                client = new InternalHooks(InternalHooks.getClient());
+                Log.i("BugsnagFlutter", "bugsnag.attach() was called from a previous Flutter context. Reusing existing client.");
+            } else {
+                Log.i("BugsnagFlutter", "bugsnag.attach() has already been called. Ignoring.");
+            }
             return result;
         }
 
