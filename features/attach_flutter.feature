@@ -59,6 +59,29 @@ Feature: Attach to running native Bugsnag instance
     And event 0 contains the feature flag "demo-mode" with no variant
     And event 0 contains the feature flag "sample-group" with variant "123"
 
+  @skip_ios
+  Scenario: attach from a second Flutter engine
+    When I run "AttachSecondEngineScenario"
+    Then I wait to receive 3 errors
+    And I sort the errors by the payload field "events.0.exceptions.0.message"
+
+    And the error is valid for the error reporting API version "4.0" for the "Flutter Bugsnag Notifier" notifier
+    And the exception "errorClass" equals "_Exception"
+    And the exception "message" equals "Handled exception from the first engine"
+    And the event "unhandled" is false
+    And I discard the oldest error
+
+    And the error is valid for the error reporting API version "4.0" for the "Flutter Bugsnag Notifier" notifier
+    And the exception "errorClass" equals "_Exception"
+    And the exception "message" equals "Handled exception from the second engine"
+    And the event "unhandled" is false
+    And I discard the oldest error
+
+    And the error is valid for the error reporting API version "4.0" for the "Flutter Bugsnag Notifier" notifier
+    And the exception "errorClass" equals "_Exception"
+    And the exception "message" equals "Unhandled exception from the second engine"
+    And the event "unhandled" is true
+
   Scenario: multiple attaches with an unhandled exception
     When I configure the app to run in the "extra-attach" state
     When I run "AttachBugsnagScenario"

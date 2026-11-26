@@ -1,5 +1,12 @@
 # Changelog
 
+## 4.3.2 (2026-11-26)
+
+### Bug fixes
+
+- Fix Dart errors being silently dropped on Android from every `FlutterEngine` after the first one that calls `bugsnag.attach()` [#334](https://github.com/bugsnag/bugsnag-flutter/issues/334)
+- Fix missing `projectPackages` on iOS in events from every `FlutterEngine` after the first one that calls `bugsnag.attach()` [#336](https://github.com/bugsnag/bugsnag-flutter/pull/336)
+
 ## 4.3.1 (2026-11-19)
 
 ### Bug fixes

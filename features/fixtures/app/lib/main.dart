@@ -9,6 +9,7 @@ import 'package:bugsnag_flutter/bugsnag_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 
+import 'scenarios/attach_second_engine_scenario.dart';
 import 'scenarios/scenario.dart';
 import 'scenarios/scenarios.dart';
 
@@ -18,6 +19,14 @@ void log(String message) {
 
 void main() {
   runApp(const MazeRunnerFlutterApp());
+}
+
+/// Entry point for the second FlutterEngine started by
+/// AttachSecondEngineScenario. It must be in the root library so the native
+/// side can find it by name.
+@pragma('vm:entry-point')
+void attachSecondEngineMain() async {
+  await AttachSecondEngineScenario.secondEngineMain();
 }
 
 extension StringGet<K, V> on Map<K, V> {
